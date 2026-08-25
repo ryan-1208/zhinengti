@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="732" height="1075" viewBox="0 0 732 1075">
+  <defs>
+    <pattern id="grid" width="28" height="28" patternUnits="userSpaceOnUse">
+      <path d="M28 0H0V28" fill="none" stroke="#e8eaed" stroke-width="1"/>
+    </pattern>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0L10 5L0 10Z" fill="#30343a"/>
+    </marker>
+  </defs>
+  <rect width="732" height="1075" fill="#fff"/>
+  <rect width="732" height="1075" fill="url(#grid)"/>
+
+  <g fill="none" stroke="#30343a" stroke-width="3" stroke-linecap="round" marker-end="url(#arrow)">
+    <path d="M308 132V211"/>
+    <path d="M308 286V367"/>
+    <path d="M308 482V593"/>
+    <path d="M308 667V739"/>
+    <path d="M308 813V933"/>
+    <path d="M398 425H560"/>
+    <path d="M640 463V780H395"/>
+  </g>
+
+  <g font-family="Arial, 'Microsoft YaHei', sans-serif" text-anchor="middle" fill="#33383f">
+    <rect x="230" y="52" width="156" height="80" rx="38" fill="#fff" stroke="#30343a" stroke-width="3"/>
+    <text x="308" y="101" font-size="22">开始</text>
+
+    <rect x="228" y="212" width="160" height="74" fill="#ffffca" stroke="#30343a" stroke-width="3"/>
+    <text x="308" y="257" font-size="20">智能排产</text>
+
+    <path d="M308 367L398 425L308 482L218 425Z" fill="#fff0dc" stroke="#30343a" stroke-width="3"/>
+    <text x="308" y="418" font-size="18">
+      <tspan x="308" dy="0">是否输入生产</tspan>
+      <tspan x="308" dy="24">模式</tspan>
+    </text>
+
+    <rect x="560" y="387" width="160" height="76" fill="#ffffca" stroke="#30343a" stroke-width="3"/>
+    <text x="640" y="418" font-size="18">
+      <tspan x="640" dy="0">输入批次、批</tspan>
+      <tspan x="640" dy="24">次时间</tspan>
+    </text>
+
+    <rect x="228" y="594" width="160" height="73" fill="#ffffca" stroke="#30343a" stroke-width="3"/>
+    <text x="308" y="625" font-size="17">
+      <tspan x="308" dy="0">按默认批次条</tspan>
+      <tspan x="308" dy="23">件进行排产</tspan>
+    </text>
+
+    <rect x="225" y="740" width="166" height="73" fill="#ffffca" stroke="#30343a" stroke-width="3"/>
+    <text x="308" y="784" font-size="18">排产计划确认</text>
+
+    <rect x="228" y="934" width="160" height="75" fill="#ffffca" stroke="#30343a" stroke-width="3"/>
+    <text x="308" y="980" font-size="20">生成成功</text>
+  </g>
+
+  <text x="308" y="535" text-anchor="middle" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="18" fill="#33383f">否</text>
+</svg>

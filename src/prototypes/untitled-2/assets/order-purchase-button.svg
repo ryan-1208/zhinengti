@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="180" height="80" viewBox="0 0 180 80" role="img" aria-labelledby="title desc">
+  <title id="title">订单采购按钮</title>
+  <desc id="desc">深蓝渐变六边形按钮，文字为订单采购</desc>
+  <defs>
+    <linearGradient id="buttonGradient" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#17345f"/>
+      <stop offset="1" stop-color="#101d45"/>
+    </linearGradient>
+    <filter id="glow" x="-30%" y="-40%" width="160%" height="180%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <path d="M14 1H166L179 40L166 79H14L1 40Z" fill="url(#buttonGradient)" stroke="#2b699f"/>
+  <text x="90" y="51" fill="#fff" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="27" font-weight="700" text-anchor="middle" filter="url(#glow)">订单采购</text>
+</svg>

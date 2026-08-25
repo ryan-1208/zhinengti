@@ -1,0 +1,184 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "path": "/var/folders/_2/2s5f87z91d3c91vwy3jphn4w0000gn/T/codex-clipboard-fe9ce672-2f88-48ce-8b3c-3b172a7600d2.png",
+    "sha256": "67768b71a96a10b5c5b521a3101551f3aade039dc9bcda09a4bc715444af8fdc",
+    "width": 2916,
+    "height": 1564,
+    "viewport": {
+      "width": 2916,
+      "height": 1564,
+      "deviceScaleFactor": 1
+    }
+  },
+  "elements": [
+    {
+      "id": "work-order-detail-page",
+      "kind": "page",
+      "sourceBBox": {
+        "x": 0,
+        "y": 0,
+        "width": 2916,
+        "height": 1564
+      },
+      "targetBBox": {
+        "x": 0,
+        "y": 0,
+        "width": 2916,
+        "height": 1564
+      },
+      "representation": "flatten-in-page",
+      "candidates": [],
+      "selectedCandidateId": null,
+      "specElementId": "work-order-detail-stage",
+      "reactTarget": "WorkOrderDetailPage"
+    },
+    {
+      "id": "work-order-detail-sidebar",
+      "kind": "navigation",
+      "sourceBBox": {
+        "x": 0,
+        "y": 0,
+        "width": 338,
+        "height": 1564
+      },
+      "targetBBox": {
+        "x": 0,
+        "y": 0,
+        "width": 338,
+        "height": 1564
+      },
+      "representation": "html",
+      "candidates": [],
+      "selectedCandidateId": null,
+      "specElementId": "work-order-detail-sidebar",
+      "reactTarget": "WorkOrderDetailPage .work-order-sidebar"
+    },
+    {
+      "id": "work-order-detail-header",
+      "kind": "header",
+      "sourceBBox": {
+        "x": 338,
+        "y": 0,
+        "width": 2578,
+        "height": 133
+      },
+      "targetBBox": {
+        "x": 338,
+        "y": 0,
+        "width": 2578,
+        "height": 133
+      },
+      "representation": "html",
+      "candidates": [],
+      "selectedCandidateId": null,
+      "specElementId": "work-order-detail-header",
+      "reactTarget": "WorkOrderDetailPage .work-order-header"
+    },
+    {
+      "id": "work-order-detail-canteen-mark",
+      "kind": "brand-mark",
+      "sourceBBox": {
+        "x": 2810,
+        "y": 0,
+        "width": 68,
+        "height": 76
+      },
+      "targetBBox": {
+        "x": 2810,
+        "y": 0,
+        "width": 68,
+        "height": 76
+      },
+      "representation": "svg",
+      "candidates": [],
+      "selectedCandidateId": null,
+      "specElementId": "work-order-detail-canteen-mark",
+      "reactTarget": "WorkOrderDetailPage .canteen-mark"
+    },
+    {
+      "id": "work-order-detail-summary",
+      "kind": "details",
+      "sourceBBox": {
+        "x": 370,
+        "y": 155,
+        "width": 2490,
+        "height": 293
+      },
+      "targetBBox": {
+        "x": 370,
+        "y": 155,
+        "width": 2490,
+        "height": 293
+      },
+      "representation": "html",
+      "candidates": [],
+      "selectedCandidateId": null,
+      "specElementId": "work-order-detail-summary",
+      "reactTarget": "WorkOrderDetailPage .work-order-summary"
+    },
+    {
+      "id": "work-order-detail-tabs",
+      "kind": "tabs",
+      "sourceBBox": {
+        "x": 370,
+        "y": 480,
+        "width": 2490,
+        "height": 61
+      },
+      "targetBBox": {
+        "x": 370,
+        "y": 480,
+        "width": 2490,
+        "height": 61
+      },
+      "representation": "html",
+      "candidates": [],
+      "selectedCandidateId": null,
+      "specElementId": "work-order-detail-tabs",
+      "reactTarget": "WorkOrderDetailPage .detail-tabs"
+    },
+    {
+      "id": "work-order-detail-table",
+      "kind": "table",
+      "sourceBBox": {
+        "x": 370,
+        "y": 559,
+        "width": 2490,
+        "height": 240
+      },
+      "targetBBox": {
+        "x": 370,
+        "y": 559,
+        "width": 2490,
+        "height": 240
+      },
+      "representation": "html",
+      "candidates": [],
+      "selectedCandidateId": null,
+      "specElementId": "work-order-detail-table",
+      "reactTarget": "WorkOrderDetailPage .detail-table"
+    },
+    {
+      "id": "work-order-detail-close",
+      "kind": "button",
+      "sourceBBox": {
+        "x": 2734,
+        "y": 1493,
+        "width": 124,
+        "height": 55
+      },
+      "targetBBox": {
+        "x": 2734,
+        "y": 1493,
+        "width": 124,
+        "height": 55
+      },
+      "representation": "html",
+      "candidates": [],
+      "selectedCandidateId": null,
+      "specElementId": "work-order-detail-close",
+      "reactTarget": "WorkOrderDetailPage .close-button"
+    }
+  ]
+}

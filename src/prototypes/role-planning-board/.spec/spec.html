@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>岗位规划看板 · 主规格</title>
+  <style>
+    :root {
+      font-family:
+        ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+      --brand: #008f5d;
+      --brand-ink: #007a50;
+      --brand-soft: #e6f5ef;
+      --brand-surface: #f2faf7;
+      --brand-border: #b7ddcf;
+      --text: #222832;
+      --text-secondary: #4b5565;
+      --text-muted: #6f7888;
+      --text-placeholder: #8b94a3;
+      color: var(--text);
+      background: #f5f7fb;
+      scrollbar-gutter: stable;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 32px 20px 64px;
+    }
+
+    .shell {
+      display: grid;
+      grid-template-columns: 220px minmax(0, 1fr);
+      gap: 24px;
+      width: min(1200px, 100%);
+      margin: 0 auto;
+      align-items: start;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 32px;
+      padding: 18px 14px;
+      border: 1px solid #dfe4ee;
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .sidebar-title {
+      margin: 0 8px 10px;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .page-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .page-nav button {
+      width: 100%;
+      padding: 8px 10px;
+      border: 0;
+      border-radius: 8px;
+      color: var(--text-secondary);
+      background: transparent;
+      font: inherit;
+      font-size: 13px;
+      line-height: 1.45;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .page-nav button:hover,
+    .page-nav button[aria-current="page"] {
+      color: var(--brand-ink);
+      background: var(--brand-soft);
+    }
+
+    .page-nav button[aria-current="page"] { font-weight: 600; }
+
+    main {
+      min-width: 0;
+      padding: 40px;
+      border: 1px solid #dfe4ee;
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 0 4px 16px rgb(30 45 75 / 6%);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 32px;
+      line-height: 1.3;
+    }
+
+    h2 {
+      margin: 44px 0 20px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e7eaf0;
+      font-size: 21px;
+      line-height: 1.55;
+    }
+
+    h3 {
+      margin: 28px 0 12px;
+      font-size: 17px;
+      line-height: 1.5;
+    }
+
+    p,
+    li {
+      font-size: 15px;
+      line-height: 2;
+    }
+
+    p { margin: 20px 0; }
+
+    td,
+    th {
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    .definition {
+      margin: 16px 0 0;
+      padding: 14px 16px;
+      border-left: 3px solid var(--brand);
+      color: var(--text-secondary);
+      background: var(--brand-surface);
+    }
+
+    .hint { color: var(--text-muted); }
+
+    ul {
+      margin: 10px 0 20px;
+      padding-left: 22px;
+    }
+
+    .placeholder-list { padding-left: 0; }
+
+    .placeholder-list li {
+      list-style: none;
+      color: var(--text-placeholder);
+    }
+
+    .placeholder-list li::before {
+      margin-right: 8px;
+      color: #b2bac6;
+      content: "—";
+    }
+
+    table {
+      width: 100%;
+      margin-top: 14px;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      min-width: 120px;
+      padding: 10px 12px;
+      border: 1px solid #dfe4ee;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th { background: #f6f8fb; }
+
+    td:empty::after {
+      content: "待补充";
+      color: var(--text-placeholder);
+    }
+
+    code {
+      padding: 2px 5px;
+      border-radius: 5px;
+      background: #eef1f6;
+    }
+
+    .mermaid {
+      display: flex;
+      justify-content: center;
+      margin: 12px 0 0;
+      padding: 16px;
+      overflow-x: auto;
+      border: 1px solid var(--brand-border);
+      border-radius: 8px;
+      background: var(--brand-surface);
+    }
+
+    .mermaid svg {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .spec-page[hidden] { display: none; }
+
+    @media (max-width: 720px) {
+      body { padding: 0 8px 40px; }
+      .shell { display: block; }
+
+      .sidebar {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        margin: 0 -8px 12px;
+        padding: 10px 8px;
+        border-width: 0 0 1px;
+        border-radius: 0;
+      }
+
+      .sidebar-title {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+      }
+
+      .page-nav {
+        flex-direction: row;
+        gap: 6px;
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+
+      .page-nav::-webkit-scrollbar { display: none; }
+
+      .page-nav button {
+        width: auto;
+        flex: 0 0 auto;
+        white-space: nowrap;
+      }
+
+      main {
+        padding: 24px 18px;
+        border-radius: 8px;
+      }
+
+      .table-wrap { overflow: visible; }
+
+      table,
+      tbody,
+      tr,
+      td {
+        display: block;
+        width: 100%;
+      }
+
+      thead { display: none; }
+
+      tbody {
+        display: grid;
+        gap: 12px;
+      }
+
+      tr {
+        overflow: hidden;
+        border: 1px solid #dfe4ee;
+        border-radius: 6px;
+        background: #fff;
+      }
+
+      td {
+        display: grid;
+        grid-template-columns: minmax(96px, 36%) minmax(0, 1fr);
+        gap: 12px;
+        min-width: 0;
+        padding: 10px 12px;
+        border: 0;
+        border-bottom: 1px solid #e7eaf0;
+      }
+
+      td:last-child { border-bottom: 0; }
+
+      td::before {
+        content: attr(data-label);
+        color: var(--text-secondary);
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 1.5;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <p class="sidebar-title">主规格</p>
+      <nav class="page-nav" aria-label="规格文档页面">
+        <button type="button" data-page-target="overview" aria-current="page">方案概览</button>
+      </nav>
+    </aside>
+
+    <main>
+      <article class="spec-page" data-spec-page="overview">
+        <h1>岗位规划看板 · 主规格</h1>
+        <p class="definition">本文档是“人机协同岗位规划与人员预控”核心闭环原型的确认载体。方案已确认，页面已按本规格实现；后续评审只更新这一份规格并保持与原型双向同步。</p>
+
+        <section id="current-plan">
+          <h2>当前方案</h2>
+          <p class="hint">本轮只实现岗位规划看板的核心闭环，其他生产管理模块作为导航入口保留。</p>
+          <ul>
+            <li><strong>原型意图：</strong>让项目经理或计划员从开餐节点倒推出备餐计划，快速判断槽位需求、人员缺口和受影响工单。</li>
+            <li><strong>使用场景：</strong>午餐 11:00 开餐，设备线 09:40 到位，计划员配置 4 名匿名备餐槽位并发布当日看板。</li>
+            <li><strong>核心体验：</strong>先看计划是否可执行，再进入时间轴确认 P1–P4 的任务；风险可追溯到参数、工艺步骤和工单。</li>
+          </ul>
+        </section>
+
+        <section id="facts-inputs">
+          <h2>事实与输入</h2>
+          <h3>用户确认事实</h3>
+          <ul>
+            <li>目标用户：项目经理/生产计划员、现场班组长、现场备餐/烹饪人员、工艺管理员。</li>
+            <li>本轮范围：岗位规划看板核心闭环，不扩展为五个完整业务模块。</li>
+            <li>业务主线：选择日期餐段 → 输入人数与关键节点 → 生成倒排计划 → 检查风险 → 发布看板 → 滚动修正。</li>
+            <li>公共看板只展示 P1、P2 等匿名槽位，不展示姓名、手机号或其他个人信息。</li>
+            <li>用户已确认设计基底为 <code>src/themes/sapgoodenergy/DESIGN.md</code>。</li>
+          </ul>
+          <h3>参考资料</h3>
+          <ul>
+            <li><code>src/resources/prd/人机协同岗位规划与人员预控PRD.md</code>：产品目标、数据对象、业务规则和验收口径。</li>
+            <li><code>src/themes/sapgoodenergy/theme.json</code>：主题色板、字体和工业/B2B 标签。</li>
+            <li><code>src/themes/sapgoodenergy/DESIGN.md</code>：本原型的视觉基底。</li>
+          </ul>
+          <h3>当前假设</h3>
+          <ul>
+            <li>原型使用 PRD 的 40 道菜示例口径，展示可理解的模拟数据，不接入真实生产接口。</li>
+            <li>“生成倒排计划”以总主动工时、备餐人数、设备线到位时间和交接缓冲演示计算结果；具体算法以后端规则为准。</li>
+            <li>重新计算、发布、顺延和方案模拟在原型内以可见状态变化呈现，不持久化真实数据。</li>
+            <li>页面默认展示“存在风险”状态，以便评审缺口、冲突和详情路径；同时保留正常状态表达。</li>
+          </ul>
+        </section>
+
+        <section id="prototype-scope">
+          <h2>原型范围</h2>
+          <h3>本次呈现</h3>
+          <ul>
+            <li>岗位规划看板：日期/餐段/区域/岗位/工单/风险筛选。</li>
+            <li>参数配置区：开餐时间、设备线到位时间、备餐人数、交接缓冲、异常缓冲。</li>
+            <li>计算摘要：总主动工时、平均主动工时、备餐开始、峰值需求、可用槽位、缺口。</li>
+            <li>时间 × 匿名槽位时间轴：P1–P4 任务卡、15 分钟汇总、状态和区域。</li>
+            <li>风险侧栏/抽屉：缺口时段、缺口岗位、受影响工单、预计延误和建议方向。</li>
+            <li>任务详情抽屉：操作、工单、菜品、标准工时、时间、槽位和计算来源。</li>
+            <li>方案模拟：调整人数、缓冲或设备数量后显示结果差异，不自动执行调班。</li>
+            <li>生产管理导航入口：生产工艺、生产工单、岗位用工标准、人员槽位配置，点击后保留当前页并提示“本轮原型未展开”。</li>
+          </ul>
+          <h3>本次不呈现</h3>
+          <ul>
+            <li>工资、绩效、考勤、自动调班和真实员工姓名映射的完整后台。</li>
+            <li>生产工艺、生产工单、岗位用工标准四个模块的完整页面。</li>
+            <li>真实设备连接、真实工单状态同步和后端计算服务。</li>
+            <li>改变现有生产工单状态定义或自动优化菜单组合。</li>
+          </ul>
+        </section>
+
+        <section id="pages-content">
+          <h2>页面与内容方案</h2>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>页面/视图</th><th>页面作用</th><th>主要模块与内容</th><th>示例数据或素材</th><th>与其他页面的关系</th></tr></thead>
+              <tbody>
+                <tr><td data-label="页面/视图">岗位规划看板</td><td data-label="页面作用">当日计划总览和现场执行入口</td><td data-label="主要模块与内容">左侧导航、顶部筛选、指标卡、时间轴、需求汇总、风险侧栏、发布与重新计算</td><td data-label="示例数据或素材">11:00 午餐；09:40 设备线到位；4 个槽位；188 分钟主动工时；P1–P4</td><td data-label="与其他页面的关系">本轮唯一主页面，模块入口暂不展开</td></tr>
+                <tr><td data-label="页面/视图">参数配置抽屉</td><td data-label="页面作用">修改倒排输入并触发重算</td><td data-label="主要模块与内容">关键时间节点、人数、缓冲、设备数量；未锁定任务覆盖提示</td><td data-label="示例数据或素材">备餐人数 4；交接缓冲 15 分钟；异常缓冲 10 分钟</td><td data-label="与看板关系">从看板打开，保存后回到摘要和时间轴</td></tr>
+                <tr><td data-label="页面/视图">任务详情抽屉</td><td data-label="页面作用">解释单个任务如何生成</td><td data-label="主要模块与内容">任务状态、岗位、区域、菜品、工单、起止时间、标准工时、计算来源</td><td data-label="示例数据或素材">P2｜水产拉油｜09:05–09:25｜水产区</td><td data-label="与看板关系">点击时间轴任务卡打开</td></tr>
+                <tr><td data-label="页面/视图">风险详情 / 方案模拟</td><td data-label="页面作用">处理缺口、冲突和延误预案</td><td data-label="主要模块与内容">风险级别、影响范围、预计延误、增加槽位/错峰/备用设备等模拟选项</td><td data-label="示例数据或素材">09:25–09:40 缺 1 个转运槽位，影响 2 张工单</td><td data-label="与看板关系">点击风险指标或风险条目打开</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="interaction-states">
+          <h2>交互与状态方案</h2>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>对象/场景</th><th>前置状态</th><th>用户操作</th><th>原型表现</th><th>后续状态</th></tr></thead>
+              <tbody>
+                <tr><td data-label="对象/场景">生成倒排计划</td><td data-label="前置状态">未计算或参数已修改</td><td data-label="用户操作">点击“生成倒排计划”</td><td data-label="原型表现">按钮加载反馈，更新摘要、时间轴和风险；显示计算版本</td><td data-label="后续状态">计算成功 / 存在风险</td></tr>
+                <tr><td data-label="对象/场景">存在人员缺口</td><td data-label="前置状态">需求槽位大于可用槽位</td><td data-label="用户操作">点击缺口指标或风险条目</td><td data-label="原型表现">打开风险详情，展示时段、岗位、受影响工单和建议</td><td data-label="后续状态">查看方案模拟</td></tr>
+                <tr><td data-label="对象/场景">任务卡</td><td data-label="前置状态">看板已生成</td><td data-label="用户操作">点击任一 P1–P4 任务卡</td><td data-label="原型表现">打开任务详情抽屉；公共视图不出现姓名</td><td data-label="后续状态">关闭抽屉或进入关联风险</td></tr>
+                <tr><td data-label="对象/场景">方案模拟</td><td data-label="前置状态">看板存在风险</td><td data-label="用户操作">调整人数、设备或缓冲并点击“试算”</td><td data-label="原型表现">并列展示当前/模拟缺口与备餐开始时间差异</td><td data-label="后续状态">保留模拟 / 返回原方案</td></tr>
+                <tr><td data-label="对象/场景">生产延误</td><td data-label="前置状态">存在已开始或已完成任务</td><td data-label="用户操作">点击“模拟工单延误”</td><td data-label="原型表现">只顺延未开始任务，标出后续冲突；已完成任务保持不变</td><td data-label="后续状态">风险刷新 / 重新计算</td></tr>
+                <tr><td data-label="对象/场景">发布看板</td><td data-label="前置状态">计算成功或存在风险</td><td data-label="用户操作">点击“发布岗位规划”</td><td data-label="原型表现">显示发布成功状态与发布时间；风险仍保留</td><td data-label="后续状态">已发布 / 可滚动修正</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="hint"><strong>空状态：</strong>无计划时提示先选择日期和餐段；<strong>数据过期：</strong>显示上次计算时间并提供重新计算；<strong>计算失败：</strong>指出缺失工时、批次容量、技能不匹配或时间重叠；<strong>权限：</strong>公共看板只显示槽位标记，姓名映射入口不在本轮公开页面中。</p>
+          <pre id="prototype-review-flow" class="mermaid">flowchart LR
+  A[选择日期与餐段] --> B[配置人数与节点]
+  B --> C[生成倒排计划]
+  C --> D{依赖与槽位是否满足}
+  D -- 是 --> E[查看时间轴并发布]
+  D -- 否 --> F[查看风险与方案模拟]
+  F --> B
+  E --> G[生产中滚动修正]
+  G --> H[顺延未开始任务并刷新风险]</pre>
+        </section>
+
+        <section id="design-basis">
+          <h2>设计基底与原型特有调整</h2>
+          <ul>
+            <li>采用的 <code>DESIGN.md</code>：<code>src/themes/sapgoodenergy/DESIGN.md</code></li>
+            <li>继承方式：沿用黑白灰浅色工业/B2B 基底，以橙色表达操作强调和紧急风险。</li>
+            <li><strong>首屏目标：</strong>先回答“今天是否可执行”，主操作为“生成倒排计划”和“发布岗位规划”。</li>
+            <li><strong>信息层级：</strong>计算摘要 → 风险判断 → 槽位时间轴 → 任务详情 / 方案模拟。</li>
+            <li><strong>布局模式：</strong>左侧导航 + 顶部筛选/操作 + 主时间轴 + 右侧风险摘要；详情使用抽屉承载。</li>
+            <li><strong>交互路径：</strong>高频计划员以快速重算和筛选为主，班组长以当前槽位任务和风险详情为主。</li>
+            <li><strong>数据呈现：</strong>底层精确到分钟，主看板按 15 分钟汇总；卡片必须同时显示槽位、操作、岗位、区域和状态。</li>
+            <li><strong>状态表达：</strong>绿色满足、黄色紧张、红色缺口/冲突、灰色等待；风险色只做功能提示，不做装饰。</li>
+            <li><strong>响应式：</strong>桌面端保留完整时间轴；移动端将指标、风险和槽位任务改为纵向滚动卡片。</li>
+          </ul>
+          <p class="hint">以上是基于已确认主题的本原型调整，不改写主题本身。</p>
+        </section>
+
+        <section id="acceptance">
+          <h2>验收口径</h2>
+          <ul>
+            <li>输入 11:00 开餐、09:40 设备线到位、4 名备餐人员和示例工时后，能展示总主动工时、平均主动工时和备餐开始时间。</li>
+            <li>时间轴可按 15 分钟看到 P1–P4 的任务，任务卡包含岗位、区域、关联菜品/工单和状态，不出现姓名。</li>
+            <li>缺口详情能说明缺口时段、岗位、人数、受影响工单和建议调整方向；不能用平均人数掩盖瞬时峰值。</li>
+            <li>点击任务卡能追溯到步骤工时、关键节点、槽位和计算来源；等待状态与主动工作有明确区分。</li>
+            <li>模拟工单延误时，只顺延未开始任务；已完成任务不被修改，并能刷新冲突和风险。</li>
+            <li>筛选、重算、发布、任务详情、风险详情和方案模拟均有可见反馈；无计划和计算失败状态可理解。</li>
+            <li>桌面端 1440×900 与移动端 393×852 均可完成核心路径：配置 → 生成 → 查看风险 → 查看任务。</li>
+          </ul>
+        </section>
+
+        <section id="implementation-sync">
+          <h2>实现同步</h2>
+          <ul>
+            <li>入口：<code>src/prototypes/role-planning-board/index.tsx</code>，已实现岗位规划主页面、参数配置、任务详情、风险详情和方案模拟抽屉。</li>
+            <li>样式：<code>src/prototypes/role-planning-board/style.css</code>，已实现 SAPGOODENERGY 黑白灰浅色基底、橙色强调、语义风险色和桌面/移动布局。</li>
+            <li>已实现交互：日期/餐段示例筛选、全部/风险/交接过滤、重新计算、发布、模拟工单延误、任务卡详情和方案试算。</li>
+            <li>当前数据为 PRD 示例数据，未接入真实后端、设备或人员姓名映射。</li>
+          </ul>
+        </section>
+
+        <section id="open-questions">
+          <h2>当前待确认事项</h2>
+          <p class="hint">当前没有阻断实现的待确认事项。</p>
+          <ul><li>无</li></ul>
+        </section>
+
+        <section id="decision-history">
+          <h2>用户重要决策与变更</h2>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>日期</th><th>用户决策或变更</th><th>对当前原型的影响</th></tr></thead>
+              <tbody>
+                <tr><td data-label="日期">2026-08-20</td><td data-label="用户决策或变更">选择核心闭环范围</td><td data-label="对当前原型的影响">只实现岗位规划看板，其他模块作为导航入口。</td></tr>
+                <tr><td data-label="日期">2026-08-20</td><td data-label="用户决策或变更">选择 SAPGOODENERGY 设计基底</td><td data-label="对当前原型的影响">采用工业/B2B 浅色视觉，橙色用于操作与风险强调。</td></tr>
+                <tr><td data-label="日期">2026-08-20</td><td data-label="用户决策或变更">选择 HTML 主规格</td><td data-label="对当前原型的影响">规格固定存放于当前原型目录的 <code>.spec/spec.html</code>。</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="hint">只记录会改变页面范围、结构、流程、内容口径或设计表达的重要决定，不保存完整讨论过程。</p>
+        </section>
+      </article>
+    </main>
+  </div>
+
+  <script>
+    const navItems = [...document.querySelectorAll('[data-page-target]')];
+    const pages = [...document.querySelectorAll('[data-spec-page]')];
+
+    const showPage = (pageId) => {
+      for (const navItem of navItems) {
+        const isCurrent = navItem.dataset.pageTarget === pageId;
+        if (isCurrent) {
+          navItem.setAttribute('aria-current', 'page');
+        } else {
+          navItem.removeAttribute('aria-current');
+        }
+      }
+
+      for (const page of pages) {
+        page.hidden = page.dataset.specPage !== pageId;
+      }
+    };
+
+    for (const navItem of navItems) {
+      navItem.addEventListener('click', () => showPage(navItem.dataset.pageTarget));
+    }
+  </script>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#e6f5ef',
+        primaryTextColor: '#222832',
+        primaryBorderColor: '#008f5d',
+        lineColor: '#008f5d',
+        secondaryColor: '#f2faf7',
+        tertiaryColor: '#ffffff',
+        edgeLabelBackground: '#ffffff',
+        fontFamily: 'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+      },
+    });
+  </script>
+</body>
+</html>

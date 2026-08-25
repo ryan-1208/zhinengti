@@ -1,0 +1,141 @@
+{
+  "sitemap": [
+    {
+      "id": "i5z89l",
+      "pageName": "语音菜单",
+      "type": "Wireframe",
+      "url": "语音菜单.html",
+      "children": [
+        {
+          "id": "sybauo",
+          "pageName": "语音生成菜单",
+          "type": "Wireframe",
+          "url": "语音生成菜单.html"
+        },
+        {
+          "id": "268a0j",
+          "pageName": "查看菜单",
+          "type": "Wireframe",
+          "url": "查看菜单.html"
+        }
+      ]
+    },
+    {
+      "id": "mdeym0",
+      "pageName": "智能排产",
+      "type": "Wireframe",
+      "url": "智能排产.html"
+    },
+    {
+      "id": "8jw2vu",
+      "pageName": "订货采购",
+      "type": "Wireframe",
+      "url": "订货采购.html",
+      "children": [
+        {
+          "id": "5ldspe",
+          "pageName": "采购清单",
+          "type": "Wireframe",
+          "url": "采购清单.html"
+        },
+        {
+          "id": "06wu4k",
+          "pageName": "确认下单",
+          "type": "Wireframe",
+          "url": "确认下单.html"
+        },
+        {
+          "id": "4780ql",
+          "pageName": "下单成功",
+          "type": "Wireframe",
+          "url": "下单成功.html"
+        }
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "id": "sybauo",
+      "pageName": "语音生成菜单",
+      "type": "Wireframe",
+      "url": "语音生成菜单.html"
+    },
+    {
+      "id": "268a0j",
+      "pageName": "查看菜单",
+      "type": "Wireframe",
+      "url": "查看菜单.html"
+    },
+    {
+      "id": "i5z89l",
+      "pageName": "语音菜单",
+      "type": "Wireframe",
+      "url": "语音菜单.html",
+      "children": [
+        {
+          "id": "sybauo",
+          "pageName": "语音生成菜单",
+          "type": "Wireframe",
+          "url": "语音生成菜单.html"
+        },
+        {
+          "id": "268a0j",
+          "pageName": "查看菜单",
+          "type": "Wireframe",
+          "url": "查看菜单.html"
+        }
+      ]
+    },
+    {
+      "id": "mdeym0",
+      "pageName": "智能排产",
+      "type": "Wireframe",
+      "url": "智能排产.html"
+    },
+    {
+      "id": "5ldspe",
+      "pageName": "采购清单",
+      "type": "Wireframe",
+      "url": "采购清单.html"
+    },
+    {
+      "id": "06wu4k",
+      "pageName": "确认下单",
+      "type": "Wireframe",
+      "url": "确认下单.html"
+    },
+    {
+      "id": "4780ql",
+      "pageName": "下单成功",
+      "type": "Wireframe",
+      "url": "下单成功.html"
+    },
+    {
+      "id": "8jw2vu",
+      "pageName": "订货采购",
+      "type": "Wireframe",
+      "url": "订货采购.html",
+      "children": [
+        {
+          "id": "5ldspe",
+          "pageName": "采购清单",
+          "type": "Wireframe",
+          "url": "采购清单.html"
+        },
+        {
+          "id": "06wu4k",
+          "pageName": "确认下单",
+          "type": "Wireframe",
+          "url": "确认下单.html"
+        },
+        {
+          "id": "4780ql",
+          "pageName": "下单成功",
+          "type": "Wireframe",
+          "url": "下单成功.html"
+        }
+      ]
+    }
+  ],
+  "logo": ""
+}

@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 3,
+  "kind": "prototype-edit-comments",
+  "resource": {
+    "id": "purchase-list-replica",
+    "targetPath": "prototypes/purchase-list-replica",
+    "filePath": ".axhub/make/comments/4f5b8e4237de3f3c77c4651235b39f1c6145734b35ad4477a83f7f79f8e2d7e6.json"
+  },
+  "comments": [],
+  "images": []
+}

@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "path": ".spec/reconstruction/source-schedule-once.png",
+    "sha256": "372b79673444217c930d00cb39191817a482aee70ecb20b5f7db66836077d945",
+    "viewport": { "width": 1862, "height": 940, "dpr": 1 }
+  },
+  "references": [
+    {
+      "id": "prep-row-replacement",
+      "path": ".spec/reconstruction/source-prep-row-replacement.png",
+      "sha256": "eb0c1575f95bb61eb5f4296865c0602389dfe2e3b7ce64c49af29fa6db3dc862",
+      "viewport": { "width": 2494, "height": 470, "dpr": 1 },
+      "intent": "用当天预制横向排产内容替换第一张图的批次分布"
+    }
+  ],
+  "elements": [
+    {
+      "id": "schedule-once-page",
+      "bbox": { "x": 0, "y": 0, "width": 1862, "height": 940 },
+      "representation": "flatten-in-page",
+      "source": ".spec/reconstruction/source-schedule-once.png",
+      "specElementId": "schedule-once-reconstruction .visual-stage",
+      "reactTarget": "ScheduleOncePage"
+    },
+    {
+      "id": "wake-card",
+      "bbox": { "x": 0, "y": 0, "width": 398, "height": 130 },
+      "representation": "html",
+      "source": "assets/wake-card-reference.png",
+      "specElementId": "schedule-once-reconstruction .wake-overlay",
+      "reactTarget": "ScheduleOncePage .wake-card"
+    }
+  ]
+}

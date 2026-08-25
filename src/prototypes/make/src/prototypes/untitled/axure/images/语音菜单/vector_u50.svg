@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="90px" height="90px" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <pattern id="BGPattern" patternUnits="userSpaceOnUse" alignment="0 0" imageRepeat="None" />
+    <mask fill="white" id="Clip18">
+      <path d="M 90 45  C 90 69.84  69.84 90  45 90  C 20.16 90  0 69.84  0 45  C 0 20.16  20.16 0  45 0  C 69.84 0  90 20.16  90 45  Z M 45 81.81  C 65.34 81.81  81.81 65.34  81.81 45  C 81.81 24.660000000000004  65.34 8.19  45 8.19  C 24.660000000000004 8.19  8.19 24.660000000000004  8.19 45  C 8.19 65.34  24.660000000000004 81.81  45 81.81  Z " fill-rule="evenodd" />
+    </mask>
+  </defs>
+  <g>
+    <path d="M 90 45  C 90 69.84  69.84 90  45 90  C 20.16 90  0 69.84  0 45  C 0 20.16  20.16 0  45 0  C 69.84 0  90 20.16  90 45  Z M 45 81.81  C 65.34 81.81  81.81 65.34  81.81 45  C 81.81 24.660000000000004  65.34 8.19  45 8.19  C 24.660000000000004 8.19  8.19 24.660000000000004  8.19 45  C 8.19 65.34  24.660000000000004 81.81  45 81.81  Z " fill-rule="nonzero" fill="rgba(236, 236, 236, 1)" stroke="none" class="fill" />
+    <path d="M 90 45  C 90 69.84  69.84 90  45 90  C 20.16 90  0 69.84  0 45  C 0 20.16  20.16 0  45 0  C 69.84 0  90 20.16  90 45  Z " stroke-width="0" stroke-dasharray="0" stroke="rgba(121, 121, 121, 1)" fill="none" class="stroke" mask="url(#Clip18)" />
+    <path d="M 45 81.81  C 65.34 81.81  81.81 65.34  81.81 45  C 81.81 24.660000000000004  65.34 8.19  45 8.19  C 24.660000000000004 8.19  8.19 24.660000000000004  8.19 45  C 8.19 65.34  24.660000000000004 81.81  45 81.81  Z " stroke-width="0" stroke-dasharray="0" stroke="rgba(121, 121, 121, 1)" fill="none" class="stroke" mask="url(#Clip18)" />
+  </g>
+</svg>

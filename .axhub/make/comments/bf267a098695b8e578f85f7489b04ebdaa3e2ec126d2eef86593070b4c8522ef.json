@@ -1,0 +1,237 @@
+{
+  "schemaVersion": 3,
+  "kind": "prototype-edit-comments",
+  "resource": {
+    "id": "untitled-5",
+    "targetPath": "prototypes/untitled-5",
+    "filePath": ".axhub/make/comments/bf267a098695b8e578f85f7489b04ebdaa3e2ec126d2eef86593070b4c8522ef.json"
+  },
+  "comments": [
+    {
+      "label": "img[alt=\"页面流程图：顶部导航连接每周菜单、智能排产和订货采购页面\"]",
+      "locator": {
+        "selectors": [
+          "[alt=\"页面流程图：顶部导航连接每周菜单、智能排产和订货采购页面\"]",
+          ".flow-image--wide",
+          ".flow-image.flow-image--wide",
+          "body > div > main > img:nth-of-type(2)",
+          "#root main > img:nth-of-type(2)"
+        ],
+        "fingerprint": "img|class=flow-image.flow-image--wide",
+        "path": [
+          0,
+          1,
+          0,
+          0,
+          3
+        ]
+      },
+      "marker": {
+        "clientX": 980,
+        "clientY": 282.1875,
+        "documentX": 980,
+        "documentY": 800.1875,
+        "xPercent": 50,
+        "y": 800.1875,
+        "isFixed": false,
+        "offsetX": 550,
+        "offsetY": 18,
+        "dirtySince": 1785850591927
+      },
+      "id": "b6210b34-8aeb-4b68-ba3e-1265e460743b",
+      "state": "completed",
+      "comment": "用图片替换原图",
+      "pageScope": "/prototypes/untitled-5",
+      "provider": "codex",
+      "requestId": "annotation-msepc5w7-2xe9m9",
+      "sessionId": "annotation-msepc5w7-2xe9m9",
+      "updatedAt": 1785850752749,
+      "message": "修改完成",
+      "code": null
+    },
+    {
+      "label": "h2#workflow-notes-title",
+      "locator": {
+        "selectors": [
+          "#workflow-notes-title",
+          "body > div > main > section > h2",
+          "#root main > section > h2"
+        ],
+        "fingerprint": "h2|id=workflow-notes-title|text=1.2 关键交互说明",
+        "path": [
+          0,
+          1,
+          0,
+          0,
+          4,
+          0
+        ]
+      },
+      "marker": {
+        "clientX": 502.5364685058594,
+        "clientY": 714.2083129882812,
+        "documentX": 502.5364685058594,
+        "documentY": 1687.5416259765625,
+        "xPercent": 25.639615740094868,
+        "y": 1687.5416259765625,
+        "isFixed": false,
+        "offsetX": 39.869781494140625,
+        "offsetY": 15.1666259765625,
+        "dirtySince": 1785850631329
+      },
+      "id": "b35e9cab-463e-4fb0-ba22-310d498530cc",
+      "state": "completed",
+      "comment": "改成 2.1 页面交互说明",
+      "pageScope": "/prototypes/untitled-5",
+      "provider": "codex",
+      "requestId": "annotation-msepg2e0-z1cxbz",
+      "sessionId": "annotation-msepg2e0-z1cxbz",
+      "updatedAt": 1785850910841,
+      "message": "修改完成",
+      "code": null
+    },
+    {
+      "label": "h1(\"2. 页面流程图\")",
+      "locator": {
+        "selectors": [
+          "body > div > main > header > h1",
+          "#root main > header > h1"
+        ],
+        "fingerprint": "h1|text=2. 页面流程图",
+        "path": [
+          0,
+          1,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "marker": {
+        "clientX": 801.8125,
+        "clientY": 43.671875,
+        "documentX": 801.8125,
+        "documentY": 43.671875,
+        "xPercent": 40.90880102040816,
+        "y": 43.671875,
+        "isFixed": false,
+        "offsetX": 12.8125,
+        "offsetY": 19.671875,
+        "dirtySince": 1785850620041
+      },
+      "id": "94d3d929-f7f7-4e01-b6b0-6aea151e4d6b",
+      "state": "completed",
+      "comment": "改成 1.业务流程图，  并且和 2.页面流程图的排版 位置对齐",
+      "pageScope": "/prototypes/untitled-5",
+      "provider": "codex",
+      "requestId": "annotation-msephv1f-kr8vwu",
+      "sessionId": "annotation-msephv1f-kr8vwu",
+      "updatedAt": 1785851018584,
+      "message": "修改完成",
+      "code": null
+    },
+    {
+      "label": "h2(\"2.页面流程图\")",
+      "locator": {
+        "selectors": [
+          "body > div > main > header > h2",
+          "#root main > header > h2"
+        ],
+        "fingerprint": "h2|text=2.页面流程图",
+        "path": [
+          0,
+          1,
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "marker": {
+        "clientX": 514.7135620117188,
+        "clientY": 71.95833587646484,
+        "documentX": 514.7135620117188,
+        "documentY": 71.95833587646484,
+        "xPercent": 26.260896021006058,
+        "y": 71.95833587646484,
+        "isFixed": false,
+        "offsetX": 84.71356201171875,
+        "offsetY": 6.958335876464844,
+        "dirtySince": 1785850946894
+      },
+      "id": "c9bb2a10-4ec7-492e-9da6-bfdc87966e6c",
+      "state": "editing",
+      "comment": "文字修改成 1.1 排产流程图\n",
+      "pageScope": "/prototypes/untitled-5",
+      "provider": "codex",
+      "requestId": "annotation-msepnbmh-pg71a5",
+      "sessionId": "annotation-msepnbmh-pg71a5",
+      "updatedAt": 1785851121042,
+      "message": "AI 编辑中",
+      "code": null
+    },
+    {
+      "label": "img[alt=\"页面流程图：顶部导航连接每周菜单、智能排产和订货采购页面\"]",
+      "locator": {
+        "selectors": [
+          "[alt=\"页面流程图：顶部导航连接每周菜单、智能排产和订货采购页面\"]",
+          ".flow-image--wide",
+          ".flow-image.flow-image--wide",
+          "body > div > main > img:nth-of-type(2)",
+          "#root main > img:nth-of-type(2)"
+        ],
+        "fingerprint": "img|class=flow-image.flow-image--wide",
+        "path": [
+          0,
+          1,
+          0,
+          0,
+          3
+        ]
+      },
+      "marker": {
+        "clientX": 821.265625,
+        "clientY": 386.7708435058594,
+        "documentX": 821.265625,
+        "documentY": 904.7708435058594,
+        "xPercent": 41.90130739795918,
+        "y": 904.7708435058594,
+        "isFixed": false,
+        "offsetX": 391.265625,
+        "offsetY": 122.58334350585938,
+        "dirtySince": 1785850589149
+      },
+      "id": "de57730b-0cac-48e4-b21e-e8cd0ec6eccd",
+      "state": "idle",
+      "pageScope": "/prototypes/untitled-5",
+      "provider": null,
+      "requestId": null,
+      "sessionId": null,
+      "updatedAt": null,
+      "message": null,
+      "code": null
+    }
+  ],
+  "images": [
+    {
+      "id": "917d18cc-d07c-46f3-8a8c-f915a2e5e46e",
+      "commentId": "b6210b34-8aeb-4b68-ba3e-1265e460743b",
+      "name": "image.png",
+      "mimeType": "image/png",
+      "size": 72157,
+      "createdAt": 1785850591926,
+      "pageScope": "/prototypes/untitled-5",
+      "assetPath": ".axhub/make/comment-assets/bf267a098695b8e578f85f7489b04ebdaa3e2ec126d2eef86593070b4c8522ef/917d18cc-d07c-46f3-8a8c-f915a2e5e46e.png"
+    },
+    {
+      "id": "2b19f76a-f499-4407-8377-18e71f4b9f8d",
+      "commentId": "de57730b-0cac-48e4-b21e-e8cd0ec6eccd",
+      "name": "image.png",
+      "mimeType": "image/png",
+      "size": 72157,
+      "createdAt": 1785850589149,
+      "pageScope": "/prototypes/untitled-5",
+      "assetPath": ".axhub/make/comment-assets/bf267a098695b8e578f85f7489b04ebdaa3e2ec126d2eef86593070b4c8522ef/2b19f76a-f499-4407-8377-18e71f4b9f8d.png"
+    }
+  ]
+}

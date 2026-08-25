@@ -1,0 +1,884 @@
+{
+  "version": 1,
+  "format": "axhub-published-source",
+  "sourceRoot": "source",
+  "entry": "index.tsx",
+  "files": [
+    {
+      "path": "axure/采购清单.html",
+      "kind": "source"
+    },
+    {
+      "path": "axure/查看菜单.html",
+      "kind": "source"
+    },
+    {
+      "path": "axure/订货采购.html",
+      "kind": "source"
+    },
+    {
+      "path": "axure/确认下单.html",
+      "kind": "source"
+    },
+    {
+      "path": "axure/下单成功.html",
+      "kind": "source"
+    },
+    {
+      "path": "axure/语音菜单.html",
+      "kind": "source"
+    },
+    {
+      "path": "axure/语音排产.html",
+      "kind": "source"
+    },
+    {
+      "path": "axure/语音生成菜单.html",
+      "kind": "source"
+    },
+    {
+      "path": "axure/智能排产.html",
+      "kind": "source"
+    },
+    {
+      "path": "axure/data/document.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/data/styles.css",
+      "kind": "source"
+    },
+    {
+      "path": "axure/files/采购清单/data.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/files/采购清单/styles.css",
+      "kind": "source"
+    },
+    {
+      "path": "axure/files/查看菜单/data.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/files/查看菜单/styles.css",
+      "kind": "source"
+    },
+    {
+      "path": "axure/files/订货采购/data.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/files/订货采购/styles.css",
+      "kind": "source"
+    },
+    {
+      "path": "axure/files/确认下单/data.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/files/确认下单/styles.css",
+      "kind": "source"
+    },
+    {
+      "path": "axure/files/下单成功/data.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/files/下单成功/styles.css",
+      "kind": "source"
+    },
+    {
+      "path": "axure/files/语音菜单/data.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/files/语音菜单/styles.css",
+      "kind": "source"
+    },
+    {
+      "path": "axure/files/语音排产/data.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/files/语音排产/styles.css",
+      "kind": "source"
+    },
+    {
+      "path": "axure/files/语音生成菜单/data.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/files/语音生成菜单/styles.css",
+      "kind": "source"
+    },
+    {
+      "path": "axure/files/智能排产/data.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/files/智能排产/styles.css",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/采购清单/u1852_div.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/采购清单/u1870_div.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/采购清单/u2154_div.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/查看菜单/u178_div.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/查看菜单/u180_div.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/查看菜单/u182_div.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/查看菜单/u184_div.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/查看菜单/u186_div.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/查看菜单/u188_div.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/查看菜单/u190_div.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/查看菜单/u192_div.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/查看菜单/u194_div.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/查看菜单/u196_div.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/查看菜单/u197_div.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/查看菜单/vector_u289.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/查看菜单/vector_u290.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/查看菜单/vector_u291.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/查看菜单/vector_u400.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/查看菜单/vector_u401.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/查看菜单/vector_u402.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/查看菜单/vector_u410.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/订货采购/u866_div.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/订货采购/u885_div.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/订货采购/u886_div.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/订货采购/vector_u869.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/订货采购/vector_u870.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/订货采购/vector_u917.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/订货采购/vector_u920.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/订货采购/vector_u923.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/订货采购/vector_u926.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/订货采购/vector_u930.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/确认下单/vector_u2215.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/确认下单/vector_u2218.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/确认下单/vector_u2235.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/确认下单/vector_u2247.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/下单成功/u3191_div.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/语音菜单/u124_div.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/语音菜单/u125_div.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/语音菜单/u129_div.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/语音菜单/u132_div.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/语音菜单/u133_div.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/语音菜单/u136_div.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/语音菜单/u3_div.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/语音菜单/u33_div.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/语音菜单/u38_div.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/语音菜单/u39_div.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/语音菜单/vector_u47.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/语音菜单/vector_u48.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/语音菜单/vector_u50.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/语音菜单/vector_u51.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/语音菜单/vector_u52.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/语音菜单/vector_u67.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/语音排产/u150_div.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/语音排产/vector_u148.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/语音生成菜单/u150_div.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/images/语音生成菜单/vector_u148.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/index.html",
+      "kind": "source"
+    },
+    {
+      "path": "axure/plugins/debug/debug.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/plugins/debug/styles/debug.css",
+      "kind": "source"
+    },
+    {
+      "path": "axure/plugins/debug/styles/images/console_panel_off.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/plugins/debug/styles/images/console_panel_on.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/plugins/page_notes/page_notes.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/plugins/page_notes/styles/images/notes_panel_off.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/plugins/page_notes/styles/images/notes_panel_on.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/plugins/page_notes/styles/page_notes.css",
+      "kind": "source"
+    },
+    {
+      "path": "axure/plugins/recordplay/recordplay.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/plugins/recordplay/styles/recordplay.css",
+      "kind": "source"
+    },
+    {
+      "path": "axure/plugins/sitemap/sitemap.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/plugins/sitemap/styles/images/back_keys.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/plugins/sitemap/styles/images/close.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/plugins/sitemap/styles/images/closed_item.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/plugins/sitemap/styles/images/collapse.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/plugins/sitemap/styles/images/expand.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/plugins/sitemap/styles/images/flow.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/plugins/sitemap/styles/images/folder_closed_blue.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/plugins/sitemap/styles/images/forward_keys.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/plugins/sitemap/styles/images/left_arrow.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/plugins/sitemap/styles/images/open_item.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/plugins/sitemap/styles/images/page_lt_grey.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/plugins/sitemap/styles/images/right_arrow.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/plugins/sitemap/styles/images/search_off.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/plugins/sitemap/styles/images/search_on.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/plugins/sitemap/styles/images/sitemap_panel_off.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/plugins/sitemap/styles/images/sitemap_panel_on.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/plugins/sitemap/styles/sitemap.css",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/chrome/allow-access.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/chrome/axure_logo.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/chrome/axure-chrome-extension.crx",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/chrome/chrome.html",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/chrome/details.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/chrome/extensions.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/chrome/firefox.html",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/chrome/preview-rp.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/chrome/safari_advanced.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/chrome/safari_restrictions.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/chrome/safari.html",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/chrome/splitter.gif",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/chrome/splitter.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/css/axure_rp_page.css",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/css/default.css",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/css/images/images.html",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/css/images/newwindow.gif",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/css/images/note.gif",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/css/images/touch.cur",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/css/images/touch.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/css/images/ui-bg_flat_0_aaaaaa_40x100.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/css/images/ui-bg_glass_55_fbf9ee_1x400.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/css/images/ui-bg_glass_65_ffffff_1x400.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/css/images/ui-bg_glass_75_dadada_1x400.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/css/images/ui-bg_glass_75_e6e6e6_1x400.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/css/images/ui-bg_glass_75_ffffff_1x400.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/css/images/ui-bg_highlight-soft_75_cccccc_1x100.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/css/images/ui-bg_inset-soft_95_fef1ec_1x100.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/css/images/ui-icons_222222_256x240.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/css/images/ui-icons_2e83ff_256x240.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/css/images/ui-icons_454545_256x240.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/css/images/ui-icons_888888_256x240.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/css/images/ui-icons_cd0a0a_256x240.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/css/jquery-ui-themes.css",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/css/previewfonts.css",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/css/previewfonts/SourceSansPro-OpenFontLicense.txt",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/css/previewfonts/SourceSansPro-Regular.woff2",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/css/previewfonts/SourceSansPro-Semibold.woff2",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/css/reset.css",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/images/axure_logo.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/images/axure_logo.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/images/axure9_logo.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/images/caret_down_off.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/images/caret_down.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/images/close_x_minimize.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/images/close_x.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/images/close.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/images/divider.png",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/images/divider.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/images/exit.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/images/favicon_play.ico",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/images/favicon_play.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/images/left_arrow.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/images/overflow_checkmark.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/images/overflow_icon_off.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/images/overflow-icon.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/images/refresh.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/images/resize.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/images/return.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/images/transparent.gif",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/images/views-icon.svg",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/Other.html",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/reload.html",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/scripts/axure/action.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/scripts/axure/adaptive.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/scripts/axure/annotation.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/scripts/axure/axQuery.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/scripts/axure/axQuery.std.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/scripts/axure/doc.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/scripts/axure/drag.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/scripts/axure/events.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/scripts/axure/expr.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/scripts/axure/flyout.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/scripts/axure/geometry.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/scripts/axure/globals.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/scripts/axure/ie.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/scripts/axure/init.temp.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/scripts/axure/ios.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/scripts/axure/jquery.nicescroll.min.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/scripts/axure/legacy.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/scripts/axure/math.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/scripts/axure/model.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/scripts/axure/move.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/scripts/axure/recording.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/scripts/axure/repeater.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/scripts/axure/sto.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/scripts/axure/style.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/scripts/axure/tree.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/scripts/axure/utils.temp.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/scripts/axure/variables.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/scripts/axure/viewer.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/scripts/axure/visibility.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/scripts/axutils.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/scripts/hintmanager.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/scripts/jquery-3.7.1.min.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/scripts/messagecenter.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/scripts/player/axplayer.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/scripts/player/init.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/resources/scripts/player/splitter.js",
+      "kind": "source"
+    },
+    {
+      "path": "axure/start_c_1.html",
+      "kind": "source"
+    },
+    {
+      "path": "axure/start_with_pages.html",
+      "kind": "source"
+    },
+    {
+      "path": "axure/start.html",
+      "kind": "source"
+    },
+    {
+      "path": "DESIGN.md",
+      "kind": "source"
+    },
+    {
+      "path": "index.tsx",
+      "kind": "entry"
+    },
+    {
+      "path": "style.css",
+      "kind": "source"
+    }
+  ]
+}

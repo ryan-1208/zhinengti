@@ -1,0 +1,1727 @@
+{
+  "documentVersion": 1,
+  "format": "axhub-annotation-source",
+  "data": {
+    "version": 2,
+    "prototypeName": "untitled-2",
+    "pageId": "untitled-2",
+    "nodes": [
+      {
+        "id": "annotation-index-gap-1",
+        "index": 1,
+        "locator": {
+          "selectors": [
+            "[data-annotation-index-gap=\"1\"]"
+          ],
+          "fingerprint": ""
+        },
+        "aiPrompt": "",
+        "annotationText": "",
+        "hasMarkdown": false,
+        "color": "#1677FF",
+        "images": [],
+        "pageId": "__annotation-index-gap__",
+        "createdAt": 1786329000000,
+        "updatedAt": 1786329000000
+      },
+      {
+        "id": "annotation-5",
+        "index": 2,
+        "title": "菜单生成结果提示",
+        "locator": {
+          "selectors": [
+            ".menu-success-message",
+            "div > main > div > div > div > div > div:nth-of-type(1) > div:nth-of-type(6) > div"
+          ],
+          "fingerprint": "div",
+          "path": [
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "main",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 5
+            },
+            {
+              "tag": "div",
+              "index": 0
+            }
+          ]
+        },
+        "aiPrompt": "",
+        "annotationText": "",
+        "hasMarkdown": true,
+        "color": "#1677FF",
+        "images": [],
+        "pageId": "assistant-menu",
+        "createdAt": 1785835527295,
+        "updatedAt": 1786095192098
+      },
+      {
+        "id": "annotation-6",
+        "index": 3,
+        "title": "烹饪时长与就餐人数",
+        "locator": {
+          "selectors": [
+            ".user-message",
+            "div > main > div > div > div > div > div > div:nth-of-type(2)"
+          ],
+          "fingerprint": "div",
+          "path": [
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "main",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 1
+            }
+          ]
+        },
+        "aiPrompt": "",
+        "annotationText": "",
+        "hasMarkdown": true,
+        "color": "#1677FF",
+        "images": [],
+        "pageId": "assistant-menu",
+        "createdAt": 1785837963049,
+        "updatedAt": 1786094848507
+      },
+      {
+        "id": "annotation-index-gap-7",
+        "index": 7,
+        "locator": {
+          "selectors": [
+            "[data-annotation-index-gap=\"7\"]"
+          ],
+          "fingerprint": ""
+        },
+        "aiPrompt": "",
+        "annotationText": "",
+        "hasMarkdown": false,
+        "color": "#1677FF",
+        "images": [],
+        "pageId": "__annotation-index-gap__",
+        "createdAt": 1786329000000,
+        "updatedAt": 1786329000000
+      },
+      {
+        "id": "annotation-index-gap-8",
+        "index": 8,
+        "locator": {
+          "selectors": [
+            "[data-annotation-index-gap=\"8\"]"
+          ],
+          "fingerprint": ""
+        },
+        "aiPrompt": "",
+        "annotationText": "",
+        "hasMarkdown": false,
+        "color": "#1677FF",
+        "images": [],
+        "pageId": "__annotation-index-gap__",
+        "createdAt": 1786329000000,
+        "updatedAt": 1786329000000
+      },
+      {
+        "id": "annotation-index-gap-9",
+        "index": 9,
+        "locator": {
+          "selectors": [
+            "[data-annotation-index-gap=\"9\"]"
+          ],
+          "fingerprint": ""
+        },
+        "aiPrompt": "",
+        "annotationText": "",
+        "hasMarkdown": false,
+        "color": "#1677FF",
+        "images": [],
+        "pageId": "__annotation-index-gap__",
+        "createdAt": 1786329000000,
+        "updatedAt": 1786329000000
+      },
+      {
+        "id": "annotation-10",
+        "index": 7,
+        "locator": {
+          "selectors": [
+            ".purchase-filter",
+            "div > main > div > div > div > div:nth-of-type(1)"
+          ],
+          "fingerprint": "div",
+          "path": [
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "main",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            }
+          ]
+        },
+        "aiPrompt": "",
+        "annotationText": "",
+        "hasMarkdown": true,
+        "color": "#1677FF",
+        "images": [],
+        "pageId": "purchase",
+        "createdAt": 1785847948647,
+        "updatedAt": 1785847948647
+      },
+      {
+        "id": "annotation-index-gap-11",
+        "index": 11,
+        "locator": {
+          "selectors": [
+            "[data-annotation-index-gap=\"11\"]"
+          ],
+          "fingerprint": ""
+        },
+        "aiPrompt": "",
+        "annotationText": "",
+        "hasMarkdown": false,
+        "color": "#1677FF",
+        "images": [],
+        "pageId": "__annotation-index-gap__",
+        "createdAt": 1786329000000,
+        "updatedAt": 1786329000000
+      },
+      {
+        "id": "annotation-12",
+        "index": 9,
+        "locator": {
+          "selectors": [
+            ".order-summary",
+            "div > main > div > div > div > div > aside"
+          ],
+          "fingerprint": "aside",
+          "path": [
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "main",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "aside",
+              "index": 0
+            }
+          ]
+        },
+        "aiPrompt": "",
+        "annotationText": "",
+        "hasMarkdown": true,
+        "color": "#1677FF",
+        "images": [],
+        "pageId": "list",
+        "createdAt": 1785848027719,
+        "updatedAt": 1785848027719
+      },
+      {
+        "id": "annotation-14",
+        "index": 11,
+        "locator": {
+          "selectors": [
+            ".primary-link",
+            "div > main > div > div > div > div > div > div:nth-of-type(4) > button"
+          ],
+          "fingerprint": "button",
+          "path": [
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "main",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 3
+            },
+            {
+              "tag": "button",
+              "index": 0
+            }
+          ]
+        },
+        "aiPrompt": "",
+        "annotationText": "",
+        "hasMarkdown": true,
+        "color": "#1677FF",
+        "images": [],
+        "pageId": "assistant-schedule",
+        "createdAt": 1785896823736,
+        "updatedAt": 1785987733981
+      },
+      {
+        "id": "annotation-15",
+        "index": 12,
+        "locator": {
+          "selectors": [
+            ".screen-content",
+            "div > main > div > div > div"
+          ],
+          "fingerprint": "div",
+          "path": [
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "main",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            }
+          ]
+        },
+        "aiPrompt": "",
+        "annotationText": "",
+        "hasMarkdown": true,
+        "color": "#1677FF",
+        "images": [],
+        "pageId": "assistant-menu",
+        "createdAt": 1785901651440,
+        "updatedAt": 1786935568827
+      },
+      {
+        "id": "annotation-index-gap-16",
+        "index": 16,
+        "locator": {
+          "selectors": [
+            "[data-annotation-index-gap=\"16\"]"
+          ],
+          "fingerprint": ""
+        },
+        "aiPrompt": "",
+        "annotationText": "",
+        "hasMarkdown": false,
+        "color": "#1677FF",
+        "images": [],
+        "pageId": "__annotation-index-gap__",
+        "createdAt": 1786329000000,
+        "updatedAt": 1786329000000
+      },
+      {
+        "id": "annotation-17",
+        "index": 14,
+        "locator": {
+          "selectors": [
+            ".batch-select",
+            "div > main > div > div > div > div:nth-of-type(3) > table > tbody > tr:nth-of-type(1) > td:nth-of-type(6) > select"
+          ],
+          "fingerprint": "select",
+          "path": [
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "main",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 2
+            },
+            {
+              "tag": "table",
+              "index": 0
+            },
+            {
+              "tag": "tbody",
+              "index": 0
+            },
+            {
+              "tag": "tr",
+              "index": 0
+            },
+            {
+              "tag": "td",
+              "index": 5
+            },
+            {
+              "tag": "select",
+              "index": 0
+            }
+          ]
+        },
+        "aiPrompt": "",
+        "annotationText": "",
+        "hasMarkdown": true,
+        "color": "#1677FF",
+        "images": [],
+        "pageId": "view-menu",
+        "createdAt": 1785910611857,
+        "updatedAt": 1785910611857
+      },
+      {
+        "id": "annotation-18",
+        "index": 15,
+        "locator": {
+          "selectors": [
+            "details",
+            "div > main > div > div > div > div:nth-of-type(2) > section > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > div > div > details:nth-of-type(1)"
+          ],
+          "fingerprint": "details",
+          "path": [
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "main",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 1
+            },
+            {
+              "tag": "section",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 1
+            },
+            {
+              "tag": "div",
+              "index": 1
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "details",
+              "index": 0
+            }
+          ]
+        },
+        "aiPrompt": "",
+        "annotationText": "",
+        "hasMarkdown": true,
+        "color": "#1677FF",
+        "images": [],
+        "pageId": "assistant-schedule",
+        "createdAt": 1785912294114,
+        "updatedAt": 1785912308109
+      },
+      {
+        "id": "annotation-19",
+        "index": 16,
+        "locator": {
+          "selectors": [
+            "td",
+            "div > main > div > div > div > div:nth-of-type(2) > table > tbody > tr:nth-of-type(1) > td:nth-of-type(1)"
+          ],
+          "fingerprint": "td",
+          "path": [
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "main",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 1
+            },
+            {
+              "tag": "table",
+              "index": 0
+            },
+            {
+              "tag": "tbody",
+              "index": 0
+            },
+            {
+              "tag": "tr",
+              "index": 0
+            },
+            {
+              "tag": "td",
+              "index": 0
+            }
+          ]
+        },
+        "aiPrompt": "",
+        "annotationText": "",
+        "hasMarkdown": true,
+        "color": "#1677FF",
+        "images": [],
+        "pageId": "confirm",
+        "createdAt": 1786002303018,
+        "updatedAt": 1786002303018
+      },
+      {
+        "id": "annotation-21",
+        "index": 18,
+        "locator": {
+          "selectors": [
+            ".screen-frame",
+            "div > main > div > div"
+          ],
+          "fingerprint": "div",
+          "path": [
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "main",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            }
+          ]
+        },
+        "aiPrompt": "",
+        "annotationText": "",
+        "hasMarkdown": true,
+        "color": "#1677FF",
+        "images": [],
+        "pageId": "schedule-once",
+        "createdAt": 1786283034815,
+        "updatedAt": 1786283034815
+      },
+      {
+        "id": "annotation-22",
+        "index": 19,
+        "locator": {
+          "selectors": [
+            ".topbar",
+            "div > main > div > header"
+          ],
+          "fingerprint": "header",
+          "path": [
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "main",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "header",
+              "index": 0
+            }
+          ]
+        },
+        "aiPrompt": "",
+        "annotationText": "",
+        "hasMarkdown": true,
+        "color": "#1677FF",
+        "images": [],
+        "pageId": "purchase",
+        "createdAt": 1786285636034,
+        "updatedAt": 1786285636034
+      },
+      {
+        "id": "annotation-23",
+        "index": 10,
+        "title": "需订量（重量单位）",
+        "locator": {
+          "selectors": [
+            ".purchase-table thead th:nth-of-type(4)",
+            "body > div > main > div > div > div > div:nth-of-type(2) > table > thead > tr > th:nth-of-type(4)"
+          ],
+          "fingerprint": "th",
+          "path": [
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "main",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 1
+            },
+            {
+              "tag": "table",
+              "index": 0
+            },
+            {
+              "tag": "thead",
+              "index": 0
+            },
+            {
+              "tag": "tr",
+              "index": 0
+            },
+            {
+              "tag": "th",
+              "index": 3
+            }
+          ]
+        },
+        "aiPrompt": "",
+        "annotationText": "",
+        "hasMarkdown": true,
+        "color": "#1677FF",
+        "images": [],
+        "pageId": "purchase",
+        "createdAt": 1786285646155,
+        "updatedAt": 1786286067655
+      },
+      {
+        "id": "annotation-24",
+        "index": 20,
+        "locator": {
+          "selectors": [
+            "button",
+            "div > main > div > div > div > div > div > section:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(2) > button:nth-of-type(2)"
+          ],
+          "fingerprint": "button",
+          "path": [
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "main",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "section",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 1
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 1
+            },
+            {
+              "tag": "button",
+              "index": 1
+            }
+          ]
+        },
+        "aiPrompt": "",
+        "annotationText": "",
+        "hasMarkdown": true,
+        "color": "#1677FF",
+        "images": [],
+        "pageId": "list",
+        "createdAt": 1786286135883,
+        "updatedAt": 1786286135883
+      },
+      {
+        "id": "annotation-25",
+        "index": 21,
+        "locator": {
+          "selectors": [
+            "h1",
+            "div > main > div > div > div > div > h1"
+          ],
+          "fingerprint": "h1",
+          "path": [
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "main",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "h1",
+              "index": 0
+            }
+          ]
+        },
+        "aiPrompt": "",
+        "annotationText": "",
+        "hasMarkdown": true,
+        "color": "#1677FF",
+        "images": [],
+        "pageId": "failure",
+        "createdAt": 1786290801261,
+        "updatedAt": 1786332226971
+      },
+      {
+        "id": "annotation-index-gap-28",
+        "index": 28,
+        "locator": {
+          "selectors": [
+            "[data-annotation-index-gap=\"28\"]"
+          ],
+          "fingerprint": ""
+        },
+        "aiPrompt": "",
+        "annotationText": "",
+        "hasMarkdown": false,
+        "color": "#1677FF",
+        "images": [],
+        "pageId": "__annotation-index-gap__",
+        "createdAt": 1786329000000,
+        "updatedAt": 1786329000000
+      },
+      {
+        "id": "annotation-29",
+        "index": 29,
+        "title": "排产计划确认",
+        "locator": {
+          "selectors": [
+            "[data-annotation-id=\"annotation-29\"]",
+            ".schedule-confirm-trigger"
+          ],
+          "fingerprint": "div|class=assistant-message schedule-confirm-trigger|text=已预生成排产计划，请查看确认",
+          "path": [
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "main",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 6
+            }
+          ]
+        },
+        "aiPrompt": "",
+        "annotationText": "",
+        "hasMarkdown": true,
+        "color": "#1677FF",
+        "images": [],
+        "pageId": "assistant-schedule",
+        "createdAt": 1786329000000,
+        "updatedAt": 1786329000000
+      },
+      {
+        "id": "annotation-27",
+        "index": 30,
+        "locator": {
+          "selectors": [
+            "[data-annotation-id=\"annotation-27\"]",
+            ".assistant-message",
+            ".assistant-device-ratio-question",
+            "div > main > div > div > div > div > div > div:nth-of-type(7)"
+          ],
+          "fingerprint": "div",
+          "path": [
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "main",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 6
+            }
+          ]
+        },
+        "aiPrompt": "",
+        "annotationText": "",
+        "hasMarkdown": true,
+        "color": "#1677FF",
+        "images": [],
+        "pageId": "assistant-menu",
+        "createdAt": 1786332493078,
+        "updatedAt": 1786332493078
+      },
+      {
+        "id": "annotation-28",
+        "index": 31,
+        "locator": {
+          "selectors": [
+            "input",
+            "div > main > div > div > div > div:nth-of-type(2) > section > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > div > div > section:nth-of-type(1) > div > div:nth-of-type(1) > div > div:nth-of-type(2) > div:nth-of-type(3) > div > div > input"
+          ],
+          "fingerprint": "input",
+          "path": [
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "main",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 1
+            },
+            {
+              "tag": "section",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 1
+            },
+            {
+              "tag": "div",
+              "index": 1
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "section",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 1
+            },
+            {
+              "tag": "div",
+              "index": 2
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "input",
+              "index": 0
+            }
+          ]
+        },
+        "aiPrompt": "",
+        "annotationText": "",
+        "hasMarkdown": true,
+        "color": "#1677FF",
+        "images": [],
+        "pageId": "assistant-schedule",
+        "createdAt": 1786339857494,
+        "updatedAt": 1786339857494
+      },
+      {
+        "id": "annotation-index-gap-29",
+        "index": 29,
+        "locator": {
+          "selectors": [
+            "[data-annotation-index-gap=\"29\"]"
+          ],
+          "fingerprint": ""
+        },
+        "aiPrompt": "",
+        "annotationText": "",
+        "hasMarkdown": false,
+        "color": "#1677FF",
+        "images": [],
+        "pageId": "__annotation-index-gap__",
+        "createdAt": 1786340000000,
+        "updatedAt": 1786340000000
+      },
+      {
+        "id": "annotation-30",
+        "index": 30,
+        "title": "批次与菜品不存在时重新追问",
+        "locator": {
+          "selectors": [
+            "[data-annotation-id=\"annotation-30\"]",
+            ".schedule-batch-details-response"
+          ],
+          "fingerprint": "div|class=user-message schedule-batch-details-response|text=8月3日·午餐：批次1：毛豆雪菜肉丝、外婆菜炒蛋；批次2：红烧带鱼。8月4日·午餐：批次1：小炒黄牛肉、韭菜绿豆芽；批次2：蒜蓉菠菜、葱油鸡。",
+          "path": []
+        },
+        "aiPrompt": "",
+        "annotationText": "",
+        "hasMarkdown": true,
+        "color": "#1677FF",
+        "images": [],
+        "pageId": "assistant-schedule",
+        "createdAt": 1786340000000,
+        "updatedAt": 1786956041462
+      },
+      {
+        "id": "annotation-31",
+        "index": 32,
+        "locator": {
+          "selectors": [
+            ".batch-group",
+            "div > main > div > div > div > div:nth-of-type(2) > section > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(1) > div > div > section:nth-of-type(1) > div > div:nth-of-type(1)"
+          ],
+          "fingerprint": "div",
+          "path": [
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "main",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 1
+            },
+            {
+              "tag": "section",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 1
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "section",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            }
+          ]
+        },
+        "aiPrompt": "",
+        "annotationText": "",
+        "hasMarkdown": true,
+        "color": "#1677FF",
+        "images": [],
+        "pageId": "assistant-schedule",
+        "createdAt": 1786341682483,
+        "updatedAt": 1787124326658
+      },
+      {
+        "id": "annotation-32",
+        "index": 33,
+        "locator": {
+          "selectors": [
+            ".plan-confirm-modal",
+            ".schedule-confirm-modal",
+            "div > main > div > div > div > div:nth-of-type(2) > section"
+          ],
+          "fingerprint": "section",
+          "path": [
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "main",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 1
+            },
+            {
+              "tag": "section",
+              "index": 0
+            }
+          ]
+        },
+        "aiPrompt": "",
+        "annotationText": "",
+        "hasMarkdown": true,
+        "color": "#1677FF",
+        "images": [],
+        "pageId": "assistant-schedule",
+        "createdAt": 1786347860744,
+        "updatedAt": 1786348215350
+      },
+      {
+        "id": "annotation-33",
+        "index": 1,
+        "title": "批次标识",
+        "locator": {
+          "selectors": [
+            "[data-annotation-id=\"annotation-33\"]"
+          ],
+          "fingerprint": "span|data-annotation-id=annotation-33",
+          "path": []
+        },
+        "aiPrompt": "",
+        "annotationText": "增加批次标识，临时加菜的不需要",
+        "hasMarkdown": false,
+        "color": "#6C5CE7",
+        "images": [],
+        "pageId": "blank-4",
+        "createdAt": 1786537586000,
+        "updatedAt": 1786537586000
+      },
+      {
+        "id": "annotation-34",
+        "index": 1,
+        "title": "增加批次列",
+        "locator": {
+          "selectors": [
+            "[data-annotation-id=\"annotation-34\"]"
+          ],
+          "fingerprint": "th|data-annotation-id=annotation-34|text=批次",
+          "path": []
+        },
+        "aiPrompt": "",
+        "annotationText": "增加批次列",
+        "hasMarkdown": false,
+        "color": "#1677FF",
+        "images": [],
+        "pageId": "blank-3",
+        "createdAt": 1786540800000,
+        "updatedAt": 1786540800000
+      },
+      {
+        "id": "annotation-35",
+        "index": 2,
+        "title": "增加批次列增加批次标识",
+        "locator": {
+          "selectors": [
+            "[data-annotation-id=\"annotation-35\"]"
+          ],
+          "fingerprint": "b|data-annotation-id=annotation-35|text=批次 1",
+          "path": []
+        },
+        "aiPrompt": "",
+        "annotationText": "",
+        "hasMarkdown": true,
+        "color": "#1677FF",
+        "images": [],
+        "pageId": "blank-3",
+        "createdAt": 1786541100000,
+        "updatedAt": 1786538939113
+      },
+      {
+        "id": "annotation-batch-water-fish",
+        "index": 1,
+        "title": "增加批次标识",
+        "locator": {
+          "selectors": [
+            "[data-annotation-id=\"annotation-batch-water-fish\"]"
+          ],
+          "fingerprint": "b|data-annotation-id=annotation-batch-water-fish|text=批次 1",
+          "path": []
+        },
+        "aiPrompt": "",
+        "annotationText": "增加批次标识，临时加菜的不需要",
+        "hasMarkdown": false,
+        "color": "#6C5CE7",
+        "images": [],
+        "pageId": "blank-2",
+        "createdAt": 1786542000000,
+        "updatedAt": 1786542000000
+      },
+      {
+        "id": "annotation-36",
+        "index": 34,
+        "locator": {
+          "selectors": [
+            "p",
+            "div > main > div > div > main > section > div > div:nth-of-type(1) > p:nth-of-type(4)"
+          ],
+          "fingerprint": "p",
+          "path": [
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "main",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "main",
+              "index": 0
+            },
+            {
+              "tag": "section",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "p",
+              "index": 3
+            }
+          ]
+        },
+        "aiPrompt": "",
+        "annotationText": "",
+        "hasMarkdown": true,
+        "color": "#1677FF",
+        "images": [],
+        "pageId": "work-order-detail",
+        "createdAt": 1786548072337,
+        "updatedAt": 1786585840067
+      },
+      {
+        "id": "annotation-37",
+        "index": 1,
+        "title": "增加批次列",
+        "locator": {
+          "selectors": [
+            "[data-annotation-id=\"annotation-37\"]"
+          ],
+          "fingerprint": "th|data-annotation-id=annotation-37|text=批次",
+          "path": []
+        },
+        "aiPrompt": "",
+        "annotationText": "",
+        "hasMarkdown": true,
+        "color": "#1677FF",
+        "images": [],
+        "pageId": "blank-1",
+        "createdAt": 1786549000000,
+        "updatedAt": 1786585818199
+      },
+      {
+        "id": "annotation-38",
+        "index": 38,
+        "title": "排产日期缺少菜单处理",
+        "locator": {
+          "selectors": [
+            "[data-annotation-id=\"annotation-38\"]"
+          ],
+          "fingerprint": "div|data-annotation-id=annotation-38|text=帮我继续8月 3 号到 4 号进行排产",
+          "path": []
+        },
+        "aiPrompt": "说明输入的排产日期缺少菜单时的询问与分支处理。",
+        "annotationText": "",
+        "hasMarkdown": true,
+        "color": "#1677FF",
+        "images": [],
+        "pageId": "assistant-schedule",
+        "createdAt": 1786665600000,
+        "updatedAt": 1786665600000
+      },
+      {
+        "id": "annotation-39",
+        "index": 1,
+        "title": "设备比例输入规则",
+        "locator": {
+          "selectors": [
+            "[data-annotation-id=\"annotation-39\"]"
+          ],
+          "fingerprint": "div|data-annotation-id=annotation-39|text=设备比例",
+          "path": []
+        },
+        "aiPrompt": "说明设备比例输入框的启用条件、数量适配和输入限制。",
+        "annotationText": "",
+        "hasMarkdown": true,
+        "color": "#1677FF",
+        "images": [],
+        "pageId": "blank-5",
+        "createdAt": 1786935569000,
+        "updatedAt": 1786944104730
+      },
+      {
+        "id": "annotation-40",
+        "index": 39,
+        "locator": {
+          "selectors": [
+            ".mint",
+            "div > main > div > div > main > header > div > button:nth-of-type(1)"
+          ],
+          "fingerprint": "button",
+          "path": [
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "main",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "main",
+              "index": 0
+            },
+            {
+              "tag": "header",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "button",
+              "index": 0
+            }
+          ]
+        },
+        "aiPrompt": "",
+        "annotationText": "",
+        "hasMarkdown": true,
+        "color": "#1677FF",
+        "images": [],
+        "pageId": "blank-5",
+        "createdAt": 1786943056680,
+        "updatedAt": 1786943056680
+      },
+      {
+        "id": "annotation-41",
+        "index": 40,
+        "title": "新增就餐人数",
+        "locator": {
+          "selectors": [
+            "[data-annotation-id=\"annotation-41\"]"
+          ],
+          "fingerprint": "div|data-annotation-id=annotation-41|text=就餐人数",
+          "path": []
+        },
+        "aiPrompt": "标识新增的就餐人数输入项。",
+        "annotationText": "新增就餐人数输入项。",
+        "hasMarkdown": false,
+        "color": "#FF4D4F",
+        "images": [],
+        "pageId": "blank-5",
+        "createdAt": 1786944293000,
+        "updatedAt": 1786944293000
+      },
+      {
+        "id": "annotation-42",
+        "index": 41,
+        "title": "新增烹饪时限",
+        "locator": {
+          "selectors": [
+            "[data-annotation-id=\"annotation-42\"]"
+          ],
+          "fingerprint": "div|data-annotation-id=annotation-42|text=烹饪时限",
+          "path": []
+        },
+        "aiPrompt": "标识新增的烹饪时限输入项。",
+        "annotationText": "新增烹饪时限输入项。",
+        "hasMarkdown": false,
+        "color": "#FF4D4F",
+        "images": [],
+        "pageId": "blank-5",
+        "createdAt": 1786944293000,
+        "updatedAt": 1786944293000
+      },
+      {
+        "id": "annotation-43",
+        "index": 42,
+        "title": "新增设备比例",
+        "locator": {
+          "selectors": [
+            "[data-annotation-id=\"annotation-39\"]"
+          ],
+          "fingerprint": "div|data-annotation-id=annotation-39|text=设备比例",
+          "path": []
+        },
+        "aiPrompt": "标识新增的设备比例输入项。",
+        "annotationText": "新增设备比例输入项。",
+        "hasMarkdown": false,
+        "color": "#FF4D4F",
+        "images": [],
+        "pageId": "blank-5",
+        "createdAt": 1786944293000,
+        "updatedAt": 1786944293000
+      },
+      {
+        "id": "annotation-44",
+        "index": 43,
+        "locator": {
+          "selectors": [
+            "label",
+            "div > main > div > div > div > div:nth-of-type(1) > label:nth-of-type(3)"
+          ],
+          "fingerprint": "label",
+          "path": [
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "main",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "label",
+              "index": 2
+            }
+          ]
+        },
+        "aiPrompt": "",
+        "annotationText": "",
+        "hasMarkdown": true,
+        "color": "#1677FF",
+        "images": [],
+        "pageId": "purchase",
+        "createdAt": 1786947781954,
+        "updatedAt": 1786949046683
+      },
+      {
+        "id": "annotation-45",
+        "index": 44,
+        "locator": {
+          "selectors": [
+            ".primary",
+            "div > main > div > div > div > div:nth-of-type(2) > section > div:nth-of-type(2) > button:nth-of-type(2)"
+          ],
+          "fingerprint": "button",
+          "path": [
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "main",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 1
+            },
+            {
+              "tag": "section",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 1
+            },
+            {
+              "tag": "button",
+              "index": 1
+            }
+          ]
+        },
+        "aiPrompt": "",
+        "annotationText": "",
+        "hasMarkdown": true,
+        "color": "#1677FF",
+        "images": [],
+        "pageId": "assistant-schedule",
+        "createdAt": 1786952493839,
+        "updatedAt": 1786952493839
+      }
+    ],
+    "updatedAt": 1787124326658
+  },
+  "markdownMap": {
+    "annotation-5": "1.筛选后一条匹配餐品都没有，提示“没有符合条件的餐品。造成该结果的条件：【菜系、口味、烹饪设备】” 【需要判断是哪个/哪几个条件造成不存在】\n\n2.存在符合条件餐品，但可用数量不满足需求，提示“符合条件的餐品不足，缺少大荤 x 份，小荤 x 份，素菜 x 份”，如果有某一种不缺，则那一种不显示\n\n3.符合条件的展示能够已生成，与现在不变\n\n都以限制条件后生成的结果为准，少和生成失败就抛出，",
+    "annotation-6": "1.生产菜单流程同之前，但是需要新增烹饪时间限制条件(例如生成烹饪总时长一个小时内的餐品:所有烹饪时间累加≤60min\n增加限制后，生成的菜单数量多少就是多少，缺少的内容按结果提示 2 抛出\n\n2.增加修改就餐人数的接口",
+    "annotation-10": "现有页面，排产后台-生产管理-原料需订量",
+    "annotation-12": "同食堂下单页面",
+    "annotation-14": "跳转后自动选中选择所选排产日期的第一天的排产计划",
+    "annotation-15": "对话优化：\n业务流程：菜单生成流程、排产计划生成流程\n通用边界：设备重新唤醒，直接交互，全部跳过下面确认校验逻辑；仅识别到要开启新对话时才执行确认判断。\n\n状态 1：当前处于【流程中】，菜单/排产计划尚未生成完成\n触发：未完成菜单/排产计划生成，模型判定要开启新对话\n询问：当前菜单生成流程/排产计划尚未完成，请确认是继续还是开启新对话\n1. 回复「继续」：重复追问流程上一个相关问题，延续原流程\n2. 回复「新对话」：终止旧流程，切换到全新会话开场白：请问是否需要生成菜单/智能排产？\n3. 如果是在排产流程中因为菜单缺少导致的流程转入菜单生成流程，不触发此询问\n状态 2：当前处于【流程结束】，菜单、排产计划已经生成成功\n触发：菜单/排产计划已生成成功，识别到要开启新对话（重新唤醒不执行）\n询问：当前菜单/排产计划已经生成成功，是否需要生成新菜单/排产计划？，请回答生成菜单/生成排产计划或者不需要\n1. 回复「生成新菜单/排产计划」：重置，开场白：我可以帮您自动生成菜单，您有什么要求都可以跟我说/您可以告诉我您的排产需求\n2. 回复「不需要」：进入休眠模式，等待唤醒\n其他：\n1. 只要是设备重新唤醒，直接进入交互，跳过全部确认提示。\n2. 休眠模式：只响应唤醒指令；唤醒后才接收业务提问。\n\n修改内容内容需要在 ai 生成菜单页面做对应同步",
+    "annotation-17": "默认批次 1",
+    "annotation-18": "1.图片颜色规则同后台\n2.自动排产逻辑同后台",
+    "annotation-19": "表格内容同 订货系统-食堂下单",
+    "annotation-21": "除了唤醒按钮，其他都用原页面",
+    "annotation-22": "订单采购页面需要后台配置",
+    "annotation-23": "不同日期同一原料累加",
+    "annotation-24": "起订量最小数量为起订量倍数的数字，如：按 3 倍起订，则数字最小为 3 不能为小于 3 的整数",
+    "annotation-25": "具体抛出内容结果原因同原订货系统流程，返回的页面也同原流程",
+    "annotation-29": "出现该文字后弹出确认弹窗",
+    "annotation-27": "在烹饪设备识别两种设备及以上时进行提问，如果不提问用户说出关键词， 不做记录",
+    "annotation-28": "上限不能超过总份数",
+    "annotation-30": "整句如果部分识别成功记录部分后提问识别不清的内容\n\n1.输入餐段不存在，追问：当前所需排产日期中X月X日、X月X日无此餐段，请重新提供\n\n2.输入批次不存在，追问：X月X日午餐的批次不存在，请重新提供\n\n3.某个餐段的餐品数量大于菜单数量，追问：X月X日午餐批次 1 的餐品数量大于菜单数量，请重新提供\n\n4.识别到的餐品数量少于输入的餐品数量，追问：已记录 8 月 3 日午餐批次 1：毛豆雪菜肉丝、外婆菜炒蛋。还缺 1 道菜，请补充",
+    "annotation-31": "\n\n1.原计划里的菜已经有一个在制作中了，这个时候按语音的需求剩下的菜进行排产\n\n\n 2.只需要对我语音输入的菜品进行排产，不影响原计划中未提到的餐品\n\n3.按我语音输入的顺序进行排产\n\n4.制作中的不能调整的逻辑不变\n\n5.如果需求餐段+语音输入的菜中有已经进入生产的菜，需要展示出来\n",
+    "annotation-32": "排产状态：\n1.排产已正常生成：当前日期无排产计划或有部分餐品在已开始\n2..当前已有排产计划，请确认是否覆盖。当前日期已有排产计划，但是未开始\n\n排产结果：在批次的结构下，沿用自动排产和合并排产（如支持）的功能进行排产",
+    "annotation-35": "增加批次标识",
+    "annotation-batch-water-fish": "增加批次标识，临时加菜的不需要",
+    "annotation-36": "新增批次字段，临时加菜，显示无；计划烹饪：显示排产计划的批次",
+    "annotation-37": "增加批次列，临时加菜，显示无；计划烹饪：显示排产计划的批次",
+    "annotation-38": "触发条件：输入的排产日期中存在没有菜单的日期。\n\n询问：“当前 x 月 x 日缺少菜单，是否需要生成菜单或者去除缺少菜单的日期继续排产？”\n\n1. 回答“生成新菜单”：进入生成菜单流程，并自动带入缺少菜单的日期。\n\n2. 回答“继续”：去除缺少菜单的日期，仅根据含有菜单的日期继续下面的排产流程。",
+    "annotation-40": "ai 生成菜单弹窗新增条件",
+    "annotation-39": "【新增】当选择的烹饪设备种类小于 2 时，输入框置灰且无法输入；大于等于 2 时，输入框个数根据已选设备种类数自适应；输入值只能为大于等于 1 的整数。",
+    "annotation-44": "默认全选，当天之前无法选择，置灰",
+    "annotation-45": "提交成功返回对话，提交失败，出现结果弹窗，选择重试或者取消排产。\n\n 重试：继续提交；\n取消排产：回到对话页面，对话显示智能排产已取消，是否需要重新排产？回答：是/需要/重新排产/智能排产，重新开始流程，回答不需要，结束对话，出现退出提示语"
+  },
+  "assetMap": {}
+}

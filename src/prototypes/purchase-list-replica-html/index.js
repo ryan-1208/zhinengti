@@ -1,0 +1,1 @@
+var UserComponent=function(e){"use strict";var a=Object.defineProperty;var r=(e,t)=>a(e,"name",{value:t,configurable:!0});function t(){return e.createElement("iframe",{className:"axure-export-frame",title:"智能体 Axure 原型",src:"./axure/start_with_pages.html"})}return r(t,"PurchaseListReplica"),t}(React);

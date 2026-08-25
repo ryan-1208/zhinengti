@@ -1,0 +1,163 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "path": "src/prototypes/untitled-2/.spec/reconstruction/source-blank-1-production-orders.png",
+    "sha256": "5ffb6dd36b0a21470aeb477b7e3392d60b24481205eb22cc9bd0534d0653e1bc",
+    "width": 2926,
+    "height": 1562,
+    "viewport": {
+      "width": 2926,
+      "height": 1562,
+      "deviceScaleFactor": 1
+    }
+  },
+  "elements": [
+    {
+      "id": "blank-1-production-orders-page",
+      "kind": "page",
+      "sourceBBox": {
+        "x": 0,
+        "y": 0,
+        "width": 2926,
+        "height": 1562
+      },
+      "targetBBox": {
+        "x": 0,
+        "y": 0,
+        "width": 2926,
+        "height": 1562
+      },
+      "representation": "html",
+      "candidates": [],
+      "selectedCandidateId": null,
+      "specElementId": "blank-1-production-orders-stage",
+      "reactTarget": "BlankPage[blank-1]"
+    },
+    {
+      "id": "sidebar-navigation",
+      "kind": "navigation",
+      "sourceBBox": {
+        "x": 0,
+        "y": 0,
+        "width": 351,
+        "height": 1562
+      },
+      "targetBBox": {
+        "x": 0,
+        "y": 0,
+        "width": 351,
+        "height": 1562
+      },
+      "representation": "html",
+      "candidates": [],
+      "selectedCandidateId": null,
+      "specElementId": "blank-1-sidebar-navigation",
+      "reactTarget": "ProductionOrdersPage .sidebar"
+    },
+    {
+      "id": "top-navigation",
+      "kind": "header",
+      "sourceBBox": {
+        "x": 351,
+        "y": 0,
+        "width": 2575,
+        "height": 136
+      },
+      "targetBBox": {
+        "x": 351,
+        "y": 0,
+        "width": 2575,
+        "height": 136
+      },
+      "representation": "html",
+      "candidates": [],
+      "selectedCandidateId": null,
+      "specElementId": "blank-1-top-navigation",
+      "reactTarget": "ProductionOrdersPage .header"
+    },
+    {
+      "id": "canteen-mark",
+      "kind": "brand-mark",
+      "sourceBBox": {
+        "x": 2820,
+        "y": 0,
+        "width": 64,
+        "height": 78
+      },
+      "targetBBox": {
+        "x": 2820,
+        "y": 0,
+        "width": 64,
+        "height": 78
+      },
+      "representation": "svg",
+      "candidates": [],
+      "selectedCandidateId": null,
+      "specElementId": "blank-1-canteen-mark",
+      "reactTarget": "ProductionOrdersPage .canteen-mark"
+    },
+    {
+      "id": "filter-panel",
+      "kind": "form",
+      "sourceBBox": {
+        "x": 382,
+        "y": 166,
+        "width": 2527,
+        "height": 280
+      },
+      "targetBBox": {
+        "x": 382,
+        "y": 166,
+        "width": 2527,
+        "height": 280
+      },
+      "representation": "html",
+      "candidates": [],
+      "selectedCandidateId": null,
+      "specElementId": "blank-1-filter-panel",
+      "reactTarget": "ProductionOrdersPage .filter-panel"
+    },
+    {
+      "id": "production-order-table",
+      "kind": "table",
+      "sourceBBox": {
+        "x": 382,
+        "y": 478,
+        "width": 2527,
+        "height": 701
+      },
+      "targetBBox": {
+        "x": 382,
+        "y": 478,
+        "width": 2527,
+        "height": 701
+      },
+      "representation": "html",
+      "candidates": [],
+      "selectedCandidateId": null,
+      "specElementId": "blank-1-production-order-table",
+      "reactTarget": "ProductionOrdersPage .order-table"
+    },
+    {
+      "id": "pagination",
+      "kind": "pagination",
+      "sourceBBox": {
+        "x": 2240,
+        "y": 1208,
+        "width": 662,
+        "height": 65
+      },
+      "targetBBox": {
+        "x": 2240,
+        "y": 1208,
+        "width": 662,
+        "height": 65
+      },
+      "representation": "html",
+      "candidates": [],
+      "selectedCandidateId": null,
+      "specElementId": "blank-1-pagination",
+      "reactTarget": "ProductionOrdersPage .pagination"
+    }
+  ]
+}

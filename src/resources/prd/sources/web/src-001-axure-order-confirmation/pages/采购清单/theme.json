@@ -1,0 +1,101 @@
+{
+  "colors": {
+    "background": [],
+    "text": [
+      {
+        "value": "rgb(0, 0, 0)",
+        "count": 4,
+        "tags": [
+          "body",
+          "center",
+          "h1"
+        ]
+      },
+      {
+        "value": "rgb(128, 128, 128)",
+        "count": 1,
+        "tags": [
+          "hr"
+        ]
+      }
+    ],
+    "border": [
+      {
+        "value": "rgb(0, 0, 0)",
+        "count": 4,
+        "tags": [
+          "body",
+          "center",
+          "h1"
+        ]
+      },
+      {
+        "value": "rgb(128, 128, 128)",
+        "count": 1,
+        "tags": [
+          "hr"
+        ]
+      }
+    ]
+  },
+  "typography": {
+    "families": [
+      {
+        "value": "Times",
+        "count": 5,
+        "tags": [
+          "body",
+          "center",
+          "h1",
+          "hr"
+        ]
+      }
+    ],
+    "textStyles": [
+      {
+        "size": "16px",
+        "lineHeight": "normal",
+        "weight": "400",
+        "count": 4,
+        "tags": [
+          "body",
+          "center",
+          "hr"
+        ]
+      },
+      {
+        "size": "32px",
+        "lineHeight": "normal",
+        "weight": "700",
+        "count": 1,
+        "tags": [
+          "h1"
+        ]
+      }
+    ]
+  },
+  "spacing": [
+    {
+      "value": "8px",
+      "count": 1,
+      "tags": [
+        "body"
+      ]
+    },
+    {
+      "value": "21.44px 0px",
+      "count": 1,
+      "tags": [
+        "h1"
+      ]
+    },
+    {
+      "value": "8px 0px",
+      "count": 1,
+      "tags": [
+        "hr"
+      ]
+    }
+  ],
+  "radius": []
+}

@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>备餐屏智能体主规格</title>
+  <style>
+    :root { font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; --brand: #008f5d; --brand-ink: #007a50; --brand-soft: #e6f5ef; --brand-surface: #f2faf7; --brand-border: #b7ddcf; --text: #222832; --text-secondary: #4b5565; --text-muted: #6f7888; color: var(--text); background: #f5f7fb; scrollbar-gutter: stable; }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 32px 20px 64px; }
+    .shell { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 24px; width: min(1200px, 100%); margin: 0 auto; align-items: start; }
+    .sidebar { position: sticky; top: 32px; padding: 18px 14px; border: 1px solid #dfe4ee; border-radius: 8px; background: #fff; }
+    .sidebar-title { margin: 0 8px 10px; color: var(--text-muted); font-size: 12px; font-weight: 600; }
+    .page-nav { display: flex; flex-direction: column; gap: 4px; }
+    .page-nav button { width: 100%; padding: 8px 10px; border: 0; border-radius: 8px; color: var(--text-secondary); background: transparent; font: inherit; font-size: 13px; line-height: 1.45; text-align: left; cursor: pointer; }
+    .page-nav button:hover, .page-nav button[aria-current="page"] { color: var(--brand-ink); background: var(--brand-soft); }
+    .page-nav button[aria-current="page"] { font-weight: 600; }
+    main { min-width: 0; padding: 40px; border: 1px solid #dfe4ee; border-radius: 8px; background: #fff; box-shadow: 0 4px 16px rgb(30 45 75 / 6%); }
+    h1 { margin: 0; font-size: 32px; line-height: 1.3; }
+    h2 { margin: 44px 0 20px; padding-bottom: 8px; border-bottom: 1px solid #e7eaf0; font-size: 21px; line-height: 1.55; }
+    h3 { margin: 28px 0 12px; font-size: 17px; line-height: 1.5; }
+    p, li { font-size: 15px; line-height: 2; }
+    p { margin: 20px 0; }
+    ul { margin: 10px 0 20px; padding-left: 22px; }
+    .definition { margin: 16px 0 0; padding: 14px 16px; border-left: 3px solid var(--brand); color: var(--text-secondary); background: var(--brand-surface); }
+    .hint { color: var(--text-muted); }
+    table { width: 100%; margin-top: 14px; border-collapse: collapse; }
+    th, td { min-width: 110px; padding: 10px 12px; border: 1px solid #dfe4ee; font-size: 14px; line-height: 1.65; text-align: left; vertical-align: top; }
+    th { background: #f6f8fb; }
+    code { padding: 2px 5px; border-radius: 5px; background: #eef1f6; }
+    .mermaid { display: flex; justify-content: center; margin: 12px 0 0; padding: 16px; overflow-x: auto; border: 1px solid var(--brand-border); border-radius: 8px; background: var(--brand-surface); }
+    .reconstruction-review { margin-top: 28px; padding: 20px; border: 1px solid #cbd9e8; border-radius: 12px; background: #f6f9fc; }
+    .reconstruction-review h3 { margin-top: 0; }
+    .visual-stage { position: relative; width: 100%; max-width: 1272px; aspect-ratio: 2494 / 470; overflow: hidden; margin: 16px auto 0; background: #fff; box-shadow: 0 8px 24px rgb(30 45 75 / 12%); }
+    .visual-stage > img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; object-fit: contain; }
+    .wake-overlay { position: absolute; top: 1.2%; right: 1.6%; display: flex; align-items: center; gap: 12px; width: 199px; height: 65px; padding: 5px 10px 5px 7px; border-radius: 3px; background: linear-gradient(100deg, #eafcff, #c9f5fb); box-shadow: 0 4px 12px rgb(111 224 244 / 24%); color: #263d8a; font-size: 11px; line-height: 1.2; }
+    .wake-overlay strong { font-size: 13px; }
+    .wake-overlay::before { content: '♩'; display: grid; place-items: center; width: 29px; height: 29px; border-radius: 50%; background: linear-gradient(145deg, #a7dcff, #4a70cf); color: #fff; font-size: 18px; }
+    .reconstruction-note { margin: 14px 0 0; color: var(--text-secondary); font-size: 14px; line-height: 1.8; }
+    .asset-review { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 16px; }
+    .asset-review figure { margin: 0; padding: 12px; border: 1px solid #dfe4ee; border-radius: 8px; background: #fff; }
+    .asset-review img { display: block; width: 100%; height: 110px; object-fit: contain; background: #f7f9fb; }
+    .asset-review figcaption { margin-top: 8px; color: var(--text-secondary); font-size: 13px; }
+    .blank2-stage-shell { position: relative; width: 100%; aspect-ratio: 1906 / 1068; overflow: hidden; margin: 16px auto 0; background: #eef1f3; box-shadow: 0 8px 24px rgb(30 45 75 / 12%); }
+    .blank2-stage { position: absolute; inset: 0 auto auto 0; width: 1906px; height: 1068px; overflow: hidden; transform: scale(var(--stage-scale, 1)); transform-origin: top left; color: #2d2d2d; background: #f1f3f4; font-family: "PingFang SC", "Microsoft YaHei", sans-serif; -webkit-font-smoothing: antialiased; }
+    .blank2-stage * { box-sizing: border-box; }
+    .b2-app { position: absolute; left: 30px; top: 19px; width: 1838px; height: 1013px; background: #f3f3f3; box-shadow: 0 14px 14px rgb(0 0 0 / 13%); }
+    .b2-status { position: absolute; inset: 0 0 auto; height: 42px; background: linear-gradient(90deg, #20a5b5 0%, #24a8b7 55%, #70b4ba 100%); }
+    .b2-wifi { position: absolute; right: 94px; top: 8px; width: 29px; height: 22px; }
+    .b2-wifi::before, .b2-wifi::after { content: ""; position: absolute; left: 50%; border: 5px solid #30c4d4; border-color: #30c4d4 transparent transparent; border-radius: 50%; transform: translateX(-50%); }
+    .b2-wifi::before { top: 0; width: 30px; height: 22px; }
+    .b2-wifi::after { top: 8px; width: 14px; height: 11px; }
+    .b2-time { position: absolute; right: 12px; top: 4px; color: #29bdce; font-size: 27px; font-weight: 600; line-height: 34px; }
+    .b2-header { position: absolute; left: 0; top: 42px; width: 100%; height: 91px; background: linear-gradient(90deg, #26b6c6 0%, #25b9c9 52%, #22b2c2 100%); }
+    .b2-back { position: absolute; left: 18px; top: 18px; display: flex; align-items: center; gap: 9px; width: 136px; height: 54px; padding: 0 20px; border: 0; color: #fff; background: #087c8b; font: 600 24px/1 "PingFang SC", "Microsoft YaHei", sans-serif; }
+    .b2-back svg { flex: 0 0 auto; width: 35px; height: 35px; stroke: currentColor; stroke-width: 2.1; }
+    .b2-title { position: absolute; inset: 0; display: grid; place-items: center; color: #fff; font-size: 31px; font-weight: 600; letter-spacing: 1px; text-shadow: 0 1px 4px rgb(255 255 255 / 35%); }
+    .b2-summary { position: absolute; left: 0; top: 133px; display: flex; align-items: center; gap: 37px; width: 100%; height: 81px; padding-left: 22px; }
+    .b2-pill { display: grid; place-items: center; height: 48px; padding: 0 26px; border-radius: 25px; font-size: 24px; white-space: nowrap; }
+    .b2-pill.gray { color: #666; background: #e5e5e5; }
+    .b2-pill.purple { color: #5c54d3; background: #e9e8f9; }
+    .b2-pill.blue { color: #4d8ce7; background: #e7eef9; }
+    .b2-pill.amber { color: #ed9e21; background: #fbf0df; }
+    .b2-pill.green { color: #0abd4b; background: #dff6e9; }
+    .b2-pill.red { color: #e2232e; background: #f8dde1; }
+    .b2-rows { position: absolute; left: 22px; top: 214px; width: 1783px; }
+    .b2-row { position: relative; width: 1783px; height: 111px; margin-bottom: 11px; background: #fff; }
+    .b2-row:nth-child(3), .b2-row:nth-child(4) { height: 110px; }
+    .b2-state { position: absolute; left: 0; top: 0; display: grid; place-items: center; width: 63px; height: 100%; padding: 12px 18px; font-size: 20px; font-weight: 600; line-height: 1.33; text-align: center; }
+    .b2-state.weighing { color: #4b8de4; background: #dfecff; }
+    .b2-state.feeding { color: #e99a18; background: #fff3c8; }
+    .b2-state.waiting { color: #5c52cf; background: #dad5ff; }
+    .b2-state.not-started { color: #6d6d6d; background: #ededed; }
+    .b2-state.invalid { color: #e11f2d; background: #ffb8bc; }
+    .b2-state.completed { color: #0ebd50; background: #d4f8e3; }
+    .b2-main { position: absolute; left: 63px; top: 0; width: 1047px; height: 100%; padding: 19px 22px 8px; }
+    .b2-dish { display: flex; align-items: center; height: 40px; font-size: 29px; line-height: 38px; white-space: nowrap; }
+    .b2-dish.no-dot, .b2-tags.no-dot { margin-left: 28px; }
+    .b2-dot { display: inline-block; width: 16px; height: 16px; margin: 0 12px 3px 0; border-radius: 50%; vertical-align: middle; }
+    .b2-dot.green { background: #00c748; } .b2-dot.red { background: #f40000; } .b2-dot.orange { background: #ff9900; }
+    .b2-batch { display: inline-grid; place-items: center; height: 32px; margin-left: 20px; padding: 0 18px; border: 1px solid #82d9d8; border-radius: 17px; color: #087f88; background: #e7f8f7; font-size: 18px; font-weight: 500; line-height: 1; }
+    .b2-tags { display: flex; align-items: center; gap: 11px; height: 31px; padding-left: 9px; color: #767676; font-size: 20px; line-height: 26px; white-space: nowrap; }
+    .b2-tags span { padding: 0 3px; background: #f5f5f5; }
+    .b2-mini { display: inline-grid !important; place-items: center; width: 24px; height: 21px; padding: 0 !important; color: #10c4d5; background: #efffff !important; font-size: 15px; line-height: 1; }
+    .b2-mini.gold { color: #f2ae18; background: #fff5d8 !important; }
+    .b2-mini.green { color: #11c765; background: #e9fff3 !important; }
+    .b2-meal { position: absolute; left: 1157px; top: 13px; display: grid; place-items: center; width: 84px; height: 84px; border: 2px solid #077f87; border-radius: 50%; color: #087f88; font-size: 23px; transform: rotate(-25deg); }
+    .b2-actions { position: absolute; right: 6px; top: 24px; display: flex; align-items: center; justify-content: flex-end; gap: 34px; }
+    .b2-action { display: inline-flex; align-items: center; justify-content: center; height: 63px; padding: 0 27px; border: 0; border-radius: 31px; box-shadow: 0 3px 3px rgb(0 0 0 / 18%); font: 28px/1 "PingFang SC", "Microsoft YaHei", sans-serif; white-space: nowrap; }
+    .b2-action.entry { min-width: 111px; color: #22b8d9; background: linear-gradient(100deg, #f7fbfc, #d9eff7); }
+    .b2-action.entry::after { content: ""; width: 28px; height: 28px; margin-left: 8px; border-radius: 50%; background: #19b8df; }
+    .b2-action.exit { min-width: 112px; color: #05c94d; background: #e9fff1; }
+    .b2-action.exit::before { content: ""; width: 28px; height: 28px; margin-right: 8px; border-radius: 50%; background: #00c946; }
+    .b2-action.skip { min-width: 112px; color: #fff; background: #08b9e5; }
+    .b2-action.pin { min-width: 112px; color: #fff; background: #68c5c7; }
+    .b2-action.manual { min-width: 112px; color: #6dc5c6; border: 2px solid #67c5c7; background: #fff; box-shadow: none; }
+    .b2-start { position: absolute; left: 22px; bottom: 0; display: grid; place-items: center; width: 1783px; height: 80px; border: 0; color: #fff; background: #087b83; box-shadow: 0 6px 7px rgb(0 0 0 / 30%); font: 30px/1 "PingFang SC", "Microsoft YaHei", sans-serif; }
+    .blank2-comparison { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 16px; }
+    .blank2-comparison figure { margin: 0; padding: 12px; border: 1px solid #dfe4ee; border-radius: 8px; background: #fff; }
+    .blank2-comparison img { display: block; width: 100%; aspect-ratio: 1906 / 1068; object-fit: contain; background: #eef1f3; }
+    .blank2-comparison figcaption { margin-top: 8px; color: var(--text-secondary); font-size: 13px; }
+    .blank1-stage-shell { position: relative; width: 100%; aspect-ratio: 2926 / 1562; overflow: hidden; margin: 16px auto 0; background: #f8f8f8; box-shadow: 0 8px 24px rgb(30 45 75 / 12%); }
+    .blank1-stage { position: absolute; inset: 0; width: 2926px; height: 1562px; overflow: hidden; transform: scale(var(--blank1-scale, 1)); transform-origin: top left; }
+    .blank1-stage img { display: block; width: 2926px; height: 1562px; object-fit: contain; }
+    .blank1-map-region { position: absolute; z-index: 1; pointer-events: none; }
+    .work-order-detail-stage-shell { position: relative; width: 100%; aspect-ratio: 2916 / 1564; overflow: hidden; margin: 16px auto 0; background: #f8f8f8; box-shadow: 0 8px 24px rgb(30 45 75 / 12%); }
+    .work-order-detail-stage { position: absolute; inset: 0; width: 2916px; height: 1564px; overflow: hidden; transform: scale(var(--work-order-detail-scale, 1)); transform-origin: top left; }
+    .work-order-detail-stage > img { display: block; width: 2916px; height: 1564px; object-fit: contain; }
+    .work-order-detail-map-region { position: absolute; z-index: 1; pointer-events: none; }
+    .work-order-detail-comparison { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 16px; }
+    .work-order-detail-comparison figure { margin: 0; padding: 12px; border: 1px solid #dfe4ee; border-radius: 8px; background: #fff; }
+    .work-order-detail-comparison img { display: block; width: 100%; aspect-ratio: 2916 / 1564; object-fit: contain; background: #f8f8f8; }
+    .work-order-detail-comparison figcaption { margin-top: 8px; color: var(--text-secondary); font-size: 13px; }
+    .work-order-detail-placement { display: grid; grid-template-columns: 310px minmax(0, 1fr); min-height: 250px; margin-top: 16px; overflow: hidden; border: 1px solid #dfe4ee; border-radius: 8px; background: #fff; }
+    .work-order-detail-placement-nav { padding: 18px 24px; border-right: 1px solid #dfe4ee; color: #172840; font-family: "PingFang SC", "Microsoft YaHei", sans-serif; }
+    .work-order-detail-placement-nav strong { display: flex; align-items: center; gap: 9px; font-size: 16px; }
+    .work-order-detail-placement-nav strong::before { content: "⌄"; color: #7b8ea0; }
+    .work-order-detail-placement-nav button { display: flex; align-items: center; width: 100%; height: 35px; padding: 0 0 0 25px; border: 0; color: #26384f; background: transparent; font: inherit; font-size: 15px; text-align: left; }
+    .work-order-detail-placement-nav button::before { content: "□"; margin-right: 10px; color: #8ba0b6; font-size: 14px; }
+    .work-order-detail-placement-nav .parent { color: #008f5d; }
+    .work-order-detail-placement-nav .child { margin-left: 26px; padding-left: 22px; border-left: 1px solid #dbe3eb; color: #008f5d; font-weight: 600; }
+    .work-order-detail-placement-nav .child::before { content: "└"; margin-left: -23px; margin-right: 9px; color: #a5b3c1; }
+    .work-order-detail-placement-canvas { display: grid; place-items: center; color: #c4d1df; background: #354b62; font-size: 30px; font-weight: 600; }
+    .blank3-stage-shell { position: relative; width: 100%; aspect-ratio: 2056 / 1166; overflow: hidden; margin: 16px auto 0; background: #10285b; box-shadow: 0 8px 24px rgb(30 45 75 / 18%); }
+    .blank3-stage { position: absolute; inset: 0; width: 2056px; height: 1166px; overflow: hidden; transform: scale(var(--blank3-scale, 1)); transform-origin: top left; color: #e8f3ff; background: radial-gradient(circle at 52% 0, #183879, #10265a 60%); font-family: "Microsoft YaHei", sans-serif; }
+    .b3-header { position: absolute; left: 65px; top: 65px; width: 1925px; height: 92px; border: 4px solid #04c9f4; box-shadow: 0 0 18px #05bce4; }
+    .b3-logo { position: absolute; left: 56px; top: 11px; display: grid; place-items: center; width: 60px; height: 60px; border-radius: 50%; color: #17244b; background: #fff; font: 700 12px/1.1 Georgia, serif; text-align: center; }
+    .b3-title { position: absolute; left: 165px; top: 15px; color: #02c8f5; font-size: 51px; font-weight: 700; letter-spacing: 13px; line-height: 65px; text-shadow: 0 0 10px #018fc3; }
+    .b3-clock { position: absolute; right: 24px; top: 13px; color: #05c4ee; text-align: right; }
+    .b3-clock small { display: block; font-size: 17px; letter-spacing: 5px; }.b3-clock strong { font-size: 38px; font-weight: 400; letter-spacing: 4px; }
+    .b3-summary-line { position: absolute; right: 86px; top: 172px; color: #13c7e9; font-size: 20px; letter-spacing: 2px; }.b3-summary-line b { color: #f3bd29; }
+    .b3-panel { position: absolute; border: 4px solid #075686; background: rgba(15, 43, 96, .82); box-shadow: inset 0 0 12px rgb(0 180 235 / 15%); }
+    .b3-panel-title { position: absolute; left: -4px; top: -4px; min-width: 218px; height: 48px; padding: 7px 48px; clip-path: polygon(16px 0, 100% 0, calc(100% - 34px) 100%, 0 100%, 0 24px); color: #0de0f6; background: #075985; font-size: 31px; font-weight: 700; }
+    .b3-overview { left: 70px; top: 212px; width: 660px; height: 260px; }
+    .b3-metrics { display: grid; grid-template-columns: 1.2fr repeat(3, 1fr); align-items: end; height: 160px; padding: 64px 20px 18px; text-align: center; }.b3-metrics b { display: block; color: #fff; font-size: 37px; }.b3-metrics span { font-size: 17px; font-weight: 700; }.b3-metrics .icon { font-size: 43px; }
+    .b3-preprocess { display: grid; grid-template-columns: 1.5fr 1fr; align-items: center; height: 96px; padding: 7px 50px; background: rgba(4, 103, 143, .68); }.b3-preprocess strong { color: #09ddf2; font-size: 34px; }.b3-preprocess b { color: #08d9ef; font-size: 39px; }.b3-preprocess small { display: block; color: #09d8ee; font-size: 18px; }.b3-legend { display: grid; gap: 12px; font-size: 18px; font-weight: 700; }.b3-legend i { display: inline-block; width: 14px; height: 14px; margin-right: 12px; border-radius: 50%; background: #71cf66; }.b3-legend i.red { background: #f3234e; }
+    .b3-menu { left: 770px; top: 212px; width: 1195px; height: 260px; }.b3-menu-table { position: absolute; left: 8px; right: 8px; top: 46px; width: calc(100% - 16px); border-collapse: collapse; color: #eaf4ff; }.b3-menu-table th, .b3-menu-table td { min-width: 0; height: 41px; padding: 4px 12px; border: 0; font-size: 21px; text-align: center; }.b3-menu-table th { background: transparent; font-size: 23px; }.b3-menu-table tr:nth-child(even) { background: rgba(39, 84, 133, .68); }.b3-chip { display: inline-block; padding: 2px 10px; border-radius: 5px; color: #fff; background: #2d9df2; font-size: 16px; }.b3-chip.yellow { background: #e8b609; }.b3-chip.red { background: #e91c4a; }.b3-chip.green { background: #56b870; }.b3-chip.orange { background: #ed7857; }.b3-status-warn { color: #f32852; font-weight: 700; }
+    .b3-tasks { left: 70px; top: 507px; width: 1150px; height: 570px; }.b3-task-filters { position: absolute; right: 70px; top: 20px; display: flex; gap: 70px; }.b3-select { width: 160px; height: 29px; border: 1px solid #ccd2da; color: #7c8491; background: #fff; font-size: 15px; text-align: center; }
+    .b3-task-group { position: relative; height: 122px; margin-top: 48px; border-bottom: 4px solid #082b63; background: rgba(26, 67, 111, .72); }.b3-task-group + .b3-task-group { margin-top: 0; }.b3-task-head { display: grid; grid-template-columns: 190px 1fr 240px 210px; align-items: center; height: 72px; padding: 0 35px; background: rgba(14, 41, 91, .8); }.b3-task-type { display: grid; place-items: center; width: 145px; height: 54px; border: 3px solid #fff; border-radius: 21px; color: #fff; background: linear-gradient(#ef3762, #e7193d); font-size: 31px; font-weight: 700; }.b3-task-type.yellow { background: linear-gradient(#f7cf1a, #dda801); }.b3-task-head small { display: block; font-size: 15px; font-weight: 700; }.b3-task-head strong { color: #0ee2f3; font-size: 27px; }.b3-complete { justify-self: end; width: 145px; height: 42px; border: 2px solid #fff; border-radius: 8px; color: #fff; background: #05b9e7; font-size: 20px; font-weight: 700; }.b3-task-detail { padding: 8px 48px; font-size: 17px; line-height: 31px; }.b3-step { display: inline-grid; place-items: center; width: 25px; height: 25px; margin: 0 8px; border-radius: 50%; color: #fff; background: #e75b68; }.b3-view { margin-left: 70px; color: #4bb0cb; text-decoration: underline; }
+    .b3-cooking { left: 1260px; top: 507px; width: 705px; height: 570px; }.b3-cooking-list { padding: 52px 18px 0; }.b3-cooking-row { display: grid; grid-template-columns: 200px 1fr; align-items: center; height: 105px; border-bottom: 2px solid rgba(17, 76, 128, .62); }.b3-cooking-name { color: #fff; font-size: 22px; font-weight: 700; text-align: center; }.b3-timeline { position: relative; display: flex; align-items: center; justify-content: space-between; padding: 32px 20px 0; color: #08dff0; font-size: 18px; font-weight: 700; }.b3-timeline::before { content: ""; position: absolute; left: 35px; right: 35px; top: 62px; border-top: 2px dotted #3282af; }.b3-timeline span { position: relative; z-index: 1; text-align: center; }.b3-timeline i { display: grid; place-items: center; width: 31px; height: 31px; margin: 8px auto 0; border-radius: 50%; color: #2262a0; background: #fff; font-size: 15px; font-style: normal; }.b3-alert { position: absolute; right: 48px; top: 57px; color: #f32c55; font-size: 15px; }
+    body.capture-blank2 { width: 1906px; height: 1068px; padding: 0; overflow: hidden; background: #f1f3f4; }
+    body.capture-blank2 .shell { display: block; width: 1906px; margin: 0; }
+    body.capture-blank2 .sidebar, body.capture-blank2 main > :not(#blank-2-reconstruction), body.capture-blank2 #blank-2-reconstruction > :not(.blank2-stage-shell) { display: none !important; }
+    body.capture-blank2 main, body.capture-blank2 #blank-2-reconstruction, body.capture-blank2 .blank2-stage-shell { width: 1906px; height: 1068px; margin: 0; padding: 0; border: 0; border-radius: 0; box-shadow: none; }
+    body.capture-blank2 .blank2-stage { transform: none; }
+    body.capture-work-order-detail { width: 2916px; height: 1564px; padding: 0; overflow: hidden; background: #f8f8f8; }
+    body.capture-work-order-detail .shell { display: block; width: 2916px; margin: 0; }
+    body.capture-work-order-detail .sidebar, body.capture-work-order-detail main > :not(#work-order-detail-reconstruction), body.capture-work-order-detail #work-order-detail-reconstruction > :not(.work-order-detail-stage-shell) { display: none !important; }
+    body.capture-work-order-detail main, body.capture-work-order-detail #work-order-detail-reconstruction, body.capture-work-order-detail .work-order-detail-stage-shell { width: 2916px; height: 1564px; margin: 0; padding: 0; border: 0; border-radius: 0; box-shadow: none; }
+    body.capture-work-order-detail .work-order-detail-stage { transform: none; }
+    .blank5-stage-shell { position: relative; width: 100%; aspect-ratio: 2588 / 1484; overflow: hidden; margin: 16px auto 0; background: #c8c8c8; box-shadow: 0 8px 24px rgb(30 45 75 / 12%); }
+    .blank5-stage { position: absolute; inset: 0 auto auto 0; width: 2588px; height: 1484px; transform: scale(var(--blank5-scale, 1)); transform-origin: top left; }
+    .blank5-stage img { display: block; width: 2588px; height: 1484px; object-fit: contain; }
+    @media (max-width: 720px) { body { padding: 0 8px 40px; } .shell { display: block; } .sidebar { position: sticky; top: 0; z-index: 10; margin: 0 -8px 12px; padding: 10px 8px; border-width: 0 0 1px; border-radius: 0; } .sidebar-title { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); } .page-nav { flex-direction: row; overflow-x: auto; } .page-nav button { width: auto; flex: 0 0 auto; white-space: nowrap; } main { padding: 24px 18px; } .table-wrap { overflow-x: auto; } }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <p class="sidebar-title">目录</p>
+      <nav class="page-nav" aria-label="规格文档页面">
+        <button type="button" data-target="prototype-scope" aria-current="page">原型范围</button>
+        <button type="button" data-target="pages-content">页面与内容</button>
+        <button type="button" data-target="blank-1-reconstruction">空白页1还原稿</button>
+        <button type="button" data-target="work-order-detail-reconstruction">工单详情还原稿</button>
+        <button type="button" data-target="blank-2-reconstruction">空白页2还原稿</button>
+        <button type="button" data-target="blank-3-reconstruction">空白页3元素化</button>
+        <button type="button" data-target="blank-5-reconstruction">排产后台-每周菜单还原稿</button>
+      </nav>
+    </aside>
+    <main>
+      <h1>备餐屏智能体 · 主规格</h1>
+      <section id="prototype-scope">
+        <h2>原型范围</h2>
+        <h3>本次呈现</h3>
+        <ul>
+          <li>十一个可切换页面：每周菜单、语音生成菜单、语音生成菜单-无餐段、查看菜单、智能排产 -分批、语音排产、订单采购、采购清单、确认下单、下单成功、下单失败。</li>
+          <li>菜单生成对话、排产确认弹窗、批次明细展开、采购数量步进和下单回流等可点击演示。</li>
+          <li>智能体原型目录新增三个子页面：版本管理、流程图、语义解析；三个入口位于“智能体”节点上方，与截图中的目录层级一致，并分别展示版本信息、业务流程图和语义解析结果。</li>
+          <li>菜单、排产、采购三个目录分组支持展开与折叠。</li>
+          <li>最外层导航支持通过右侧按钮向左收起，再次点击可展开。</li>
+          <li>空白页4的“计划排产”任务卡片在菜名右侧以同行流式布局显示紫色椭圆标识“批次 1”，与菜名留有间距且不遮挡内容；两张“临时加菜”卡片不显示批次标识。</li>
+        </ul>
+      </section>
+
+      <section id="blank-3-reconstruction" class="reconstruction-review">
+        <h2>空白页3 · 可选择元素重构稿</h2>
+        <p class="definition">已确认并完成：标题、日期时间、工作概览、菜品列表、待办任务、烹饪提示、表格行、状态标签和时间节点均已拆为真实 HTML/CSS 元素，运行页不再引用整图。</p>
+        <div class="blank3-stage-shell" aria-label="空白页3元素化视觉稿">
+          <div class="blank3-stage" data-reconstruction-id="blank-3-dashboard-page">
+            <header class="b3-header" data-reconstruction-id="dashboard-header"><div class="b3-logo">XI<br>XIANG</div><div class="b3-title">智能厨房自动生产任务进度监控大屏</div><div class="b3-clock"><small>2025年02月22日 星期二</small><strong>◷ 18:36:57</strong></div></header>
+            <div class="b3-summary-line">今日 <b>午餐</b> 共需自动生产 <b>5</b> 道菜品，预计备菜时长 <b>2小时49分</b>，为确保 <b>12:00</b> 能够准时出餐，请 <b>08:22</b> 开始备菜</div>
+            <section class="b3-panel b3-overview" data-reconstruction-id="work-overview"><h3 class="b3-panel-title">工作概览</h3><div class="b3-metrics"><span class="icon">♨<small>自动生产菜品</small></span><span><b>12</b>总数</span><span><b>9</b>有预处理任务</span><span><b>3</b>无预处理任务</span></div><div class="b3-preprocess"><div><strong>预处理任务　20↑</strong><small>剩余处理时长　<b>1</b>小时<b>15</b>分钟</small></div><div class="b3-legend"><span><i></i>已完成　14↑</span><span><i class="red"></i>待处理　6↑</span></div></div></section>
+            <section class="b3-panel b3-menu" data-reconstruction-id="dish-list"><h3 class="b3-panel-title">菜品列表</h3><table class="b3-menu-table"><thead><tr><th>序号</th><th>批次</th><th>菜品名称</th><th>生产数量</th><th>预处理任务</th><th>完成情况</th></tr></thead><tbody><tr><td>01</td><td>批次1</td><td>青椒香干肉丝　<span class="b3-chip yellow">今 午</span> <span class="b3-chip">10份/盆</span></td><td>2盆</td><td><span class="b3-chip yellow">过油</span></td><td>已完成</td></tr><tr><td>02</td><td>批次1</td><td>芹香水面筋肉丝　<span class="b3-chip yellow">今 午</span> <span class="b3-chip">10份/盆</span></td><td>1盆</td><td><span class="b3-chip red">腌制</span></td><td class="b3-status-warn">待处理</td></tr><tr><td>03</td><td>批次2</td><td>肉沫小油片　<span class="b3-chip yellow">今 午</span> <span class="b3-chip">10份/盆</span></td><td>1盆</td><td><span class="b3-chip red">腌制</span></td><td>已完成</td></tr><tr><td>04</td><td>批次2</td><td>红烧牛腩　<span class="b3-chip yellow">今 午</span> <span class="b3-chip">10份/盆</span></td><td>1盆</td><td><span class="b3-chip">焯烫</span> <span class="b3-chip green">调制</span> <span class="b3-chip orange">蒸煮</span></td><td class="b3-status-warn">待处理</td></tr></tbody></table></section>
+            <section class="b3-panel b3-tasks" data-reconstruction-id="pending-tasks"><h3 class="b3-panel-title">待办任务</h3><div class="b3-task-filters"><span class="b3-select">请选择完成状态 ▼</span><span class="b3-select">请选择任务类型 ▼</span></div><article class="b3-task-group"><div class="b3-task-head"><span class="b3-task-type">腌 制</span><span><small>食材名称</small><strong>鸡腿肉块</strong>（1kg）[GT0210]</span><span><small>食材总重量</small><strong>8000g</strong></span><button class="b3-complete">全部完成</button></div><div class="b3-task-detail">黄焖鸡<br>食材重量：4000g　　所需调料：盐15g；鸡精15g；白胡椒粉10g；老抽30g；生抽30g；大豆油30g<br>操作流程：<i class="b3-step">1</i>腌制30分钟23℃ <u class="b3-view">查看操作</u></div></article><article class="b3-task-group"><div class="b3-task-detail">咖喱鸡块<br>食材重量：4000g　　所需调料：咖喱粉40g；盐15g；鸡精20g；糖10g；料酒30g；白胡椒粉12g<br>操作流程：<i class="b3-step">1</i>腌制30分钟23℃ <u class="b3-view">查看操作</u></div></article><article class="b3-task-group"><div class="b3-task-head"><span class="b3-task-type yellow">过 油</span><span><small>食材名称</small><strong>CY精肉丝</strong>（1kg）[CY00058]</span><span><small>食材总重量</small><strong>900g</strong></span><button class="b3-complete">全部完成</button></div><div class="b3-task-detail">青椒香干肉丝<br>食材重量：900g　　所需调料：无<br>操作流程：<i class="b3-step">1</i>过油1分钟120℃ <u class="b3-view">查看操作</u></div></article></section>
+            <section class="b3-panel b3-cooking" data-reconstruction-id="cooking-prompts"><h3 class="b3-panel-title">烹饪提示</h3><div class="b3-cooking-list"><article class="b3-cooking-row"><div class="b3-cooking-name">绝味鸭腿块</div><div class="b3-alert">已晚于 09:15 10分钟，请尽快安排自动生产！</div><div class="b3-timeline"><span>08:35<i>预</i></span><span>09:05<i>称</i></span><span>09:15<i>烹</i></span><span>09:40<i>出</i></span></div></article><article class="b3-cooking-row"><div class="b3-cooking-name">黄焖鸡</div><div class="b3-timeline"><span>08:40<i>预</i></span><span>09:05<i>称</i></span><span>09:15<i>烹</i></span><span>09:40<i>出</i></span></div></article><article class="b3-cooking-row"><div class="b3-cooking-name">油面筋塞肉</div><div class="b3-timeline"><span>无<i>预</i></span><span>09:05<i>称</i></span><span>10:00<i>烹</i></span><span>10:15<i>出</i></span></div></article><article class="b3-cooking-row"><div class="b3-cooking-name">芹香水面筋肉丝</div><div class="b3-timeline"><span>10:47<i>预</i></span><span>11:17<i>称</i></span><span>11:27<i>烹</i></span><span>11:35<i>出</i></span></div></article><article class="b3-cooking-row"><div class="b3-cooking-name">红烧牛腩</div><div class="b3-timeline"><span>完成<i>预</i></span><span>完成<i>称</i></span><span>10:25<i>烹</i></span><span>11:55<i>出</i></span></div></article></div></section>
+          </div>
+        </div>
+        <p class="reconstruction-note">已实施：React 不再引用 <code>blank3-dashboard.png</code> 作为页面；每个板块、表格、任务行、标签、数值和时间节点都可在代码或页面编辑器中独立选择与修改。已按原图补齐顶栏装饰、日期切换、任务物料与重量、预处理流程/完成情况，以及五条烹饪提示及其时长；菜品列表保留用户指定的“批次”列并扩展示例为 9 道菜。烹饪提示中每条菜名下方也增加了不遮挡内容的批次标识，批次覆盖批次1、批次2、批次3。</p>
+      </section>
+
+      <section id="blank-1-reconstruction" class="reconstruction-review">
+        <h2>空白页1 · 生产工单页 1:1 还原稿</h2>
+        <p class="definition">已完成：按 2926×1562 源图同步到“空白页1”，保持侧边栏、顶部导航、筛选区、工单表格和分页的字体、颜色、尺寸与排版。页面由静态 React/HTML/CSS 元素组成，不使用整图；用户未要求交互。</p>
+        <div class="blank1-stage-shell" aria-label="空白页1生产工单截图还原视觉稿">
+          <div class="blank1-stage" id="blank-1-production-orders-stage" data-reconstruction-id="blank-1-production-orders-page">
+            <img src="./reconstruction/source-blank-1-production-orders.png" alt="生产工单页 1:1 固定尺寸视觉基准">
+            <i class="blank1-map-region" data-reconstruction-id="blank-1-sidebar-navigation" style="left:0;top:0;width:351px;height:1562px"></i>
+            <i class="blank1-map-region" data-reconstruction-id="blank-1-top-navigation" style="left:351px;top:0;width:2575px;height:136px"></i>
+            <i class="blank1-map-region" data-reconstruction-id="blank-1-canteen-mark" style="left:2820px;top:0;width:64px;height:78px"></i>
+            <i class="blank1-map-region" data-reconstruction-id="blank-1-filter-panel" style="left:382px;top:166px;width:2527px;height:280px"></i>
+            <i class="blank1-map-region" data-reconstruction-id="blank-1-production-order-table" style="left:382px;top:478px;width:2527px;height:701px"></i>
+            <i class="blank1-map-region" data-reconstruction-id="blank-1-pagination" style="left:2240px;top:1208px;width:662px;height:65px"></i>
+          </div>
+        </div>
+        <p class="reconstruction-note">素材矩阵：汉堡菜单、搜索、日历、下拉箭头、列表、分页箭头与右上食堂标识在最终 React 中以 CSS/SVG 表达；所有表单、表格与文字已恢复为真实 HTML。页面无照片或插画，不需要生成位图。交互边界：所有控件仅呈现静态外观。</p>
+        <div class="blank2-comparison"><figure><img src="./reconstruction/source-blank-1-production-orders.png" alt="空白页1原图"><figcaption>原图 · 2926×1562</figcaption></figure><figure><img src="./reconstruction/visual-check/blank-1-react.png" alt="空白页1 React 运行截图"><figcaption>React 运行页 · 2926×1562</figcaption></figure></div>
+      </section>
+
+      <section id="work-order-detail-reconstruction" class="reconstruction-review">
+        <h2>工单详情 · 空白页1子页面 1:1 还原稿</h2>
+        <p class="definition">已确认并完成：按 2916×1564 源图创建“工单详情”，并在原型左侧目录树中缩进显示为“空白页1”的子节点。页面使用真实 React/HTML/CSS 元素，完整保留生产管理侧栏、面包屑与页签、工单摘要、六个详情页签、餐品信息表格和右下角关闭按钮；关闭后返回“空白页1”。</p>
+        <h3>页面层级与入口位置</h3>
+        <div class="work-order-detail-placement" aria-label="工单详情在左侧目录中的位置示意">
+          <nav class="work-order-detail-placement-nav">
+            <strong>其他</strong>
+            <button class="parent" type="button">空白页1</button>
+            <button class="child" type="button">工单详情</button>
+            <button type="button">空白页2</button>
+            <button type="button">空白页3</button>
+            <button type="button">空白页4</button>
+          </nav>
+          <div class="work-order-detail-placement-canvas">点击“工单详情”后在右侧展示详情页</div>
+        </div>
+        <div class="work-order-detail-stage-shell" aria-label="工单详情截图还原视觉稿">
+          <div class="work-order-detail-stage" id="work-order-detail-stage" data-reconstruction-id="work-order-detail-page">
+            <img src="./reconstruction/source-work-order-detail.png" alt="工单详情页 1:1 固定尺寸视觉基准">
+            <i class="work-order-detail-map-region" id="work-order-detail-sidebar" data-reconstruction-id="work-order-detail-sidebar" style="left:0;top:0;width:338px;height:1564px"></i>
+            <i class="work-order-detail-map-region" id="work-order-detail-header" data-reconstruction-id="work-order-detail-header" style="left:338px;top:0;width:2578px;height:133px"></i>
+            <i class="work-order-detail-map-region" id="work-order-detail-canteen-mark" data-reconstruction-id="work-order-detail-canteen-mark" style="left:2810px;top:0;width:68px;height:76px"></i>
+            <i class="work-order-detail-map-region" id="work-order-detail-summary" data-reconstruction-id="work-order-detail-summary" style="left:370px;top:155px;width:2490px;height:293px"></i>
+            <i class="work-order-detail-map-region" id="work-order-detail-tabs" data-reconstruction-id="work-order-detail-tabs" style="left:370px;top:480px;width:2490px;height:61px"></i>
+            <i class="work-order-detail-map-region" id="work-order-detail-table" data-reconstruction-id="work-order-detail-table" style="left:370px;top:559px;width:2490px;height:240px"></i>
+            <i class="work-order-detail-map-region" id="work-order-detail-close" data-reconstruction-id="work-order-detail-close" style="left:2734px;top:1493px;width:124px;height:55px"></i>
+          </div>
+        </div>
+        <p class="reconstruction-note">已实施：菜单、下拉、页签、表格、按钮和全部文字均为 HTML/CSS；右上食堂标识使用 CSS 表达，不依赖整屏截图。在“其他”目录分组中，“空白页1”可展开/收起并显示子节点“工单详情”；点击子节点或生产工单表格中的“查看”进入详情页，点击“关闭”返回“空白页1”。</p>
+        <div class="work-order-detail-comparison">
+          <figure><img src="./reconstruction/source-work-order-detail.png" alt="工单详情源图"><figcaption>原图 · 2916×1564</figcaption></figure>
+          <figure><img src="./reconstruction/visual-check/work-order-detail-render.png" alt="工单详情 HTML 视觉稿"><figcaption>HTML 视觉稿 · 2916×1564</figcaption></figure>
+        </div>
+        <div class="work-order-detail-comparison">
+          <figure><img src="./reconstruction/source-work-order-detail.png" alt="工单详情原始参考图"><figcaption>原图 · 2916×1564</figcaption></figure>
+          <figure><img src="./reconstruction/visual-check/work-order-detail-react.png" alt="工单详情 React 运行截图"><figcaption>React 最终运行页 · 已包含左侧原型目录子节点</figcaption></figure>
+        </div>
+      </section>
+
+      <section id="pages-content">
+        <h2>页面与内容方案</h2>
+        <div class="table-wrap"><table>
+          <thead><tr><th>页面/视图</th><th>页面作用</th><th>主要模块与内容</th><th>与其他页面的关系</th></tr></thead>
+          <tbody>
+            <tr><td>每周菜单</td><td>按周、日期与餐段查看菜单。</td><td>周切换、七天菜单网格、已有菜单/添加菜单入口、语音唤醒入口。</td><td>已有菜单进入查看菜单；添加菜单和唤醒入口进入语音生成菜单。</td></tr>
+            <tr><td>语音生成菜单</td><td>演示菜单需求对话与生成结果。</td><td>助手/用户气泡、点击推进对话、生成成功后的“查看菜单”及后续新菜单确认对话。</td><td>查看菜单回到每周菜单。</td></tr>
+            <tr><td>语音生成菜单-无餐段</td><td>保留其余对话，仅删除指定用户与语音助手话术并替换最终结果内容。</td><td>语音助手提示“当前所需排产日期中X月 X 日、X月X 日无餐段，请进入排产后台进行餐段设置后重新生成菜单”、返回按钮。</td><td>点击返回进入每周菜单。</td></tr>
+            <tr><td>查看菜单</td><td>查看当天午晚餐的餐品与生产数量。</td><td>餐品表格、数量步进器、删除、返回、加菜、去排产。</td><td>返回每周菜单；加菜进语音生成菜单；去排产进智能排产 -分批。</td></tr>
+            <tr><td>智能排产 -分批</td><td>查看与编辑每天的生产计划。</td><td>周/日切换、午晚餐卡片、编辑模式、智能排产与保存。</td><td>语音唤醒进入语音排产。</td></tr>
+            <tr><td>语音排产</td><td>演示排产需求对话和预生成结果。</td><td>助手/用户气泡、排产日期缺少菜单时的生成新菜单/去除缺失日期继续分支、排产计划确认弹窗、前往查看排产计划。</td><td>生成新菜单时自动带入缺少菜单的日期；继续时仅按含有菜单的日期进入后续排产；确认弹窗为当前页模态。</td></tr>
+            <tr><td>订单采购</td><td>根据周/日期查看原料需订量。</td><td>时间筛选、原料表、更新需订量、去采购。</td><td>去采购进入采购清单。</td></tr>
+            <tr><td>采购清单</td><td>调整下单数量并核对金额。</td><td>分类商品、数量步进器、单价、订单摘要、订单类型、送达时间。</td><td>去结算进确认下单；返回修改回订单采购。</td></tr>
+            <tr><td>确认下单</td><td>最终核对采购字段与总计。</td><td>采购明细表、实际需求量步进器、送达时间、总计/总数。</td><td>确认下单进入下单成功；返回修改回采购清单。</td></tr>
+            <tr><td>下单成功</td><td>反馈订单完成。</td><td>成功状态、预计送达时间、返回订单采购。</td><td>返回订单采购重新开始采购操作。</td></tr>
+            <tr><td>下单失败</td><td>反馈订单失败。</td><td>失败状态、失败标题、返回订单采购；不显示预计送达时间。</td><td>返回订单采购重新开始采购操作。</td></tr>
+            <tr><td>版本管理</td><td>智能体目录下的版本管理子页面。</td><td>复用 <code>src/prototypes/untitled-3</code> 的版本管理内容。</td><td>由最外层左侧“版本管理”入口进入。</td></tr>
+            <tr><td>流程图</td><td>智能体目录下的流程图子页面。</td><td>复用 <code>src/prototypes/untitled-5</code> 的业务流程图与页面流程内容。</td><td>由最外层左侧“流程图”入口进入。</td></tr>
+            <tr><td>语义解析</td><td>智能体目录下的语义解析子页面。</td><td>复用 <code>src/prototypes/untitled-6</code> 的语义解析表格内容。</td><td>由最外层左侧“语义解析”入口进入。</td></tr>
+            <tr><td>需求标注一览</td><td>集中阅读当前页面的全部需求标注。</td><td>仅在当前页面存在需求标注时显示“需求一览”入口和数量；点击后从右侧打开抽屉，按标注查看器加载 <code>data.nodes</code> 后生成的运行时序号展示标题与完整正文，可通过关闭按钮或 Esc 隐藏。</td><td>抽屉序号与现有蓝色标注圆点一致；切换页面时自动关闭，并按新页面重新统计。</td></tr>
+            <tr><td>空白页2 / 称重</td><td>按参考图展示称重任务总览与逐项操作。</td><td>状态统计、六条任务、每条任务的批次标识（批次1至批次3）、餐段章、入口/出口、跳过/置顶/手动操作、底部开始按钮。</td><td>本阶段仅确认 1:1 HTML 视觉稿；确认后覆盖空白页2并补齐可点击反馈。</td></tr>
+          </tbody>
+        </table></div>
+      </section>
+
+      <section id="schedule-once-reconstruction" class="reconstruction-review">
+        <h2>智能排产-一次性 · 截图还原稿</h2>
+        <p class="definition">本阶段只提交截图替换视觉稿：将第一张图中的批次分布内容替换为第二张图的“当天预制”横向排产内容；右上角保留现有唤醒入口。确认后再同步到 React 页面。</p>
+        <div class="visual-stage" aria-label="智能排产-一次性截图视觉稿">
+          <img src="./reconstruction/source-prep-row-replacement.png" alt="智能排产-一次性替换后的当天预制内容" />
+          <div class="wake-overlay">说“小熙小熙”<br><strong>唤醒我</strong></div>
+        </div>
+        <p class="reconstruction-note">替换关系：第一张图是被替换内容，第二张图是最终“当天预制”内容。拟保留交互：周次、日期、编辑按钮与唤醒按钮可点击。</p>
+        <div class="asset-review">
+          <figure><img src="./reconstruction/source-schedule-once.png" alt="第一张截图" /><figcaption>被替换内容：批次分布</figcaption></figure>
+          <figure><img src="../assets/wake-card-reference.png" alt="第二张截图" /><figcaption>参考图：唤醒按钮（保留为可交互按钮）</figcaption></figure>
+          <figure><img src="./reconstruction/source-prep-row-replacement.png" alt="第二张截图" /><figcaption>替换内容：当天预制横向排产</figcaption></figure>
+        </div>
+      </section>
+
+      <section id="blank-2-reconstruction" class="reconstruction-review">
+        <h2>空白页2 · 称重页 1:1 还原稿</h2>
+        <p class="definition">已确认并完成：按 1906×1068 源图复刻字体、颜色、间距和排版，现已覆盖“空白页2”。React 使用真实文本、按钮与列表结构，并保留返回、任务操作及开始按钮。</p>
+        <div class="blank2-stage-shell" aria-label="空白页2称重截图还原视觉稿">
+          <div class="blank2-stage" data-reconstruction-id="blank-2-page">
+            <div class="b2-app">
+              <div class="b2-status" data-reconstruction-id="status-bar"><span class="b2-wifi" aria-hidden="true"></span><span class="b2-time">20:20</span></div>
+              <div class="b2-header" data-reconstruction-id="title-bar">
+                <button class="b2-back" type="button"><svg viewBox="0 0 36 36" aria-hidden="true"><path d="M29 18H7M16 8 6 18l10 10" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>返回</button>
+                <div class="b2-title">称重</div>
+              </div>
+              <div class="b2-summary" data-reconstruction-id="status-summary">
+                <span class="b2-pill gray">未开始：6</span><span class="b2-pill purple">待称重：5</span><span class="b2-pill blue">称重中：5</span><span class="b2-pill amber">待加料：5</span><span class="b2-pill green">已完成：12</span><span class="b2-pill red">已作废：5</span>
+              </div>
+              <div class="b2-rows" data-reconstruction-id="task-list">
+                <article class="b2-row" data-reconstruction-id="task-water-fish">
+                  <div class="b2-state weighing">称重中</div><div class="b2-main"><div class="b2-dish"><i class="b2-dot green"></i>水煮鱼（100份/8盆）<b class="b2-batch">批次 1</b></div><div class="b2-tags"><span class="b2-mini">预</span><span class="b2-mini gold">称</span><span>鳗鱼版</span><span>鹌鹑蛋</span></div></div><div class="b2-meal">早餐</div><div class="b2-actions"><button class="b2-action entry">入口</button><button class="b2-action skip">跳过</button></div>
+                </article>
+                <article class="b2-row" data-reconstruction-id="task-frog">
+                  <div class="b2-state feeding">待加料</div><div class="b2-main"><div class="b2-dish"><i class="b2-dot red"></i>小炒牛蛙（100份/5盆）</div><div class="b2-tags"><span class="b2-mini">预</span><span class="b2-mini gold">称</span><span>鳗鱼版</span><span>鹌鹑蛋</span><span>香干</span><span>鹌鹑蛋</span><span>鳗鱼版</span><span>鹌鹑蛋</span><span>鹌鹑蛋</span><span>鹌鹑蛋</span><span>鹌鹑蛋</span><span>鹌鹑蛋</span><span>甜咸版</span></div></div><div class="b2-meal">午餐</div><div class="b2-actions"><button class="b2-action manual">手动</button><button class="b2-action pin">置顶</button></div>
+                </article>
+                <article class="b2-row" data-reconstruction-id="task-beef-waiting">
+                  <div class="b2-state waiting">待称重</div><div class="b2-main"><div class="b2-dish no-dot">土豆牛腩（100份/10盆）</div><div class="b2-tags no-dot"><span>鳗鱼版</span><span>鹌鹑蛋</span><span>香干</span><span>鹌鹑蛋</span><span>鳗鱼版</span><span>鹌鹑蛋</span><span>鹌鹑蛋</span><span>鹌鹑蛋</span><span>鹌鹑蛋</span><span>鹌鹑蛋</span><span>甜咸版</span></div></div><div class="b2-meal">晚餐</div><div class="b2-actions"><button class="b2-action exit">出口</button><button class="b2-action pin">置顶</button></div>
+                </article>
+                <article class="b2-row" data-reconstruction-id="task-pickled-fish-not-started">
+                  <div class="b2-state not-started">未开始</div><div class="b2-main"><div class="b2-dish"><i class="b2-dot orange"></i>酸菜鱼（100份/8盆）</div><div class="b2-tags"><span class="b2-mini gold">称</span><span>鳗鱼版</span><span>鹌鹑蛋</span><span>香干</span><span>鹌鹑蛋</span><span>鳗鱼版</span><span>鹌鹑蛋</span></div></div><div class="b2-meal">宵夜</div><div class="b2-actions"><button class="b2-action entry">入口</button><button class="b2-action skip">跳过</button></div>
+                </article>
+                <article class="b2-row" data-reconstruction-id="task-beef-invalid">
+                  <div class="b2-state invalid">已作废</div><div class="b2-main"><div class="b2-dish no-dot">土豆牛腩（100份/10盆）</div><div class="b2-tags"><span class="b2-mini gold">称</span><span class="b2-mini green">出</span><span>鳗鱼版</span><span>鹌鹑蛋</span><span>香干</span><span>鹌鹑蛋</span><span>鳗鱼版</span><span>鹌鹑蛋</span><span>鹌鹑蛋</span><span>鹌鹑蛋</span><span>鹌鹑蛋</span><span>鹌鹑蛋</span><span>甜咸版</span></div></div><div class="b2-meal">下午茶</div><div class="b2-actions"><button class="b2-action manual">手动</button></div>
+                </article>
+                <article class="b2-row" data-reconstruction-id="task-pickled-fish-complete">
+                  <div class="b2-state completed">已完成</div><div class="b2-main"><div class="b2-dish no-dot">酸菜鱼（100份/8盆）</div><div class="b2-tags no-dot"><span>鳗鱼版</span><span>鹌鹑蛋</span><span>香干</span><span>鹌鹑蛋</span><span>鳗鱼版</span><span>鹌鹑蛋</span><span>鹌鹑蛋</span></div></div><div class="b2-meal">晚餐</div>
+                </article>
+              </div>
+              <button class="b2-start" type="button" data-reconstruction-id="start-action">开始</button>
+            </div>
+          </div>
+        </div>
+        <p class="reconstruction-note">素材矩阵：返回箭头、Wi‑Fi、状态圆点、餐段章、胶囊按钮均采用 HTML/CSS/SVG；页面不存在需要切图或生成的照片、插画、Logo。最终 React 将恢复为真实文本和按钮，不引用整屏截图。</p>
+        <div class="blank2-comparison">
+          <figure><img src="./reconstruction/source-blank-2-weighing.png" alt="空白页2还原源图"><figcaption>原图 · 1906×1068</figcaption></figure>
+          <figure><img src="./reconstruction/visual-check/blank-2-react.png" alt="空白页2 React 最终运行截图"><figcaption>React 最终运行页 · 1906×1068</figcaption></figure>
+        </div>
+      </section>
+
+      <section id="blank-5-reconstruction" class="reconstruction-review">
+        <h2>排产后台-每周菜单 · 单品生产计划还原稿</h2>
+        <p class="definition">已实现：仅新增“排产后台-每周菜单”，按确认截图还原单品生产计划的七天排产主视图；现有空白页1至4、既有文字和样式均未修改。运行页使用真实 HTML/CSS 元素，不引用整屏截图。</p>
+        <div class="blank5-stage-shell" aria-label="排产后台-每周菜单 1:1 视觉稿">
+          <div class="blank5-stage" data-reconstruction-id="blank-5-page">
+            <img src="./reconstruction/source-blank-5-ai-menu.png" alt="排产后台-每周菜单 单品生产计划源图" />
+          </div>
+        </div>
+        <p class="reconstruction-note">素材矩阵：页面为后台管理界面、导航、周次切换、七天餐段网格和状态卡片，没有需要提取或生成的照片、插画或复杂位图。运行页已以 HTML/CSS 还原；点击“AI生成菜单”仍可打开可操作表单弹窗。</p>
+        <p class="reconstruction-note">验收重点：固定视口 2588×1484 下，顶部栏、左侧导航、四个周次、七天日期列、宵夜/其他空餐段、早餐/午餐/晚餐卡片及周五至周日状态文字须与确认截图一致。</p>
+      </section>
+    </main>
+  </div>
+  <script>
+    const captureTarget = new URLSearchParams(location.search).get('capture');
+    if (captureTarget === 'blank-2') document.body.classList.add('capture-blank2');
+    if (captureTarget === 'work-order-detail') document.body.classList.add('capture-work-order-detail');
+    const blank2Shell = document.querySelector('.blank2-stage-shell');
+    const blank1Shell = document.querySelector('.blank1-stage-shell');
+    const blank3Shell = document.querySelector('.blank3-stage-shell');
+    const blank5Shell = document.querySelector('.blank5-stage-shell');
+    const workOrderDetailShell = document.querySelector('.work-order-detail-stage-shell');
+    const syncBlank2Scale = () => {
+      if (!blank2Shell || document.body.classList.contains('capture-blank2')) return;
+      blank2Shell.style.setProperty('--stage-scale', String(blank2Shell.clientWidth / 1906));
+    };
+    new ResizeObserver(syncBlank2Scale).observe(blank2Shell);
+    syncBlank2Scale();
+    const syncBlank1Scale = () => {
+      if (!blank1Shell) return;
+      blank1Shell.style.setProperty('--blank1-scale', String(blank1Shell.clientWidth / 2926));
+    };
+    new ResizeObserver(syncBlank1Scale).observe(blank1Shell);
+    syncBlank1Scale();
+    const syncWorkOrderDetailScale = () => {
+      if (!workOrderDetailShell || document.body.classList.contains('capture-work-order-detail')) return;
+      workOrderDetailShell.style.setProperty('--work-order-detail-scale', String(workOrderDetailShell.clientWidth / 2916));
+    };
+    new ResizeObserver(syncWorkOrderDetailScale).observe(workOrderDetailShell);
+    syncWorkOrderDetailScale();
+    const syncBlank3Scale = () => {
+      if (!blank3Shell) return;
+      blank3Shell.style.setProperty('--blank3-scale', String(blank3Shell.clientWidth / 2056));
+    };
+    new ResizeObserver(syncBlank3Scale).observe(blank3Shell);
+    syncBlank3Scale();
+    const syncBlank5Scale = () => {
+      if (!blank5Shell) return;
+      blank5Shell.style.setProperty('--blank5-scale', String(blank5Shell.clientWidth / 2588));
+    };
+    new ResizeObserver(syncBlank5Scale).observe(blank5Shell);
+    syncBlank5Scale();
+    const navItems = [...document.querySelectorAll('[data-target]')];
+    navItems.forEach((item) => item.addEventListener('click', () => {
+      document.getElementById(item.dataset.target)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      navItems.forEach((navItem) => navItem.removeAttribute('aria-current'));
+      item.setAttribute('aria-current', 'page');
+    }));
+  </script>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ startOnLoad: true, theme: 'base', themeVariables: { primaryColor: '#e6f5ef', primaryTextColor: '#222832', primaryBorderColor: '#008f5d', lineColor: '#008f5d', secondaryColor: '#f2faf7', tertiaryColor: '#ffffff', edgeLabelBackground: '#ffffff', fontFamily: 'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif' } });
+  </script>
+</body>
+</html>

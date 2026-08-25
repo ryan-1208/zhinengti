@@ -1,0 +1,142 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "path": "src/prototypes/untitled-2/.spec/reconstruction/source-blank-3-dashboard.png",
+    "sha256": "7b477e132dde7c532db7e3e59837e91f54d3271621bdf0f5c8cf9d2a1354fcb6",
+    "width": 2056,
+    "height": 1166,
+    "viewport": {
+      "width": 2056,
+      "height": 1166,
+      "deviceScaleFactor": 1
+    }
+  },
+  "elements": [
+    {
+      "id": "blank-3-dashboard-page",
+      "kind": "page",
+      "sourceBBox": {
+        "x": 0,
+        "y": 0,
+        "width": 2056,
+        "height": 1166
+      },
+      "targetBBox": {
+        "x": 0,
+        "y": 0,
+        "width": 2056,
+        "height": 1166
+      },
+      "representation": "html",
+      "candidates": [],
+      "selectedCandidateId": null,
+      "specElementId": "blank-3-dashboard-page",
+      "reactTarget": "DashboardPage"
+    },
+    {
+      "id": "dashboard-header",
+      "kind": "header",
+      "sourceBBox": {
+        "x": 65,
+        "y": 65,
+        "width": 1925,
+        "height": 92
+      },
+      "targetBBox": {
+        "x": 65,
+        "y": 65,
+        "width": 1925,
+        "height": 92
+      },
+      "representation": "html",
+      "candidates": [],
+      "selectedCandidateId": null,
+      "specElementId": "dashboard-header",
+      "reactTarget": "DashboardPage .dashboard-header"
+    },
+    {
+      "id": "work-overview",
+      "kind": "metrics",
+      "sourceBBox": {
+        "x": 70,
+        "y": 212,
+        "width": 660,
+        "height": 260
+      },
+      "targetBBox": {
+        "x": 70,
+        "y": 212,
+        "width": 660,
+        "height": 260
+      },
+      "representation": "html",
+      "candidates": [],
+      "selectedCandidateId": null,
+      "specElementId": "work-overview",
+      "reactTarget": "DashboardPage .work-overview"
+    },
+    {
+      "id": "dish-list",
+      "kind": "table",
+      "sourceBBox": {
+        "x": 770,
+        "y": 212,
+        "width": 1195,
+        "height": 260
+      },
+      "targetBBox": {
+        "x": 770,
+        "y": 212,
+        "width": 1195,
+        "height": 260
+      },
+      "representation": "html",
+      "candidates": [],
+      "selectedCandidateId": null,
+      "specElementId": "dish-list",
+      "reactTarget": "DashboardPage .dish-list"
+    },
+    {
+      "id": "pending-tasks",
+      "kind": "task-list",
+      "sourceBBox": {
+        "x": 70,
+        "y": 507,
+        "width": 1150,
+        "height": 570
+      },
+      "targetBBox": {
+        "x": 70,
+        "y": 507,
+        "width": 1150,
+        "height": 570
+      },
+      "representation": "html",
+      "candidates": [],
+      "selectedCandidateId": null,
+      "specElementId": "pending-tasks",
+      "reactTarget": "DashboardPage .pending-tasks"
+    },
+    {
+      "id": "cooking-prompts",
+      "kind": "timeline-list",
+      "sourceBBox": {
+        "x": 1260,
+        "y": 507,
+        "width": 705,
+        "height": 570
+      },
+      "targetBBox": {
+        "x": 1260,
+        "y": 507,
+        "width": 705,
+        "height": 570
+      },
+      "representation": "html",
+      "candidates": [],
+      "selectedCandidateId": null,
+      "specElementId": "cooking-prompts",
+      "reactTarget": "DashboardPage .cooking-prompts"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 3,
+  "kind": "prototype-edit-comments",
+  "resource": {
+    "id": "annotation-demo",
+    "targetPath": "prototypes/annotation-demo",
+    "filePath": ".axhub/make/comments/bc44f46aa3c5784db40ea77a272acf7db46c848093470cb5ef3a3280a51c31de.json"
+  },
+  "comments": [],
+  "images": []
+}

@@ -1,0 +1,352 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "path": "src/prototypes/untitled-2/.spec/reconstruction/source-blank-2-weighing.png",
+    "sha256": "e1687b07f0ed25757b02024351d0a16913bce3661a250658bd7ebaa16db50422",
+    "width": 1906,
+    "height": 1068,
+    "viewport": {
+      "width": 1906,
+      "height": 1068,
+      "deviceScaleFactor": 1
+    }
+  },
+  "elements": [
+    {
+      "id": "blank-2-page",
+      "kind": "page",
+      "sourceBBox": {
+        "x": 0,
+        "y": 0,
+        "width": 1906,
+        "height": 1068
+      },
+      "targetBBox": {
+        "x": 0,
+        "y": 0,
+        "width": 1906,
+        "height": 1068
+      },
+      "representation": "html",
+      "candidates": [],
+      "selectedCandidateId": null,
+      "specElementId": "blank-2-page",
+      "reactTarget": "BlankPage[blank-2]"
+    },
+    {
+      "id": "status-bar",
+      "kind": "system-status",
+      "sourceBBox": {
+        "x": 30,
+        "y": 19,
+        "width": 1838,
+        "height": 42
+      },
+      "targetBBox": {
+        "x": 30,
+        "y": 19,
+        "width": 1838,
+        "height": 42
+      },
+      "representation": "html",
+      "candidates": [],
+      "selectedCandidateId": null,
+      "specElementId": "status-bar",
+      "reactTarget": "WeighingPage .status-bar"
+    },
+    {
+      "id": "wifi-icon",
+      "kind": "icon",
+      "sourceBBox": {
+        "x": 1742,
+        "y": 27,
+        "width": 36,
+        "height": 25
+      },
+      "targetBBox": {
+        "x": 1742,
+        "y": 27,
+        "width": 36,
+        "height": 25
+      },
+      "representation": "svg",
+      "candidates": [],
+      "selectedCandidateId": null,
+      "specElementId": "status-bar .b2-wifi",
+      "reactTarget": "WeighingPage .wifi-icon"
+    },
+    {
+      "id": "title-bar",
+      "kind": "header",
+      "sourceBBox": {
+        "x": 30,
+        "y": 61,
+        "width": 1838,
+        "height": 91
+      },
+      "targetBBox": {
+        "x": 30,
+        "y": 61,
+        "width": 1838,
+        "height": 91
+      },
+      "representation": "html",
+      "candidates": [],
+      "selectedCandidateId": null,
+      "specElementId": "title-bar",
+      "reactTarget": "WeighingPage .title-bar"
+    },
+    {
+      "id": "back-arrow",
+      "kind": "icon",
+      "sourceBBox": {
+        "x": 68,
+        "y": 91,
+        "width": 35,
+        "height": 35
+      },
+      "targetBBox": {
+        "x": 68,
+        "y": 91,
+        "width": 35,
+        "height": 35
+      },
+      "representation": "svg",
+      "candidates": [],
+      "selectedCandidateId": null,
+      "specElementId": "title-bar .b2-back svg",
+      "reactTarget": "WeighingPage .back-button svg"
+    },
+    {
+      "id": "status-summary",
+      "kind": "status-pills",
+      "sourceBBox": {
+        "x": 52,
+        "y": 169,
+        "width": 1145,
+        "height": 48
+      },
+      "targetBBox": {
+        "x": 52,
+        "y": 169,
+        "width": 1145,
+        "height": 48
+      },
+      "representation": "html",
+      "candidates": [],
+      "selectedCandidateId": null,
+      "specElementId": "status-summary",
+      "reactTarget": "WeighingPage .status-summary"
+    },
+    {
+      "id": "task-list",
+      "kind": "list",
+      "sourceBBox": {
+        "x": 52,
+        "y": 233,
+        "width": 1783,
+        "height": 718
+      },
+      "targetBBox": {
+        "x": 52,
+        "y": 233,
+        "width": 1783,
+        "height": 718
+      },
+      "representation": "html",
+      "candidates": [],
+      "selectedCandidateId": null,
+      "specElementId": "task-list",
+      "reactTarget": "WeighingPage .task-list"
+    },
+    {
+      "id": "task-water-fish",
+      "kind": "task-row",
+      "sourceBBox": {
+        "x": 52,
+        "y": 233,
+        "width": 1783,
+        "height": 111
+      },
+      "targetBBox": {
+        "x": 52,
+        "y": 233,
+        "width": 1783,
+        "height": 111
+      },
+      "representation": "html",
+      "candidates": [],
+      "selectedCandidateId": null,
+      "specElementId": "task-water-fish",
+      "reactTarget": "WeighingPage .task-row[data-id=water-fish]"
+    },
+    {
+      "id": "task-frog",
+      "kind": "task-row",
+      "sourceBBox": {
+        "x": 52,
+        "y": 354,
+        "width": 1783,
+        "height": 110
+      },
+      "targetBBox": {
+        "x": 52,
+        "y": 354,
+        "width": 1783,
+        "height": 110
+      },
+      "representation": "html",
+      "candidates": [],
+      "selectedCandidateId": null,
+      "specElementId": "task-frog",
+      "reactTarget": "WeighingPage .task-row[data-id=frog]"
+    },
+    {
+      "id": "task-beef-waiting",
+      "kind": "task-row",
+      "sourceBBox": {
+        "x": 52,
+        "y": 475,
+        "width": 1783,
+        "height": 110
+      },
+      "targetBBox": {
+        "x": 52,
+        "y": 475,
+        "width": 1783,
+        "height": 110
+      },
+      "representation": "html",
+      "candidates": [],
+      "selectedCandidateId": null,
+      "specElementId": "task-beef-waiting",
+      "reactTarget": "WeighingPage .task-row[data-id=beef-waiting]"
+    },
+    {
+      "id": "task-pickled-fish-not-started",
+      "kind": "task-row",
+      "sourceBBox": {
+        "x": 52,
+        "y": 597,
+        "width": 1783,
+        "height": 109
+      },
+      "targetBBox": {
+        "x": 52,
+        "y": 597,
+        "width": 1783,
+        "height": 109
+      },
+      "representation": "html",
+      "candidates": [],
+      "selectedCandidateId": null,
+      "specElementId": "task-pickled-fish-not-started",
+      "reactTarget": "WeighingPage .task-row[data-id=pickled-fish-not-started]"
+    },
+    {
+      "id": "task-beef-invalid",
+      "kind": "task-row",
+      "sourceBBox": {
+        "x": 52,
+        "y": 718,
+        "width": 1783,
+        "height": 109
+      },
+      "targetBBox": {
+        "x": 52,
+        "y": 718,
+        "width": 1783,
+        "height": 109
+      },
+      "representation": "html",
+      "candidates": [],
+      "selectedCandidateId": null,
+      "specElementId": "task-beef-invalid",
+      "reactTarget": "WeighingPage .task-row[data-id=beef-invalid]"
+    },
+    {
+      "id": "task-pickled-fish-complete",
+      "kind": "task-row",
+      "sourceBBox": {
+        "x": 52,
+        "y": 839,
+        "width": 1783,
+        "height": 112
+      },
+      "targetBBox": {
+        "x": 52,
+        "y": 839,
+        "width": 1783,
+        "height": 112
+      },
+      "representation": "html",
+      "candidates": [],
+      "selectedCandidateId": null,
+      "specElementId": "task-pickled-fish-complete",
+      "reactTarget": "WeighingPage .task-row[data-id=pickled-fish-complete]"
+    },
+    {
+      "id": "meal-stamps",
+      "kind": "decorative-labels",
+      "sourceBBox": {
+        "x": 1209,
+        "y": 247,
+        "width": 84,
+        "height": 693
+      },
+      "targetBBox": {
+        "x": 1209,
+        "y": 247,
+        "width": 84,
+        "height": 693
+      },
+      "representation": "html",
+      "candidates": [],
+      "selectedCandidateId": null,
+      "specElementId": "task-list .b2-meal",
+      "reactTarget": "WeighingPage .meal-stamp"
+    },
+    {
+      "id": "task-actions",
+      "kind": "buttons",
+      "sourceBBox": {
+        "x": 1571,
+        "y": 258,
+        "width": 258,
+        "height": 548
+      },
+      "targetBBox": {
+        "x": 1571,
+        "y": 258,
+        "width": 258,
+        "height": 548
+      },
+      "representation": "html",
+      "candidates": [],
+      "selectedCandidateId": null,
+      "specElementId": "task-list .b2-actions",
+      "reactTarget": "WeighingPage .task-actions"
+    },
+    {
+      "id": "start-action",
+      "kind": "button",
+      "sourceBBox": {
+        "x": 52,
+        "y": 952,
+        "width": 1783,
+        "height": 80
+      },
+      "targetBBox": {
+        "x": 52,
+        "y": 952,
+        "width": 1783,
+        "height": 80
+      },
+      "representation": "html",
+      "candidates": [],
+      "selectedCandidateId": null,
+      "specElementId": "start-action",
+      "reactTarget": "WeighingPage .start-button"
+    }
+  ]
+}

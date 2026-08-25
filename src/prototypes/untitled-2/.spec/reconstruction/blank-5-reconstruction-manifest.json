@@ -1,0 +1,184 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "path": "src/prototypes/untitled-2/.spec/reconstruction/source-blank-5-ai-menu.png",
+    "sha256": "4e2a3e1096d332a61c535193864c7853fa04ba37dff41320e9cc28e0595e4a87",
+    "width": 2588,
+    "height": 1484,
+    "viewport": {
+      "width": 2588,
+      "height": 1484,
+      "deviceScaleFactor": 1
+    }
+  },
+  "elements": [
+    {
+      "id": "blank-5-page",
+      "kind": "page",
+      "sourceBBox": {
+        "x": 0,
+        "y": 0,
+        "width": 2588,
+        "height": 1484
+      },
+      "targetBBox": {
+        "x": 0,
+        "y": 0,
+        "width": 2588,
+        "height": 1484
+      },
+      "representation": "html",
+      "candidates": [],
+      "selectedCandidateId": null,
+      "specElementId": "blank-5-page",
+      "reactTarget": "BlankPage5"
+    },
+    {
+      "id": "blank-5-topbar",
+      "kind": "header",
+      "sourceBBox": {
+        "x": 34,
+        "y": 34,
+        "width": 2520,
+        "height": 82
+      },
+      "targetBBox": {
+        "x": 34,
+        "y": 34,
+        "width": 2520,
+        "height": 82
+      },
+      "representation": "html",
+      "candidates": [],
+      "selectedCandidateId": null,
+      "specElementId": "blank-5-topbar",
+      "reactTarget": "BlankPage5 .topbar"
+    },
+    {
+      "id": "blank-5-sidebar",
+      "kind": "navigation",
+      "sourceBBox": {
+        "x": 35,
+        "y": 116,
+        "width": 306,
+        "height": 1334
+      },
+      "targetBBox": {
+        "x": 35,
+        "y": 116,
+        "width": 306,
+        "height": 1334
+      },
+      "representation": "html",
+      "candidates": [],
+      "selectedCandidateId": null,
+      "specElementId": "blank-5-sidebar",
+      "reactTarget": "BlankPage5 .sidebar"
+    },
+    {
+      "id": "blank-5-plan-background",
+      "kind": "content",
+      "sourceBBox": {
+        "x": 341,
+        "y": 116,
+        "width": 2213,
+        "height": 1334
+      },
+      "targetBBox": {
+        "x": 341,
+        "y": 116,
+        "width": 2213,
+        "height": 1334
+      },
+      "representation": "html",
+      "candidates": [],
+      "selectedCandidateId": null,
+      "specElementId": "blank-5-plan-background",
+      "reactTarget": "BlankPage5 .plan-page"
+    },
+    {
+      "id": "blank-5-ai-menu-modal",
+      "kind": "modal",
+      "sourceBBox": {
+        "x": 559,
+        "y": 184,
+        "width": 1858,
+        "height": 1289
+      },
+      "targetBBox": {
+        "x": 559,
+        "y": 184,
+        "width": 1858,
+        "height": 1289
+      },
+      "representation": "html",
+      "candidates": [],
+      "selectedCandidateId": null,
+      "specElementId": "blank-5-ai-menu-modal",
+      "reactTarget": "BlankPage5 .ai-menu-modal"
+    },
+    {
+      "id": "blank-5-menu-form",
+      "kind": "form",
+      "sourceBBox": {
+        "x": 660,
+        "y": 314,
+        "width": 1714,
+        "height": 882
+      },
+      "targetBBox": {
+        "x": 660,
+        "y": 314,
+        "width": 1714,
+        "height": 882
+      },
+      "representation": "html",
+      "candidates": [],
+      "selectedCandidateId": null,
+      "specElementId": "blank-5-menu-form",
+      "reactTarget": "BlankPage5 .ai-menu-form"
+    },
+    {
+      "id": "blank-5-period-grid",
+      "kind": "table",
+      "sourceBBox": {
+        "x": 802,
+        "y": 643,
+        "width": 1587,
+        "height": 271
+      },
+      "targetBBox": {
+        "x": 802,
+        "y": 643,
+        "width": 1587,
+        "height": 271
+      },
+      "representation": "html",
+      "candidates": [],
+      "selectedCandidateId": null,
+      "specElementId": "blank-5-period-grid",
+      "reactTarget": "BlankPage5 .period-grid"
+    },
+    {
+      "id": "blank-5-modal-actions",
+      "kind": "actions",
+      "sourceBBox": {
+        "x": 1943,
+        "y": 1408,
+        "width": 326,
+        "height": 54
+      },
+      "targetBBox": {
+        "x": 1943,
+        "y": 1408,
+        "width": 326,
+        "height": 54
+      },
+      "representation": "html",
+      "candidates": [],
+      "selectedCandidateId": null,
+      "specElementId": "blank-5-modal-actions",
+      "reactTarget": "BlankPage5 .modal-actions"
+    }
+  ]
+}

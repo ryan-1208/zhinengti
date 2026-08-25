@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <title>智能体 Axure 原型复刻主规格</title>
+  <style>
+    body{font-family:Arial,"Microsoft YaHei",sans-serif;line-height:1.65;margin:40px;color:#172033}
+    h1{margin-bottom:8px}.meta{color:#526078}.card{border:1px solid #d8e0ec;border-radius:12px;padding:20px;margin:18px 0}
+    code{background:#f3f6fa;padding:2px 5px;border-radius:4px}.source{word-break:break-all}
+  </style>
+</head>
+<body>
+  <h1>智能体 Axure 原型 1:1 复刻主规格</h1>
+  <p class="meta">状态：已接入 Axure HTML 导出物 · 目标：在 Make 中保持来源原型的页面、视觉和交互一致</p>
+  <div class="card">
+    <h2>来源与范围</h2>
+    <p class="source">来源：<a href="https://axhub.im/ax11/e5ef191e5eea4a38/?id=5ldspe&amp;p=%E9%87%87%E8%B4%AD%E6%B8%85%E5%8D%95&amp;g=1">Axure 原型链接</a></p>
+    <p>来源文件为 <code>智能体.zip</code>，直接保留导出包中的 8 个页面、页面树和采购清单 → 确认下单 → 下单成功主路径。</p>
+  </div>
+  <div class="card">
+    <h2>实现边界</h2>
+    <ul>
+      <li>Make 入口仅加载 <code>axure/start_with_pages.html</code>。</li>
+      <li>导出包内的 HTML、CSS、JavaScript、图片和资源完整放在原型目录的 <code>axure/</code> 下。</li>
+      <li>不新增来源中不存在的页面、文案、视觉样式或业务规则。</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h2>验收标准</h2>
+    <ul>
+      <li>进入原型后可看到 Axure 原始播放器与页面树。</li>
+      <li>8 个页面可按来源原型切换，页面资源和交互由导出包原样执行。</li>
+      <li>不再使用此前的近似重绘页面。</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h2>当前结果</h2>
+    <p>已完成导出包接入，预览入口为原型目录下的 Make 页面。</p>
+  </div>
+</body>
+</html>

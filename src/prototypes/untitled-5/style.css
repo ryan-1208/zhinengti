@@ -1,0 +1,88 @@
+.flow-image-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px;
+  box-sizing: border-box;
+  background: #fff;
+}
+
+.flow-heading {
+  width: min(1100px, 100%);
+  margin-bottom: 20px;
+  color: #1f2937;
+}
+
+.flow-heading h1,
+.flow-heading h2 {
+  margin: 0;
+}
+
+.flow-heading h1 {
+  font-size: 28px;
+  line-height: 1.25;
+  font-weight: 700;
+}
+
+.flow-heading h2 {
+  margin-top: 6px;
+  color: #6b7280;
+  font-size: 18px;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+.flow-image {
+  display: block;
+  width: min(1100px, 100%);
+  height: auto;
+}
+
+.flow-image--scheduling {
+  width: min(1400px, 100%);
+}
+
+.flow-image--wide {
+  width: min(1100px, 100%);
+  margin-top: 20px;
+}
+
+.section-heading {
+  width: min(1100px, 100%);
+  margin: 56px 0 0;
+  color: #1f2937;
+  font-size: 28px;
+  line-height: 1.25;
+  font-weight: 700;
+}
+
+.workflow-notes {
+  width: min(1100px, 100%);
+  margin-top: 44px;
+  padding: 28px 32px 32px;
+  box-sizing: border-box;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #475569;
+}
+
+.workflow-notes h2 {
+  margin: 6px 0 18px;
+  color: #6b7280;
+  font-size: 18px;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+.workflow-notes ul {
+  margin: 0;
+  padding-left: 22px;
+}
+
+.workflow-notes li {
+  margin: 10px 0;
+  font-size: 15px;
+  line-height: 1.75;
+}

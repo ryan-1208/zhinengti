@@ -1,0 +1,744 @@
+{
+  "pageId": "59236c716f0149c5bd4cc819331e315e",
+  "pageName": "下单成功",
+  "diagram": {
+    "objects": [
+      {
+        "id": "73e245f14c574fa5ab1ca45fc00feecc",
+        "label": "",
+        "friendlyType": "矩形",
+        "type": "vectorShape",
+        "styleType": "vectorShape",
+        "visible": true,
+        "style": {
+          "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+          "fontWeight": "400",
+          "fontStyle": "normal",
+          "fontStretch": "5",
+          "foreGroundFill": {
+            "fillType": "solid",
+            "color": 4281545523
+          },
+          "size": {
+            "width": 1920,
+            "height": 1080
+          },
+          "baseStyle": "4b7bfc596114427989e10bb0b557d0ce",
+          "fill": {
+            "fillType": "solid",
+            "color": 4278920020
+          }
+        },
+        "adaptiveStyles": {},
+        "imageOverrides": {},
+        "generateCompound": false,
+        "autoFitWidth": false,
+        "autoFitHeight": false
+      },
+      {
+        "id": "c53f7ddd3a9a46989fb6a0c460458489",
+        "label": "",
+        "friendlyType": "图片",
+        "type": "imageBox",
+        "styleType": "imageBox",
+        "visible": true,
+        "style": {
+          "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+          "fontWeight": "400",
+          "fontStyle": "normal",
+          "fontStretch": "5",
+          "foreGroundFill": {
+            "fillType": "solid",
+            "color": 4281545523
+          },
+          "baseStyle": "75a91ee5b9d042cfa01b8d565fe289c0",
+          "size": {
+            "width": 1860,
+            "height": 897
+          },
+          "location": {
+            "x": 30,
+            "y": 153
+          },
+          "image": {
+            "path": "../../images/下单成功/u1.png",
+            "width": 2736,
+            "height": 1320
+          }
+        },
+        "adaptiveStyles": {},
+        "imageOverrides": {},
+        "images": {
+          "normal~": "images/下单成功/u1.png"
+        },
+        "autoFitWidth": false,
+        "autoFitHeight": false
+      },
+      {
+        "id": "d882a1a6d26640efa3e0eb60410e2e59",
+        "label": "",
+        "friendlyType": "矩形",
+        "type": "vectorShape",
+        "styleType": "vectorShape",
+        "visible": true,
+        "style": {
+          "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+          "fontWeight": "400",
+          "fontStyle": "normal",
+          "fontStretch": "5",
+          "foreGroundFill": {
+            "fillType": "solid",
+            "color": 4281545523
+          },
+          "size": {
+            "width": 1760,
+            "height": 820
+          },
+          "baseStyle": "4b7bfc596114427989e10bb0b557d0ce",
+          "borderWidth": "0",
+          "location": {
+            "x": 80,
+            "y": 200
+          }
+        },
+        "adaptiveStyles": {},
+        "imageOverrides": {},
+        "generateCompound": false,
+        "autoFitWidth": false,
+        "autoFitHeight": false
+      },
+      {
+        "id": "9cfd3afb7eb74cc0a2fc51ef7c2a03c6",
+        "label": "",
+        "friendlyType": "图片",
+        "type": "imageBox",
+        "styleType": "imageBox",
+        "visible": true,
+        "style": {
+          "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+          "fontWeight": "400",
+          "fontStyle": "normal",
+          "fontStretch": "5",
+          "foreGroundFill": {
+            "fillType": "solid",
+            "color": 4281545523
+          },
+          "baseStyle": "75a91ee5b9d042cfa01b8d565fe289c0",
+          "size": {
+            "width": 1920,
+            "height": 135.65969718817593
+          },
+          "image": {
+            "path": "../../images/下单成功/u3.png",
+            "width": 2774,
+            "height": 196
+          }
+        },
+        "adaptiveStyles": {},
+        "imageOverrides": {},
+        "images": {
+          "normal~": "images/下单成功/u3.png"
+        },
+        "autoFitWidth": false,
+        "autoFitHeight": false
+      },
+      {
+        "id": "2e057321adce4029890a5ce594b659bd",
+        "label": "",
+        "friendlyType": "矩形",
+        "type": "vectorShape",
+        "styleType": "vectorShape",
+        "visible": true,
+        "style": {
+          "fontName": "\"微软雅黑 Bold\", \"微软雅黑\", sans-serif",
+          "fontWeight": "700",
+          "foreGroundFill": {
+            "fillType": "solid",
+            "color": 4278242555
+          },
+          "fontStyle": "normal",
+          "fontStretch": "5",
+          "size": {
+            "width": 126,
+            "height": 55
+          },
+          "baseStyle": "8c7a4c5ad69a4369a5f7788171ac0b32",
+          "location": {
+            "x": 153,
+            "y": 40
+          },
+          "fontSize": "42px"
+        },
+        "adaptiveStyles": {},
+        "imageOverrides": {},
+        "generateCompound": false,
+        "autoFitWidth": true,
+        "autoFitHeight": true
+      },
+      {
+        "id": "3f1a5be9fa3948a3994e2d28150c61e9",
+        "label": "",
+        "friendlyType": "图片",
+        "type": "imageBox",
+        "styleType": "imageBox",
+        "visible": true,
+        "style": {
+          "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+          "fontWeight": "400",
+          "fontStyle": "normal",
+          "fontStretch": "5",
+          "foreGroundFill": {
+            "fillType": "solid",
+            "color": 4281545523
+          },
+          "baseStyle": "75a91ee5b9d042cfa01b8d565fe289c0",
+          "size": {
+            "width": 59.294117647058826,
+            "height": 60
+          },
+          "location": {
+            "x": 69,
+            "y": 38
+          },
+          "image": {
+            "path": "../../images/下单成功/u5.png",
+            "width": 84,
+            "height": 85
+          }
+        },
+        "adaptiveStyles": {},
+        "imageOverrides": {},
+        "images": {
+          "normal~": "images/下单成功/u5.png"
+        },
+        "autoFitWidth": false,
+        "autoFitHeight": false
+      },
+      {
+        "id": "e6e62e4c3c6d4cadb52932bf83c5894e",
+        "label": "",
+        "friendlyType": "组合",
+        "type": "layer",
+        "styleType": "layer",
+        "visible": true,
+        "style": {
+          "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+          "fontWeight": "400",
+          "fontStyle": "normal",
+          "fontStretch": "5",
+          "foreGroundFill": {
+            "fillType": "solid",
+            "color": 4281545523
+          }
+        },
+        "adaptiveStyles": {},
+        "imageOverrides": {},
+        "interactionMap": {
+          "onClick": {
+            "eventType": "OnClick",
+            "description": "单击",
+            "cases": [
+              {
+                "description": "",
+                "conditionString": "",
+                "isNewIfGroup": false,
+                "disabled": false,
+                "caseColorHex": "AB68FF",
+                "actions": [
+                  {
+                    "action": "linkWindow",
+                    "description": "在 当前窗口 打开 智能排产",
+                    "displayName": "打开链接",
+                    "actionInfoDescriptions": {
+                      "智能排产": {
+                        "": "在 当前窗口 打开 智能排产"
+                      }
+                    },
+                    "target": {
+                      "targetType": "page",
+                      "url": "智能排产.html",
+                      "includeVariables": true
+                    },
+                    "linkType": "current"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "tabbable": true,
+        "objs": [
+          {
+            "id": "ea271d591c6e4b3cb2a8834294fb0acb",
+            "label": "",
+            "friendlyType": "图片",
+            "type": "imageBox",
+            "styleType": "imageBox",
+            "visible": true,
+            "style": {
+              "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+              "fontWeight": "400",
+              "fontStyle": "normal",
+              "fontStretch": "5",
+              "foreGroundFill": {
+                "fillType": "solid",
+                "color": 4281545523
+              },
+              "baseStyle": "75a91ee5b9d042cfa01b8d565fe289c0",
+              "size": {
+                "width": 203,
+                "height": 90
+              },
+              "location": {
+                "x": 783,
+                "y": 23
+              },
+              "image": {
+                "path": "../../images/下单成功/u7.png",
+                "width": 270,
+                "height": 120
+              }
+            },
+            "adaptiveStyles": {},
+            "imageOverrides": {},
+            "images": {
+              "normal~": "images/下单成功/u7.png"
+            },
+            "autoFitWidth": false,
+            "autoFitHeight": false
+          },
+          {
+            "id": "c1e5acc3bba94f318864733e1153e49b",
+            "label": "",
+            "friendlyType": "矩形",
+            "type": "vectorShape",
+            "styleType": "vectorShape",
+            "visible": true,
+            "style": {
+              "fontName": "\"微软雅黑\", sans-serif",
+              "foreGroundFill": {
+                "fillType": "solid",
+                "color": 4290825693
+              },
+              "fontWeight": "400",
+              "fontStyle": "normal",
+              "fontStretch": "5",
+              "size": {
+                "width": 120,
+                "height": 40
+              },
+              "baseStyle": "8c7a4c5ad69a4369a5f7788171ac0b32",
+              "location": {
+                "x": 825,
+                "y": 48
+              },
+              "fontSize": "30px"
+            },
+            "adaptiveStyles": {},
+            "imageOverrides": {},
+            "generateCompound": false,
+            "autoFitWidth": true,
+            "autoFitHeight": true
+          }
+        ],
+        "propagate": false
+      },
+      {
+        "id": "83780321734640a0b76d1206ab6b4636",
+        "label": "",
+        "friendlyType": "组合",
+        "type": "layer",
+        "styleType": "layer",
+        "visible": true,
+        "style": {
+          "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+          "fontWeight": "400",
+          "fontStyle": "normal",
+          "fontStretch": "5",
+          "foreGroundFill": {
+            "fillType": "solid",
+            "color": 4281545523
+          }
+        },
+        "adaptiveStyles": {},
+        "imageOverrides": {},
+        "interactionMap": {
+          "onClick": {
+            "eventType": "OnClick",
+            "description": "单击",
+            "cases": [
+              {
+                "description": "",
+                "conditionString": "",
+                "isNewIfGroup": false,
+                "disabled": false,
+                "caseColorHex": "AB68FF",
+                "actions": [
+                  {
+                    "action": "linkWindow",
+                    "description": "在 当前窗口 打开 订货采购",
+                    "displayName": "打开链接",
+                    "actionInfoDescriptions": {
+                      "订货采购": {
+                        "": "在 当前窗口 打开 订货采购"
+                      }
+                    },
+                    "target": {
+                      "targetType": "page",
+                      "url": "订货采购.html",
+                      "includeVariables": true
+                    },
+                    "linkType": "current"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "tabbable": true,
+        "objs": [
+          {
+            "id": "c7821dbd322f4bc0837fa0eaafe1d26a",
+            "label": "",
+            "friendlyType": "图片",
+            "type": "imageBox",
+            "styleType": "imageBox",
+            "visible": true,
+            "style": {
+              "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+              "fontWeight": "400",
+              "fontStyle": "normal",
+              "fontStretch": "5",
+              "foreGroundFill": {
+                "fillType": "solid",
+                "color": 4281545523
+              },
+              "baseStyle": "75a91ee5b9d042cfa01b8d565fe289c0",
+              "size": {
+                "width": 203,
+                "height": 90
+              },
+              "location": {
+                "x": 1026,
+                "y": 23
+              },
+              "image": {
+                "path": "../../images/下单成功/u10.png",
+                "width": 270,
+                "height": 120
+              }
+            },
+            "adaptiveStyles": {},
+            "imageOverrides": {},
+            "images": {
+              "normal~": "images/下单成功/u10.png"
+            },
+            "autoFitWidth": false,
+            "autoFitHeight": false
+          },
+          {
+            "id": "138ddf44c1a54269bac0ac43d92d062c",
+            "label": "",
+            "friendlyType": "矩形",
+            "type": "vectorShape",
+            "styleType": "vectorShape",
+            "visible": true,
+            "style": {
+              "fontName": "\"微软雅黑 Bold\", \"微软雅黑\", sans-serif",
+              "fontWeight": "700",
+              "foreGroundFill": {
+                "fillType": "solid",
+                "color": 4294901759
+              },
+              "fontStyle": "normal",
+              "fontStretch": "5",
+              "size": {
+                "width": 120,
+                "height": 40
+              },
+              "baseStyle": "8c7a4c5ad69a4369a5f7788171ac0b32",
+              "location": {
+                "x": 1068,
+                "y": 48
+              },
+              "fontSize": "30px"
+            },
+            "adaptiveStyles": {},
+            "imageOverrides": {},
+            "generateCompound": false,
+            "autoFitWidth": true,
+            "autoFitHeight": true
+          }
+        ],
+        "propagate": false
+      },
+      {
+        "id": "d369249429644f3b9a43d12804fabd4a",
+        "label": "",
+        "friendlyType": "组合",
+        "type": "layer",
+        "styleType": "layer",
+        "visible": true,
+        "style": {
+          "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+          "fontWeight": "400",
+          "fontStyle": "normal",
+          "fontStretch": "5",
+          "foreGroundFill": {
+            "fillType": "solid",
+            "color": 4281545523
+          }
+        },
+        "adaptiveStyles": {},
+        "imageOverrides": {},
+        "interactionMap": {
+          "onClick": {
+            "eventType": "OnClick",
+            "description": "单击",
+            "cases": [
+              {
+                "description": "",
+                "conditionString": "",
+                "isNewIfGroup": false,
+                "disabled": false,
+                "caseColorHex": "AB68FF",
+                "actions": [
+                  {
+                    "action": "linkWindow",
+                    "description": "在 当前窗口 打开 语音菜单",
+                    "displayName": "打开链接",
+                    "actionInfoDescriptions": {
+                      "语音菜单": {
+                        "": "在 当前窗口 打开 语音菜单"
+                      }
+                    },
+                    "target": {
+                      "targetType": "page",
+                      "url": "语音菜单.html",
+                      "includeVariables": true
+                    },
+                    "linkType": "current"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "tabbable": true,
+        "objs": [
+          {
+            "id": "2721e1376d694f4880659a5753ea8dc0",
+            "label": "",
+            "friendlyType": "图片",
+            "type": "imageBox",
+            "styleType": "imageBox",
+            "visible": true,
+            "style": {
+              "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+              "fontWeight": "400",
+              "fontStyle": "normal",
+              "fontStretch": "5",
+              "foreGroundFill": {
+                "fillType": "solid",
+                "color": 4281545523
+              },
+              "baseStyle": "75a91ee5b9d042cfa01b8d565fe289c0",
+              "size": {
+                "width": 203,
+                "height": 90
+              },
+              "location": {
+                "x": 540,
+                "y": 23
+              },
+              "image": {
+                "path": "../../images/下单成功/u7.png",
+                "width": 270,
+                "height": 120
+              }
+            },
+            "adaptiveStyles": {},
+            "imageOverrides": {},
+            "images": {
+              "normal~": "images/下单成功/u7.png"
+            },
+            "autoFitWidth": false,
+            "autoFitHeight": false
+          },
+          {
+            "id": "c1b7cedba07d4c40a36d43fe607ecd32",
+            "label": "",
+            "friendlyType": "矩形",
+            "type": "vectorShape",
+            "styleType": "vectorShape",
+            "visible": true,
+            "style": {
+              "fontName": "\"微软雅黑\", sans-serif",
+              "foreGroundFill": {
+                "fillType": "solid",
+                "color": 4290825693
+              },
+              "fontWeight": "400",
+              "fontStyle": "normal",
+              "fontStretch": "5",
+              "size": {
+                "width": 120,
+                "height": 40
+              },
+              "baseStyle": "8c7a4c5ad69a4369a5f7788171ac0b32",
+              "location": {
+                "x": 582,
+                "y": 48
+              },
+              "fontSize": "30px"
+            },
+            "adaptiveStyles": {},
+            "imageOverrides": {},
+            "generateCompound": false,
+            "autoFitWidth": true,
+            "autoFitHeight": true
+          }
+        ],
+        "propagate": false
+      },
+      {
+        "id": "035112b1630a4cd1bd6cc7877872fa0a",
+        "label": "",
+        "friendlyType": "矩形",
+        "type": "vectorShape",
+        "styleType": "vectorShape",
+        "visible": true,
+        "style": {
+          "fontName": "\"微软雅黑\", sans-serif",
+          "fontWeight": "400",
+          "fontStyle": "normal",
+          "fontStretch": "5",
+          "foreGroundFill": {
+            "fillType": "solid",
+            "color": 4281545523
+          },
+          "size": {
+            "width": 955,
+            "height": 52
+          },
+          "baseStyle": "1111111151944dfba49f67fd55eb1f88",
+          "location": {
+            "x": 483,
+            "y": 488
+          },
+          "fontSize": "40px"
+        },
+        "adaptiveStyles": {},
+        "imageOverrides": {},
+        "generateCompound": false,
+        "autoFitWidth": true,
+        "autoFitHeight": true
+      },
+      {
+        "id": "8560fc10a4e5438eb8ab017c8821a872",
+        "label": "",
+        "friendlyType": "SVG",
+        "type": "imageBox",
+        "styleType": "imageBox",
+        "visible": true,
+        "style": {
+          "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+          "fontWeight": "400",
+          "fontStyle": "normal",
+          "fontStretch": "5",
+          "foreGroundFill": {
+            "fillType": "solid",
+            "color": 4281545523
+          },
+          "baseStyle": "75a91ee5b9d042cfa01b8d565fe289c0",
+          "size": {
+            "width": 88,
+            "height": 88
+          },
+          "location": {
+            "x": 916,
+            "y": 635
+          },
+          "image": {
+            "path": "../../images/下单成功/u16.svg",
+            "width": 200,
+            "height": 200
+          }
+        },
+        "adaptiveStyles": {},
+        "imageOverrides": {},
+        "images": {
+          "normal~": "images/下单成功/u16.svg"
+        },
+        "autoFitWidth": false,
+        "autoFitHeight": false
+      }
+    ]
+  },
+  "interactionMap": {},
+  "pageNotes": {},
+  "widgetNotes": [],
+  "objectPaths": {
+    "73e245f14c574fa5ab1ca45fc00feecc": {
+      "scriptId": "u0"
+    },
+    "c53f7ddd3a9a46989fb6a0c460458489": {
+      "scriptId": "u1"
+    },
+    "d882a1a6d26640efa3e0eb60410e2e59": {
+      "scriptId": "u2"
+    },
+    "9cfd3afb7eb74cc0a2fc51ef7c2a03c6": {
+      "scriptId": "u3"
+    },
+    "2e057321adce4029890a5ce594b659bd": {
+      "scriptId": "u4"
+    },
+    "3f1a5be9fa3948a3994e2d28150c61e9": {
+      "scriptId": "u5"
+    },
+    "e6e62e4c3c6d4cadb52932bf83c5894e": {
+      "scriptId": "u6"
+    },
+    "ea271d591c6e4b3cb2a8834294fb0acb": {
+      "scriptId": "u7"
+    },
+    "c1e5acc3bba94f318864733e1153e49b": {
+      "scriptId": "u8"
+    },
+    "83780321734640a0b76d1206ab6b4636": {
+      "scriptId": "u9"
+    },
+    "c7821dbd322f4bc0837fa0eaafe1d26a": {
+      "scriptId": "u10"
+    },
+    "138ddf44c1a54269bac0ac43d92d062c": {
+      "scriptId": "u11"
+    },
+    "d369249429644f3b9a43d12804fabd4a": {
+      "scriptId": "u12"
+    },
+    "2721e1376d694f4880659a5753ea8dc0": {
+      "scriptId": "u13"
+    },
+    "c1b7cedba07d4c40a36d43fe607ecd32": {
+      "scriptId": "u14"
+    },
+    "035112b1630a4cd1bd6cc7877872fa0a": {
+      "scriptId": "u15"
+    },
+    "8560fc10a4e5438eb8ab017c8821a872": {
+      "scriptId": "u16"
+    }
+  },
+  "generationDate": "2026-07-14T01:27:14.322Z",
+  "url": "下单成功.html",
+  "jsImages": [
+    "images/下单成功/u1.png",
+    "images/下单成功/u3.png",
+    "images/下单成功/u5.png",
+    "images/下单成功/u7.png",
+    "images/下单成功/u10.png",
+    "images/下单成功/u16.svg"
+  ]
+}

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <title>智能体 Axure 原型复刻主规格</title>
+  <style>
+    body{font-family:Arial,"Microsoft YaHei",sans-serif;line-height:1.65;margin:40px;color:#172033}
+    h1{margin-bottom:8px}.meta{color:#526078}.card{border:1px solid #d8e0ec;border-radius:12px;padding:20px;margin:18px 0}
+    code{background:#f3f6fa;padding:2px 5px;border-radius:4px}.source{word-break:break-all}
+  </style>
+</head>
+<body>
+  <h1>智能体 Axure 原型 1:1 复刻主规格</h1>
+  <p class="meta">状态：已接入 Axure HTML 导出物，并在 Make 入口增加智能排产对话预览</p>
+  <div class="card">
+    <h2>来源与范围</h2>
+    <p class="source">来源：<a href="https://axhub.im/ax11/e5ef191e5eea4a38/?id=5ldspe&amp;p=%E9%87%87%E8%B4%AD%E6%B8%85%E5%8D%95&amp;g=1">Axure 原型链接</a></p>
+    <p>来源文件为 <code>智能体.zip</code>，直接保留导出包中的 8 个页面、页面树和采购清单 → 确认下单 → 下单成功主路径。</p>
+  </div>
+  <div class="card">
+    <h2>实现边界</h2>
+    <ul>
+      <li>Axure 导出包的 HTML、CSS、JavaScript、图片和资源保持原样，不直接修改底层 <code>axure/</code> 文件。</li>
+      <li>Make 入口在 Axure 预览之上增加 React 对话预览层，交互状态只维护在 Make 原型入口。</li>
+      <li>导出包内的 HTML、CSS、JavaScript、图片和资源完整放在原型目录的 <code>axure/</code> 下。</li>
+      <li>AI 批次设置仅展示“待定”占位，不实现真实 AI 生成。</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h2>语音生成菜单 → 智能排产对话</h2>
+    <ol>
+      <li>进入智能排产后，询问是否按默认批次自动排产。</li>
+      <li>支持当前默认一次性排产，或分 3 批排产：10:00–10:30、10:30–11:00、11:00–11:30。</li>
+      <li>确认后可按默认规则直接开始排产。</li>
+      <li>默认规则无法合理排产时，询问是否使用 AI 批次设置、重新设置批次，或用当前批次设置倒推菜单。</li>
+      <li>不用默认批次时，可输入出餐时间、出餐批次和批次时间；三者进行冲突校验。</li>
+      <li>人工修改批次后重新校验菜单是否支持；无冲突时正常排产。</li>
+    </ol>
+  </div>
+  <div class="card">
+    <h2>验收标准</h2>
+    <ul>
+      <li>进入原型后可看到 Axure 原始播放器与页面树。</li>
+      <li>8 个页面可按来源原型切换，页面资源和原始交互由导出包执行。</li>
+      <li>Make 对话层可完整演示默认批次、冲突回退、自定义批次校验和正常排产状态。</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h2>当前结果</h2>
+    <p>已完成导出包接入，预览入口为原型目录下的 Make 页面。</p>
+  </div>
+</body>
+</html>

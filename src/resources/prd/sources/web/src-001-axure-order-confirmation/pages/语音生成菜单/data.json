@@ -1,0 +1,4279 @@
+{
+  "pageId": "f3e2ce2ba08f4befb08dd4a6f80b7f0e",
+  "pageName": "语音生成菜单",
+  "diagram": {
+    "objects": [
+      {
+        "id": "73c7402c11894b87807cc957d02de2b2",
+        "label": "",
+        "friendlyType": "矩形",
+        "type": "vectorShape",
+        "styleType": "vectorShape",
+        "visible": true,
+        "style": {
+          "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+          "fontWeight": "400",
+          "fontStyle": "normal",
+          "fontStretch": "5",
+          "foreGroundFill": {
+            "fillType": "solid",
+            "color": 4281545523
+          },
+          "size": {
+            "width": 1920,
+            "height": 1080
+          },
+          "baseStyle": "4b7bfc596114427989e10bb0b557d0ce",
+          "fill": {
+            "fillType": "solid",
+            "color": 4278920020
+          }
+        },
+        "adaptiveStyles": {},
+        "imageOverrides": {},
+        "generateCompound": false,
+        "autoFitWidth": false,
+        "autoFitHeight": false
+      },
+      {
+        "id": "fdbe34ede0da427383310a41c99ee9bb",
+        "label": "",
+        "friendlyType": "图片",
+        "type": "imageBox",
+        "styleType": "imageBox",
+        "visible": true,
+        "style": {
+          "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+          "fontWeight": "400",
+          "fontStyle": "normal",
+          "fontStretch": "5",
+          "foreGroundFill": {
+            "fillType": "solid",
+            "color": 4281545523
+          },
+          "baseStyle": "75a91ee5b9d042cfa01b8d565fe289c0",
+          "size": {
+            "width": 1860,
+            "height": 897
+          },
+          "location": {
+            "x": 30,
+            "y": 153
+          },
+          "image": {
+            "path": "../../images/语音生成菜单/u1.png",
+            "width": 2736,
+            "height": 1320
+          }
+        },
+        "adaptiveStyles": {},
+        "imageOverrides": {},
+        "images": {
+          "normal~": "images/语音生成菜单/u1.png"
+        },
+        "autoFitWidth": false,
+        "autoFitHeight": false
+      },
+      {
+        "id": "aa61c7493d884fe19c39e29c2eaa3333",
+        "label": "",
+        "friendlyType": "动态面板",
+        "type": "dynamicPanel",
+        "styleType": "dynamicPanel",
+        "visible": true,
+        "style": {
+          "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+          "fontWeight": "400",
+          "fontStyle": "normal",
+          "fontStretch": "5",
+          "foreGroundFill": {
+            "fillType": "solid",
+            "color": 4281545523
+          },
+          "size": {
+            "width": 1760,
+            "height": 820
+          },
+          "location": {
+            "x": 80,
+            "y": 200
+          }
+        },
+        "adaptiveStyles": {},
+        "imageOverrides": {},
+        "interactionMap": {
+          "onClick": {
+            "eventType": "OnClick",
+            "description": "单击",
+            "cases": [
+              {
+                "description": "",
+                "conditionString": "",
+                "isNewIfGroup": false,
+                "disabled": false,
+                "caseColorHex": "AB68FF",
+                "actions": [
+                  {
+                    "action": "setPanelState",
+                    "description": "设置 当前元件 to 状态",
+                    "displayName": "设置动态面板状态",
+                    "actionInfoDescriptions": {
+                      "当前元件 to 下一个": {
+                        "": "设置 当前元件 to 状态"
+                      }
+                    },
+                    "panelsToStates": [
+                      {
+                        "panelPath": [
+                          "aa61c7493d884fe19c39e29c2eaa3333"
+                        ],
+                        "stateInfo": {
+                          "setStateType": "next",
+                          "stateNumber": 1,
+                          "stateValue": {
+                            "exprType": "stringLiteral",
+                            "value": "1",
+                            "stos": []
+                          },
+                          "loop": false,
+                          "showWhenSet": false,
+                          "options": {
+                            "compress": false
+                          }
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "tabbable": true,
+        "scrollbars": "none",
+        "fitToContent": true,
+        "propagate": false,
+        "diagrams": [
+          {
+            "id": "505202d6103449c5a350c636f5a6b2fb",
+            "label": "State 1",
+            "type": "Axure:PanelDiagram",
+            "objects": [
+              {
+                "id": "cf8dbaf875db45319ee15990075999d0",
+                "label": "",
+                "friendlyType": "矩形",
+                "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                "panelIndex": 0,
+                "type": "vectorShape",
+                "styleType": "vectorShape",
+                "visible": true,
+                "style": {
+                  "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                  "fontWeight": "400",
+                  "fontStyle": "normal",
+                  "fontStretch": "5",
+                  "foreGroundFill": {
+                    "fillType": "solid",
+                    "color": 4281545523
+                  },
+                  "size": {
+                    "width": 1760,
+                    "height": 820
+                  },
+                  "baseStyle": "4b7bfc596114427989e10bb0b557d0ce",
+                  "borderWidth": "0"
+                },
+                "adaptiveStyles": {},
+                "imageOverrides": {},
+                "generateCompound": false,
+                "autoFitWidth": false,
+                "autoFitHeight": false
+              },
+              {
+                "id": "0b196517414546b7bb29f3fc5917a9d0",
+                "label": "",
+                "friendlyType": "组合",
+                "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                "panelIndex": 0,
+                "type": "layer",
+                "styleType": "layer",
+                "visible": true,
+                "style": {
+                  "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                  "fontWeight": "400",
+                  "fontStyle": "normal",
+                  "fontStretch": "5",
+                  "foreGroundFill": {
+                    "fillType": "solid",
+                    "color": 4281545523
+                  },
+                  "location": {
+                    "x": -80,
+                    "y": -200
+                  }
+                },
+                "adaptiveStyles": {},
+                "imageOverrides": {},
+                "objs": [
+                  {
+                    "id": "718aca5788e84b9d9b935f9b52740b35",
+                    "label": "",
+                    "friendlyType": "矩形",
+                    "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                    "panelIndex": 0,
+                    "type": "vectorShape",
+                    "styleType": "vectorShape",
+                    "visible": true,
+                    "style": {
+                      "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                      "fontWeight": "400",
+                      "fontStyle": "normal",
+                      "fontStretch": "5",
+                      "foreGroundFill": {
+                        "fillType": "solid",
+                        "color": 4281545523
+                      },
+                      "size": {
+                        "width": 880,
+                        "height": 100
+                      },
+                      "baseStyle": "4b7bfc596114427989e10bb0b557d0ce",
+                      "location": {
+                        "x": 40,
+                        "y": 40
+                      },
+                      "cornerRadius": "50",
+                      "fill": {
+                        "fillType": "linearGradient",
+                        "startPoint": {
+                          "x": 0,
+                          "y": 0.5083333333333346
+                        },
+                        "endPoint": {
+                          "x": 0.9916666666666663,
+                          "y": 0.5083333333333346
+                        },
+                        "stops": [
+                          {
+                            "color": 4293653244,
+                            "offset": 0,
+                            "opacity": 1
+                          },
+                          {
+                            "color": 4292668158,
+                            "offset": 0.52,
+                            "opacity": 1
+                          },
+                          {
+                            "color": 4294310142,
+                            "offset": 1,
+                            "opacity": 1
+                          }
+                        ]
+                      },
+                      "borderWidth": "0"
+                    },
+                    "adaptiveStyles": {},
+                    "imageOverrides": {},
+                    "images": {
+                      "normal~": "images/语音生成菜单/u5.svg",
+                      "images/语音生成菜单/u5.svg-isGeneratedImage": "true"
+                    },
+                    "generateCompound": false,
+                    "autoFitWidth": false,
+                    "autoFitHeight": false
+                  },
+                  {
+                    "id": "ba84f201cdc442218117e3982bf0790d",
+                    "label": "",
+                    "friendlyType": "图片",
+                    "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                    "panelIndex": 0,
+                    "type": "imageBox",
+                    "styleType": "imageBox",
+                    "visible": true,
+                    "style": {
+                      "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                      "fontWeight": "400",
+                      "fontStyle": "normal",
+                      "fontStretch": "5",
+                      "foreGroundFill": {
+                        "fillType": "solid",
+                        "color": 4281545523
+                      },
+                      "baseStyle": "75a91ee5b9d042cfa01b8d565fe289c0",
+                      "size": {
+                        "width": 80,
+                        "height": 80
+                      },
+                      "location": {
+                        "x": 60,
+                        "y": 50
+                      },
+                      "image": {
+                        "path": "../../images/语音生成菜单/u6.png",
+                        "width": 120,
+                        "height": 120
+                      }
+                    },
+                    "adaptiveStyles": {},
+                    "imageOverrides": {},
+                    "images": {
+                      "normal~": "images/语音生成菜单/u6.png"
+                    },
+                    "autoFitWidth": false,
+                    "autoFitHeight": false
+                  },
+                  {
+                    "id": "193c31b89dd644c9a80af66e08a07d63",
+                    "label": "",
+                    "friendlyType": "组合",
+                    "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                    "panelIndex": 0,
+                    "type": "layer",
+                    "styleType": "layer",
+                    "visible": true,
+                    "style": {
+                      "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                      "fontWeight": "400",
+                      "fontStyle": "normal",
+                      "fontStretch": "5",
+                      "foreGroundFill": {
+                        "fillType": "solid",
+                        "color": 4281545523
+                      },
+                      "location": {
+                        "x": -80,
+                        "y": -200
+                      }
+                    },
+                    "adaptiveStyles": {},
+                    "imageOverrides": {},
+                    "objs": [
+                      {
+                        "id": "796eb289bf4e406295b6f9bd059525ff",
+                        "label": "",
+                        "friendlyType": "矩形",
+                        "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                        "panelIndex": 0,
+                        "type": "vectorShape",
+                        "styleType": "vectorShape",
+                        "visible": true,
+                        "style": {
+                          "fontName": "\"微软雅黑\", sans-serif",
+                          "foreGroundFill": {
+                            "fillType": "solid",
+                            "color": 4280728260
+                          },
+                          "fontWeight": "400",
+                          "fontStyle": "normal",
+                          "fontStretch": "5",
+                          "size": {
+                            "width": 96,
+                            "height": 31
+                          },
+                          "baseStyle": "8c7a4c5ad69a4369a5f7788171ac0b32",
+                          "fontSize": "24px",
+                          "location": {
+                            "x": 160,
+                            "y": 52
+                          }
+                        },
+                        "adaptiveStyles": {},
+                        "imageOverrides": {},
+                        "generateCompound": false,
+                        "autoFitWidth": true,
+                        "autoFitHeight": true
+                      },
+                      {
+                        "id": "c10c331eeb30474fb531a8e606325398",
+                        "label": "",
+                        "friendlyType": "矩形",
+                        "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                        "panelIndex": 0,
+                        "type": "vectorShape",
+                        "styleType": "vectorShape",
+                        "visible": true,
+                        "style": {
+                          "fontName": "\"微软雅黑\", sans-serif",
+                          "foreGroundFill": {
+                            "fillType": "solid",
+                            "color": 4281174150
+                          },
+                          "fontWeight": "400",
+                          "fontStyle": "normal",
+                          "fontStretch": "5",
+                          "size": {
+                            "width": 720,
+                            "height": 40
+                          },
+                          "baseStyle": "8c7a4c5ad69a4369a5f7788171ac0b32",
+                          "location": {
+                            "x": 160,
+                            "y": 88
+                          },
+                          "fontSize": "30px"
+                        },
+                        "adaptiveStyles": {},
+                        "imageOverrides": {},
+                        "generateCompound": false,
+                        "autoFitWidth": true,
+                        "autoFitHeight": true
+                      }
+                    ],
+                    "propagate": false
+                  }
+                ],
+                "propagate": false
+              }
+            ],
+            "style": {
+              "fill": {
+                "fillType": "solid",
+                "color": 16777215,
+                "opacity": 0
+              },
+              "image": null,
+              "imageAlignment": {
+                "horizontal": "near",
+                "vertical": "near"
+              },
+              "imageRepeat": "auto",
+              "borderWidth": "0",
+              "borderVisibility": "top right bottom left",
+              "borderFill": {
+                "fillType": "solid",
+                "color": 4286151033
+              },
+              "cornerRadius": "0",
+              "cornerVisibility": "top right bottom left",
+              "outerShadow": {
+                "on": false,
+                "offsetX": 5,
+                "offsetY": 5,
+                "blurRadius": 5,
+                "spread": 0,
+                "color": {
+                  "r": 0,
+                  "g": 0,
+                  "b": 0,
+                  "a": 0.34901960784313724
+                }
+              }
+            },
+            "adaptiveStyles": {}
+          },
+          {
+            "id": "db884acc88474da4a1d2b5b525c2674e",
+            "label": "State 2",
+            "type": "Axure:PanelDiagram",
+            "objects": [
+              {
+                "id": "2517aaa70f014fa0b7f9d90178b2fb3a",
+                "label": "",
+                "friendlyType": "矩形",
+                "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                "panelIndex": 1,
+                "type": "vectorShape",
+                "styleType": "vectorShape",
+                "visible": true,
+                "style": {
+                  "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                  "fontWeight": "400",
+                  "fontStyle": "normal",
+                  "fontStretch": "5",
+                  "foreGroundFill": {
+                    "fillType": "solid",
+                    "color": 4281545523
+                  },
+                  "size": {
+                    "width": 1760,
+                    "height": 820
+                  },
+                  "baseStyle": "4b7bfc596114427989e10bb0b557d0ce",
+                  "borderWidth": "0"
+                },
+                "adaptiveStyles": {},
+                "imageOverrides": {},
+                "generateCompound": false,
+                "autoFitWidth": false,
+                "autoFitHeight": false
+              },
+              {
+                "id": "d07696214ef242429e1f71f76611790c",
+                "label": "",
+                "friendlyType": "组合",
+                "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                "panelIndex": 1,
+                "type": "layer",
+                "styleType": "layer",
+                "visible": true,
+                "style": {
+                  "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                  "fontWeight": "400",
+                  "fontStyle": "normal",
+                  "fontStretch": "5",
+                  "foreGroundFill": {
+                    "fillType": "solid",
+                    "color": 4281545523
+                  },
+                  "location": {
+                    "x": 40,
+                    "y": 40
+                  }
+                },
+                "adaptiveStyles": {},
+                "imageOverrides": {},
+                "objs": [
+                  {
+                    "id": "fc947db7f5f041ba852c58a89e448af5",
+                    "label": "",
+                    "friendlyType": "矩形",
+                    "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                    "panelIndex": 1,
+                    "type": "vectorShape",
+                    "styleType": "vectorShape",
+                    "visible": true,
+                    "style": {
+                      "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                      "fontWeight": "400",
+                      "fontStyle": "normal",
+                      "fontStretch": "5",
+                      "foreGroundFill": {
+                        "fillType": "solid",
+                        "color": 4281545523
+                      },
+                      "size": {
+                        "width": 880,
+                        "height": 100
+                      },
+                      "baseStyle": "4b7bfc596114427989e10bb0b557d0ce",
+                      "location": {
+                        "x": 40,
+                        "y": 40
+                      },
+                      "cornerRadius": "50",
+                      "fill": {
+                        "fillType": "linearGradient",
+                        "startPoint": {
+                          "x": 0,
+                          "y": 0.5083333333333346
+                        },
+                        "endPoint": {
+                          "x": 0.9916666666666663,
+                          "y": 0.5083333333333346
+                        },
+                        "stops": [
+                          {
+                            "color": 4293653244,
+                            "offset": 0,
+                            "opacity": 1
+                          },
+                          {
+                            "color": 4292668158,
+                            "offset": 0.52,
+                            "opacity": 1
+                          },
+                          {
+                            "color": 4294310142,
+                            "offset": 1,
+                            "opacity": 1
+                          }
+                        ]
+                      },
+                      "borderWidth": "0"
+                    },
+                    "adaptiveStyles": {},
+                    "imageOverrides": {},
+                    "images": {
+                      "normal~": "images/语音生成菜单/u5.svg",
+                      "images/语音生成菜单/u5.svg-isGeneratedImage": "true"
+                    },
+                    "generateCompound": false,
+                    "autoFitWidth": false,
+                    "autoFitHeight": false
+                  },
+                  {
+                    "id": "11873906ce3e439d801815ac44e86d63",
+                    "label": "",
+                    "friendlyType": "图片",
+                    "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                    "panelIndex": 1,
+                    "type": "imageBox",
+                    "styleType": "imageBox",
+                    "visible": true,
+                    "style": {
+                      "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                      "fontWeight": "400",
+                      "fontStyle": "normal",
+                      "fontStretch": "5",
+                      "foreGroundFill": {
+                        "fillType": "solid",
+                        "color": 4281545523
+                      },
+                      "baseStyle": "75a91ee5b9d042cfa01b8d565fe289c0",
+                      "size": {
+                        "width": 80,
+                        "height": 80
+                      },
+                      "location": {
+                        "x": 60,
+                        "y": 50
+                      },
+                      "image": {
+                        "path": "../../images/语音生成菜单/u6.png",
+                        "width": 120,
+                        "height": 120
+                      }
+                    },
+                    "adaptiveStyles": {},
+                    "imageOverrides": {},
+                    "images": {
+                      "normal~": "images/语音生成菜单/u6.png"
+                    },
+                    "autoFitWidth": false,
+                    "autoFitHeight": false
+                  },
+                  {
+                    "id": "36c1a73610e04e6f86fb913e957c4ddc",
+                    "label": "",
+                    "friendlyType": "组合",
+                    "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                    "panelIndex": 1,
+                    "type": "layer",
+                    "styleType": "layer",
+                    "visible": true,
+                    "style": {
+                      "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                      "fontWeight": "400",
+                      "fontStyle": "normal",
+                      "fontStretch": "5",
+                      "foreGroundFill": {
+                        "fillType": "solid",
+                        "color": 4281545523
+                      },
+                      "location": {
+                        "x": 160,
+                        "y": 52
+                      }
+                    },
+                    "adaptiveStyles": {},
+                    "imageOverrides": {},
+                    "objs": [
+                      {
+                        "id": "3eaf9b4b687c482fb15a5463edbb214f",
+                        "label": "",
+                        "friendlyType": "矩形",
+                        "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                        "panelIndex": 1,
+                        "type": "vectorShape",
+                        "styleType": "vectorShape",
+                        "visible": true,
+                        "style": {
+                          "fontName": "\"微软雅黑\", sans-serif",
+                          "foreGroundFill": {
+                            "fillType": "solid",
+                            "color": 4280728260
+                          },
+                          "fontWeight": "400",
+                          "fontStyle": "normal",
+                          "fontStretch": "5",
+                          "size": {
+                            "width": 96,
+                            "height": 31
+                          },
+                          "baseStyle": "8c7a4c5ad69a4369a5f7788171ac0b32",
+                          "fontSize": "24px",
+                          "location": {
+                            "x": 160,
+                            "y": 52
+                          }
+                        },
+                        "adaptiveStyles": {},
+                        "imageOverrides": {},
+                        "generateCompound": false,
+                        "autoFitWidth": true,
+                        "autoFitHeight": true
+                      },
+                      {
+                        "id": "1e72dc104c564ac38ae12f93be8ea1dc",
+                        "label": "",
+                        "friendlyType": "矩形",
+                        "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                        "panelIndex": 1,
+                        "type": "vectorShape",
+                        "styleType": "vectorShape",
+                        "visible": true,
+                        "style": {
+                          "fontName": "\"微软雅黑\", sans-serif",
+                          "foreGroundFill": {
+                            "fillType": "solid",
+                            "color": 4281174150
+                          },
+                          "fontWeight": "400",
+                          "fontStyle": "normal",
+                          "fontStretch": "5",
+                          "size": {
+                            "width": 720,
+                            "height": 40
+                          },
+                          "baseStyle": "8c7a4c5ad69a4369a5f7788171ac0b32",
+                          "location": {
+                            "x": 160,
+                            "y": 88
+                          },
+                          "fontSize": "30px"
+                        },
+                        "adaptiveStyles": {},
+                        "imageOverrides": {},
+                        "generateCompound": false,
+                        "autoFitWidth": true,
+                        "autoFitHeight": true
+                      }
+                    ],
+                    "propagate": false
+                  }
+                ],
+                "propagate": false
+              },
+              {
+                "id": "b22932060aee416295658d16a650d717",
+                "label": "",
+                "friendlyType": "矩形",
+                "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                "panelIndex": 1,
+                "type": "vectorShape",
+                "styleType": "vectorShape",
+                "visible": true,
+                "style": {
+                  "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                  "fontWeight": "400",
+                  "fontStyle": "normal",
+                  "fontStretch": "5",
+                  "foreGroundFill": {
+                    "fillType": "solid",
+                    "color": 4281545523
+                  },
+                  "size": {
+                    "width": 478,
+                    "height": 100
+                  },
+                  "baseStyle": "4b7bfc596114427989e10bb0b557d0ce",
+                  "location": {
+                    "x": 40,
+                    "y": 180
+                  },
+                  "cornerRadius": "50",
+                  "fill": {
+                    "fillType": "linearGradient",
+                    "startPoint": {
+                      "x": 0,
+                      "y": 0.5083333333333346
+                    },
+                    "endPoint": {
+                      "x": 0.9916666666666663,
+                      "y": 0.5083333333333346
+                    },
+                    "stops": [
+                      {
+                        "color": 4293653244,
+                        "offset": 0,
+                        "opacity": 1
+                      },
+                      {
+                        "color": 4292668158,
+                        "offset": 0.52,
+                        "opacity": 1
+                      },
+                      {
+                        "color": 4294310142,
+                        "offset": 1,
+                        "opacity": 1
+                      }
+                    ]
+                  },
+                  "borderWidth": "0"
+                },
+                "adaptiveStyles": {},
+                "imageOverrides": {},
+                "images": {
+                  "normal~": "images/语音生成菜单/u17.svg",
+                  "images/语音生成菜单/u17.svg-isGeneratedImage": "true"
+                },
+                "generateCompound": false,
+                "autoFitWidth": false,
+                "autoFitHeight": false
+              },
+              {
+                "id": "bac46708f113448fafd9aa06ec38800d",
+                "label": "",
+                "friendlyType": "图片",
+                "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                "panelIndex": 1,
+                "type": "imageBox",
+                "styleType": "imageBox",
+                "visible": true,
+                "style": {
+                  "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                  "fontWeight": "400",
+                  "fontStyle": "normal",
+                  "fontStretch": "5",
+                  "foreGroundFill": {
+                    "fillType": "solid",
+                    "color": 4281545523
+                  },
+                  "baseStyle": "75a91ee5b9d042cfa01b8d565fe289c0",
+                  "size": {
+                    "width": 80,
+                    "height": 80
+                  },
+                  "location": {
+                    "x": 60,
+                    "y": 190
+                  },
+                  "image": {
+                    "path": "../../images/语音生成菜单/u6.png",
+                    "width": 120,
+                    "height": 120
+                  }
+                },
+                "adaptiveStyles": {},
+                "imageOverrides": {},
+                "images": {
+                  "normal~": "images/语音生成菜单/u6.png"
+                },
+                "autoFitWidth": false,
+                "autoFitHeight": false
+              },
+              {
+                "id": "8e4ed4bb2a42462c988a5a0514e75c59",
+                "label": "",
+                "friendlyType": "矩形",
+                "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                "panelIndex": 1,
+                "type": "vectorShape",
+                "styleType": "vectorShape",
+                "visible": true,
+                "style": {
+                  "fontName": "\"微软雅黑\", sans-serif",
+                  "foreGroundFill": {
+                    "fillType": "solid",
+                    "color": 4280728260
+                  },
+                  "fontWeight": "400",
+                  "fontStyle": "normal",
+                  "fontStretch": "5",
+                  "size": {
+                    "width": 96,
+                    "height": 31
+                  },
+                  "baseStyle": "8c7a4c5ad69a4369a5f7788171ac0b32",
+                  "location": {
+                    "x": 160,
+                    "y": 192
+                  },
+                  "fontSize": "24px"
+                },
+                "adaptiveStyles": {},
+                "imageOverrides": {},
+                "generateCompound": false,
+                "autoFitWidth": true,
+                "autoFitHeight": true
+              },
+              {
+                "id": "8b550dcb47954009aee45c75ac494e1c",
+                "label": "",
+                "friendlyType": "矩形",
+                "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                "panelIndex": 1,
+                "type": "vectorShape",
+                "styleType": "vectorShape",
+                "visible": true,
+                "style": {
+                  "fontName": "\"微软雅黑\", sans-serif",
+                  "foreGroundFill": {
+                    "fillType": "solid",
+                    "color": 4281174150
+                  },
+                  "fontWeight": "400",
+                  "fontStyle": "normal",
+                  "fontStretch": "5",
+                  "size": {
+                    "width": 270,
+                    "height": 40
+                  },
+                  "baseStyle": "8c7a4c5ad69a4369a5f7788171ac0b32",
+                  "location": {
+                    "x": 208,
+                    "y": 228
+                  },
+                  "fontSize": "30px"
+                },
+                "adaptiveStyles": {},
+                "imageOverrides": {},
+                "generateCompound": false,
+                "autoFitWidth": true,
+                "autoFitHeight": true
+              },
+              {
+                "id": "351e7ceebf9f43e9a3d5624b7d2f1964",
+                "label": "",
+                "friendlyType": "图片",
+                "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                "panelIndex": 1,
+                "type": "imageBox",
+                "styleType": "imageBox",
+                "visible": true,
+                "style": {
+                  "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                  "fontWeight": "400",
+                  "fontStyle": "normal",
+                  "fontStretch": "5",
+                  "foreGroundFill": {
+                    "fillType": "solid",
+                    "color": 4281545523
+                  },
+                  "baseStyle": "75a91ee5b9d042cfa01b8d565fe289c0",
+                  "size": {
+                    "width": 45,
+                    "height": 45
+                  },
+                  "location": {
+                    "x": 160,
+                    "y": 225
+                  },
+                  "image": {
+                    "path": "../../images/语音生成菜单/u21.gif",
+                    "width": 400,
+                    "height": 400
+                  }
+                },
+                "adaptiveStyles": {},
+                "imageOverrides": {},
+                "images": {
+                  "normal~": "images/语音生成菜单/u21.gif"
+                },
+                "autoFitWidth": false,
+                "autoFitHeight": false
+              }
+            ],
+            "style": {
+              "fill": {
+                "fillType": "solid",
+                "color": 16777215,
+                "opacity": 0
+              },
+              "image": null,
+              "imageAlignment": {
+                "horizontal": "near",
+                "vertical": "near"
+              },
+              "imageRepeat": "auto",
+              "borderWidth": "0",
+              "borderVisibility": "top right bottom left",
+              "borderFill": {
+                "fillType": "solid",
+                "color": 4286151033
+              },
+              "cornerRadius": "0",
+              "cornerVisibility": "top right bottom left",
+              "outerShadow": {
+                "on": false,
+                "offsetX": 5,
+                "offsetY": 5,
+                "blurRadius": 5,
+                "spread": 0,
+                "color": {
+                  "r": 0,
+                  "g": 0,
+                  "b": 0,
+                  "a": 0.34901960784313724
+                }
+              }
+            },
+            "adaptiveStyles": {}
+          },
+          {
+            "id": "cc1067d1b0694f1b9ece80692a73f99a",
+            "label": "State 3",
+            "type": "Axure:PanelDiagram",
+            "objects": [
+              {
+                "id": "e7c8398033ca4323b0e37762a549cf12",
+                "label": "",
+                "friendlyType": "矩形",
+                "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                "panelIndex": 2,
+                "type": "vectorShape",
+                "styleType": "vectorShape",
+                "visible": true,
+                "style": {
+                  "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                  "fontWeight": "400",
+                  "fontStyle": "normal",
+                  "fontStretch": "5",
+                  "foreGroundFill": {
+                    "fillType": "solid",
+                    "color": 4281545523
+                  },
+                  "size": {
+                    "width": 1760,
+                    "height": 820
+                  },
+                  "baseStyle": "4b7bfc596114427989e10bb0b557d0ce",
+                  "borderWidth": "0"
+                },
+                "adaptiveStyles": {},
+                "imageOverrides": {},
+                "generateCompound": false,
+                "autoFitWidth": false,
+                "autoFitHeight": false
+              },
+              {
+                "id": "6b20487ee3104552b5517c545bb38b60",
+                "label": "",
+                "friendlyType": "组合",
+                "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                "panelIndex": 2,
+                "type": "layer",
+                "styleType": "layer",
+                "visible": true,
+                "style": {
+                  "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                  "fontWeight": "400",
+                  "fontStyle": "normal",
+                  "fontStretch": "5",
+                  "foreGroundFill": {
+                    "fillType": "solid",
+                    "color": 4281545523
+                  },
+                  "location": {
+                    "x": 726,
+                    "y": 180
+                  }
+                },
+                "adaptiveStyles": {},
+                "imageOverrides": {},
+                "objs": [
+                  {
+                    "id": "f72dce6359394bc790ca699e21c9285f",
+                    "label": "",
+                    "friendlyType": "矩形",
+                    "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                    "panelIndex": 2,
+                    "type": "vectorShape",
+                    "styleType": "vectorShape",
+                    "visible": true,
+                    "style": {
+                      "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                      "fontWeight": "400",
+                      "fontStyle": "normal",
+                      "fontStretch": "5",
+                      "foreGroundFill": {
+                        "fillType": "solid",
+                        "color": 4281545523
+                      },
+                      "size": {
+                        "width": 1020,
+                        "height": 140
+                      },
+                      "baseStyle": "4b7bfc596114427989e10bb0b557d0ce",
+                      "location": {
+                        "x": 720,
+                        "y": 180
+                      },
+                      "cornerRadius": "70",
+                      "fill": {
+                        "fillType": "linearGradient",
+                        "startPoint": {
+                          "x": 0,
+                          "y": 0.5083333333333346
+                        },
+                        "endPoint": {
+                          "x": 0.9916666666666663,
+                          "y": 0.5083333333333346
+                        },
+                        "stops": [
+                          {
+                            "color": 4278237637,
+                            "offset": 0,
+                            "opacity": 1
+                          },
+                          {
+                            "color": 4280611837,
+                            "offset": 1,
+                            "opacity": 1
+                          }
+                        ]
+                      },
+                      "borderWidth": "0"
+                    },
+                    "adaptiveStyles": {},
+                    "imageOverrides": {},
+                    "images": {
+                      "normal~": "images/语音生成菜单/u24.svg",
+                      "images/语音生成菜单/u24.svg-isGeneratedImage": "true"
+                    },
+                    "generateCompound": false,
+                    "autoFitWidth": false,
+                    "autoFitHeight": false
+                  },
+                  {
+                    "id": "9f664fe47b604bcd915d54529670dc9d",
+                    "label": "",
+                    "friendlyType": "图片",
+                    "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                    "panelIndex": 2,
+                    "type": "imageBox",
+                    "styleType": "imageBox",
+                    "visible": true,
+                    "style": {
+                      "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                      "fontWeight": "400",
+                      "fontStyle": "normal",
+                      "fontStretch": "5",
+                      "foreGroundFill": {
+                        "fillType": "solid",
+                        "color": 4281545523
+                      },
+                      "baseStyle": "75a91ee5b9d042cfa01b8d565fe289c0",
+                      "size": {
+                        "width": 80,
+                        "height": 80
+                      },
+                      "location": {
+                        "x": 1640,
+                        "y": 210
+                      },
+                      "image": {
+                        "path": "../../images/语音生成菜单/u25.png",
+                        "width": 120,
+                        "height": 120
+                      }
+                    },
+                    "adaptiveStyles": {},
+                    "imageOverrides": {},
+                    "images": {
+                      "normal~": "images/语音生成菜单/u25.png"
+                    },
+                    "autoFitWidth": false,
+                    "autoFitHeight": false
+                  },
+                  {
+                    "id": "ae219f95c21d4b0ba2303abf590221c9",
+                    "label": "",
+                    "friendlyType": "组合",
+                    "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                    "panelIndex": 2,
+                    "type": "layer",
+                    "styleType": "layer",
+                    "visible": true,
+                    "style": {
+                      "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                      "fontWeight": "400",
+                      "fontStyle": "normal",
+                      "fontStretch": "5",
+                      "foreGroundFill": {
+                        "fillType": "solid",
+                        "color": 4281545523
+                      },
+                      "location": {
+                        "x": 766,
+                        "y": 192
+                      }
+                    },
+                    "adaptiveStyles": {},
+                    "imageOverrides": {},
+                    "objs": [
+                      {
+                        "id": "50ce7cf7007f4c5a8a9a63411d0d3d66",
+                        "label": "",
+                        "friendlyType": "矩形",
+                        "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                        "panelIndex": 2,
+                        "type": "vectorShape",
+                        "styleType": "vectorShape",
+                        "visible": true,
+                        "style": {
+                          "fontName": "\"微软雅黑\", sans-serif",
+                          "foreGroundFill": {
+                            "fillType": "solid",
+                            "color": 4294967295
+                          },
+                          "fontWeight": "400",
+                          "fontStyle": "normal",
+                          "fontStretch": "5",
+                          "size": {
+                            "width": 48,
+                            "height": 31
+                          },
+                          "baseStyle": "8c7a4c5ad69a4369a5f7788171ac0b32",
+                          "fontSize": "24px",
+                          "location": {
+                            "x": 1572,
+                            "y": 192
+                          }
+                        },
+                        "adaptiveStyles": {},
+                        "imageOverrides": {},
+                        "generateCompound": false,
+                        "autoFitWidth": true,
+                        "autoFitHeight": true
+                      },
+                      {
+                        "id": "2bde44e173ae4b6b83609f51352e10d8",
+                        "label": "",
+                        "friendlyType": "矩形",
+                        "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                        "panelIndex": 2,
+                        "type": "vectorShape",
+                        "styleType": "vectorShape",
+                        "visible": true,
+                        "style": {
+                          "fontName": "\"微软雅黑\", sans-serif",
+                          "foreGroundFill": {
+                            "fillType": "solid",
+                            "color": 4294967295
+                          },
+                          "fontWeight": "400",
+                          "fontStyle": "normal",
+                          "fontStretch": "5",
+                          "size": {
+                            "width": 860,
+                            "height": 80
+                          },
+                          "baseStyle": "8c7a4c5ad69a4369a5f7788171ac0b32",
+                          "location": {
+                            "x": 760,
+                            "y": 228
+                          },
+                          "fontSize": "30px",
+                          "horizontalAlignment": "right"
+                        },
+                        "adaptiveStyles": {},
+                        "imageOverrides": {},
+                        "generateCompound": false,
+                        "autoFitWidth": false,
+                        "autoFitHeight": true
+                      }
+                    ],
+                    "propagate": false
+                  }
+                ],
+                "propagate": false
+              },
+              {
+                "id": "e805c9e36fb045afa6312a6b08917c2d",
+                "label": "",
+                "friendlyType": "组合",
+                "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                "panelIndex": 2,
+                "type": "layer",
+                "styleType": "layer",
+                "visible": true,
+                "style": {
+                  "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                  "fontWeight": "400",
+                  "fontStyle": "normal",
+                  "fontStretch": "5",
+                  "foreGroundFill": {
+                    "fillType": "solid",
+                    "color": 4281545523
+                  },
+                  "location": {
+                    "x": 40,
+                    "y": 40
+                  }
+                },
+                "adaptiveStyles": {},
+                "imageOverrides": {},
+                "objs": [
+                  {
+                    "id": "f70d4e6464674c3ca41fd0ae7e983c4f",
+                    "label": "",
+                    "friendlyType": "矩形",
+                    "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                    "panelIndex": 2,
+                    "type": "vectorShape",
+                    "styleType": "vectorShape",
+                    "visible": true,
+                    "style": {
+                      "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                      "fontWeight": "400",
+                      "fontStyle": "normal",
+                      "fontStretch": "5",
+                      "foreGroundFill": {
+                        "fillType": "solid",
+                        "color": 4281545523
+                      },
+                      "size": {
+                        "width": 880,
+                        "height": 100
+                      },
+                      "baseStyle": "4b7bfc596114427989e10bb0b557d0ce",
+                      "location": {
+                        "x": 40,
+                        "y": 40
+                      },
+                      "cornerRadius": "50",
+                      "fill": {
+                        "fillType": "linearGradient",
+                        "startPoint": {
+                          "x": 0,
+                          "y": 0.5083333333333346
+                        },
+                        "endPoint": {
+                          "x": 0.9916666666666663,
+                          "y": 0.5083333333333346
+                        },
+                        "stops": [
+                          {
+                            "color": 4293653244,
+                            "offset": 0,
+                            "opacity": 1
+                          },
+                          {
+                            "color": 4292668158,
+                            "offset": 0.52,
+                            "opacity": 1
+                          },
+                          {
+                            "color": 4294310142,
+                            "offset": 1,
+                            "opacity": 1
+                          }
+                        ]
+                      },
+                      "borderWidth": "0"
+                    },
+                    "adaptiveStyles": {},
+                    "imageOverrides": {},
+                    "images": {
+                      "normal~": "images/语音生成菜单/u5.svg",
+                      "images/语音生成菜单/u5.svg-isGeneratedImage": "true"
+                    },
+                    "generateCompound": false,
+                    "autoFitWidth": false,
+                    "autoFitHeight": false
+                  },
+                  {
+                    "id": "a8ddff0bedde4e65a5bb5b82d1fa3193",
+                    "label": "",
+                    "friendlyType": "图片",
+                    "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                    "panelIndex": 2,
+                    "type": "imageBox",
+                    "styleType": "imageBox",
+                    "visible": true,
+                    "style": {
+                      "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                      "fontWeight": "400",
+                      "fontStyle": "normal",
+                      "fontStretch": "5",
+                      "foreGroundFill": {
+                        "fillType": "solid",
+                        "color": 4281545523
+                      },
+                      "baseStyle": "75a91ee5b9d042cfa01b8d565fe289c0",
+                      "size": {
+                        "width": 80,
+                        "height": 80
+                      },
+                      "location": {
+                        "x": 60,
+                        "y": 50
+                      },
+                      "image": {
+                        "path": "../../images/语音生成菜单/u6.png",
+                        "width": 120,
+                        "height": 120
+                      }
+                    },
+                    "adaptiveStyles": {},
+                    "imageOverrides": {},
+                    "images": {
+                      "normal~": "images/语音生成菜单/u6.png"
+                    },
+                    "autoFitWidth": false,
+                    "autoFitHeight": false
+                  },
+                  {
+                    "id": "3ee82c2e0ff64771bacda825ef0adb6a",
+                    "label": "",
+                    "friendlyType": "组合",
+                    "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                    "panelIndex": 2,
+                    "type": "layer",
+                    "styleType": "layer",
+                    "visible": true,
+                    "style": {
+                      "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                      "fontWeight": "400",
+                      "fontStyle": "normal",
+                      "fontStretch": "5",
+                      "foreGroundFill": {
+                        "fillType": "solid",
+                        "color": 4281545523
+                      },
+                      "location": {
+                        "x": 160,
+                        "y": 52
+                      }
+                    },
+                    "adaptiveStyles": {},
+                    "imageOverrides": {},
+                    "objs": [
+                      {
+                        "id": "8e9b88a2e23841208d5532b396519462",
+                        "label": "",
+                        "friendlyType": "矩形",
+                        "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                        "panelIndex": 2,
+                        "type": "vectorShape",
+                        "styleType": "vectorShape",
+                        "visible": true,
+                        "style": {
+                          "fontName": "\"微软雅黑\", sans-serif",
+                          "foreGroundFill": {
+                            "fillType": "solid",
+                            "color": 4280728260
+                          },
+                          "fontWeight": "400",
+                          "fontStyle": "normal",
+                          "fontStretch": "5",
+                          "size": {
+                            "width": 96,
+                            "height": 31
+                          },
+                          "baseStyle": "8c7a4c5ad69a4369a5f7788171ac0b32",
+                          "fontSize": "24px",
+                          "location": {
+                            "x": 160,
+                            "y": 52
+                          }
+                        },
+                        "adaptiveStyles": {},
+                        "imageOverrides": {},
+                        "generateCompound": false,
+                        "autoFitWidth": true,
+                        "autoFitHeight": true
+                      },
+                      {
+                        "id": "dd818cc1b08e4920b952764fd9962765",
+                        "label": "",
+                        "friendlyType": "矩形",
+                        "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                        "panelIndex": 2,
+                        "type": "vectorShape",
+                        "styleType": "vectorShape",
+                        "visible": true,
+                        "style": {
+                          "fontName": "\"微软雅黑\", sans-serif",
+                          "foreGroundFill": {
+                            "fillType": "solid",
+                            "color": 4281174150
+                          },
+                          "fontWeight": "400",
+                          "fontStyle": "normal",
+                          "fontStretch": "5",
+                          "size": {
+                            "width": 720,
+                            "height": 40
+                          },
+                          "baseStyle": "8c7a4c5ad69a4369a5f7788171ac0b32",
+                          "location": {
+                            "x": 160,
+                            "y": 88
+                          },
+                          "fontSize": "30px"
+                        },
+                        "adaptiveStyles": {},
+                        "imageOverrides": {},
+                        "generateCompound": false,
+                        "autoFitWidth": true,
+                        "autoFitHeight": true
+                      }
+                    ],
+                    "propagate": false
+                  }
+                ],
+                "propagate": false
+              }
+            ],
+            "style": {
+              "fill": {
+                "fillType": "solid",
+                "color": 16777215,
+                "opacity": 0
+              },
+              "image": null,
+              "imageAlignment": {
+                "horizontal": "near",
+                "vertical": "near"
+              },
+              "imageRepeat": "auto",
+              "borderWidth": "0",
+              "borderVisibility": "top right bottom left",
+              "borderFill": {
+                "fillType": "solid",
+                "color": 4286151033
+              },
+              "cornerRadius": "0",
+              "cornerVisibility": "top right bottom left",
+              "outerShadow": {
+                "on": false,
+                "offsetX": 5,
+                "offsetY": 5,
+                "blurRadius": 5,
+                "spread": 0,
+                "color": {
+                  "r": 0,
+                  "g": 0,
+                  "b": 0,
+                  "a": 0.34901960784313724
+                }
+              }
+            },
+            "adaptiveStyles": {}
+          },
+          {
+            "id": "6f8eabfb54b344228b0473fa9d1b69a9",
+            "label": "State 4",
+            "type": "Axure:PanelDiagram",
+            "objects": [
+              {
+                "id": "34d3eba985814472aa5ca27df67f6d3c",
+                "label": "",
+                "friendlyType": "矩形",
+                "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                "panelIndex": 3,
+                "type": "vectorShape",
+                "styleType": "vectorShape",
+                "visible": true,
+                "style": {
+                  "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                  "fontWeight": "400",
+                  "fontStyle": "normal",
+                  "fontStretch": "5",
+                  "foreGroundFill": {
+                    "fillType": "solid",
+                    "color": 4281545523
+                  },
+                  "size": {
+                    "width": 1760,
+                    "height": 820
+                  },
+                  "baseStyle": "4b7bfc596114427989e10bb0b557d0ce",
+                  "borderWidth": "0"
+                },
+                "adaptiveStyles": {},
+                "imageOverrides": {},
+                "generateCompound": false,
+                "autoFitWidth": false,
+                "autoFitHeight": false
+              },
+              {
+                "id": "8a176b48e0af40b89e0b397f1c6b1a33",
+                "label": "",
+                "friendlyType": "组合",
+                "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                "panelIndex": 3,
+                "type": "layer",
+                "styleType": "layer",
+                "visible": true,
+                "style": {
+                  "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                  "fontWeight": "400",
+                  "fontStyle": "normal",
+                  "fontStretch": "5",
+                  "foreGroundFill": {
+                    "fillType": "solid",
+                    "color": 4281545523
+                  },
+                  "location": {
+                    "x": 40,
+                    "y": 40
+                  }
+                },
+                "adaptiveStyles": {},
+                "imageOverrides": {},
+                "objs": [
+                  {
+                    "id": "d94712ac3a244b9dbbe06d937cf7c792",
+                    "label": "",
+                    "friendlyType": "矩形",
+                    "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                    "panelIndex": 3,
+                    "type": "vectorShape",
+                    "styleType": "vectorShape",
+                    "visible": true,
+                    "style": {
+                      "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                      "fontWeight": "400",
+                      "fontStyle": "normal",
+                      "fontStretch": "5",
+                      "foreGroundFill": {
+                        "fillType": "solid",
+                        "color": 4281545523
+                      },
+                      "size": {
+                        "width": 880,
+                        "height": 100
+                      },
+                      "baseStyle": "4b7bfc596114427989e10bb0b557d0ce",
+                      "location": {
+                        "x": 40,
+                        "y": 40
+                      },
+                      "cornerRadius": "50",
+                      "fill": {
+                        "fillType": "linearGradient",
+                        "startPoint": {
+                          "x": 0,
+                          "y": 0.5083333333333346
+                        },
+                        "endPoint": {
+                          "x": 0.9916666666666663,
+                          "y": 0.5083333333333346
+                        },
+                        "stops": [
+                          {
+                            "color": 4293653244,
+                            "offset": 0,
+                            "opacity": 1
+                          },
+                          {
+                            "color": 4292668158,
+                            "offset": 0.52,
+                            "opacity": 1
+                          },
+                          {
+                            "color": 4294310142,
+                            "offset": 1,
+                            "opacity": 1
+                          }
+                        ]
+                      },
+                      "borderWidth": "0"
+                    },
+                    "adaptiveStyles": {},
+                    "imageOverrides": {},
+                    "images": {
+                      "normal~": "images/语音生成菜单/u5.svg",
+                      "images/语音生成菜单/u5.svg-isGeneratedImage": "true"
+                    },
+                    "generateCompound": false,
+                    "autoFitWidth": false,
+                    "autoFitHeight": false
+                  },
+                  {
+                    "id": "f50aed89624a42e084bebae10b7efff8",
+                    "label": "",
+                    "friendlyType": "图片",
+                    "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                    "panelIndex": 3,
+                    "type": "imageBox",
+                    "styleType": "imageBox",
+                    "visible": true,
+                    "style": {
+                      "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                      "fontWeight": "400",
+                      "fontStyle": "normal",
+                      "fontStretch": "5",
+                      "foreGroundFill": {
+                        "fillType": "solid",
+                        "color": 4281545523
+                      },
+                      "baseStyle": "75a91ee5b9d042cfa01b8d565fe289c0",
+                      "size": {
+                        "width": 80,
+                        "height": 80
+                      },
+                      "location": {
+                        "x": 60,
+                        "y": 50
+                      },
+                      "image": {
+                        "path": "../../images/语音生成菜单/u6.png",
+                        "width": 120,
+                        "height": 120
+                      }
+                    },
+                    "adaptiveStyles": {},
+                    "imageOverrides": {},
+                    "images": {
+                      "normal~": "images/语音生成菜单/u6.png"
+                    },
+                    "autoFitWidth": false,
+                    "autoFitHeight": false
+                  },
+                  {
+                    "id": "1b4a6b2e501f4554b0a5478e660014f3",
+                    "label": "",
+                    "friendlyType": "组合",
+                    "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                    "panelIndex": 3,
+                    "type": "layer",
+                    "styleType": "layer",
+                    "visible": true,
+                    "style": {
+                      "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                      "fontWeight": "400",
+                      "fontStyle": "normal",
+                      "fontStretch": "5",
+                      "foreGroundFill": {
+                        "fillType": "solid",
+                        "color": 4281545523
+                      },
+                      "location": {
+                        "x": 160,
+                        "y": 52
+                      }
+                    },
+                    "adaptiveStyles": {},
+                    "imageOverrides": {},
+                    "objs": [
+                      {
+                        "id": "d017431c31a14dc7a76c84e29934cf70",
+                        "label": "",
+                        "friendlyType": "矩形",
+                        "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                        "panelIndex": 3,
+                        "type": "vectorShape",
+                        "styleType": "vectorShape",
+                        "visible": true,
+                        "style": {
+                          "fontName": "\"微软雅黑\", sans-serif",
+                          "foreGroundFill": {
+                            "fillType": "solid",
+                            "color": 4280728260
+                          },
+                          "fontWeight": "400",
+                          "fontStyle": "normal",
+                          "fontStretch": "5",
+                          "size": {
+                            "width": 96,
+                            "height": 31
+                          },
+                          "baseStyle": "8c7a4c5ad69a4369a5f7788171ac0b32",
+                          "fontSize": "24px",
+                          "location": {
+                            "x": 160,
+                            "y": 52
+                          }
+                        },
+                        "adaptiveStyles": {},
+                        "imageOverrides": {},
+                        "generateCompound": false,
+                        "autoFitWidth": true,
+                        "autoFitHeight": true
+                      },
+                      {
+                        "id": "c0520fd1dbde4055934ef068eb9ce5c6",
+                        "label": "",
+                        "friendlyType": "矩形",
+                        "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                        "panelIndex": 3,
+                        "type": "vectorShape",
+                        "styleType": "vectorShape",
+                        "visible": true,
+                        "style": {
+                          "fontName": "\"微软雅黑\", sans-serif",
+                          "foreGroundFill": {
+                            "fillType": "solid",
+                            "color": 4281174150
+                          },
+                          "fontWeight": "400",
+                          "fontStyle": "normal",
+                          "fontStretch": "5",
+                          "size": {
+                            "width": 720,
+                            "height": 40
+                          },
+                          "baseStyle": "8c7a4c5ad69a4369a5f7788171ac0b32",
+                          "location": {
+                            "x": 160,
+                            "y": 88
+                          },
+                          "fontSize": "30px"
+                        },
+                        "adaptiveStyles": {},
+                        "imageOverrides": {},
+                        "generateCompound": false,
+                        "autoFitWidth": true,
+                        "autoFitHeight": true
+                      }
+                    ],
+                    "propagate": false
+                  }
+                ],
+                "propagate": false
+              },
+              {
+                "id": "db0733af8ce84c7293a0b04c32f77a8b",
+                "label": "",
+                "friendlyType": "组合",
+                "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                "panelIndex": 3,
+                "type": "layer",
+                "styleType": "layer",
+                "visible": true,
+                "style": {
+                  "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                  "fontWeight": "400",
+                  "fontStyle": "normal",
+                  "fontStretch": "5",
+                  "foreGroundFill": {
+                    "fillType": "solid",
+                    "color": 4281545523
+                  },
+                  "location": {
+                    "x": 40,
+                    "y": 360
+                  }
+                },
+                "adaptiveStyles": {},
+                "imageOverrides": {},
+                "objs": [
+                  {
+                    "id": "3ba616153cb4449a86c764edb9a7448e",
+                    "label": "",
+                    "friendlyType": "矩形",
+                    "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                    "panelIndex": 3,
+                    "type": "vectorShape",
+                    "styleType": "vectorShape",
+                    "visible": true,
+                    "style": {
+                      "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                      "fontWeight": "400",
+                      "fontStyle": "normal",
+                      "fontStretch": "5",
+                      "foreGroundFill": {
+                        "fillType": "solid",
+                        "color": 4281545523
+                      },
+                      "size": {
+                        "width": 628,
+                        "height": 100
+                      },
+                      "baseStyle": "4b7bfc596114427989e10bb0b557d0ce",
+                      "location": {
+                        "x": 40,
+                        "y": 360
+                      },
+                      "cornerRadius": "50",
+                      "fill": {
+                        "fillType": "linearGradient",
+                        "startPoint": {
+                          "x": 0,
+                          "y": 0.5083333333333346
+                        },
+                        "endPoint": {
+                          "x": 0.9916666666666663,
+                          "y": 0.5083333333333346
+                        },
+                        "stops": [
+                          {
+                            "color": 4293653244,
+                            "offset": 0,
+                            "opacity": 1
+                          },
+                          {
+                            "color": 4292668158,
+                            "offset": 0.52,
+                            "opacity": 1
+                          },
+                          {
+                            "color": 4294310142,
+                            "offset": 1,
+                            "opacity": 1
+                          }
+                        ]
+                      },
+                      "borderWidth": "0"
+                    },
+                    "adaptiveStyles": {},
+                    "imageOverrides": {},
+                    "images": {
+                      "normal~": "images/语音生成菜单/u43.svg",
+                      "images/语音生成菜单/u43.svg-isGeneratedImage": "true"
+                    },
+                    "generateCompound": false,
+                    "autoFitWidth": false,
+                    "autoFitHeight": false
+                  },
+                  {
+                    "id": "27484f701058405a8239215a6639d560",
+                    "label": "",
+                    "friendlyType": "图片",
+                    "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                    "panelIndex": 3,
+                    "type": "imageBox",
+                    "styleType": "imageBox",
+                    "visible": true,
+                    "style": {
+                      "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                      "fontWeight": "400",
+                      "fontStyle": "normal",
+                      "fontStretch": "5",
+                      "foreGroundFill": {
+                        "fillType": "solid",
+                        "color": 4281545523
+                      },
+                      "baseStyle": "75a91ee5b9d042cfa01b8d565fe289c0",
+                      "size": {
+                        "width": 80,
+                        "height": 80
+                      },
+                      "location": {
+                        "x": 60,
+                        "y": 370
+                      },
+                      "image": {
+                        "path": "../../images/语音生成菜单/u6.png",
+                        "width": 120,
+                        "height": 120
+                      }
+                    },
+                    "adaptiveStyles": {},
+                    "imageOverrides": {},
+                    "images": {
+                      "normal~": "images/语音生成菜单/u6.png"
+                    },
+                    "autoFitWidth": false,
+                    "autoFitHeight": false
+                  },
+                  {
+                    "id": "833176e6c1c24f98bf218cf76987c830",
+                    "label": "",
+                    "friendlyType": "组合",
+                    "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                    "panelIndex": 3,
+                    "type": "layer",
+                    "styleType": "layer",
+                    "visible": true,
+                    "style": {
+                      "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                      "fontWeight": "400",
+                      "fontStyle": "normal",
+                      "fontStretch": "5",
+                      "foreGroundFill": {
+                        "fillType": "solid",
+                        "color": 4281545523
+                      },
+                      "location": {
+                        "x": 160,
+                        "y": 372
+                      }
+                    },
+                    "adaptiveStyles": {},
+                    "imageOverrides": {},
+                    "objs": [
+                      {
+                        "id": "431aff487e3a471f84c07ef17a392162",
+                        "label": "",
+                        "friendlyType": "矩形",
+                        "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                        "panelIndex": 3,
+                        "type": "vectorShape",
+                        "styleType": "vectorShape",
+                        "visible": true,
+                        "style": {
+                          "fontName": "\"微软雅黑\", sans-serif",
+                          "foreGroundFill": {
+                            "fillType": "solid",
+                            "color": 4280728260
+                          },
+                          "fontWeight": "400",
+                          "fontStyle": "normal",
+                          "fontStretch": "5",
+                          "size": {
+                            "width": 96,
+                            "height": 31
+                          },
+                          "baseStyle": "8c7a4c5ad69a4369a5f7788171ac0b32",
+                          "location": {
+                            "x": 160,
+                            "y": 372
+                          },
+                          "fontSize": "24px"
+                        },
+                        "adaptiveStyles": {},
+                        "imageOverrides": {},
+                        "generateCompound": false,
+                        "autoFitWidth": true,
+                        "autoFitHeight": true
+                      },
+                      {
+                        "id": "745584593019488a92e7d8f16bfeb6e1",
+                        "label": "",
+                        "friendlyType": "矩形",
+                        "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                        "panelIndex": 3,
+                        "type": "vectorShape",
+                        "styleType": "vectorShape",
+                        "visible": true,
+                        "style": {
+                          "fontName": "\"微软雅黑\", sans-serif",
+                          "foreGroundFill": {
+                            "fillType": "solid",
+                            "color": 4281174150
+                          },
+                          "fontWeight": "400",
+                          "fontStyle": "normal",
+                          "fontStretch": "5",
+                          "size": {
+                            "width": 468,
+                            "height": 40
+                          },
+                          "baseStyle": "8c7a4c5ad69a4369a5f7788171ac0b32",
+                          "location": {
+                            "x": 160,
+                            "y": 408
+                          },
+                          "fontSize": "30px"
+                        },
+                        "adaptiveStyles": {},
+                        "imageOverrides": {},
+                        "generateCompound": false,
+                        "autoFitWidth": false,
+                        "autoFitHeight": true
+                      }
+                    ],
+                    "propagate": false
+                  }
+                ],
+                "propagate": false
+              },
+              {
+                "id": "d9e7cc7983a04889ae4409e1325b1ae3",
+                "label": "",
+                "friendlyType": "组合",
+                "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                "panelIndex": 3,
+                "type": "layer",
+                "styleType": "layer",
+                "visible": true,
+                "style": {
+                  "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                  "fontWeight": "400",
+                  "fontStyle": "normal",
+                  "fontStretch": "5",
+                  "foreGroundFill": {
+                    "fillType": "solid",
+                    "color": 4281545523
+                  },
+                  "location": {
+                    "x": 720,
+                    "y": 180
+                  }
+                },
+                "adaptiveStyles": {},
+                "imageOverrides": {},
+                "objs": [
+                  {
+                    "id": "4863729808c14e53b20ec356b2c6399d",
+                    "label": "",
+                    "friendlyType": "矩形",
+                    "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                    "panelIndex": 3,
+                    "type": "vectorShape",
+                    "styleType": "vectorShape",
+                    "visible": true,
+                    "style": {
+                      "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                      "fontWeight": "400",
+                      "fontStyle": "normal",
+                      "fontStretch": "5",
+                      "foreGroundFill": {
+                        "fillType": "solid",
+                        "color": 4281545523
+                      },
+                      "size": {
+                        "width": 1020,
+                        "height": 140
+                      },
+                      "baseStyle": "4b7bfc596114427989e10bb0b557d0ce",
+                      "location": {
+                        "x": 720,
+                        "y": 180
+                      },
+                      "cornerRadius": "70",
+                      "fill": {
+                        "fillType": "linearGradient",
+                        "startPoint": {
+                          "x": 0,
+                          "y": 0.5083333333333346
+                        },
+                        "endPoint": {
+                          "x": 0.9916666666666663,
+                          "y": 0.5083333333333346
+                        },
+                        "stops": [
+                          {
+                            "color": 4278237637,
+                            "offset": 0,
+                            "opacity": 1
+                          },
+                          {
+                            "color": 4280611837,
+                            "offset": 1,
+                            "opacity": 1
+                          }
+                        ]
+                      },
+                      "borderWidth": "0"
+                    },
+                    "adaptiveStyles": {},
+                    "imageOverrides": {},
+                    "images": {
+                      "normal~": "images/语音生成菜单/u24.svg",
+                      "images/语音生成菜单/u24.svg-isGeneratedImage": "true"
+                    },
+                    "generateCompound": false,
+                    "autoFitWidth": false,
+                    "autoFitHeight": false
+                  },
+                  {
+                    "id": "726dd3ceaddc42d49f5e775f84063082",
+                    "label": "",
+                    "friendlyType": "图片",
+                    "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                    "panelIndex": 3,
+                    "type": "imageBox",
+                    "styleType": "imageBox",
+                    "visible": true,
+                    "style": {
+                      "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                      "fontWeight": "400",
+                      "fontStyle": "normal",
+                      "fontStretch": "5",
+                      "foreGroundFill": {
+                        "fillType": "solid",
+                        "color": 4281545523
+                      },
+                      "baseStyle": "75a91ee5b9d042cfa01b8d565fe289c0",
+                      "size": {
+                        "width": 80,
+                        "height": 80
+                      },
+                      "location": {
+                        "x": 1640,
+                        "y": 210
+                      },
+                      "image": {
+                        "path": "../../images/语音生成菜单/u25.png",
+                        "width": 120,
+                        "height": 120
+                      }
+                    },
+                    "adaptiveStyles": {},
+                    "imageOverrides": {},
+                    "images": {
+                      "normal~": "images/语音生成菜单/u25.png"
+                    },
+                    "autoFitWidth": false,
+                    "autoFitHeight": false
+                  },
+                  {
+                    "id": "49c28f395f08424e8a9c8b8fc6b01ac7",
+                    "label": "",
+                    "friendlyType": "组合",
+                    "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                    "panelIndex": 3,
+                    "type": "layer",
+                    "styleType": "layer",
+                    "visible": true,
+                    "style": {
+                      "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                      "fontWeight": "400",
+                      "fontStyle": "normal",
+                      "fontStretch": "5",
+                      "foreGroundFill": {
+                        "fillType": "solid",
+                        "color": 4281545523
+                      },
+                      "location": {
+                        "x": 760,
+                        "y": 192
+                      }
+                    },
+                    "adaptiveStyles": {},
+                    "imageOverrides": {},
+                    "objs": [
+                      {
+                        "id": "ce93e231e16549968c388d173f3b685a",
+                        "label": "",
+                        "friendlyType": "矩形",
+                        "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                        "panelIndex": 3,
+                        "type": "vectorShape",
+                        "styleType": "vectorShape",
+                        "visible": true,
+                        "style": {
+                          "fontName": "\"微软雅黑\", sans-serif",
+                          "foreGroundFill": {
+                            "fillType": "solid",
+                            "color": 4294967295
+                          },
+                          "fontWeight": "400",
+                          "fontStyle": "normal",
+                          "fontStretch": "5",
+                          "size": {
+                            "width": 48,
+                            "height": 31
+                          },
+                          "baseStyle": "8c7a4c5ad69a4369a5f7788171ac0b32",
+                          "fontSize": "24px",
+                          "location": {
+                            "x": 1572,
+                            "y": 192
+                          }
+                        },
+                        "adaptiveStyles": {},
+                        "imageOverrides": {},
+                        "generateCompound": false,
+                        "autoFitWidth": true,
+                        "autoFitHeight": true
+                      },
+                      {
+                        "id": "35a0722181354764bba714980202c504",
+                        "label": "",
+                        "friendlyType": "矩形",
+                        "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                        "panelIndex": 3,
+                        "type": "vectorShape",
+                        "styleType": "vectorShape",
+                        "visible": true,
+                        "style": {
+                          "fontName": "\"微软雅黑\", sans-serif",
+                          "foreGroundFill": {
+                            "fillType": "solid",
+                            "color": 4294967295
+                          },
+                          "fontWeight": "400",
+                          "fontStyle": "normal",
+                          "fontStretch": "5",
+                          "size": {
+                            "width": 860,
+                            "height": 80
+                          },
+                          "baseStyle": "8c7a4c5ad69a4369a5f7788171ac0b32",
+                          "location": {
+                            "x": 760,
+                            "y": 228
+                          },
+                          "fontSize": "30px",
+                          "horizontalAlignment": "right"
+                        },
+                        "adaptiveStyles": {},
+                        "imageOverrides": {},
+                        "generateCompound": false,
+                        "autoFitWidth": false,
+                        "autoFitHeight": true
+                      }
+                    ],
+                    "propagate": false
+                  }
+                ],
+                "propagate": false
+              }
+            ],
+            "style": {
+              "fill": {
+                "fillType": "solid",
+                "color": 16777215,
+                "opacity": 0
+              },
+              "image": null,
+              "imageAlignment": {
+                "horizontal": "near",
+                "vertical": "near"
+              },
+              "imageRepeat": "auto",
+              "borderWidth": "0",
+              "borderVisibility": "top right bottom left",
+              "borderFill": {
+                "fillType": "solid",
+                "color": 4286151033
+              },
+              "cornerRadius": "0",
+              "cornerVisibility": "top right bottom left",
+              "outerShadow": {
+                "on": false,
+                "offsetX": 5,
+                "offsetY": 5,
+                "blurRadius": 5,
+                "spread": 0,
+                "color": {
+                  "r": 0,
+                  "g": 0,
+                  "b": 0,
+                  "a": 0.34901960784313724
+                }
+              }
+            },
+            "adaptiveStyles": {}
+          },
+          {
+            "id": "92aa4a755f9e44ffaebcef0cb5522808",
+            "label": "State 5",
+            "type": "Axure:PanelDiagram",
+            "objects": [
+              {
+                "id": "6ce92e132fb44c8993e20812e889fa67",
+                "label": "",
+                "friendlyType": "矩形",
+                "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                "panelIndex": 4,
+                "type": "vectorShape",
+                "styleType": "vectorShape",
+                "visible": true,
+                "style": {
+                  "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                  "fontWeight": "400",
+                  "fontStyle": "normal",
+                  "fontStretch": "5",
+                  "foreGroundFill": {
+                    "fillType": "solid",
+                    "color": 4281545523
+                  },
+                  "size": {
+                    "width": 1760,
+                    "height": 820
+                  },
+                  "baseStyle": "4b7bfc596114427989e10bb0b557d0ce",
+                  "borderWidth": "0"
+                },
+                "adaptiveStyles": {},
+                "imageOverrides": {},
+                "generateCompound": false,
+                "autoFitWidth": false,
+                "autoFitHeight": false
+              },
+              {
+                "id": "bb87aea9a1ac4cf987ced08229d66169",
+                "label": "",
+                "friendlyType": "组合",
+                "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                "panelIndex": 4,
+                "type": "layer",
+                "styleType": "layer",
+                "visible": true,
+                "style": {
+                  "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                  "fontWeight": "400",
+                  "fontStyle": "normal",
+                  "fontStretch": "5",
+                  "foreGroundFill": {
+                    "fillType": "solid",
+                    "color": 4281545523
+                  },
+                  "location": {
+                    "x": 40,
+                    "y": 40
+                  }
+                },
+                "adaptiveStyles": {},
+                "imageOverrides": {},
+                "objs": [
+                  {
+                    "id": "4f201d394e414e23bdeb68b38b44ce9e",
+                    "label": "",
+                    "friendlyType": "矩形",
+                    "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                    "panelIndex": 4,
+                    "type": "vectorShape",
+                    "styleType": "vectorShape",
+                    "visible": true,
+                    "style": {
+                      "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                      "fontWeight": "400",
+                      "fontStyle": "normal",
+                      "fontStretch": "5",
+                      "foreGroundFill": {
+                        "fillType": "solid",
+                        "color": 4281545523
+                      },
+                      "size": {
+                        "width": 880,
+                        "height": 100
+                      },
+                      "baseStyle": "4b7bfc596114427989e10bb0b557d0ce",
+                      "location": {
+                        "x": 40,
+                        "y": 40
+                      },
+                      "cornerRadius": "50",
+                      "fill": {
+                        "fillType": "linearGradient",
+                        "startPoint": {
+                          "x": 0,
+                          "y": 0.5083333333333346
+                        },
+                        "endPoint": {
+                          "x": 0.9916666666666663,
+                          "y": 0.5083333333333346
+                        },
+                        "stops": [
+                          {
+                            "color": 4293653244,
+                            "offset": 0,
+                            "opacity": 1
+                          },
+                          {
+                            "color": 4292668158,
+                            "offset": 0.52,
+                            "opacity": 1
+                          },
+                          {
+                            "color": 4294310142,
+                            "offset": 1,
+                            "opacity": 1
+                          }
+                        ]
+                      },
+                      "borderWidth": "0"
+                    },
+                    "adaptiveStyles": {},
+                    "imageOverrides": {},
+                    "images": {
+                      "normal~": "images/语音生成菜单/u5.svg",
+                      "images/语音生成菜单/u5.svg-isGeneratedImage": "true"
+                    },
+                    "generateCompound": false,
+                    "autoFitWidth": false,
+                    "autoFitHeight": false
+                  },
+                  {
+                    "id": "0ddab9199e36492fab59218d7b4ce1ad",
+                    "label": "",
+                    "friendlyType": "图片",
+                    "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                    "panelIndex": 4,
+                    "type": "imageBox",
+                    "styleType": "imageBox",
+                    "visible": true,
+                    "style": {
+                      "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                      "fontWeight": "400",
+                      "fontStyle": "normal",
+                      "fontStretch": "5",
+                      "foreGroundFill": {
+                        "fillType": "solid",
+                        "color": 4281545523
+                      },
+                      "baseStyle": "75a91ee5b9d042cfa01b8d565fe289c0",
+                      "size": {
+                        "width": 80,
+                        "height": 80
+                      },
+                      "location": {
+                        "x": 60,
+                        "y": 50
+                      },
+                      "image": {
+                        "path": "../../images/语音生成菜单/u6.png",
+                        "width": 120,
+                        "height": 120
+                      }
+                    },
+                    "adaptiveStyles": {},
+                    "imageOverrides": {},
+                    "images": {
+                      "normal~": "images/语音生成菜单/u6.png"
+                    },
+                    "autoFitWidth": false,
+                    "autoFitHeight": false
+                  },
+                  {
+                    "id": "57554fbf18344af18ce362bece315ae3",
+                    "label": "",
+                    "friendlyType": "组合",
+                    "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                    "panelIndex": 4,
+                    "type": "layer",
+                    "styleType": "layer",
+                    "visible": true,
+                    "style": {
+                      "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                      "fontWeight": "400",
+                      "fontStyle": "normal",
+                      "fontStretch": "5",
+                      "foreGroundFill": {
+                        "fillType": "solid",
+                        "color": 4281545523
+                      },
+                      "location": {
+                        "x": 160,
+                        "y": 52
+                      }
+                    },
+                    "adaptiveStyles": {},
+                    "imageOverrides": {},
+                    "objs": [
+                      {
+                        "id": "b0f5a8b0c69c4363b462dfba548321c1",
+                        "label": "",
+                        "friendlyType": "矩形",
+                        "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                        "panelIndex": 4,
+                        "type": "vectorShape",
+                        "styleType": "vectorShape",
+                        "visible": true,
+                        "style": {
+                          "fontName": "\"微软雅黑\", sans-serif",
+                          "foreGroundFill": {
+                            "fillType": "solid",
+                            "color": 4280728260
+                          },
+                          "fontWeight": "400",
+                          "fontStyle": "normal",
+                          "fontStretch": "5",
+                          "size": {
+                            "width": 96,
+                            "height": 31
+                          },
+                          "baseStyle": "8c7a4c5ad69a4369a5f7788171ac0b32",
+                          "fontSize": "24px",
+                          "location": {
+                            "x": 160,
+                            "y": 52
+                          }
+                        },
+                        "adaptiveStyles": {},
+                        "imageOverrides": {},
+                        "generateCompound": false,
+                        "autoFitWidth": true,
+                        "autoFitHeight": true
+                      },
+                      {
+                        "id": "98bb44ab9492416f8788afda9e5ece42",
+                        "label": "",
+                        "friendlyType": "矩形",
+                        "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                        "panelIndex": 4,
+                        "type": "vectorShape",
+                        "styleType": "vectorShape",
+                        "visible": true,
+                        "style": {
+                          "fontName": "\"微软雅黑\", sans-serif",
+                          "foreGroundFill": {
+                            "fillType": "solid",
+                            "color": 4281174150
+                          },
+                          "fontWeight": "400",
+                          "fontStyle": "normal",
+                          "fontStretch": "5",
+                          "size": {
+                            "width": 720,
+                            "height": 40
+                          },
+                          "baseStyle": "8c7a4c5ad69a4369a5f7788171ac0b32",
+                          "location": {
+                            "x": 160,
+                            "y": 88
+                          },
+                          "fontSize": "30px"
+                        },
+                        "adaptiveStyles": {},
+                        "imageOverrides": {},
+                        "generateCompound": false,
+                        "autoFitWidth": true,
+                        "autoFitHeight": true
+                      }
+                    ],
+                    "propagate": false
+                  }
+                ],
+                "propagate": false
+              },
+              {
+                "id": "3df5afbfec8a469ca0160ab805cd5297",
+                "label": "",
+                "friendlyType": "组合",
+                "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                "panelIndex": 4,
+                "type": "layer",
+                "styleType": "layer",
+                "visible": true,
+                "style": {
+                  "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                  "fontWeight": "400",
+                  "fontStyle": "normal",
+                  "fontStretch": "5",
+                  "foreGroundFill": {
+                    "fillType": "solid",
+                    "color": 4281545523
+                  },
+                  "location": {
+                    "x": 40,
+                    "y": 360
+                  }
+                },
+                "adaptiveStyles": {},
+                "imageOverrides": {},
+                "objs": [
+                  {
+                    "id": "2491aa0b64a1435d9183ec8b278c8755",
+                    "label": "",
+                    "friendlyType": "矩形",
+                    "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                    "panelIndex": 4,
+                    "type": "vectorShape",
+                    "styleType": "vectorShape",
+                    "visible": true,
+                    "style": {
+                      "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                      "fontWeight": "400",
+                      "fontStyle": "normal",
+                      "fontStretch": "5",
+                      "foreGroundFill": {
+                        "fillType": "solid",
+                        "color": 4281545523
+                      },
+                      "size": {
+                        "width": 628,
+                        "height": 100
+                      },
+                      "baseStyle": "4b7bfc596114427989e10bb0b557d0ce",
+                      "location": {
+                        "x": 40,
+                        "y": 360
+                      },
+                      "cornerRadius": "50",
+                      "fill": {
+                        "fillType": "linearGradient",
+                        "startPoint": {
+                          "x": 0,
+                          "y": 0.5083333333333346
+                        },
+                        "endPoint": {
+                          "x": 0.9916666666666663,
+                          "y": 0.5083333333333346
+                        },
+                        "stops": [
+                          {
+                            "color": 4293653244,
+                            "offset": 0,
+                            "opacity": 1
+                          },
+                          {
+                            "color": 4292668158,
+                            "offset": 0.52,
+                            "opacity": 1
+                          },
+                          {
+                            "color": 4294310142,
+                            "offset": 1,
+                            "opacity": 1
+                          }
+                        ]
+                      },
+                      "borderWidth": "0"
+                    },
+                    "adaptiveStyles": {},
+                    "imageOverrides": {},
+                    "images": {
+                      "normal~": "images/语音生成菜单/u43.svg",
+                      "images/语音生成菜单/u43.svg-isGeneratedImage": "true"
+                    },
+                    "generateCompound": false,
+                    "autoFitWidth": false,
+                    "autoFitHeight": false
+                  },
+                  {
+                    "id": "8c7ffd87f64f4c2e9d663181ec152883",
+                    "label": "",
+                    "friendlyType": "图片",
+                    "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                    "panelIndex": 4,
+                    "type": "imageBox",
+                    "styleType": "imageBox",
+                    "visible": true,
+                    "style": {
+                      "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                      "fontWeight": "400",
+                      "fontStyle": "normal",
+                      "fontStretch": "5",
+                      "foreGroundFill": {
+                        "fillType": "solid",
+                        "color": 4281545523
+                      },
+                      "baseStyle": "75a91ee5b9d042cfa01b8d565fe289c0",
+                      "size": {
+                        "width": 80,
+                        "height": 80
+                      },
+                      "location": {
+                        "x": 60,
+                        "y": 370
+                      },
+                      "image": {
+                        "path": "../../images/语音生成菜单/u6.png",
+                        "width": 120,
+                        "height": 120
+                      }
+                    },
+                    "adaptiveStyles": {},
+                    "imageOverrides": {},
+                    "images": {
+                      "normal~": "images/语音生成菜单/u6.png"
+                    },
+                    "autoFitWidth": false,
+                    "autoFitHeight": false
+                  },
+                  {
+                    "id": "bc71fceae6c3438ea59ce890b58a4500",
+                    "label": "",
+                    "friendlyType": "组合",
+                    "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                    "panelIndex": 4,
+                    "type": "layer",
+                    "styleType": "layer",
+                    "visible": true,
+                    "style": {
+                      "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                      "fontWeight": "400",
+                      "fontStyle": "normal",
+                      "fontStretch": "5",
+                      "foreGroundFill": {
+                        "fillType": "solid",
+                        "color": 4281545523
+                      },
+                      "location": {
+                        "x": 160,
+                        "y": 372
+                      }
+                    },
+                    "adaptiveStyles": {},
+                    "imageOverrides": {},
+                    "objs": [
+                      {
+                        "id": "fe94bccc6291438491e5766cf47aba76",
+                        "label": "",
+                        "friendlyType": "矩形",
+                        "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                        "panelIndex": 4,
+                        "type": "vectorShape",
+                        "styleType": "vectorShape",
+                        "visible": true,
+                        "style": {
+                          "fontName": "\"微软雅黑\", sans-serif",
+                          "foreGroundFill": {
+                            "fillType": "solid",
+                            "color": 4280728260
+                          },
+                          "fontWeight": "400",
+                          "fontStyle": "normal",
+                          "fontStretch": "5",
+                          "size": {
+                            "width": 96,
+                            "height": 31
+                          },
+                          "baseStyle": "8c7a4c5ad69a4369a5f7788171ac0b32",
+                          "location": {
+                            "x": 160,
+                            "y": 372
+                          },
+                          "fontSize": "24px"
+                        },
+                        "adaptiveStyles": {},
+                        "imageOverrides": {},
+                        "generateCompound": false,
+                        "autoFitWidth": true,
+                        "autoFitHeight": true
+                      },
+                      {
+                        "id": "1ea40745a7764baaba5f5c00fd6cfbaf",
+                        "label": "",
+                        "friendlyType": "矩形",
+                        "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                        "panelIndex": 4,
+                        "type": "vectorShape",
+                        "styleType": "vectorShape",
+                        "visible": true,
+                        "style": {
+                          "fontName": "\"微软雅黑\", sans-serif",
+                          "foreGroundFill": {
+                            "fillType": "solid",
+                            "color": 4281174150
+                          },
+                          "fontWeight": "400",
+                          "fontStyle": "normal",
+                          "fontStretch": "5",
+                          "size": {
+                            "width": 468,
+                            "height": 40
+                          },
+                          "baseStyle": "8c7a4c5ad69a4369a5f7788171ac0b32",
+                          "location": {
+                            "x": 160,
+                            "y": 408
+                          },
+                          "fontSize": "30px"
+                        },
+                        "adaptiveStyles": {},
+                        "imageOverrides": {},
+                        "generateCompound": false,
+                        "autoFitWidth": false,
+                        "autoFitHeight": true
+                      }
+                    ],
+                    "propagate": false
+                  }
+                ],
+                "propagate": false
+              },
+              {
+                "id": "53631b149c90406c896bb6faf7a28367",
+                "label": "",
+                "friendlyType": "组合",
+                "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                "panelIndex": 4,
+                "type": "layer",
+                "styleType": "layer",
+                "visible": true,
+                "style": {
+                  "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                  "fontWeight": "400",
+                  "fontStyle": "normal",
+                  "fontStretch": "5",
+                  "foreGroundFill": {
+                    "fillType": "solid",
+                    "color": 4281545523
+                  },
+                  "location": {
+                    "x": 40,
+                    "y": 500
+                  }
+                },
+                "adaptiveStyles": {},
+                "imageOverrides": {},
+                "objs": [
+                  {
+                    "id": "09762b5e3ebd48d297cfaa820a67dbdd",
+                    "label": "",
+                    "friendlyType": "矩形",
+                    "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                    "panelIndex": 4,
+                    "type": "vectorShape",
+                    "styleType": "vectorShape",
+                    "visible": true,
+                    "style": {
+                      "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                      "fontWeight": "400",
+                      "fontStyle": "normal",
+                      "fontStretch": "5",
+                      "foreGroundFill": {
+                        "fillType": "solid",
+                        "color": 4281545523
+                      },
+                      "size": {
+                        "width": 550,
+                        "height": 100
+                      },
+                      "baseStyle": "4b7bfc596114427989e10bb0b557d0ce",
+                      "location": {
+                        "x": 40,
+                        "y": 500
+                      },
+                      "cornerRadius": "50",
+                      "fill": {
+                        "fillType": "linearGradient",
+                        "startPoint": {
+                          "x": 0,
+                          "y": 0.5083333333333346
+                        },
+                        "endPoint": {
+                          "x": 0.9916666666666663,
+                          "y": 0.5083333333333346
+                        },
+                        "stops": [
+                          {
+                            "color": 4293653244,
+                            "offset": 0,
+                            "opacity": 1
+                          },
+                          {
+                            "color": 4292668158,
+                            "offset": 0.52,
+                            "opacity": 1
+                          },
+                          {
+                            "color": 4294310142,
+                            "offset": 1,
+                            "opacity": 1
+                          }
+                        ]
+                      },
+                      "borderWidth": "0"
+                    },
+                    "adaptiveStyles": {},
+                    "imageOverrides": {},
+                    "images": {
+                      "normal~": "images/语音生成菜单/u68.svg",
+                      "images/语音生成菜单/u68.svg-isGeneratedImage": "true"
+                    },
+                    "generateCompound": false,
+                    "autoFitWidth": false,
+                    "autoFitHeight": false
+                  },
+                  {
+                    "id": "8ae9ef5f06834adeb4c56c035cb51ca1",
+                    "label": "",
+                    "friendlyType": "图片",
+                    "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                    "panelIndex": 4,
+                    "type": "imageBox",
+                    "styleType": "imageBox",
+                    "visible": true,
+                    "style": {
+                      "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                      "fontWeight": "400",
+                      "fontStyle": "normal",
+                      "fontStretch": "5",
+                      "foreGroundFill": {
+                        "fillType": "solid",
+                        "color": 4281545523
+                      },
+                      "baseStyle": "75a91ee5b9d042cfa01b8d565fe289c0",
+                      "size": {
+                        "width": 80,
+                        "height": 80
+                      },
+                      "location": {
+                        "x": 60,
+                        "y": 510
+                      },
+                      "image": {
+                        "path": "../../images/语音生成菜单/u6.png",
+                        "width": 120,
+                        "height": 120
+                      }
+                    },
+                    "adaptiveStyles": {},
+                    "imageOverrides": {},
+                    "images": {
+                      "normal~": "images/语音生成菜单/u6.png"
+                    },
+                    "autoFitWidth": false,
+                    "autoFitHeight": false
+                  },
+                  {
+                    "id": "2bc4810379244b539e9ccbcd90717bab",
+                    "label": "",
+                    "friendlyType": "组合",
+                    "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                    "panelIndex": 4,
+                    "type": "layer",
+                    "styleType": "layer",
+                    "visible": true,
+                    "style": {
+                      "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                      "fontWeight": "400",
+                      "fontStyle": "normal",
+                      "fontStretch": "5",
+                      "foreGroundFill": {
+                        "fillType": "solid",
+                        "color": 4281545523
+                      },
+                      "location": {
+                        "x": 160,
+                        "y": 512
+                      }
+                    },
+                    "adaptiveStyles": {},
+                    "imageOverrides": {},
+                    "objs": [
+                      {
+                        "id": "10ce753d0ff847388d94d5f0788851c7",
+                        "label": "",
+                        "friendlyType": "矩形",
+                        "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                        "panelIndex": 4,
+                        "type": "vectorShape",
+                        "styleType": "vectorShape",
+                        "visible": true,
+                        "style": {
+                          "fontName": "\"微软雅黑\", sans-serif",
+                          "foreGroundFill": {
+                            "fillType": "solid",
+                            "color": 4280728260
+                          },
+                          "fontWeight": "400",
+                          "fontStyle": "normal",
+                          "fontStretch": "5",
+                          "size": {
+                            "width": 96,
+                            "height": 31
+                          },
+                          "baseStyle": "8c7a4c5ad69a4369a5f7788171ac0b32",
+                          "location": {
+                            "x": 160,
+                            "y": 512
+                          },
+                          "fontSize": "24px"
+                        },
+                        "adaptiveStyles": {},
+                        "imageOverrides": {},
+                        "generateCompound": false,
+                        "autoFitWidth": true,
+                        "autoFitHeight": true
+                      },
+                      {
+                        "id": "8b193533e00e4c73bcf1c0d7c218fd9f",
+                        "label": "",
+                        "friendlyType": "矩形",
+                        "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                        "panelIndex": 4,
+                        "type": "vectorShape",
+                        "styleType": "vectorShape",
+                        "visible": true,
+                        "style": {
+                          "fontName": "\"微软雅黑\", sans-serif",
+                          "foreGroundFill": {
+                            "fillType": "solid",
+                            "color": 4281174150
+                          },
+                          "fontWeight": "400",
+                          "fontStyle": "normal",
+                          "fontStretch": "5",
+                          "size": {
+                            "width": 390,
+                            "height": 40
+                          },
+                          "baseStyle": "8c7a4c5ad69a4369a5f7788171ac0b32",
+                          "location": {
+                            "x": 160,
+                            "y": 548
+                          },
+                          "fontSize": "30px"
+                        },
+                        "adaptiveStyles": {},
+                        "imageOverrides": {},
+                        "generateCompound": false,
+                        "autoFitWidth": true,
+                        "autoFitHeight": true
+                      }
+                    ],
+                    "propagate": false
+                  }
+                ],
+                "propagate": false
+              },
+              {
+                "id": "949c7ad6f1334a6ca9fd6e114194f49e",
+                "label": "",
+                "friendlyType": "组合",
+                "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                "panelIndex": 4,
+                "type": "layer",
+                "styleType": "layer",
+                "visible": true,
+                "style": {
+                  "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                  "fontWeight": "400",
+                  "fontStyle": "normal",
+                  "fontStretch": "5",
+                  "foreGroundFill": {
+                    "fillType": "solid",
+                    "color": 4281545523
+                  },
+                  "location": {
+                    "x": 630,
+                    "y": 521
+                  }
+                },
+                "adaptiveStyles": {},
+                "imageOverrides": {},
+                "interactionMap": {
+                  "onClick": {
+                    "eventType": "OnClick",
+                    "description": "单击",
+                    "cases": [
+                      {
+                        "description": "",
+                        "conditionString": "",
+                        "isNewIfGroup": false,
+                        "disabled": false,
+                        "caseColorHex": "AB68FF",
+                        "actions": [
+                          {
+                            "action": "linkWindow",
+                            "description": "在 当前窗口 打开 查看菜单",
+                            "displayName": "打开链接",
+                            "actionInfoDescriptions": {
+                              "查看菜单": {
+                                "": "在 当前窗口 打开 查看菜单"
+                              }
+                            },
+                            "target": {
+                              "targetType": "page",
+                              "url": "查看菜单.html",
+                              "includeVariables": true
+                            },
+                            "linkType": "current"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "tabbable": true,
+                "objs": [
+                  {
+                    "id": "68bdbeba2ef04d74833332771059d608",
+                    "label": "",
+                    "friendlyType": "图片",
+                    "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                    "panelIndex": 4,
+                    "type": "imageBox",
+                    "styleType": "imageBox",
+                    "visible": true,
+                    "style": {
+                      "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                      "fontWeight": "400",
+                      "fontStyle": "normal",
+                      "fontStretch": "5",
+                      "foreGroundFill": {
+                        "fillType": "solid",
+                        "color": 4281545523
+                      },
+                      "baseStyle": "75a91ee5b9d042cfa01b8d565fe289c0",
+                      "size": {
+                        "width": 150.8860759493671,
+                        "height": 80
+                      },
+                      "location": {
+                        "x": 630,
+                        "y": 510
+                      },
+                      "image": {
+                        "path": "../../images/语音生成菜单/u74.png",
+                        "width": 273,
+                        "height": 144
+                      }
+                    },
+                    "adaptiveStyles": {},
+                    "imageOverrides": {},
+                    "images": {
+                      "normal~": "images/语音生成菜单/u74.png"
+                    },
+                    "autoFitWidth": false,
+                    "autoFitHeight": false
+                  },
+                  {
+                    "id": "8aca5bab9d2d436c98944e2c397da528",
+                    "label": "",
+                    "friendlyType": "矩形",
+                    "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                    "panelIndex": 4,
+                    "type": "vectorShape",
+                    "styleType": "vectorShape",
+                    "visible": true,
+                    "style": {
+                      "fontName": "\"微软雅黑 Bold\", \"微软雅黑\", sans-serif",
+                      "fontWeight": "700",
+                      "foreGroundFill": {
+                        "fillType": "solid",
+                        "color": 4294967295
+                      },
+                      "fontStyle": "normal",
+                      "fontStretch": "5",
+                      "size": {
+                        "width": 72,
+                        "height": 31
+                      },
+                      "baseStyle": "8c7a4c5ad69a4369a5f7788171ac0b32",
+                      "location": {
+                        "x": 670,
+                        "y": 522
+                      },
+                      "fontSize": "24px"
+                    },
+                    "adaptiveStyles": {},
+                    "imageOverrides": {},
+                    "generateCompound": false,
+                    "autoFitWidth": true,
+                    "autoFitHeight": true
+                  }
+                ],
+                "propagate": false
+              },
+              {
+                "id": "0d61469d7d9e464eaa20a02346b6016e",
+                "label": "",
+                "friendlyType": "组合",
+                "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                "panelIndex": 4,
+                "type": "layer",
+                "styleType": "layer",
+                "visible": true,
+                "style": {
+                  "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                  "fontWeight": "400",
+                  "fontStyle": "normal",
+                  "fontStretch": "5",
+                  "foreGroundFill": {
+                    "fillType": "solid",
+                    "color": 4281545523
+                  },
+                  "location": {
+                    "x": 720,
+                    "y": 180
+                  }
+                },
+                "adaptiveStyles": {},
+                "imageOverrides": {},
+                "objs": [
+                  {
+                    "id": "6502dc44f17e44d1a3231fe9602777e1",
+                    "label": "",
+                    "friendlyType": "矩形",
+                    "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                    "panelIndex": 4,
+                    "type": "vectorShape",
+                    "styleType": "vectorShape",
+                    "visible": true,
+                    "style": {
+                      "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                      "fontWeight": "400",
+                      "fontStyle": "normal",
+                      "fontStretch": "5",
+                      "foreGroundFill": {
+                        "fillType": "solid",
+                        "color": 4281545523
+                      },
+                      "size": {
+                        "width": 1020,
+                        "height": 140
+                      },
+                      "baseStyle": "4b7bfc596114427989e10bb0b557d0ce",
+                      "location": {
+                        "x": 720,
+                        "y": 180
+                      },
+                      "cornerRadius": "70",
+                      "fill": {
+                        "fillType": "linearGradient",
+                        "startPoint": {
+                          "x": 0,
+                          "y": 0.5083333333333346
+                        },
+                        "endPoint": {
+                          "x": 0.9916666666666663,
+                          "y": 0.5083333333333346
+                        },
+                        "stops": [
+                          {
+                            "color": 4278237637,
+                            "offset": 0,
+                            "opacity": 1
+                          },
+                          {
+                            "color": 4280611837,
+                            "offset": 1,
+                            "opacity": 1
+                          }
+                        ]
+                      },
+                      "borderWidth": "0"
+                    },
+                    "adaptiveStyles": {},
+                    "imageOverrides": {},
+                    "images": {
+                      "normal~": "images/语音生成菜单/u24.svg",
+                      "images/语音生成菜单/u24.svg-isGeneratedImage": "true"
+                    },
+                    "generateCompound": false,
+                    "autoFitWidth": false,
+                    "autoFitHeight": false
+                  },
+                  {
+                    "id": "fd0a6257569d4d888988cfe0d00e00e7",
+                    "label": "",
+                    "friendlyType": "图片",
+                    "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                    "panelIndex": 4,
+                    "type": "imageBox",
+                    "styleType": "imageBox",
+                    "visible": true,
+                    "style": {
+                      "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                      "fontWeight": "400",
+                      "fontStyle": "normal",
+                      "fontStretch": "5",
+                      "foreGroundFill": {
+                        "fillType": "solid",
+                        "color": 4281545523
+                      },
+                      "baseStyle": "75a91ee5b9d042cfa01b8d565fe289c0",
+                      "size": {
+                        "width": 80,
+                        "height": 80
+                      },
+                      "location": {
+                        "x": 1640,
+                        "y": 210
+                      },
+                      "image": {
+                        "path": "../../images/语音生成菜单/u25.png",
+                        "width": 120,
+                        "height": 120
+                      }
+                    },
+                    "adaptiveStyles": {},
+                    "imageOverrides": {},
+                    "images": {
+                      "normal~": "images/语音生成菜单/u25.png"
+                    },
+                    "autoFitWidth": false,
+                    "autoFitHeight": false
+                  },
+                  {
+                    "id": "c748bdedf0fe4574870a17ef0ccec268",
+                    "label": "",
+                    "friendlyType": "组合",
+                    "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                    "panelIndex": 4,
+                    "type": "layer",
+                    "styleType": "layer",
+                    "visible": true,
+                    "style": {
+                      "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+                      "fontWeight": "400",
+                      "fontStyle": "normal",
+                      "fontStretch": "5",
+                      "foreGroundFill": {
+                        "fillType": "solid",
+                        "color": 4281545523
+                      },
+                      "location": {
+                        "x": 760,
+                        "y": 192
+                      }
+                    },
+                    "adaptiveStyles": {},
+                    "imageOverrides": {},
+                    "objs": [
+                      {
+                        "id": "67586e3505bc4d71a05c1e36adce2573",
+                        "label": "",
+                        "friendlyType": "矩形",
+                        "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                        "panelIndex": 4,
+                        "type": "vectorShape",
+                        "styleType": "vectorShape",
+                        "visible": true,
+                        "style": {
+                          "fontName": "\"微软雅黑\", sans-serif",
+                          "foreGroundFill": {
+                            "fillType": "solid",
+                            "color": 4294967295
+                          },
+                          "fontWeight": "400",
+                          "fontStyle": "normal",
+                          "fontStretch": "5",
+                          "size": {
+                            "width": 48,
+                            "height": 31
+                          },
+                          "baseStyle": "8c7a4c5ad69a4369a5f7788171ac0b32",
+                          "fontSize": "24px",
+                          "location": {
+                            "x": 1572,
+                            "y": 192
+                          }
+                        },
+                        "adaptiveStyles": {},
+                        "imageOverrides": {},
+                        "generateCompound": false,
+                        "autoFitWidth": true,
+                        "autoFitHeight": true
+                      },
+                      {
+                        "id": "f6af7cdd57f84b24b832571748f72d57",
+                        "label": "",
+                        "friendlyType": "矩形",
+                        "parentDynamicPanel": "aa61c7493d884fe19c39e29c2eaa3333",
+                        "panelIndex": 4,
+                        "type": "vectorShape",
+                        "styleType": "vectorShape",
+                        "visible": true,
+                        "style": {
+                          "fontName": "\"微软雅黑\", sans-serif",
+                          "foreGroundFill": {
+                            "fillType": "solid",
+                            "color": 4294967295
+                          },
+                          "fontWeight": "400",
+                          "fontStyle": "normal",
+                          "fontStretch": "5",
+                          "size": {
+                            "width": 860,
+                            "height": 80
+                          },
+                          "baseStyle": "8c7a4c5ad69a4369a5f7788171ac0b32",
+                          "location": {
+                            "x": 760,
+                            "y": 228
+                          },
+                          "fontSize": "30px",
+                          "horizontalAlignment": "right"
+                        },
+                        "adaptiveStyles": {},
+                        "imageOverrides": {},
+                        "generateCompound": false,
+                        "autoFitWidth": false,
+                        "autoFitHeight": true
+                      }
+                    ],
+                    "propagate": false
+                  }
+                ],
+                "propagate": false
+              }
+            ],
+            "style": {
+              "fill": {
+                "fillType": "solid",
+                "color": 16777215,
+                "opacity": 0
+              },
+              "image": null,
+              "imageAlignment": {
+                "horizontal": "near",
+                "vertical": "near"
+              },
+              "imageRepeat": "auto",
+              "borderWidth": "0",
+              "borderVisibility": "top right bottom left",
+              "borderFill": {
+                "fillType": "solid",
+                "color": 4286151033
+              },
+              "cornerRadius": "0",
+              "cornerVisibility": "top right bottom left",
+              "outerShadow": {
+                "on": false,
+                "offsetX": 5,
+                "offsetY": 5,
+                "blurRadius": 5,
+                "spread": 0,
+                "color": {
+                  "r": 0,
+                  "g": 0,
+                  "b": 0,
+                  "a": 0.34901960784313724
+                }
+              }
+            },
+            "adaptiveStyles": {}
+          }
+        ]
+      },
+      {
+        "id": "41b63620a57b40348bd05487bb5ecc8a",
+        "label": "",
+        "friendlyType": "图片",
+        "type": "imageBox",
+        "styleType": "imageBox",
+        "visible": true,
+        "style": {
+          "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+          "fontWeight": "400",
+          "fontStyle": "normal",
+          "fontStretch": "5",
+          "foreGroundFill": {
+            "fillType": "solid",
+            "color": 4281545523
+          },
+          "baseStyle": "75a91ee5b9d042cfa01b8d565fe289c0",
+          "size": {
+            "width": 1920,
+            "height": 135.65969718817593
+          },
+          "image": {
+            "path": "../../images/语音生成菜单/u82.png",
+            "width": 2774,
+            "height": 196
+          }
+        },
+        "adaptiveStyles": {},
+        "imageOverrides": {},
+        "images": {
+          "normal~": "images/语音生成菜单/u82.png"
+        },
+        "autoFitWidth": false,
+        "autoFitHeight": false
+      },
+      {
+        "id": "1bff5ca17d48485abe26076779a0a96b",
+        "label": "",
+        "friendlyType": "矩形",
+        "type": "vectorShape",
+        "styleType": "vectorShape",
+        "visible": true,
+        "style": {
+          "fontName": "\"微软雅黑 Bold\", \"微软雅黑\", sans-serif",
+          "fontWeight": "700",
+          "foreGroundFill": {
+            "fillType": "solid",
+            "color": 4278242555
+          },
+          "fontStyle": "normal",
+          "fontStretch": "5",
+          "size": {
+            "width": 126,
+            "height": 55
+          },
+          "baseStyle": "8c7a4c5ad69a4369a5f7788171ac0b32",
+          "location": {
+            "x": 153,
+            "y": 40
+          },
+          "fontSize": "42px"
+        },
+        "adaptiveStyles": {},
+        "imageOverrides": {},
+        "generateCompound": false,
+        "autoFitWidth": true,
+        "autoFitHeight": true
+      },
+      {
+        "id": "98108bc7a5784d80bf3748ba059896ec",
+        "label": "",
+        "friendlyType": "图片",
+        "type": "imageBox",
+        "styleType": "imageBox",
+        "visible": true,
+        "style": {
+          "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+          "fontWeight": "400",
+          "fontStyle": "normal",
+          "fontStretch": "5",
+          "foreGroundFill": {
+            "fillType": "solid",
+            "color": 4281545523
+          },
+          "baseStyle": "75a91ee5b9d042cfa01b8d565fe289c0",
+          "size": {
+            "width": 59.294117647058826,
+            "height": 60
+          },
+          "location": {
+            "x": 69,
+            "y": 38
+          },
+          "image": {
+            "path": "../../images/语音生成菜单/u84.png",
+            "width": 84,
+            "height": 85
+          }
+        },
+        "adaptiveStyles": {},
+        "imageOverrides": {},
+        "images": {
+          "normal~": "images/语音生成菜单/u84.png"
+        },
+        "autoFitWidth": false,
+        "autoFitHeight": false
+      },
+      {
+        "id": "21b341258e1d4915aaf7c9b60b8cbc06",
+        "label": "",
+        "friendlyType": "组合",
+        "type": "layer",
+        "styleType": "layer",
+        "visible": true,
+        "style": {
+          "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+          "fontWeight": "400",
+          "fontStyle": "normal",
+          "fontStretch": "5",
+          "foreGroundFill": {
+            "fillType": "solid",
+            "color": 4281545523
+          }
+        },
+        "adaptiveStyles": {},
+        "imageOverrides": {},
+        "interactionMap": {
+          "onClick": {
+            "eventType": "OnClick",
+            "description": "单击",
+            "cases": [
+              {
+                "description": "",
+                "conditionString": "",
+                "isNewIfGroup": false,
+                "disabled": false,
+                "caseColorHex": "AB68FF",
+                "actions": [
+                  {
+                    "action": "linkWindow",
+                    "description": "在 当前窗口 打开 智能排产",
+                    "displayName": "打开链接",
+                    "actionInfoDescriptions": {
+                      "智能排产": {
+                        "": "在 当前窗口 打开 智能排产"
+                      }
+                    },
+                    "target": {
+                      "targetType": "page",
+                      "url": "智能排产.html",
+                      "includeVariables": true
+                    },
+                    "linkType": "current"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "tabbable": true,
+        "objs": [
+          {
+            "id": "83111aa19b52488d9e29b3029f8f1c1f",
+            "label": "",
+            "friendlyType": "图片",
+            "type": "imageBox",
+            "styleType": "imageBox",
+            "visible": true,
+            "style": {
+              "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+              "fontWeight": "400",
+              "fontStyle": "normal",
+              "fontStretch": "5",
+              "foreGroundFill": {
+                "fillType": "solid",
+                "color": 4281545523
+              },
+              "baseStyle": "75a91ee5b9d042cfa01b8d565fe289c0",
+              "size": {
+                "width": 203,
+                "height": 90
+              },
+              "location": {
+                "x": 783,
+                "y": 23
+              },
+              "image": {
+                "path": "../../images/语音生成菜单/u86.png",
+                "width": 270,
+                "height": 120
+              }
+            },
+            "adaptiveStyles": {},
+            "imageOverrides": {},
+            "images": {
+              "normal~": "images/语音生成菜单/u86.png"
+            },
+            "autoFitWidth": false,
+            "autoFitHeight": false
+          },
+          {
+            "id": "7315896087ae40ec922079267e17c45e",
+            "label": "",
+            "friendlyType": "矩形",
+            "type": "vectorShape",
+            "styleType": "vectorShape",
+            "visible": true,
+            "style": {
+              "fontName": "\"微软雅黑\", sans-serif",
+              "foreGroundFill": {
+                "fillType": "solid",
+                "color": 4290825693
+              },
+              "fontWeight": "400",
+              "fontStyle": "normal",
+              "fontStretch": "5",
+              "size": {
+                "width": 120,
+                "height": 40
+              },
+              "baseStyle": "8c7a4c5ad69a4369a5f7788171ac0b32",
+              "location": {
+                "x": 825,
+                "y": 48
+              },
+              "fontSize": "30px"
+            },
+            "adaptiveStyles": {},
+            "imageOverrides": {},
+            "generateCompound": false,
+            "autoFitWidth": true,
+            "autoFitHeight": true
+          }
+        ],
+        "propagate": false
+      },
+      {
+        "id": "51d739e28bae4355862b47422908ec09",
+        "label": "",
+        "friendlyType": "组合",
+        "type": "layer",
+        "styleType": "layer",
+        "visible": true,
+        "style": {
+          "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+          "fontWeight": "400",
+          "fontStyle": "normal",
+          "fontStretch": "5",
+          "foreGroundFill": {
+            "fillType": "solid",
+            "color": 4281545523
+          }
+        },
+        "adaptiveStyles": {},
+        "imageOverrides": {},
+        "interactionMap": {
+          "onClick": {
+            "eventType": "OnClick",
+            "description": "单击",
+            "cases": [
+              {
+                "description": "",
+                "conditionString": "",
+                "isNewIfGroup": false,
+                "disabled": false,
+                "caseColorHex": "AB68FF",
+                "actions": [
+                  {
+                    "action": "linkWindow",
+                    "description": "在 当前窗口 打开 语音菜单",
+                    "displayName": "打开链接",
+                    "actionInfoDescriptions": {
+                      "语音菜单": {
+                        "": "在 当前窗口 打开 语音菜单"
+                      }
+                    },
+                    "target": {
+                      "targetType": "page",
+                      "url": "语音菜单.html",
+                      "includeVariables": true
+                    },
+                    "linkType": "current"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "tabbable": true,
+        "objs": [
+          {
+            "id": "686fd6655a40422995964fa025928516",
+            "label": "",
+            "friendlyType": "图片",
+            "type": "imageBox",
+            "styleType": "imageBox",
+            "visible": true,
+            "style": {
+              "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+              "fontWeight": "400",
+              "fontStyle": "normal",
+              "fontStretch": "5",
+              "foreGroundFill": {
+                "fillType": "solid",
+                "color": 4281545523
+              },
+              "baseStyle": "75a91ee5b9d042cfa01b8d565fe289c0",
+              "size": {
+                "width": 203,
+                "height": 90
+              },
+              "location": {
+                "x": 540,
+                "y": 23
+              },
+              "image": {
+                "path": "../../images/语音生成菜单/u89.png",
+                "width": 270,
+                "height": 120
+              }
+            },
+            "adaptiveStyles": {},
+            "imageOverrides": {},
+            "images": {
+              "normal~": "images/语音生成菜单/u89.png"
+            },
+            "autoFitWidth": false,
+            "autoFitHeight": false
+          },
+          {
+            "id": "a5f332c02ce7480ab9fd88feb377c647",
+            "label": "",
+            "friendlyType": "矩形",
+            "type": "vectorShape",
+            "styleType": "vectorShape",
+            "visible": true,
+            "style": {
+              "fontName": "\"微软雅黑 Bold\", \"微软雅黑\", sans-serif",
+              "fontWeight": "700",
+              "foreGroundFill": {
+                "fillType": "solid",
+                "color": 4294901759
+              },
+              "fontStyle": "normal",
+              "fontStretch": "5",
+              "size": {
+                "width": 120,
+                "height": 40
+              },
+              "baseStyle": "8c7a4c5ad69a4369a5f7788171ac0b32",
+              "location": {
+                "x": 582,
+                "y": 48
+              },
+              "fontSize": "30px"
+            },
+            "adaptiveStyles": {},
+            "imageOverrides": {},
+            "generateCompound": false,
+            "autoFitWidth": true,
+            "autoFitHeight": true
+          }
+        ],
+        "propagate": false
+      },
+      {
+        "id": "588945cb68c6482abba49e18dcd23f31",
+        "label": "",
+        "friendlyType": "组合",
+        "type": "layer",
+        "styleType": "layer",
+        "visible": true,
+        "style": {
+          "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+          "fontWeight": "400",
+          "fontStyle": "normal",
+          "fontStretch": "5",
+          "foreGroundFill": {
+            "fillType": "solid",
+            "color": 4281545523
+          }
+        },
+        "adaptiveStyles": {},
+        "imageOverrides": {},
+        "interactionMap": {
+          "onClick": {
+            "eventType": "OnClick",
+            "description": "单击",
+            "cases": [
+              {
+                "description": "",
+                "conditionString": "",
+                "isNewIfGroup": false,
+                "disabled": false,
+                "caseColorHex": "AB68FF",
+                "actions": [
+                  {
+                    "action": "linkWindow",
+                    "description": "在 当前窗口 打开 订货采购",
+                    "displayName": "打开链接",
+                    "actionInfoDescriptions": {
+                      "订货采购": {
+                        "": "在 当前窗口 打开 订货采购"
+                      }
+                    },
+                    "target": {
+                      "targetType": "page",
+                      "url": "订货采购.html",
+                      "includeVariables": true
+                    },
+                    "linkType": "current"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "tabbable": true,
+        "objs": [
+          {
+            "id": "c2bbeb58eeac44e3b4f7f68c71a9441b",
+            "label": "",
+            "friendlyType": "图片",
+            "type": "imageBox",
+            "styleType": "imageBox",
+            "visible": true,
+            "style": {
+              "fontName": "\"Arial Normal\", \"Arial\", sans-serif",
+              "fontWeight": "400",
+              "fontStyle": "normal",
+              "fontStretch": "5",
+              "foreGroundFill": {
+                "fillType": "solid",
+                "color": 4281545523
+              },
+              "baseStyle": "75a91ee5b9d042cfa01b8d565fe289c0",
+              "size": {
+                "width": 203,
+                "height": 90
+              },
+              "location": {
+                "x": 1026,
+                "y": 23
+              },
+              "image": {
+                "path": "../../images/语音生成菜单/u86.png",
+                "width": 270,
+                "height": 120
+              }
+            },
+            "adaptiveStyles": {},
+            "imageOverrides": {},
+            "images": {
+              "normal~": "images/语音生成菜单/u86.png"
+            },
+            "autoFitWidth": false,
+            "autoFitHeight": false
+          },
+          {
+            "id": "f803554ad79e45bab0ba1d031940b109",
+            "label": "",
+            "friendlyType": "矩形",
+            "type": "vectorShape",
+            "styleType": "vectorShape",
+            "visible": true,
+            "style": {
+              "fontName": "\"微软雅黑\", sans-serif",
+              "foreGroundFill": {
+                "fillType": "solid",
+                "color": 4290825693
+              },
+              "fontWeight": "400",
+              "fontStyle": "normal",
+              "fontStretch": "5",
+              "size": {
+                "width": 120,
+                "height": 40
+              },
+              "baseStyle": "8c7a4c5ad69a4369a5f7788171ac0b32",
+              "location": {
+                "x": 1068,
+                "y": 48
+              },
+              "fontSize": "30px"
+            },
+            "adaptiveStyles": {},
+            "imageOverrides": {},
+            "generateCompound": false,
+            "autoFitWidth": true,
+            "autoFitHeight": true
+          }
+        ],
+        "propagate": false
+      }
+    ]
+  },
+  "interactionMap": {},
+  "pageNotes": {},
+  "widgetNotes": [],
+  "objectPaths": {
+    "73c7402c11894b87807cc957d02de2b2": {
+      "scriptId": "u0"
+    },
+    "fdbe34ede0da427383310a41c99ee9bb": {
+      "scriptId": "u1"
+    },
+    "aa61c7493d884fe19c39e29c2eaa3333": {
+      "scriptId": "u2"
+    },
+    "cf8dbaf875db45319ee15990075999d0": {
+      "scriptId": "u3"
+    },
+    "0b196517414546b7bb29f3fc5917a9d0": {
+      "scriptId": "u4"
+    },
+    "718aca5788e84b9d9b935f9b52740b35": {
+      "scriptId": "u5"
+    },
+    "ba84f201cdc442218117e3982bf0790d": {
+      "scriptId": "u6"
+    },
+    "193c31b89dd644c9a80af66e08a07d63": {
+      "scriptId": "u7"
+    },
+    "796eb289bf4e406295b6f9bd059525ff": {
+      "scriptId": "u8"
+    },
+    "c10c331eeb30474fb531a8e606325398": {
+      "scriptId": "u9"
+    },
+    "2517aaa70f014fa0b7f9d90178b2fb3a": {
+      "scriptId": "u10"
+    },
+    "d07696214ef242429e1f71f76611790c": {
+      "scriptId": "u11"
+    },
+    "fc947db7f5f041ba852c58a89e448af5": {
+      "scriptId": "u12"
+    },
+    "11873906ce3e439d801815ac44e86d63": {
+      "scriptId": "u13"
+    },
+    "36c1a73610e04e6f86fb913e957c4ddc": {
+      "scriptId": "u14"
+    },
+    "3eaf9b4b687c482fb15a5463edbb214f": {
+      "scriptId": "u15"
+    },
+    "1e72dc104c564ac38ae12f93be8ea1dc": {
+      "scriptId": "u16"
+    },
+    "b22932060aee416295658d16a650d717": {
+      "scriptId": "u17"
+    },
+    "bac46708f113448fafd9aa06ec38800d": {
+      "scriptId": "u18"
+    },
+    "8e4ed4bb2a42462c988a5a0514e75c59": {
+      "scriptId": "u19"
+    },
+    "8b550dcb47954009aee45c75ac494e1c": {
+      "scriptId": "u20"
+    },
+    "351e7ceebf9f43e9a3d5624b7d2f1964": {
+      "scriptId": "u21"
+    },
+    "e7c8398033ca4323b0e37762a549cf12": {
+      "scriptId": "u22"
+    },
+    "6b20487ee3104552b5517c545bb38b60": {
+      "scriptId": "u23"
+    },
+    "f72dce6359394bc790ca699e21c9285f": {
+      "scriptId": "u24"
+    },
+    "9f664fe47b604bcd915d54529670dc9d": {
+      "scriptId": "u25"
+    },
+    "ae219f95c21d4b0ba2303abf590221c9": {
+      "scriptId": "u26"
+    },
+    "50ce7cf7007f4c5a8a9a63411d0d3d66": {
+      "scriptId": "u27"
+    },
+    "2bde44e173ae4b6b83609f51352e10d8": {
+      "scriptId": "u28"
+    },
+    "e805c9e36fb045afa6312a6b08917c2d": {
+      "scriptId": "u29"
+    },
+    "f70d4e6464674c3ca41fd0ae7e983c4f": {
+      "scriptId": "u30"
+    },
+    "a8ddff0bedde4e65a5bb5b82d1fa3193": {
+      "scriptId": "u31"
+    },
+    "3ee82c2e0ff64771bacda825ef0adb6a": {
+      "scriptId": "u32"
+    },
+    "8e9b88a2e23841208d5532b396519462": {
+      "scriptId": "u33"
+    },
+    "dd818cc1b08e4920b952764fd9962765": {
+      "scriptId": "u34"
+    },
+    "34d3eba985814472aa5ca27df67f6d3c": {
+      "scriptId": "u35"
+    },
+    "8a176b48e0af40b89e0b397f1c6b1a33": {
+      "scriptId": "u36"
+    },
+    "d94712ac3a244b9dbbe06d937cf7c792": {
+      "scriptId": "u37"
+    },
+    "f50aed89624a42e084bebae10b7efff8": {
+      "scriptId": "u38"
+    },
+    "1b4a6b2e501f4554b0a5478e660014f3": {
+      "scriptId": "u39"
+    },
+    "d017431c31a14dc7a76c84e29934cf70": {
+      "scriptId": "u40"
+    },
+    "c0520fd1dbde4055934ef068eb9ce5c6": {
+      "scriptId": "u41"
+    },
+    "db0733af8ce84c7293a0b04c32f77a8b": {
+      "scriptId": "u42"
+    },
+    "3ba616153cb4449a86c764edb9a7448e": {
+      "scriptId": "u43"
+    },
+    "27484f701058405a8239215a6639d560": {
+      "scriptId": "u44"
+    },
+    "833176e6c1c24f98bf218cf76987c830": {
+      "scriptId": "u45"
+    },
+    "431aff487e3a471f84c07ef17a392162": {
+      "scriptId": "u46"
+    },
+    "745584593019488a92e7d8f16bfeb6e1": {
+      "scriptId": "u47"
+    },
+    "d9e7cc7983a04889ae4409e1325b1ae3": {
+      "scriptId": "u48"
+    },
+    "4863729808c14e53b20ec356b2c6399d": {
+      "scriptId": "u49"
+    },
+    "726dd3ceaddc42d49f5e775f84063082": {
+      "scriptId": "u50"
+    },
+    "49c28f395f08424e8a9c8b8fc6b01ac7": {
+      "scriptId": "u51"
+    },
+    "ce93e231e16549968c388d173f3b685a": {
+      "scriptId": "u52"
+    },
+    "35a0722181354764bba714980202c504": {
+      "scriptId": "u53"
+    },
+    "6ce92e132fb44c8993e20812e889fa67": {
+      "scriptId": "u54"
+    },
+    "bb87aea9a1ac4cf987ced08229d66169": {
+      "scriptId": "u55"
+    },
+    "4f201d394e414e23bdeb68b38b44ce9e": {
+      "scriptId": "u56"
+    },
+    "0ddab9199e36492fab59218d7b4ce1ad": {
+      "scriptId": "u57"
+    },
+    "57554fbf18344af18ce362bece315ae3": {
+      "scriptId": "u58"
+    },
+    "b0f5a8b0c69c4363b462dfba548321c1": {
+      "scriptId": "u59"
+    },
+    "98bb44ab9492416f8788afda9e5ece42": {
+      "scriptId": "u60"
+    },
+    "3df5afbfec8a469ca0160ab805cd5297": {
+      "scriptId": "u61"
+    },
+    "2491aa0b64a1435d9183ec8b278c8755": {
+      "scriptId": "u62"
+    },
+    "8c7ffd87f64f4c2e9d663181ec152883": {
+      "scriptId": "u63"
+    },
+    "bc71fceae6c3438ea59ce890b58a4500": {
+      "scriptId": "u64"
+    },
+    "fe94bccc6291438491e5766cf47aba76": {
+      "scriptId": "u65"
+    },
+    "1ea40745a7764baaba5f5c00fd6cfbaf": {
+      "scriptId": "u66"
+    },
+    "53631b149c90406c896bb6faf7a28367": {
+      "scriptId": "u67"
+    },
+    "09762b5e3ebd48d297cfaa820a67dbdd": {
+      "scriptId": "u68"
+    },
+    "8ae9ef5f06834adeb4c56c035cb51ca1": {
+      "scriptId": "u69"
+    },
+    "2bc4810379244b539e9ccbcd90717bab": {
+      "scriptId": "u70"
+    },
+    "10ce753d0ff847388d94d5f0788851c7": {
+      "scriptId": "u71"
+    },
+    "8b193533e00e4c73bcf1c0d7c218fd9f": {
+      "scriptId": "u72"
+    },
+    "949c7ad6f1334a6ca9fd6e114194f49e": {
+      "scriptId": "u73"
+    },
+    "68bdbeba2ef04d74833332771059d608": {
+      "scriptId": "u74"
+    },
+    "8aca5bab9d2d436c98944e2c397da528": {
+      "scriptId": "u75"
+    },
+    "0d61469d7d9e464eaa20a02346b6016e": {
+      "scriptId": "u76"
+    },
+    "6502dc44f17e44d1a3231fe9602777e1": {
+      "scriptId": "u77"
+    },
+    "fd0a6257569d4d888988cfe0d00e00e7": {
+      "scriptId": "u78"
+    },
+    "c748bdedf0fe4574870a17ef0ccec268": {
+      "scriptId": "u79"
+    },
+    "67586e3505bc4d71a05c1e36adce2573": {
+      "scriptId": "u80"
+    },
+    "f6af7cdd57f84b24b832571748f72d57": {
+      "scriptId": "u81"
+    },
+    "41b63620a57b40348bd05487bb5ecc8a": {
+      "scriptId": "u82"
+    },
+    "1bff5ca17d48485abe26076779a0a96b": {
+      "scriptId": "u83"
+    },
+    "98108bc7a5784d80bf3748ba059896ec": {
+      "scriptId": "u84"
+    },
+    "21b341258e1d4915aaf7c9b60b8cbc06": {
+      "scriptId": "u85"
+    },
+    "83111aa19b52488d9e29b3029f8f1c1f": {
+      "scriptId": "u86"
+    },
+    "7315896087ae40ec922079267e17c45e": {
+      "scriptId": "u87"
+    },
+    "51d739e28bae4355862b47422908ec09": {
+      "scriptId": "u88"
+    },
+    "686fd6655a40422995964fa025928516": {
+      "scriptId": "u89"
+    },
+    "a5f332c02ce7480ab9fd88feb377c647": {
+      "scriptId": "u90"
+    },
+    "588945cb68c6482abba49e18dcd23f31": {
+      "scriptId": "u91"
+    },
+    "c2bbeb58eeac44e3b4f7f68c71a9441b": {
+      "scriptId": "u92"
+    },
+    "f803554ad79e45bab0ba1d031940b109": {
+      "scriptId": "u93"
+    }
+  },
+  "generationDate": "2026-07-14T01:30:10.607Z",
+  "url": "语音生成菜单.html",
+  "jsImages": [
+    "images/语音生成菜单/u1.png",
+    "images/语音生成菜单/u5.svg",
+    "images/语音生成菜单/u6.png",
+    "images/语音生成菜单/u17.svg",
+    "images/语音生成菜单/u21.gif",
+    "images/语音生成菜单/u24.svg",
+    "images/语音生成菜单/u25.png",
+    "images/语音生成菜单/u43.svg",
+    "images/语音生成菜单/u68.svg",
+    "images/语音生成菜单/u74.png",
+    "images/语音生成菜单/u82.png",
+    "images/语音生成菜单/u84.png",
+    "images/语音生成菜单/u86.png",
+    "images/语音生成菜单/u89.png"
+  ]
+}
