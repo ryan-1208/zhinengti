@@ -1,3 +1,6 @@
+/**
+ * @name 智能体
+ */
 import React, { useEffect, useMemo, useState } from 'react';
 import { ChevronLeft, ChevronRight, Mic } from 'lucide-react';
 import { defineHashPageRoute, useHashPage } from '../../common/useHashPage';
@@ -10,9 +13,11 @@ import SemanticParsingPage from '../untitled-6/index';
 import brandMark from './assets/brand-mark.png';
 import assistantChef from './assets/assistant-chef.png';
 import schedulingFrame from './assets/scheduling-frame.png';
+import menuGenerationRulesImagePath from './assets/menu-generation-rules.png';
+import modifyRulesFlowchartImagePath from './assets/modify-rules-flowchart.png';
 import { RequirementOverviewDrawer } from './components/RequirementOverviewDrawer';
 
-type Page = 'version' | 'flow' | 'semantic' | 'menu' | 'assistant-menu' | 'assistant-menu-no-meal' | 'assistant-menu-flow' | 'assistant-menu-failure' | 'view-menu' | 'schedule' | 'assistant-schedule' | 'assistant-schedule-no-menu' | 'purchase' | 'list' | 'confirm' | 'success' | 'failure' | 'blank-1' | 'work-order-detail' | 'blank-2' | 'blank-3' | 'blank-4' | 'blank-5' | 'backup-assistant-menu' | 'backup-assistant-menu-flow' | 'backup-assistant-schedule';
+type Page = 'version' | 'flow' | 'semantic' | 'menu' | 'assistant-menu' | 'assistant-menu-dialog-example' | 'assistant-menu-no-meal' | 'assistant-menu-flow' | 'assistant-menu-insufficient' | 'assistant-menu-failure' | 'view-menu' | 'schedule' | 'assistant-schedule' | 'assistant-schedule-no-menu' | 'purchase' | 'list' | 'confirm' | 'success' | 'failure' | 'blank-1' | 'work-order-detail' | 'blank-2' | 'blank-3' | 'blank-4' | 'blank-5' | 'meal-settings' | 'ai-menu-result-notice' | 'backup-assistant-menu' | 'backup-assistant-menu-flow' | 'backup-assistant-schedule';
 type PlanDayStatus = 'started' | 'generated' | 'existing';
 type MenuGenerationResult = { status: 'success'; totalCookingMinutes: number; cookingTimeLimit: number } | { status: 'empty'; filters: string[] } | { status: 'insufficient'; shortages: Partial<Record<'大荤' | '小荤' | '素菜', number>> };
 function getMenuGenerationResult(matchingDishes: number, required: Record<'大荤' | '小荤' | '素菜', number>, available: Record<'大荤' | '小荤' | '素菜', number>, filters: string[], cookingTimes: number[], cookingTimeLimit: number): MenuGenerationResult {
@@ -33,6 +38,7 @@ const pageRoute = defineHashPageRoute([
   { id: 'assistant-menu', title: '语音生成菜单', group: '菜单' },
   { id: 'assistant-menu-no-meal', title: '语音生成菜单-无餐段', group: '菜单' },
   { id: 'assistant-menu-flow', title: '语音生成菜单-流程中', group: '菜单' },
+  { id: 'assistant-menu-insufficient', title: '语音生成菜单-菜单数量不足', group: '菜单' },
   { id: 'assistant-menu-failure', title: '语音生成菜单-失败', group: '菜单' },
   { id: 'view-menu', title: '查看菜单', group: '菜单' },
   { id: 'schedule', title: '智能排产 -分批', group: '排产' },
@@ -49,6 +55,9 @@ const pageRoute = defineHashPageRoute([
   { id: 'blank-3', title: '备餐屏', group: '需要增加批次字段的页面' },
   { id: 'blank-4', title: '轻量总控屏', group: '需要增加批次字段的页面' },
   { id: 'blank-5', title: '排产后台-每周菜单', group: '需要增加批次字段的页面' },
+  { id: 'meal-settings', title: '餐段设置', group: '后台页面' },
+  { id: 'assistant-menu-dialog-example', title: '对话修改示例', group: 'v1.1.0 优化内容' },
+  { id: 'ai-menu-result-notice', title: 'ai生成结果提示新增', group: 'v1.1.0 优化内容' },
   { id: 'backup-assistant-menu', title: '语音生成菜单', group: '备用页' },
   { id: 'backup-assistant-menu-flow', title: '语音生成菜单流程中', group: '备用页' },
   { id: 'backup-assistant-schedule', title: '语音排产', group: '备用页' },
@@ -63,18 +72,20 @@ const ingredients = ['姜', '带鱼', '红烧汁', '五花肉', '百叶结', '�
 const orderItems = ['五花肉', '牛肉', '三黄鸡', '精肉片', '肉丝', '牛肉片', '百叶结', '青椒', '洋葱', '千叶豆腐', '毛豆米', '雪菜', '外婆菜', '线椒', '芹菜', '绿豆芽', '韭菜', '菠菜', '红烧汁'];
 
 function Header({ page, go }: { page: Page; go: (page: Page) => void }) {
-  const active = page === 'menu' || page === 'assistant-menu' || page === 'assistant-menu-no-meal' || page === 'assistant-menu-flow' || page === 'assistant-menu-failure' || page === 'backup-assistant-menu' || page === 'backup-assistant-menu-flow' || page === 'view-menu' ? '每周菜单' : page === 'schedule' || page === 'assistant-schedule' || page === 'assistant-schedule-no-menu' || page === 'backup-assistant-schedule' ? '排产计划' : '采购清单';
+  const active = page === 'menu' || page === 'assistant-menu' || page === 'assistant-menu-dialog-example' || page === 'assistant-menu-no-meal' || page === 'assistant-menu-flow' || page === 'assistant-menu-insufficient' || page === 'assistant-menu-failure' || page === 'backup-assistant-menu' || page === 'backup-assistant-menu-flow' || page === 'view-menu' ? '每周菜单' : page === 'schedule' || page === 'assistant-schedule' || page === 'assistant-schedule-no-menu' || page === 'backup-assistant-schedule' ? '排产计划' : '采购清单';
   return <header className="topbar"><img className="brand-mark-image" src={brandMark} alt="熙香" /><div className="brand-name">备餐屏</div><nav>{[['每周菜单', 'menu'], ['排产计划', 'schedule'], ['采购清单', 'purchase']].map(([label, target]) => <button key={label} className={active === label ? 'nav-item active' : 'nav-item'} onClick={() => go(target as Page)}>{label}</button>)}</nav></header>;
 }
 
 function PrototypeSidebar({ page, go, collapsed, onToggle }: { page: Page; go: (page: Page) => void; collapsed: boolean; onToggle: () => void }) {
-  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({ 菜单: true, 排产: true, 采购: true, 需要增加批次字段的页面: true, 备用页: true });
+  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({ 菜单: true, 排产: true, 采购: true, 需要增加批次字段的页面: true, 'v1.1.0 优化内容': true, 备用页: true });
   const [blank1Expanded, setBlank1Expanded] = useState(true);
   const groups: Array<{ label: string; pages: Array<[string, Page]> }> = [
-    { label: '菜单', pages: [['每周菜单', 'menu'], ['语音生成菜单', 'assistant-menu'], ['语音生成菜单-无餐段', 'assistant-menu-no-meal'], ['语音生成菜单-流程中', 'assistant-menu-flow'], ['语音生成菜单-失败', 'assistant-menu-failure'], ['查看菜单', 'view-menu']] },
+    { label: '菜单', pages: [['每周菜单', 'menu'], ['语音生成菜单', 'assistant-menu'], ['语音生成菜单-无餐段', 'assistant-menu-no-meal'], ['语音生成菜单-流程中', 'assistant-menu-flow'], ['语音生成菜单-菜单数量不足', 'assistant-menu-insufficient'], ['语音生成菜单-失败', 'assistant-menu-failure'], ['查看菜单', 'view-menu']] },
     { label: '排产', pages: [['智能排产 -分批', 'schedule'], ['语音排产', 'assistant-schedule'], ['语音排产-无菜单', 'assistant-schedule-no-menu']] },
     { label: '采购', pages: [['订单采购', 'purchase'], ['采购清单', 'list'], ['确认下单', 'confirm'], ['下单成功', 'success'], ['下单失败', 'failure']] },
     { label: '需要增加批次字段的页面', pages: [['生产工单列表', 'blank-1'], ['称重加料屏', 'blank-2'], ['备餐屏', 'blank-3'], ['轻量总控屏', 'blank-4'], ['排产后台-每周菜单', 'blank-5']] },
+    { label: '后台页面', pages: [['餐段设置', 'meal-settings']] },
+    { label: 'v1.1.0 优化内容', pages: [['对话修改示例', 'assistant-menu-dialog-example'], ['ai生成结果提示新增', 'ai-menu-result-notice']] },
     { label: '备用页', pages: [['语音生成菜单', 'backup-assistant-menu'], ['语音生成菜单流程中', 'backup-assistant-menu-flow'], ['语音排产', 'backup-assistant-schedule']] },
   ];
   const topPages: Array<[string, Page]> = [['版本管理', 'version'], ['流程图', 'flow'], ['语义解析', 'semantic']];
@@ -86,7 +97,8 @@ function isPlainPage(page: Page) { return page === 'version' || page === 'flow' 
 function Shell({ page, go, children }: { page: Page; go: (page: Page) => void; children: React.ReactNode }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const shellClass = `app-shell${isPlainPage(page) ? ' plain-app-shell' : ''}${sidebarCollapsed ? ' sidebar-collapsed' : ''}`;
-  if (page === 'blank-2' || page === 'blank-3' || page === 'blank-4' || page === 'blank-5') {
+  if (page === 'meal-settings') return children;
+  if (page === 'blank-2' || page === 'blank-3' || page === 'blank-4' || page === 'blank-5' || page === 'ai-menu-result-notice') {
     const contentClass = page === 'blank-2' ? 'weighing-app-shell' : page === 'blank-3' ? 'dashboard-app-shell' : page === 'blank-4' ? 'mobile-app-shell' : 'ai-menu-app-shell';
     return <main className={`special-page-app-shell${sidebarCollapsed ? ' sidebar-collapsed' : ''}`}><PrototypeSidebar page={page} go={go} collapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed((value) => !value)} /><div className={contentClass}>{children}</div></main>;
   }
@@ -109,7 +121,7 @@ function MenuPage({ go }: { go: (page: Page) => void }) {
   return <><div className="menu-head"><div></div><button className="wake-card" onClick={() => go('assistant-menu')}><span className="wake-orb"><Mic size={25} /></span><span>说“生成菜单”<br /><strong>唤醒我</strong></span></button></div><WeekTabs active={week} setActive={setWeek} /><div className="menu-grid"><div className="menu-corner">餐段</div>{days.map(([name, date]) => <div className="menu-day" key={date}>{name}<small>{date}</small></div>)}<div className="meal-side">午餐</div>{days.map(([_, date], index) => <button key={`l${date}`} className={index < 3 ? 'menu-cell ready' : 'menu-cell add'} onClick={index < 3 ? () => go('view-menu') : undefined}>{index < 3 ? <>已有菜单<small>10</small></> : '添加菜单'}</button>)}<div className="meal-side">晚餐</div>{days.map(([_, date], index) => <button key={`d${date}`} className={index < 3 ? 'menu-cell ready' : 'menu-cell add'} onClick={index < 3 ? () => go('view-menu') : undefined}>{index < 3 ? <>已有菜单<small>8</small></> : '添加菜单'}</button>)}</div></>;
 }
 
-function AssistantPage({ type, noMeal = false, noMenu = false, flow = false, staticDisplay = false, go }: { type: 'menu' | 'schedule'; noMeal?: boolean; noMenu?: boolean; flow?: boolean; staticDisplay?: boolean; go: (page: Page) => void }) {
+function AssistantPage({ type, noMeal = false, noMenu = false, flow = false, staticDisplay = false, dialogExample = false, reuseFallback = false, failure = false, go }: { type: 'menu' | 'schedule'; noMeal?: boolean; noMenu?: boolean; flow?: boolean; staticDisplay?: boolean; dialogExample?: boolean; reuseFallback?: boolean; failure?: boolean; go: (page: Page) => void }) {
   const [listening, setListening] = useState(false);
   const [messageIndex, setMessageIndex] = useState(staticDisplay ? Number.MAX_SAFE_INTEGER : 0);
   const [postSuccessIndex, setPostSuccessIndex] = useState(0);
@@ -120,6 +132,7 @@ function AssistantPage({ type, noMeal = false, noMenu = false, flow = false, sta
   const [planScope, setPlanScope] = useState<'single' | 'range'>('single');
   const [saved, setSaved] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [reuseDetailsOpen, setReuseDetailsOpen] = useState(false);
   const [expandedDays, setExpandedDays] = useState<Record<string, boolean>>({ '2026年8月3日': true, '2026年8月4日': true });
   const [menuExpanded, setMenuExpanded] = useState(false);
   const schedule = type === 'schedule';
@@ -135,19 +148,43 @@ function AssistantPage({ type, noMeal = false, noMenu = false, flow = false, sta
     { role: 'user', text: '生成菜单' },
     { role: 'assistant', text: '我可以帮您自动生成菜单，您有什么要求都可以跟我说。', hint: '提示：生成条件包括时间周期、餐段、餐品数量、大荤小荤蔬菜比例、菜系、口味、烹饪设备、就餐人数、烹饪时限、设备比例、菜单偏好。' },
     { role: 'user', text: '请帮我生成明天的菜单，午餐 10 个菜，500 人用餐，晚餐 8 个菜，200 人用餐，大荤、小荤、蔬菜的比例是 2 比 2 比 1' },
-    { role: 'assistant', text: '好的，请问需要生成多少时间内的菜单？' },
     { role: 'user', text: '烹饪总时长不超过 60 分钟' },
     { role: 'assistant', text: '请问使用炒菜机和烤箱的餐品比例分别是多少？' },
     { role: 'user', text: '午餐 10 个菜' },
     { role: 'assistant', text: '当前菜单生成流程尚未完成，请确认是继续还是开启新对话' },
     { role: 'user', text: '新对话' },
     { role: 'assistant', text: '我可以帮您自动生成菜单，您有什么要求都可以跟我说。' },
+  ] : dialogExample ? [
+    ...(noMeal ? [] : [{ role: 'assistant', text: '请问您是需要生成菜单还是智能排产？' }]),
+    { role: 'user', text: '生成菜单' },
+    { role: 'assistant', text: '我可以帮您自动生成菜单，您有什么要求都可以跟我说。', hint: '提示：生成条件包括时间周期、餐段、餐品数量、大荤小荤蔬菜比例、菜系、口味、烹饪设备、就餐人数、烹饪时限、设备比例、菜单偏好。' },
+    { role: 'user', text: '请帮我生成明天的菜单，午餐 10 个菜，500 人用餐，晚餐 8 个菜，200 人用餐，大荤、小荤、蔬菜的比例是 2 比 2 比 1' },
+    { role: 'assistant', text: '请输入菜系、口味、烹饪设备、烹饪时限、设备比例、菜单偏好，没有回复默认即可' },
+    { role: 'user', text: '帮我改成午餐 20 个菜' },
+    { role: 'assistant', text: '好的，已将午餐菜品数量修改为 20 道。请问还需要调整其他条件吗？' },
+    { role: 'user', text: '去除晚餐 8 个菜' },
+    { role: 'assistant', text: '餐品数量无法去除，是否需要修改' },
+    { role: 'user', text: '修改成 7 个菜' },
+    { role: 'assistant', text: '好的，已将晚餐餐品数量修改为 7 道。请问还需要调整其他条件吗' },
+    { role: 'user', text: '去除就餐人数' },
+    { role: 'assistant', text: '已去除就餐人数，请问还需要调整其他条件吗？' },
+    { role: 'user', text: '重新来' },
+    { role: 'assistant', text: '你确定要清空所有已设置的筛选条件并重新开始？请回答确定或者取消？' },
+    { role: 'user', text: '确定' },
+    { role: 'assistant', text: '我可以帮您自动生成菜单，您有什么要求都可以跟我说。' },
+    { role: 'user', text: '我要修改条件' },
+    { role: 'assistant', text: '好的，请问需要调整哪些条件' },
+    { role: 'user', text: '午餐 8个菜，100人用餐，晚餐 8 个菜，100人用餐，大荤、小荤、蔬菜的比例是 1比 1比 1' },
+    { role: 'assistant', text: '好的，已修改为午餐 8个菜，100人用餐，晚餐 8 个菜，100人用餐，大荤、小荤、蔬菜的比例是 1比 1比 1，请问还需要修改其他条件吗' },
+    { role: 'user', text: '晚餐的就餐人数我不想改了' },
+    { role: 'assistant', text: '已经恢复晚餐就餐人数 200 人。请问还需要调整其他条件吗' },
+    { role: 'user', text: '不需要了' },
+    { role: 'assistant', text: '好的，正在为您生成菜单，请稍后' },
   ] : [
     ...(noMeal ? [] : [{ role: 'assistant', text: '请问您是需要生成菜单还是智能排产？' }]),
     { role: 'user', text: '生成菜单' },
     { role: 'assistant', text: '我可以帮您自动生成菜单，您有什么要求都可以跟我说。', hint: '提示：生成条件包括时间周期、餐段、餐品数量、大荤小荤蔬菜比例、菜系、口味、烹饪设备、就餐人数、烹饪时限、设备比例、菜单偏好。' },
     { role: 'user', text: '请帮我生成明天的菜单，午餐 10 个菜，500 人用餐，晚餐 8 个菜，200 人用餐，大荤、小荤、蔬菜的比例是 2 比 2 比 1' },
-    { role: 'assistant', text: '好的，请问需要生成多少时间内的菜单？' },
     { role: 'user', text: '烹饪总时长不超过 60 分钟' },
     { role: 'assistant', text: '请问使用炒菜机和烤箱的餐品比例分别是多少？' },
     { role: 'user', text: '炒菜机与烤箱的比例是 3 比 1' },
@@ -179,27 +216,36 @@ function AssistantPage({ type, noMeal = false, noMenu = false, flow = false, sta
   const statusLabel: Record<PlanDayStatus, string> = { started: '计划已经开始，无法生成', generated: '排产已正常预生成', existing: '当前已有排产计划，请确认是否覆盖' };
   const detailDishes = [['黑椒牛仔粒', '3盆', '早餐', '红', '炒菜机', '翻炒', '180℃ · 12分钟'], ['香酥鱼排', '2盆', '早餐', '红', '烤箱', '烘烤', '200℃ · 18分钟'], ['地三鲜', '1盆', '午餐', '黄', '炒菜机', '翻炒', '175℃ · 10分钟'], ['香菇菜心', '2盆', '午餐', '绿', '炒菜机', '翻炒', '165℃ · 8分钟'], ['酸辣藕丁', '3盆', '晚餐', '黄', '炒菜机', '翻炒', '170℃ · 9分钟'], ['番茄炒蛋', '2盆', '晚餐', '绿', '炒菜机', '翻炒', '160℃ · 7分钟']];
   const detailDishPortions = ['20份/盆', '30份/盆', '20份/盆', '20份/盆', '10份/盆', '5kg/盆'];
-  const menuResultMessage = menuGenerationResult.status === 'empty'
+  const failureReason = '失败原因：按照当前选定的口味筛选后，没有匹配的可用菜品。';
+  const menuResultMessage = failure
+    ? '本次菜单生成失败，所有餐段均无符合条件的菜品，请调整筛选条件或补充菜品库后重试。'
+    : menuGenerationResult.status === 'empty'
     ? `没有符合条件的餐品。造成该结果的条件：【${menuGenerationResult.filters.join('、')}】`
     : menuGenerationResult.status === 'insufficient'
       ? `符合条件的餐品不足，${(['大荤', '小荤', '素菜'] as const).filter((category) => menuGenerationResult.shortages[category]).map((category) => `缺少${category} ${menuGenerationResult.shortages[category]} 份`).join('，')}`
       : '已为您生成菜单，请前往查看';
+  const reuseFallbackMessage = '本次菜单生成成功，共 3 个餐段可选菜品不足，已自动复用菜品补足数量。调整筛选条件可丰富菜品，点击详情查看复用明细。';
+  const reuseFallbackDetails = [
+    '2026-08-26 午餐：目标 10 道，复用 5 道',
+    '2026-08-26 晚餐：目标 12 道，复用 3 道',
+    '2026-08-27 早餐：目标 10 道，复用 2 道',
+  ];
   const postSuccessDialogue = [
-    { role: 'user', text: '午餐10 个菜' },
+    { role: 'user', text: '啊啊啊啊啊' },
     { role: 'assistant', text: '当前菜单已经生成成功，需否需要生成新菜单' },
     { role: 'user', text: '生成新菜单' },
     { role: 'assistant', text: '我可以帮您自动生成菜单，您有什么要求都可以跟我说' },
   ];
   return <>
-    <div className={`assistant-page${noMenu ? ' no-menu-assistant-page' : ''}`} onClick={staticDisplay ? undefined : advance}>
+    <div className={`assistant-page${noMenu ? ' no-menu-assistant-page' : ''}`} data-annotation-id={dialogExample ? 'annotation-modify-rules' : undefined} onClick={staticDisplay ? undefined : advance}>
       {started && <div className="conversation">
         {dialogue.slice(0, displayMessageIndex).map((message, index) => ({ message, index })).filter(({ index }) => !(!schedule && !noMeal && !flow && index === 0) && !(noMeal && [4, 5, 6, 7, 8].includes(index))).map(({ message, index }) => { const hasLongMenuHint = schedule && typeof message.hint === 'string' && message.hint.includes('当前菜单'); return <div className={`${message.role}-message${schedule && index === 3 ? ' schedule-menu-question' : ''}${schedule && index === 4 ? ' schedule-batch-question' : ''}${schedule && index === 5 ? ' schedule-batch-details-response' : ''}${!schedule && index === 4 ? ' assistant-menu-time-limit-question' : ''}${!schedule && !flow && index === 6 ? ' assistant-device-ratio-question' : ''}${schedule && index === dialogue.length - 1 ? ' schedule-confirm-trigger' : ''}`} data-annotation-id={schedule && index === 2 ? 'annotation-38' : schedule && index === 3 ? 'annotation-30' : !schedule && !flow && index === 6 ? 'annotation-27' : schedule && index === dialogue.length - 1 ? 'annotation-29' : undefined} key={`${message.text}-${index}`} onClick={(event) => { event.stopPropagation(); if (schedule && index === dialogue.length - 1) setShowScheduleConfirm(true); }}><span className="message-avatar">{message.role === 'assistant' ? <img src={assistantChef} alt="小熙" /> : '我'}</span><span className="message-text">{noMenu && schedule && index === 3 ? '当前 8月 3日缺少菜单，点击按钮生成菜单或者说继续，去除缺少菜单的日期继续排产？' : message.text}{'hint' in message && (hasLongMenuHint ? <span className={`assistant-message-hint schedule-menu-hint${menuExpanded ? ' expanded' : ''}`}><span>{message.hint}</span>{!noMenu && <button type="button" onClick={(event) => { event.stopPropagation(); setMenuExpanded((expanded) => !expanded); }}>{menuExpanded ? '收起内容' : '展开全部'}</button>}</span> : <span className="assistant-message-hint">{message.hint}</span>)}{noMenu && schedule && index === 3 && <button className="primary-link schedule-no-menu-inline-action" onClick={(event) => { event.stopPropagation(); go('assistant-menu'); }}>点击进入生成菜单</button>}</span></div>; })}
         {schedule && !noMenu && displayMessageIndex === dialogue.length && <div className="schedule-success-dialog schedule-plan-dialog" onClick={(event) => event.stopPropagation()}><div className="menu-success-message"><span className="message-avatar"><img src={assistantChef} alt="小熙" /></span><span className="message-text">已成功生成排产计划</span></div><button className="primary-link" onClick={() => go('schedule')}>前往查看排产计划</button></div>}
-        {!schedule && !flow && displayMessageIndex === dialogue.length && <div className="schedule-success-dialog menu-success-dialog" onClick={(event) => event.stopPropagation()}><div className="menu-success-message"><span className="message-avatar"><img src={assistantChef} alt="小熙" /></span><span className="message-text">{noMeal ? '当前所需排产日期中X月X日、X月X日无餐段，请重新提供或进入排产后台进行餐段设置后重新生成菜单' : menuResultMessage}</span>{!noMeal && menuGenerationResult.status === 'success' && <button className="primary-link" onClick={() => go('menu')}>查看菜单</button>}</div></div>}
+        {!schedule && !flow && displayMessageIndex === dialogue.length && <div className="schedule-success-dialog menu-success-dialog" onClick={(event) => event.stopPropagation()}>{reuseFallback ? <div className="menu-success-message menu-reuse-success-message"><span className="message-avatar"><img src={assistantChef} alt="小熙" /></span><div className="menu-reuse-success-body"><span className="message-text">{reuseFallbackMessage}</span><div className="menu-reuse-actions"><button className="primary-link" onClick={() => go('menu')}>查看菜单</button><button type="button" className="menu-reuse-detail-button" aria-expanded={reuseDetailsOpen} onClick={() => setReuseDetailsOpen((open) => !open)}>{reuseDetailsOpen ? '收起详情' : '详情'}</button></div>{reuseDetailsOpen && <div className="menu-reuse-details">{reuseFallbackDetails.map((detail) => <p key={detail}>{detail}</p>)}</div>}</div></div> : <div className="menu-success-message"><span className="message-avatar"><img src={assistantChef} alt="小熙" /></span><span className="message-text">{noMeal ? '当前所需排产日期中X月X日、X月X日无餐段，请重新提供或进入排产后台进行餐段设置后重新生成菜单' : failure ? <>{menuResultMessage}<span className="assistant-message-hint menu-failure-reason">{failureReason}</span></> : menuResultMessage}</span>{!failure && !noMeal && menuGenerationResult.status === 'success' && <button className="primary-link" onClick={() => go('menu')}>查看菜单</button>}</div>}</div>}
         {!schedule && !noMeal && !flow && displayMessageIndex === dialogue.length && postSuccessDialogue.slice(0, postSuccessIndex).map((message, index) => <div className={`${message.role}-message`} key={`post-success-${message.text}-${index}`}><span className="message-avatar">{message.role === 'assistant' ? <img src={assistantChef} alt="小熙" /> : '我'}</span><span className="message-text">{message.text}</span></div>)}
       </div>}
     </div>
-{showScheduleConfirm && <div className="modal-mask" onClick={closeModal}><section className="plan-confirm-modal schedule-confirm-modal" onClick={(event) => event.stopPropagation()}><h2>排产计划确认</h2><div className="plan-summary"><div className="plan-info-grid"><span>排产范围<strong>2026年8月3日、8月4日</strong></span></div><div className="compact-plan-days">{planDays.map(([date, meals, people]) => { const status = dayStatus(date); const canViewDetails = status === 'generated' || (status === 'existing' && coverExisting === true); const mealGroups = meals.includes('晚餐') ? [{ meal: '午餐', batches: [{ label: '批次1', start: 0 }, { label: '批次2', start: 2 }] }, { meal: '晚餐', batches: [{ label: '批次3', start: 4 }] }] : [{ meal: '午餐', batches: [{ label: '批次1', start: 0 }, { label: '批次2', start: 2 }, { label: '批次3', start: 4 }] }]; return <div key={date} className={`compact-plan-day ${status}`}><strong>{date}</strong><span>{meals} · {people}</span><em>{statusLabel[status]}</em>{status === 'existing' && <div className="cover-confirm"><button className={coverExisting === true ? 'selected' : ''} onClick={() => setCoverExisting(true)}>覆盖已有计划</button><button className={coverExisting === false ? 'selected' : ''} onClick={() => setCoverExisting(false)}>保留已有计划</button>{coverExisting !== null && <small>已记录：{coverExisting ? '覆盖已有计划' : '保留已有计划'}</small>}</div>}{canViewDetails && <><button className="day-detail-button" onClick={() => setExpandedDays((current) => ({ ...current, [date]: !current[date] }))}>{expandedDays[date] ? '收起明细' : '查看明细'} <span>{expandedDays[date] ? '⌃' : '⌄'}</span></button>{expandedDays[date] && <div className="plan-day-content"><p className="day-status">{status === 'generated' ? '已生成排产，可按批次查看生产顺序' : '覆盖后将按当前批次生成排产'}</p><div className="meal-batch-groups">{mealGroups.map(({ meal, batches }) => <section className="meal-batch-group" key={meal}><h4>{meal}</h4><div className="batch-detail-list">{batches.map(({ label, start }) => <div className="batch-group" key={label}><h5>{label}</h5><div className="dish-grid">{detailDishes.slice(start, start + 2).map(([name, quantity, , tone, equipment, method, temperature], dishIndex) => <div className={`production-dish-card ${tone === "红" ? "red" : tone === "黄" ? "yellow" : "green"}`} key={`${date}-${name}`}><div className="production-dish-top"><strong>{start + dishIndex + 1}</strong><i /><span>{detailDishPortions[start + dishIndex]}</span></div><div className="production-dish-flags"><b>预</b>{equipment === "炒菜机" && <b>出</b>}</div><div className="production-dish-body"><div className="production-quantity-control"><QuantityStepper initial={Number.parseInt(quantity, 10)} label={`${name}数量`} /><em>盆</em></div><span>{name}</span></div><div className="production-dish-method">{equipment} · {method} · {temperature}</div></div>)}</div></div>)}</div></section>)}</div></div>}</>}</div> })}</div></div><div className="plan-confirm-actions"><button onClick={closeModal}>取消</button><button className="primary" onClick={closeModal}>提交</button></div>{(saved || submitted) && <div className="plan-result">{saved ? '已暂存当前计划' : '已提交当前计划，结果已记录'}</div>}</section></div>}
+    {showScheduleConfirm && <div className="modal-mask" onClick={closeModal}><section className="plan-confirm-modal schedule-confirm-modal" onClick={(event) => event.stopPropagation()}><h2>排产计划确认</h2><div className="plan-summary"><div className="plan-info-grid"><span>排产范围<strong>2026年8月3日、8月4日</strong></span></div><div className="compact-plan-days">{planDays.map(([date, meals, people]) => { const status = dayStatus(date); const canViewDetails = status === 'generated' || (status === 'existing' && coverExisting === true); const mealGroups = meals.includes('晚餐') ? [{ meal: '午餐', batches: [{ label: '批次1', start: 0 }, { label: '批次2', start: 2 }] }, { meal: '晚餐', batches: [{ label: '批次3', start: 4 }] }] : [{ meal: '午餐', batches: [{ label: '批次1', start: 0 }, { label: '批次2', start: 2 }, { label: '批次3', start: 4 }] }]; return <div key={date} className={`compact-plan-day ${status}`}><strong>{date}</strong><span>{meals} · {people}</span><em>{statusLabel[status]}</em>{status === 'existing' && <div className="cover-confirm"><button className={coverExisting === true ? 'selected' : ''} onClick={() => setCoverExisting(true)}>覆盖已有计划</button><button className={coverExisting === false ? 'selected' : ''} onClick={() => setCoverExisting(false)}>保留已有计划</button>{coverExisting !== null && <small>已记录：{coverExisting ? '覆盖已有计划' : '保留已有计划'}</small>}</div>}{canViewDetails && <><button className="day-detail-button" onClick={() => setExpandedDays((current) => ({ ...current, [date]: !current[date] }))}>{expandedDays[date] ? '收起明细' : '查看明细'} <span>{expandedDays[date] ? '⌃' : '⌄'}</span></button>{expandedDays[date] && <div className="plan-day-content"><p className="day-status">{status === 'generated' ? '已生成排产，可按批次查看生产顺序' : '覆盖后将按当前批次生成排产'}</p><div className="meal-batch-groups">{mealGroups.map(({ meal, batches }) => <section className="meal-batch-group" key={meal}><h4>{meal}</h4><div className="batch-detail-list">{batches.map(({ label, start }) => <div className="batch-group" key={label}><h5>{label}</h5><div className="dish-grid">{detailDishes.slice(start, start + 2).map(([name, quantity, , tone, equipment, method, temperature], dishIndex) => <div className={`production-dish-card ${tone === "红" ? "red" : tone === "黄" ? "yellow" : "green"}`} key={`${date}-${name}`}><div className="production-dish-top"><strong>{start + dishIndex + 1}</strong><i /><span>{detailDishPortions[start + dishIndex]}</span></div><div className="production-dish-flags"><b>预</b>{equipment === "炒菜机" && <b>出</b>}</div><div className="production-dish-body"><div className="production-quantity-control"><QuantityStepper initial={Number.parseInt(quantity, 10)} label={`${name}数量`} /><em>份</em></div><span>{name}</span></div><div className="production-dish-method">{equipment} · {method} · {temperature}</div></div>)}</div></div>)}</div></section>)}</div></div>}</>}</div> })}</div></div><div className="plan-confirm-actions"><button onClick={closeModal}>取消</button><button className="primary" onClick={closeModal}>提交</button></div>{(saved || submitted) && <div className="plan-result">{saved ? '已暂存当前计划' : '已提交当前计划，结果已记录'}</div>}</section></div>}
   </>;
 }
 
@@ -230,7 +276,7 @@ const scheduleMealGroups: { meal: string; batches: { label: string; dishes: Sche
   { meal: '宵夜', batches: [{ label: '批次1', dishes: [{ name: '酸辣藕丁', quantity: 3, tone: 'green' }] }] },
 ];
 
-const scheduleDishDetails: Record<string, { quantity: number; capacity: string; method: string; tone: 'red' | 'yellow' | 'green' }> = {
+  const scheduleDishDetails: Record<string, { quantity: number; capacity: string; method: string; tone: 'red' | 'yellow' | 'green' }> = {
   '黑椒牛仔粒': { quantity: 3, capacity: '17份/盆', method: '黑椒牛仔粒2kg', tone: 'red' },
   '香酥鱼排': { quantity: 2, capacity: '25份/盆', method: '煎烤8分钟180度', tone: 'red' },
   '地三鲜': { quantity: 1, capacity: '50份/盆', method: '地三鲜6kg', tone: 'yellow' },
@@ -257,12 +303,12 @@ function ScheduleProductionBoard() {
     <div className="legend"><span className="legend-title">排产计划</span><span><i className="dot not-started" />未开始</span><span><i className="dot weighing" />称重中</span><span><i className="dot weighed" />称重完成</span><span><i className="dot produced" />生产完成</span></div>
     <div className="schedule-prep-panel">
       <h2>当天预制</h2>
-      {scheduleMealGroups.map(({ meal, batches }) => { let mealDishOffset = 0; return <section className="schedule-meal-section" key={meal}>
+      {scheduleMealGroups.map(({ meal, batches }) => { const dishes = batches.flatMap(({ dishes: batchDishes }) => batchDishes); const mergedDishes = dishes.slice(-2); return <section className="schedule-meal-section" key={meal}>
         <div className="schedule-meal-label">{meal}</div>
-        <div className="schedule-batch-list">{batches.map(({ label, dishes }) => { const batchOffset = mealDishOffset; mealDishOffset += dishes.length; return <div className="schedule-batch-group" key={`${meal}-${label}`}>
-          <h3>{label}</h3>
-          <div className="schedule-batch-grid">{dishes.map((dish, index) => { const detail = scheduleDishDetails[dish.name] ?? { quantity: index % 3 + 1, capacity: '25份/盆', method: '炒菜机', tone: 'green' as const }; const cardNumber = dish.number ?? (meal === '早餐' ? batchOffset + index + 1 : index + 1); return <div className={`schedule-production-card ${dish.tone ?? detail.tone}`} key={`${meal}-${label}-${dish.name}-${index}`}><div className="schedule-card-meta"><strong>{cardNumber}</strong><i /><span>{detail.capacity}</span></div><div className="schedule-card-body"><strong>{dish.quantity ?? detail.quantity}盆</strong><span>{dish.name}</span></div><div className="schedule-card-method">{detail.method}</div></div>; })}</div>
-        </div>; })}</div>
+        <div className="schedule-batch-list"><div className="schedule-batch-group reference-batch-group">
+          <h3>批次1</h3>
+          <div className="schedule-batch-content"><div className="schedule-batch-grid">{dishes.map((dish, index) => { const detail = scheduleDishDetails[dish.name] ?? { quantity: index % 3 + 1, capacity: '25份/盆', method: '炒菜机', tone: 'green' as const }; const cardNumber = dish.number ?? index + 1; return <div className={`schedule-production-card ${dish.tone ?? detail.tone}`} key={`${meal}-batch-1-${dish.name}-${index}`}><div className="schedule-card-meta"><strong>{cardNumber}</strong><i /><span>{detail.capacity}</span></div><div className="schedule-card-body"><strong>{dish.quantity ?? detail.quantity}盆</strong><span>{dish.name}</span></div><div className="schedule-card-method">{detail.method}</div></div>; })}</div><div className="schedule-merge-group"><h4>合并生产</h4><div className="schedule-batch-grid">{mergedDishes.map((dish, index) => { const detail = scheduleDishDetails[dish.name] ?? { quantity: index % 3 + 1, capacity: '25份/盆', method: '炒菜机', tone: 'green' as const }; return <div className={`schedule-production-card ${dish.tone ?? detail.tone}`} key={`${meal}-merged-${dish.name}-${index}`}><div className="schedule-card-meta"><strong>{dishes.length - mergedDishes.length + index + 1}</strong><i /><span>{detail.capacity}</span></div><div className="schedule-card-body"><strong>{dish.quantity ?? detail.quantity}盆</strong><span>{dish.name}</span></div><div className="schedule-card-method">{detail.method}</div></div>; })}</div></div></div>
+        </div></div>
       </section>; })}
     </div>
   </section>;
@@ -503,7 +549,7 @@ function WorkOrderDetailPage({ go }: { go: (page: Page) => void }) {
 
 function AiMenuPage() {
   const [open, setOpen] = useState(false);
-  const [notice, setNotice] = useState('');
+  const [showToasts, setShowToasts] = useState(false);
   const [weeks, setWeeks] = useState([true, true, false, false]);
   const [equipment, setEquipment] = useState([true, true]);
   const [preferences, setPreferences] = useState([false, false]);
@@ -515,7 +561,12 @@ function AiMenuPage() {
   return <div className="ai-menu-page">
     <header className="ai-menu-topbar"><strong>熙香AI食堂 <i /> 智能管理后台</strong><button>test-验证食堂 <span>⌄</span></button><div><span>♟</span> CXY　⏻</div></header>
     <aside className="ai-menu-side"><section><button>♧　生产管理 <i>⌃</i></button><a>餐段设置</a><a className="active">每周菜单</a><a>排产计划</a><a>原料需订量</a><a>生产设置</a></section>{['食堂订货', '系统管理'].map((item) => <button key={item}>▣　{item}<i>⌄</i></button>)}</aside>
-    <main className="ai-menu-content"><header><h1>单品生产计划</h1><div><button className="mint" onClick={() => setOpen(true)}>AI生成菜单</button><button>导出</button><button>编辑</button><button className="blue">复制同周菜单</button></div></header><section className="ai-menu-plan"><nav>{['本周', '下周', '第三周', '第四周'].map((item, index) => <button className={index === 0 ? 'selected' : ''} key={item}>{item}<br /><b>{weekRanges[index]}</b></button>)}</nav><div className="ai-menu-days"><div className="ai-menu-grid-head">{planDays.map((day) => <strong key={day}>{day}</strong>)}</div><div className="ai-menu-grid-row ai-empty-row">{planDays.map((day) => <article key={day}><b>宵夜</b><span>◯<small>无此餐段</small></span></article>)}</div><div className="ai-menu-grid-row ai-empty-row">{planDays.map((day) => <article key={day}><b>其他</b><span>◯<small>无此餐段</small></span></article>)}</div>{planMeals.map((meal) => <div className="ai-menu-grid-row" key={meal}>{planDays.map((day, dayIndex) => <article key={day}>{meal === '早餐' || dayIndex < 4 ? <button className="ai-add-meal"><b>{meal}</b><small>点击添加菜单</small></button> : <div className={`ai-planned-status ${meal === '晚餐' && dayIndex > 4 ? 'orange' : meal === '午餐' && dayIndex > 4 ? 'red' : ''}`}><b>● {meal} ({meal === '晚餐' && dayIndex > 4 ? 8 : 10})</b><small>已有单品生产计划</small></div>}</article>)}</div>)}</div></section></main>
+    <main className="ai-menu-content"><header><h1>单品生产计划</h1><div><button className="mint" onClick={() => { setShowToasts(false); setOpen(true); }}>AI生成菜单</button><button>导出</button><button>编辑</button><button className="blue">复制同周菜单</button></div></header><section className="ai-menu-plan"><nav>{['本周', '下周', '第三周', '第四周'].map((item, index) => <button className={index === 0 ? 'selected' : ''} key={item}>{item}<br /><b>{weekRanges[index]}</b></button>)}</nav><div className="ai-menu-days"><div className="ai-menu-grid-head">{planDays.map((day) => <strong key={day}>{day}</strong>)}</div><div className="ai-menu-grid-row ai-empty-row">{planDays.map((day) => <article key={day}><b>宵夜</b><span>◯<small>无此餐段</small></span></article>)}</div><div className="ai-menu-grid-row ai-empty-row">{planDays.map((day) => <article key={day}><b>其他</b><span>◯<small>无此餐段</small></span></article>)}</div>{planMeals.map((meal) => <div className="ai-menu-grid-row" key={meal}>{planDays.map((day, dayIndex) => <article key={day}>{meal === '早餐' || dayIndex < 4 ? <button className="ai-add-meal"><b>{meal}</b><small>点击添加菜单</small></button> : <div className={`ai-planned-status ${meal === '晚餐' && dayIndex > 4 ? 'orange' : meal === '午餐' && dayIndex > 4 ? 'red' : ''}`}><b>● {meal} ({meal === '晚餐' && dayIndex > 4 ? 8 : 10})</b><small>已有单品生产计划</small></div>}</article>)}</div>)}</div></section></main>
+    {showToasts && <div className="ai-menu-toast-stack" aria-label="菜单生成结果示例">
+      <div className="ai-menu-toast success" role="status"><span>✓</span><p>菜单生成成功</p></div>
+      <div className="ai-menu-toast warning" role="status"><span>!</span><p>本次菜单生成成功，共 3 个餐段可选菜品不足，已自动复用菜品补足数量。调整筛选条件可丰富菜品。<small>2026-08-26 午餐：目标 10 道，复用 5 道<br />2026-08-26 晚餐：目标 12 道，复用 3 道<br />2026-08-27 早餐：目标 10 道，复用 2 道</small></p></div>
+      <div className="ai-menu-toast failure" role="alert"><span>×</span><p>本次菜单生成失败，所有餐段均无符合条件的菜品，请调整筛选条件或补充菜品库后重试。<small>失败原因：按照当前选定的口味筛选后，没有匹配的可用菜品。</small></p></div>
+    </div>}
     {open && <div className="ai-menu-mask"><section className="ai-menu-modal" role="dialog" aria-modal="true" aria-label="AI生成菜单"><header><h2>AI生成菜单</h2></header><div className="ai-menu-form">
       <label><span>餐品菜系</span><div className="fake-select"><b>湘菜</b><b>家常菜</b><i>⌄</i></div></label>
       <label><span>餐品口味</span><div className="fake-select"><b>咸鲜</b><b>辣</b><i>⌄</i></div></label>
@@ -528,8 +579,47 @@ function AiMenuPage() {
       <div className="choice-row"><span><em>*</em> 菜单偏好</span>{['效率最高(生产时间短)', '口味最佳(餐品维度评分最高)'].map((item, index) => <label key={item}><input type="checkbox" checked={preferences[index]} onChange={() => toggle(setPreferences, index)} /> {item}</label>)}</div>
       <div className="setting-row" data-annotation-id="annotation-42"><span>烹饪时限 <i title="输入大于 0 的整数" aria-label="输入大于 0 的整数" data-tooltip="输入大于 0 的整数">?</i></span><label><input type="number" min="1" step="1" /> 分钟</label></div>
       <div className="setting-row" data-annotation-id="annotation-39"><span>设备比例</span><div className="device-ratio-inputs"><input type="number" min="0" aria-label="烤箱比例" />：<input type="number" min="0" aria-label="炒菜机比例" /></div></div>
-    </div><footer>{notice && <small>{notice}</small>}<button className="cancel" onClick={() => setOpen(false)}>取消</button><button className="create" onClick={() => setNotice('菜单生成任务已提交')}>AI生成菜单</button></footer></section></div>}
+    </div><footer><button className="cancel" onClick={() => setOpen(false)}>取消</button><button className="create" onClick={() => { setShowToasts(true); setOpen(false); }}>AI生成菜单</button></footer></section></div>}
   </div>;
+}
+
+type MealSegment = { name: string; enabled: boolean; people: string; start: string; end: string; batches: string; batchTime: string };
+
+const initialMealSegments: MealSegment[] = [
+  { name: '早餐', enabled: true, people: '0', start: '00:00', end: '00:00', batches: '1', batchTime: '00:00' },
+  { name: '午餐', enabled: true, people: '0', start: '00:00', end: '00:00', batches: '1', batchTime: '00:00' },
+  { name: '晚餐', enabled: true, people: '0', start: '00:00', end: '00:00', batches: '1', batchTime: '00:00' },
+  { name: '宵夜', enabled: true, people: '0', start: '00:00', end: '00:00', batches: '1', batchTime: '00:00' },
+  { name: '其他', enabled: true, people: '0', start: '00:00', end: '00:00', batches: '1', batchTime: '00:00' },
+];
+
+function MealSegmentFields({ item, onChange }: { item: MealSegment; onChange: (next: MealSegment) => void }) {
+  return <div className="meal-segment-fields">
+    <label>就餐人数<input value={item.people} onChange={(event) => onChange({ ...item, people: event.target.value })} /></label>
+    <label>出餐时间<div className="meal-time-range"><input value={item.start} onChange={(event) => onChange({ ...item, start: event.target.value })} /><span>~</span><input value={item.end} onChange={(event) => onChange({ ...item, end: event.target.value })} /></div></label>
+    <label>出餐批次<select value={item.batches} onChange={(event) => onChange({ ...item, batches: event.target.value })}><option>1</option><option>2</option><option>3</option></select></label>
+    <label>批次时间<input value={item.batchTime} onChange={(event) => onChange({ ...item, batchTime: event.target.value })} /></label>
+  </div>;
+}
+
+function MealSegmentPage() {
+  const [editing, setEditing] = useState(false);
+  const [segments, setSegments] = useState(initialMealSegments);
+  const updateSegment = (index: number, next: MealSegment) => setSegments((items) => items.map((item, itemIndex) => itemIndex === index ? next : item));
+  return <main className="meal-settings-app">
+    <header className="meal-settings-topbar"><strong>熙香AI食堂 <i /> 智能管理后台</strong><button>熙香-光大安石 <span>⌄</span></button><div><span>♟</span> manager　⏻</div></header>
+    <aside className="meal-settings-side"><button>♧　订单管理 <i>⌄</i></button><section><button>♧　生产管理 <i>⌃</i></button><a className="active">餐段设置</a><a>餐品库</a><a>单品菜单</a><a>排产计划</a><a>原料需订量</a><a>生产设置</a></section>{['餐品管理', '食堂订货', '营业报表', '提醒管理', '系统管理'].map((item) => <button key={item}>▣　{item}<i>⌄</i></button>)}</aside>
+    <section className="meal-settings-content">
+      <header className="meal-settings-title"><h1>餐段设置</h1><button className={editing ? 'save' : ''} onClick={() => setEditing((value) => !value)}>{editing ? '保存' : '编辑'}</button></header>
+      <section className={`meal-settings-summary ${editing ? 'editing' : ''}`}>
+        {segments.map((item, index) => <article key={item.name} className="meal-summary-card">
+          <div className="meal-summary-heading"><strong>{item.name}</strong>{editing ? <label className="meal-enabled"><input type="checkbox" checked={item.enabled} onChange={(event) => updateSegment(index, { ...item, enabled: event.target.checked })} /> 启用餐段</label> : <span className="meal-enabled-readonly">☑ 启用餐段</span>}</div>
+          {editing ? <MealSegmentFields item={item} onChange={(next) => updateSegment(index, next)} /> : <dl><div><dt>就餐人数</dt><dd>{item.people}</dd></div><div><dt>出餐时间</dt><dd>{item.start}　~　{item.end}</dd></div><div><dt>出餐批次</dt><dd>{item.batches}</dd></div><div><dt>批次时间</dt><dd>{item.batchTime}</dd></div></dl>}
+        </article>)}
+      </section>
+      {!editing && <section className="meal-detail-section"><div className="meal-detail-heading"><h2>餐段明细</h2><button onClick={() => setEditing(true)}>编辑</button></div><div className="meal-detail-table"><div className="meal-detail-row meal-detail-head"><strong>餐段</strong>{['周一', '周二', '周三', '周四', '周五', '周六', '周日'].map((day) => <strong key={day}>{day}</strong>)}</div>{segments.map((item) => <div className="meal-detail-row" key={item.name}><strong className="meal-detail-name">{item.name}</strong>{Array.from({ length: 7 }, (_, index) => <div className="meal-detail-cell" key={`${item.name}-${index}`}><b>{item.name}</b><span>♟　{item.people}</span><span>◷　{item.start}　~　{item.end}</span><span>▱　{item.batches}</span><span>①　{item.batchTime}</span></div>)}</div>)}</div></section>}
+    </section>
+  </main>;
 }
 
 function BlankPage({ page, go }: { page: Page; go: (page: Page) => void }) {
@@ -537,7 +627,7 @@ function BlankPage({ page, go }: { page: Page; go: (page: Page) => void }) {
   if (page === 'work-order-detail') return <WorkOrderDetailPage go={go} />;
   if (page === 'blank-2') return <WeighingPage go={go} />;
   if (page === 'blank-3') return <DashboardPage />;
-  if (page === 'blank-5') return <AiMenuPage />;
+  if (page === 'blank-5' || page === 'ai-menu-result-notice') return <AiMenuPage />;
   if (page !== 'blank-4') return <div aria-label="空白页面" />;
   const devices = [
     { name: '移动门', state: '已关门', action: '开门', icon: 'door' },
@@ -581,12 +671,21 @@ function BlankPage({ page, go }: { page: Page; go: (page: Page) => void }) {
 function getPageAnnotationSource(page: Page): AnnotationSourceDocument {
   const source = JSON.parse(JSON.stringify(annotationSourceDocument)) as AnnotationSourceDocument;
   if (!source.data) return source;
-  const pageNodes = source.data.nodes.filter((node) => Array.isArray(node.pageId) ? node.pageId.includes(page) : node.pageId === page);
+  source.assetMap = {
+    ...source.assetMap,
+    'menu-generation-rules.png': menuGenerationRulesImagePath,
+    'modify-rules-flowchart.png': modifyRulesFlowchartImagePath,
+  };
+  if (source.markdownMap?.['annotation-5']) {
+    source.markdownMap['annotation-5'] = source.markdownMap['annotation-5'].replace('/prototypes/untitled-2/assets/menu-generation-rules.png', menuGenerationRulesImagePath);
+  }
+  const annotationPage = page === 'ai-menu-result-notice' ? 'blank-5' : page;
+  const pageNodes = source.data.nodes.filter((node) => Array.isArray(node.pageId) ? node.pageId.includes(annotationPage) : node.pageId === annotationPage);
   source.data = { ...source.data, pageId: page, nodes: pageNodes.map((node, index) => ({ ...node, index: index + 1 })) };
   return source;
 }
 
-  export default function IntelligentScheduling() { const { page: routePage, setPage } = useHashPage(pageRoute); const page = (routePage as Page); const [deliveryDate, setDeliveryDate] = useState('2026-07-15T06:00:00'); const go = (next: Page) => setPage(next); useEffect(() => { window.scrollTo(0, 0); }, [page]); const annotationSource = useMemo(() => getPageAnnotationSource(page), [page]); const content = useMemo(() => { if (page === 'version' || page === 'flow' || page === 'semantic') return <PlainPage page={page} />; if (page === 'blank-1' || page === 'work-order-detail' || page === 'blank-2' || page === 'blank-3' || page === 'blank-4' || page === 'blank-5') return <BlankPage page={page} go={go} />; if (page === 'menu') return <MenuPage go={go} />; if (page === 'assistant-menu-no-meal') return <AssistantPage type="menu" noMeal staticDisplay go={go} />; if (page === 'assistant-menu-flow' || page === 'backup-assistant-menu-flow') return <AssistantPage key={page} type="menu" flow={page === 'assistant-menu-flow'} staticDisplay={page === 'assistant-menu-flow'} go={go} />; if (page === 'assistant-menu' || page === 'assistant-menu-failure' || page === 'backup-assistant-menu') return <AssistantPage key={page} type="menu" staticDisplay={page === 'assistant-menu-failure'} go={go} />; if (page === 'view-menu') return <ViewMenu go={go} />; if (page === 'assistant-schedule' || page === 'backup-assistant-schedule') return <AssistantPage key={page} type="schedule" go={go} />; if (page === 'purchase') return <PurchasePage go={go} />; if (page === 'list') return <ListPage go={go} deliveryDate={deliveryDate} setDeliveryDate={setDeliveryDate} />; if (page === 'confirm') return <ConfirmPage go={go} deliveryDate={deliveryDate} />; if (page === 'success') return <SuccessPage go={go} />; if (page === 'failure') return <FailurePage go={go} />; return <SchedulePage go={go} />; }, [page, deliveryDate]); return <>
+  export default function IntelligentScheduling() { const { page: routePage, setPage } = useHashPage(pageRoute); const page = (routePage as Page); const [deliveryDate, setDeliveryDate] = useState('2026-07-15T06:00:00'); const [zoomedImage, setZoomedImage] = useState<string | null>(null); const go = (next: Page) => setPage(next); useEffect(() => { window.scrollTo(0, 0); }, [page]); useEffect(() => { const imagePaths = [menuGenerationRulesImagePath, modifyRulesFlowchartImagePath]; if (page !== 'assistant-menu' && page !== 'assistant-menu-dialog-example') { setZoomedImage(null); return undefined; } const handleImageClick = (event: MouseEvent) => { const image = event.composedPath().find((target): target is HTMLImageElement => target instanceof HTMLImageElement && imagePaths.some((imagePath) => target.src.includes(imagePath))); if (!image) return; event.preventDefault(); event.stopPropagation(); setZoomedImage(image.src); }; const handleKeyDown = (event: KeyboardEvent) => { if (event.key === 'Escape') setZoomedImage(null); }; document.addEventListener('click', handleImageClick, true); document.addEventListener('keydown', handleKeyDown); return () => { document.removeEventListener('click', handleImageClick, true); document.removeEventListener('keydown', handleKeyDown); }; }, [page]); const annotationSource = useMemo(() => getPageAnnotationSource(page), [page]); const content = useMemo(() => { if (page === 'meal-settings') return <MealSegmentPage />; if (page === 'version' || page === 'flow' || page === 'semantic') return <PlainPage page={page} />; if (page === 'blank-1' || page === 'work-order-detail' || page === 'blank-2' || page === 'blank-3' || page === 'blank-4' || page === 'blank-5' || page === 'ai-menu-result-notice') return <BlankPage page={page} go={go} />; if (page === 'menu') return <MenuPage go={go} />; if (page === 'assistant-menu-dialog-example') return <AssistantPage key={page} type="menu" staticDisplay dialogExample go={go} />; if (page === 'assistant-menu-no-meal') return <AssistantPage type="menu" noMeal staticDisplay go={go} />; if (page === 'assistant-menu-flow' || page === 'backup-assistant-menu-flow') return <AssistantPage key={page} type="menu" flow={page === 'assistant-menu-flow'} staticDisplay={page === 'assistant-menu-flow'} go={go} />; if (page === 'assistant-menu' || page === 'assistant-menu-insufficient' || page === 'assistant-menu-failure' || page === 'backup-assistant-menu') return <AssistantPage key={page} type="menu" staticDisplay={page === 'assistant-menu-insufficient' || page === 'assistant-menu-failure'} reuseFallback={page === 'assistant-menu-insufficient'} failure={page === 'assistant-menu-failure'} go={go} />; if (page === 'view-menu') return <ViewMenu go={go} />; if (page === 'assistant-schedule' || page === 'backup-assistant-schedule') return <AssistantPage key={page} type="schedule" go={go} />; if (page === 'purchase') return <PurchasePage go={go} />; if (page === 'list') return <ListPage go={go} deliveryDate={deliveryDate} setDeliveryDate={setDeliveryDate} />; if (page === 'confirm') return <ConfirmPage go={go} deliveryDate={deliveryDate} />; if (page === 'success') return <SuccessPage go={go} />; if (page === 'failure') return <FailurePage go={go} />; return <SchedulePage go={go} />; }, [page, deliveryDate]); return <>
   <Shell page={page} go={go}>{content}</Shell>
   <AnnotationViewer
     source={annotationSource}
@@ -601,4 +700,5 @@ function getPageAnnotationSource(page: Page): AnnotationSourceDocument {
     }}
   />
   <RequirementOverviewDrawer source={annotationSource} currentPageId={page} />
+  {(page === 'assistant-menu' || page === 'assistant-menu-dialog-example') && zoomedImage && <div className="annotation-image-zoom" role="dialog" aria-modal="true" aria-label="查看需求标注图片" onClick={() => setZoomedImage(null)}><button type="button" className="annotation-image-zoom-close" aria-label="关闭图片预览" onClick={() => setZoomedImage(null)}>×</button><img src={zoomedImage} alt="需求标注图片" onClick={(event) => event.stopPropagation()} /></div>}
 </>; }

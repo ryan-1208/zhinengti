@@ -11,6 +11,7 @@ import { autoStartMakeServerPlugin } from './vite-plugins/autoStartMakeServerPlu
 import { writeDevServerInfoPlugin } from './vite-plugins/writeDevServerInfoPlugin';
 import { axhubComponentEnforcer } from './vite-plugins/axhubComponentEnforcer';
 import { websocketPlugin } from './vite-plugins/websocketPlugin';
+import { adminAssetProxyPlugin } from './vite-plugins/adminAssetProxyPlugin';
 import { canvasHotUpdateFilterPlugin } from './vite-plugins/canvasHotUpdateFilter';
 import { annotationRuntimeOptimizeDepsPlugin } from './vite-plugins/annotationRuntimeOptimizeDeps';
 import { createAnnotationSourceMarkdownPlugin } from './vite-plugins/annotationSourceMarkdown';
@@ -70,6 +71,7 @@ export default defineConfig(({ command }) => {
       isServe ? autoStartMakeServerPlugin() : null,
       isServe ? websocketPlugin() : null,
       isServe ? clientPreviewPlugin() : null,
+      isServe ? adminAssetProxyPlugin() : null,
       createAnnotationSourceMarkdownPlugin(projectRoot, { mode: isServe ? 'serve' : 'build' }),
       forceInlineDynamicImportsOff(isIifeBuild),
       isIifeBuild ? axhubComponentEnforcer(jsEntries[entryKey as string]) : null,

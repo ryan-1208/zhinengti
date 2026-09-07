@@ -11,6 +11,7 @@ type RequirementNode = {
   aiPrompt?: string;
   hasMarkdown?: boolean;
   color?: string;
+  images?: string[];
 };
 
 type IndexedRequirementNode = RequirementNode & { runtimeIndex: number };
@@ -58,12 +59,14 @@ export function RequirementOverviewDrawer({
   currentPageId: string;
 }) {
   const [open, setOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
   const requirementSource = source as RequirementSource;
   const nodes = useMemo<IndexedRequirementNode[]>(() => requirementSource.data?.nodes
     ?.filter((node) => node.pageId !== '__annotation-index-gap__' && matchesPage(node, currentPageId))
     .map((node, index) => ({ ...node, runtimeIndex: node.index ?? index + 1 })) || [], [currentPageId, requirementSource.data?.nodes]);
 
   useEffect(() => setOpen(false), [currentPageId]);
+  useEffect(() => setPreviewImage(null), [currentPageId]);
   useEffect(() => {
     if (!open) return undefined;
     const closeOnEscape = (event: KeyboardEvent) => {
@@ -115,9 +118,17 @@ export function RequirementOverviewDrawer({
               <h3>{node.title || `需求标注 ${index + 1}`}</h3>
             </div>
             <RequirementContent content={(content || node.annotationText || node.aiPrompt || '暂无补充说明').trim()} />
+            {node.images?.map((image) => {
+              const imageSource = requirementSource.assetMap?.[image] || image;
+              return <button type="button" className="requirement-overview-image" key={image} onClick={() => setPreviewImage(imageSource)} aria-label={`放大查看${node.title || '需求标注'}图片`}>
+                <img src={imageSource} alt={`${node.title || '需求标注'}附件`} />
+                <span>点击放大查看</span>
+              </button>;
+            })}
           </article>;
         })}
       </div>
     </aside>
+    {previewImage && <div className="annotation-image-zoom" role="dialog" aria-modal="true" aria-label="查看需求标注图片" onClick={() => setPreviewImage(null)}><button type="button" className="annotation-image-zoom-close" aria-label="关闭图片预览" onClick={() => setPreviewImage(null)}>×</button><img src={previewImage} alt="需求标注图片" onClick={(event) => event.stopPropagation()} /></div>}
   </>;
 }

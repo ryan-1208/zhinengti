@@ -24,6 +24,7 @@ const initialRecords: RecordItem[] = [
 ]; 
 
 const combinedContent = initialRecords.map((record) => record.content).join('\n');
+const version110Content = '1.支持生成菜单条件二次修改，见对话修改示例页面\n2.新增点击查看菜单生成第一天所在周\n3.ai 生成菜单新增结果提示\n4.后台增加批次逻辑，备餐屏排产计划、语音排产同时优化';
 
 export default function TableViewPrototype() {
   return (
@@ -63,10 +64,17 @@ export default function TableViewPrototype() {
                 <td className="text-cell">{initialRecords[0].author}</td>
                 <td className="text-cell">{initialRecords[0].date}</td>
               </tr>
+              <tr>
+                <td className="row-number">2</td>
+                <td className="text-cell">v1.1.0</td>
+                <td className="text-cell content-cell">{version110Content}</td>
+                <td className="text-cell">陈希阳</td>
+                <td className="text-cell">2026-08-28</td>
+              </tr>
             </tbody>
           </table>
         </div>
-        <div className="table-footer"><span>共 1 条记录，包含 7 项修订</span><span>最后编辑于 2026-08-04 14:32</span></div>
+        <div className="table-footer"><span>共 2 条记录，包含 11 项修订</span><span>最后编辑于 2026-08-28</span></div>
       </section>
     </main>
   );
