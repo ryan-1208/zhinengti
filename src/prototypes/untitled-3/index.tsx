@@ -24,7 +24,7 @@ const initialRecords: RecordItem[] = [
 ]; 
 
 const combinedContent = initialRecords.map((record) => record.content).join('\n');
-const version110Content = '1.支持生成菜单条件二次修改，见对话修改示例页面\n2.新增点击查看菜单生成第一天所在周\n3.ai 生成菜单新增结果提示\n4.后台增加批次逻辑，备餐屏排产计划、语音排产同时优化';
+const version110Content = '1.支持生成菜单条件二次修改，见对话修改示例页面\n2.新增点击查看菜单生成第一天所在周\n3.ai 生成菜单新增结果提示\n4.排产后台增加批次逻辑，备餐屏排产计划、语音排产同时优化\n5.排产后台排产计划页面 内容布局与备餐屏保持一致，见排产计划同步页面\n6.排产后台-原料需订量-详情：需订量（重量单位）改为需订量（g）/采购清单：需订量（重量单位）改为需订量（g）\n7.采购清单下单失败提示增加失败原因\n8.语音排产提示内容增加批次信息；需要根据餐段换行';
 
 export default function TableViewPrototype() {
   return (

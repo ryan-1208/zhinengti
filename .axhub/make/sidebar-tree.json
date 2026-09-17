@@ -1,7 +1,19 @@
 {
   "version": 1,
-  "updatedAt": "2026-08-20T08:21:54.401Z",
+  "updatedAt": "2026-09-17T03:19:55.160Z",
   "prototypes": [
+    {
+      "id": "item:prototypes:canteen-digital-twin-cockpit-copy",
+      "kind": "item",
+      "title": "食堂现场数字孪生驾驶舱",
+      "itemKey": "prototypes/canteen-digital-twin-cockpit-copy"
+    },
+    {
+      "id": "item:prototypes:canteen-digital-twin-cockpit",
+      "kind": "item",
+      "title": "单独展示版",
+      "itemKey": "prototypes/canteen-digital-twin-cockpit"
+    },
     {
       "id": "folder-1787208039122-xv0wxx",
       "kind": "folder",

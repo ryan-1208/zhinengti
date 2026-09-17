@@ -1598,10 +1598,12 @@
         "annotationText": "",
         "hasMarkdown": true,
         "color": "#FF4D4F",
-        "images": [],
+        "images": [
+          "voice-scheduling-conditions.png"
+        ],
         "pageId": "assistant-schedule",
         "createdAt": 1787795409000,
-        "updatedAt": 1787796992236
+        "updatedAt": 1789113561901
       },
       {
         "id": "annotation-47",
@@ -1653,7 +1655,7 @@
         "images": [],
         "pageId": "assistant-menu-dialog-example",
         "createdAt": 1787897468624,
-        "updatedAt": 1787898641800
+        "updatedAt": 1788835909031
       },
       {
         "id": "annotation-48",
@@ -1809,7 +1811,7 @@
         "images": [],
         "pageId": "assistant-menu-dialog-example",
         "createdAt": 1788159109741,
-        "updatedAt": 1788334491225
+        "updatedAt": 1788835782874
       },
       {
         "id": "annotation-modify-rules",
@@ -2042,13 +2044,261 @@
         "pageId": "ai-menu-result-notice",
         "createdAt": 1788334840971,
         "updatedAt": 1788334840971
+      },
+      {
+        "id": "annotation-55",
+        "index": 57,
+        "locator": {
+          "selectors": [
+            "div > main > div > div > div > div > div > div:nth-of-type(23)"
+          ],
+          "fingerprint": "div",
+          "path": [
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "main",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 22
+            }
+          ]
+        },
+        "aiPrompt": "",
+        "annotationText": "",
+        "hasMarkdown": true,
+        "color": "#1677FF",
+        "images": [],
+        "pageId": "assistant-menu-dialog-example",
+        "createdAt": 1788835877871,
+        "updatedAt": 1788835877871
+      },
+      {
+        "id": "annotation-56",
+        "index": 58,
+        "locator": {
+          "selectors": [
+            "div > main > div > div > div > div > p"
+          ],
+          "fingerprint": "p",
+          "path": [
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "main",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "p",
+              "index": 0
+            }
+          ]
+        },
+        "aiPrompt": "",
+        "annotationText": "",
+        "hasMarkdown": true,
+        "color": "#1677FF",
+        "images": [],
+        "pageId": "failure",
+        "createdAt": 1788847016045,
+        "updatedAt": 1788847016045
+      },
+      {
+        "id": "annotation-57",
+        "index": 59,
+        "locator": {
+          "selectors": [
+            "div > main > div > div > div > div > section:nth-of-type(2) > div:nth-of-type(2) > section:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2) > h3"
+          ],
+          "fingerprint": "h3",
+          "path": [
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "main",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "section",
+              "index": 1
+            },
+            {
+              "tag": "div",
+              "index": 1
+            },
+            {
+              "tag": "section",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 1
+            },
+            {
+              "tag": "div",
+              "index": 1
+            },
+            {
+              "tag": "h3",
+              "index": 0
+            }
+          ]
+        },
+        "aiPrompt": "",
+        "annotationText": "",
+        "hasMarkdown": true,
+        "color": "#1677FF",
+        "images": [],
+        "pageId": "schedule",
+        "createdAt": 1789007005779,
+        "updatedAt": 1789007005779
+      },
+      {
+        "id": "annotation-58",
+        "index": 60,
+        "locator": {
+          "selectors": [
+            "div > main > div > div > div > div > section:nth-of-type(2) > div:nth-of-type(2) > section:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(2) > select"
+          ],
+          "fingerprint": "select",
+          "path": [
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "main",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "section",
+              "index": 1
+            },
+            {
+              "tag": "div",
+              "index": 1
+            },
+            {
+              "tag": "section",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 1
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 1
+            },
+            {
+              "tag": "div",
+              "index": 0
+            },
+            {
+              "tag": "div",
+              "index": 1
+            },
+            {
+              "tag": "select",
+              "index": 0
+            }
+          ]
+        },
+        "aiPrompt": "",
+        "annotationText": "",
+        "hasMarkdown": true,
+        "color": "#1677FF",
+        "images": [],
+        "pageId": "schedule",
+        "createdAt": 1789007050961,
+        "updatedAt": 1789007050961
       }
     ],
-    "updatedAt": 1788334840971
+    "updatedAt": 1789113561901
   },
   "markdownMap": {
     "annotation-5": "菜单生成规则变更\n\n变更后：\n1.筛选后一条匹配餐品都没有，菜单生成失败，提示菜单生成失败，展示失败原因，示例见“语音生成菜单-失败”\n\n2.菜单数量不足，菜单照常生成，不足数量按重复菜品补充，点击详情查看重复数量，示例见“语音生成菜单-菜单数量不足”\n\n3.菜单正常生成成功，同本页面\n\n4.新增菜单降重规则，规则如下图\n\n![菜单生成规则](/prototypes/untitled-2/assets/menu-generation-rules.png)",
-    "annotation-46": "1.排产周期是必须的，一定要询问\n\n2.如果只说了排产周期，询问一次其他条件、回复默认生成排产计划（相等于全部排产，默认全部每个餐段的餐品都是批次 1）\n\n3.如果只说了排产周期、餐段，询问一次其他条件，回复默认生成排产计划（相等于全部排产，默认该餐段的餐品都是批次 1）\n\n4.批次、餐品数量、餐品名称：当系统后台批次只有单批次的时候、餐品数量和餐品名称可以回答默认，多批次的话一定要全部输入对应的信息，缺失的话需要追问，这三个条件一定要输入餐段\n\n5.关于可以回答默认的问题 可以在回答上加一下“没有要求回复默认即可”",
+    "annotation-46": "1.排产周期是必须的，一定要询问\n\n2.如果只说了排产周期，询问一次其他条件、回复默认生成排产计划（相等于全部排产，默认全部每个餐段的餐品都是批次 1）\n\n3.如果只说了排产周期、餐段，询问一次其他条件，回复默认生成排产计划（相等于全部排产，默认该餐段的餐品都是批次 1）\n\n4.批次、餐品数量、餐品名称：\n这三个条件一定要输入餐段\n餐段、菜名、数量的话 统一都问一下是哪个批次，然后说没有要求回复默认即可，默认=批次 1\n\n5.关于可以回答默认的问题 可以在回答上加一下“没有要求回复默认即可”\n\n6.如果识别到餐品名称总数大于餐品数量：\n\n1）餐品数量≤餐品名称总数-餐品数量，提问：已记录xxxx、xxxx、xxxx，大于餐品数量，请问要保留哪些餐品？\n\n2）餐品数量＞餐品名称总数-餐品数量，提问：已记录xxxx、xxxx、xxxx，大于餐品数量，请问要去除哪些餐品？\n\n8.如果识别到餐品名称总数小于餐品数量，提问：已记录xxxx、xxxx、xxxx，还缺少 x 个菜，请补充\n",
     "annotation-6": "1.生产菜单流程同之前，但是需要新增烹饪时间限制条件(例如生成烹饪总时长一个小时内的餐品:所有烹饪时间累加≤60min\n增加限制后，生成的菜单数量多少就是多少，缺少的内容按结果提示 2 抛出\n\n2.增加修改就餐人数的接口",
     "annotation-10": "现有页面，排产后台-生产管理-原料需订量",
     "annotation-12": "同食堂下单页面",
@@ -2075,16 +2325,21 @@
     "annotation-39": "【新增】当选择的烹饪设备种类小于 2 时，输入框置灰且无法输入；大于等于 2 时，输入框个数根据已选设备种类数自适应；输入值只能为大于等于 1 的整数。",
     "annotation-44": "默认全选，当天之前无法选择，置灰",
     "annotation-45": "提交成功返回对话，提交失败，出现结果弹窗，选择重试或者取消排产。\n\n 重试：继续提交；\n取消排产：回到对话页面，对话显示智能排产已取消，是否需要重新排产？回答：是/需要/重新排产/智能排产，重新开始流程，回答不需要，结束对话，出现退出提示语",
-    "annotation-47": "新增支持修改，当意图识别识别出用户的修改需求（能和对应条件匹配）时，修改对应条件",
+    "annotation-47": "新增支持修改，当意图识别识别出用户的修改需求（能和对应条件匹配）时，修改对应条件\n如果修改需求的条件不存在，则直接新增",
     "annotation-48": "必填去除",
     "annotation-49": "非必填去除，类似提示词：不要、去掉、拿掉、删掉、移除、去除",
-    "annotation-50": "重置反悔，识别后进行询问，回答确定清空从流程第一句话提问，回答取消重复提问上一句话",
+    "annotation-50": "重置反悔，识别后进行询问，回答确定清空从流程第一句话提问，回答取消重复提问上一句话\n\n提示词：重新来、重置条件、重置筛选、重新生成、清空条件、清除所有、清空所有、重新输入条件",
     "annotation-51": "模糊修改",
     "annotation-52": "修改反悔",
     "annotation-53": "ai 生成菜单弹窗新增结果提示",
-    "annotation-54": "ai 生成菜单弹窗新增条件"
+    "annotation-54": "ai 生成菜单弹窗新增条件",
+    "annotation-55": "用户想要恢复从来改过的条件或者没有输入过的条件，回复： xxxx没有历史记录，请重新输入需求",
+    "annotation-56": "展示异常原料",
+    "annotation-57": "如果批次为空，不显示",
+    "annotation-58": "如果该餐品已经开始，批次置灰"
   },
   "assetMap": {
-    "menu-generation-rules.png": "/prototypes/untitled-2/assets/menu-generation-rules.png"
+    "menu-generation-rules.png": "/prototypes/untitled-2/assets/menu-generation-rules.png",
+    "voice-scheduling-conditions.png": "/prototypes/untitled-2/assets/voice-scheduling-conditions.png"
   }
 }

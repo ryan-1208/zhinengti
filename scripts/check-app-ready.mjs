@@ -69,7 +69,7 @@ const CONFIG = {
   pagePath,                         // 目标页面路径（从命令行参数获取）
   pollIntervalMs: 500,              // 页面轮询间隔
   stableCheckMs: 1000,              // 错误稳定判断时间
-  timeoutMs: 30_000,                // 总超时
+  timeoutMs: Number(process.env.AXHUB_CHECK_TIMEOUT_MS) || 120_000, // 总超时，可通过环境变量覆盖
   skipBuild                         // 是否跳过构建校验
 }
 
