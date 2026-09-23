@@ -1,9 +1,19 @@
 /**
- * @name 食堂现场数字孪生驾驶舱
+ * @name 客户驾驶舱需求
  */
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import './style.css';
+import { useHashPage, defineHashPageRoute, parseHashPage } from '../../common/useHashPage';
+import { isDisplayPageId, useDisplayState, writeDisplayPageId } from './components/displaySync';
+import { PageSwitcher } from './components/PageSwitcher';
+// 暂时下线：厨房总览、无人烹饪流程、核心设备与能力（页面文件保留在 pages/ 下，恢复时一并取消注释）
+// import { KitchenOverview } from './pages/KitchenOverview';
+import { OperationsDashboard } from './pages/OperationsDashboard';
+// import { CookingProcess } from './pages/CookingProcess';
+// import { EquipmentCapability } from './pages/EquipmentCapability';
+import { BehaviorMonitor } from './pages/BehaviorMonitor';
+import { DisplayControl } from './pages/DisplayControl';
 import modelImage from './assets/食堂现场3D建模示例.png';
 import videoWallImage from './assets/后厨监控视频墙.png';
 import mouseDetectionImage from './assets/食材仓储老鼠检测.png';
@@ -15,19 +25,18 @@ type Zone = { id: string; name: string; group: string; summary: string; features
 type Panel = 'overview' | 'safety' | 'kitchen' | 'complaint' | 'morning' | 'testing' | 'retention' | 'office' | 'mouse' | 'behavior';
 
 const zones: Zone[] = [
-    { id: 'morning', name: '出入口晨检区', group: 'safety', summary: '智能晨检仪', features: '智能人脸晨检；体温、健康证、手部健康监测；自动生成晨检台账', data: '设备：智能晨检仪' },
-    { id: 'acceptance', name: '食材验收区', group: 'safety', summary: '视觉收货称', features: '食材存档信息；原料问题预警；库存数据统计', data: '设备：视觉收货称' },
-    { id: 'storage', name: '食材仓储区', group: 'storage', summary: 'AI鼠患抓拍', features: 'AI鼠患抓拍', data: '设备：视觉摄像头' },
-    { id: 'testing', name: '食材检测室', group: 'safety', summary: '农残快检仪', features: '食材农药残留快检；自动生成检测台账', data: '设备：农残快检仪' },
-    { id: 'production', name: '食材加工区', group: 'production', summary: 'AI行为与鼠患监测', features: 'AI实时监测人员行为并预警；AI鼠患抓拍', data: '设备：视觉摄像头' },
-    { id: 'cooking', name: '烹饪区', group: 'production', summary: 'AI鼠患、人员检测', features: 'AI鼠患抓拍、人员检测', data: '设备：视觉摄像头' },
-    { id: 'selling', name: '售卖区', group: 'production', summary: '消毒与行为监测', features: '紫外线消毒；消毒台账；AI实时监测人员行为并预警', data: '设备：视觉摄像头' },
-    { id: 'retention', name: '留样区', group: 'safety', summary: '留样全流程管理', features: '菜品自动识别、自动称重、留样图片抓拍、销样提醒；自动生成留样台账', data: '设备：智能留样柜、智能留样称' },
-    { id: 'front', name: '前厅服务台', group: 'safety', summary: '电脑缩略图', features: '食堂数据驾驶舱；明厨亮灶公示；客诉反馈系统', data: '示意：数据驾驶舱电脑终端' },
-    { id: 'office', name: '办公区', group: 'safety', summary: '电脑缩略图', features: '运营报表自动化处理；数据自动汇总统计；报废智能管理', data: '示意：运营管理电脑终端' },
+    { id: 'morning', name: '出入口晨检区', group: 'safety', summary: '晨检设备 1 台 · 正常', features: '智能人脸晨检、体温/健康证/手部健康监测、自动生成晨检台账', data: '42 人已完成晨检 · 最高体温 36.8℃ · 通过率 100%' },
+    { id: 'acceptance', name: '食材验收区', group: 'safety', summary: '今日验收 38 批 · 正常', features: '食材称重、供应商信息核验、合格证拍照、验收台账', data: '今日验收 38 批 · 合格 37 批 · 待复核 1 批' },
+    { id: 'storage', name: '食材仓储区', group: 'storage', summary: '老鼠检测 · 1 条报警', features: '老鼠检测、活动轨迹识别、异常报警', data: '今日检测 16 次 · 发现疑似活动 1 次 · 已触发报警' },
+    { id: 'testing', name: '食材检测室', group: 'safety', summary: '今日检测 12 批 · 全部合格', features: '食材农残快检、自动生成检测台账', data: '检测项目 4 项 · 最近检测 11:08 · 合格率 100%' },
+    { id: 'production', name: '食材加工区', group: 'production', summary: '行为检测 · 2 条报警', features: '未佩戴口罩、未佩戴帽子、人员检测、抽烟检测', data: '当前 3 人作业 · 口罩佩戴 2/3 · 今日报警 2 条' },
+    { id: 'cooking', name: '烹饪区', group: 'production', summary: '烤箱、炒菜机运行中', features: '烤箱运行监测、炒菜机运行监测、菜品生产进度、设备状态', data: '烤箱烹饪中：娃娃菜 · 炒菜机烹饪中：干锅花菜' },
+    { id: 'selling', name: '售卖区', group: 'production', summary: '行为检测 · 1 条报警', features: '未佩戴口罩、未佩戴帽子、抽烟检测', data: '当前 2 人售卖 · 行为检测正常 · 今日报警 1 条' },
+    { id: 'retention', name: '留样区', group: 'safety', summary: '留样完成率 96%', features: '菜品自动识别/自动称重、留样图片实时抓拍/销样提醒、自动生成留样台账', data: '今日留样 24 份 · 待销样 2 份 · 柜内温度 4.2℃' },
+    { id: 'front', name: '前厅服务台', group: 'safety', summary: '2 个出口 · 平均等待 3 分钟', features: '食安数据驾驶舱、明厨亮灶公示、客诉反馈系统', data: '今日满意度 92% · 投诉 3 条 · 已处理 2 条' },
 ];
 
-const markerPositions: Record<string, string> = { morning: 'm1', acceptance: 'm2', storage: 'm3', testing: 'm4', production: 'm5', cooking: 'm6', selling: 'm7', retention: 'm8', front: 'm9', office: 'm10' };
+const markerPositions: Record<string, string> = { morning: 'm1', acceptance: 'm2', storage: 'm3', testing: 'm4', production: 'm5', cooking: 'm6', selling: 'm7', retention: 'm8', front: 'm9' };
 
 function Stat({ value, label }: { value: string; label: string }) { return <div className="dt-stat"><b>{value}</b><span>{label}</span></div>; }
 
@@ -80,12 +89,39 @@ function FrontCockpit({ page, setPage }: { page: 'safety' | 'kitchen' | 'complai
 }
 
 function ProductionCockpit() {
-    const progressRows = [['01', '清炒莲藕片', '鲜达供应链', '预处理完成'], ['02', '番茄炒蛋', '华安食材', '已出餐'], ['03', '土豆烧牛肉', '放心肉业', '预处理完成'], ['04', '青椒肉丝', '放心肉业', '预处理完成'], ['05', '清蒸鸡腿', '华安禽业', '预处理完成'], ['06', '紫菜蛋汤', '禾丰粮油', '待生产'], ['07', '米饭', '禾丰粮油', '待生产'], ['08', '时蔬拼盘', '鲜达供应链', '待生产']];
+    const progressRows = [
+        ['01', '清炒莲藕片', '鲜达供应链', '预处理完成'],
+        ['02', '番茄炒蛋', '华安食材', '已出餐'],
+        ['03', '土豆烧牛肉', '放心肉业', '烹饪中'],
+        ['04', '青椒肉丝', '放心肉业', '预处理完成'],
+        ['05', '清蒸鸡腿', '华安禽业', '预处理完成'],
+        ['06', '紫菜蛋汤', '禾丰粮油', '待生产'],
+        ['07', '米饭', '禾丰粮油', '待生产'],
+        ['08', '时蔬拼盘', '鲜达供应链', '待生产'],
+    ] as const;
+    const summary = {
+        total: progressRows.length,
+        served: progressRows.filter((row) => row[3] === '已出餐').length,
+        cooking: progressRows.filter((row) => row[3] === '烹饪中').length,
+        ready: progressRows.filter((row) => row[3] === '预处理完成').length,
+        pending: progressRows.filter((row) => row[3] === '待生产').length,
+    };
     return <div className="dt-production-page">
-        <div className="dt-production-brand"><div className="dt-production-logo">食</div><div><h2>AI 后厨驾驶舱</h2><p>生产进度 · 生产状态 · 出餐管理</p></div><span>● 实时连接　2026-09-15 11:26:42</span></div>
+        <div className="dt-production-brand"><div className="dt-production-logo">食</div><div><h2>无人智厨生产驾驶舱</h2><p>生产进度 · 设备协同 · 出餐管理</p></div><span>● 演示数据　11:26:42</span></div>
+        <div className="dt-production-kpis" aria-label="生产概况">
+            <div><b>{summary.total}</b><span>今日生产任务</span></div>
+            <div><b className="ok">{summary.served}</b><span>已出餐</span></div>
+            <div><b className="info-text">{summary.cooking}</b><span>烹饪中</span></div>
+            <div><b className="ready-text">{summary.ready}</b><span>预处理完成</span></div>
+            <div><b className="warn-text">{summary.pending}</b><span>待生产</span></div>
+        </div>
+        <div className="dt-production-visual-row">
+            <section className="dt-production-visual-card"><div className="dt-production-visual-head"><h3>任务完成趋势</h3><span>固定演示数据</span></div><svg viewBox="0 0 520 130" role="img" aria-label="任务完成趋势图"><line x1="14" x2="506" y1="108" y2="108" className="dt-chart-grid" /><line x1="14" x2="506" y1="70" y2="70" className="dt-chart-grid" /><line x1="14" x2="506" y1="32" y2="32" className="dt-chart-grid" /><polyline points="14,98 95,90 177,96 259,72 341,61 423,48 506,28" className="dt-chart-line" /><circle cx="14" cy="98" r="4" className="dt-chart-point" /><circle cx="95" cy="90" r="4" className="dt-chart-point" /><circle cx="177" cy="96" r="4" className="dt-chart-point" /><circle cx="259" cy="72" r="4" className="dt-chart-point" /><circle cx="341" cy="61" r="4" className="dt-chart-point" /><circle cx="423" cy="48" r="4" className="dt-chart-point" /><circle cx="506" cy="28" r="4" className="dt-chart-point" /></svg><div className="dt-production-chart-labels"><span>06:00</span><span>08:00</span><span>10:00</span><span>12:00</span></div></section>
+            <section className="dt-production-visual-card"><div className="dt-production-visual-head"><h3>无人厨房设备画面</h3><span>现场示意图</span></div><div className="dt-production-map"><img src={modelImage} alt="无人厨房设备协同示意图" /><span className="dt-production-map-tag left">机械臂 · 分装</span><span className="dt-production-map-tag right">层架 · 暂存</span></div><div className="dt-production-map-note">炒菜机、烤箱与机械臂协同展示；具体接入状态待客户系统确认。</div></section>
+        </div>
         <div className="dt-production-grid">
-            <section className="dt-production-panel dt-progress-panel"><h3>生产进度</h3><div className="dt-progress-summary"><b>今日生产总数 12</b><span className="ok">● 已完成 2</span><span className="bad">● 未完成 2</span></div><table><thead><tr><th>序号</th><th>菜品名称</th><th>供应商</th><th>生产状态</th></tr></thead><tbody>{progressRows.map(row => <tr key={row[0]}>{row.map((cell, i) => <td className={i === 3 && cell === '已出餐' ? 'ok' : ''} key={cell}>{cell}</td>)}</tr>)}</tbody></table></section>
-            <section className="dt-production-panel dt-status-panel"><h3>生产状态</h3><div className="dt-production-section"><h4>投料区</h4><div className="dt-station-row"><b>入口 1</b><span className="warn">待摆盘</span><span className="info">切块土豆</span><b>入口 2</b><span className="warn">空闲中</span></div></div><div className="dt-production-section"><h4>烹饪区</h4><div className="dt-cooking"><div className="dt-cooking-image"><img src={cookingImage} alt="烹饪区烤箱与炒菜机现场画面" /><span>烤箱　烹饪中：娃娃菜</span><span>炒菜机　烹饪中：干锅花菜</span></div></div></div><div className="dt-production-section"><h4>出餐区</h4><div className="dt-serving"><div><b>出口 1</b><p>清炒莲藕片　3盆/75份</p><p>番茄炒蛋　3盆/75份</p><p>紫菜蛋汤　2盆/50份</p></div><div><b>出口 2</b><p>清炒莲藕片　3盆/75份</p><p>土豆烧牛肉　3盆/75份</p><p>青椒肉丝　2盆/50份</p></div></div></div></section>
+            <section className="dt-production-panel dt-progress-panel"><div className="dt-production-panel-head"><h3>生产进度</h3><span>固定演示数据 · 任务口径可按客户系统接入</span></div><div className="dt-progress-summary"><b>当前班次 {summary.total} 项任务</b><span className="ok">● 已出餐 {summary.served}</span><span className="info-text">● 烹饪中 {summary.cooking}</span><span className="warn-text">● 待生产 {summary.pending}</span></div><table><thead><tr><th>序号</th><th>菜品名称</th><th>来源</th><th>生产状态</th></tr></thead><tbody>{progressRows.map(row => <tr key={row[0]}>{row.map((cell, i) => <td className={i === 3 ? ({ '已出餐': 'ok', '烹饪中': 'info-text', '预处理完成': 'ready-text', '待生产': 'warn-text' } as Record<string, string>)[cell] : ''} key={cell}>{cell}</td>)}</tr>)}</tbody></table></section>
+            <section className="dt-production-panel dt-status-panel"><div className="dt-production-panel-head"><h3>生产状态</h3><span>设备状态按接入能力展示</span></div><div className="dt-production-legend"><span><i className="legend-dot ok-dot" />已完成</span><span><i className="legend-dot info-dot" />进行中</span><span><i className="legend-dot warn-dot" />待处理</span></div><div className="dt-production-section"><h4>投料区</h4><div className="dt-station-row"><b>入口 1</b><span className="warn">待摆盘</span><span className="info">切块土豆</span><b>入口 2</b><span className="warn">空闲中</span></div></div><div className="dt-production-section"><h4>烹饪区</h4><div className="dt-cooking"><div className="dt-cooking-image"><img src={cookingImage} alt="烹饪区烤箱与炒菜机现场画面" /><span>烤箱　烹饪中：娃娃菜</span><span>炒菜机　烹饪中：干锅花菜</span></div></div></div><div className="dt-production-section"><h4>出餐区</h4><div className="dt-serving"><div><b>出口 1</b><p>清炒莲藕片　3盆/75份</p><p>番茄炒蛋　3盆/75份</p><p>紫菜蛋汤　2盆/50份</p></div><div><b>出口 2</b><p>清炒莲藕片　3盆/75份</p><p>土豆烧牛肉　3盆/75份</p><p>青椒肉丝　2盆/50份</p></div></div></div></section>
         </div>
     </div>;
 }
@@ -150,8 +186,12 @@ function buildAlarmHtml(zone: Zone) {
     return <div className="dt-alarm-page"><div className="dt-alarm-title"><div><h2>{zone.name} · {mouse ? '老鼠检测' : 'AI 行为检测'}</h2><p>{mouse ? '仓储区域生物识别与异常活动报警' : '人员行为实时识别与风险报警'}</p></div><span className="dt-live">● 实时监测</span></div><div className="dt-alarm-stats"><Stat value={mouse ? '16' : '186'} label="今日检测次数" /><Stat value={mouse ? '1' : '4'} label="今日报警" /><Stat value={mouse ? '1' : '2'} label="待处置" /><Stat value={mouse ? '99%' : '98%'} label="设备在线率" /></div><div className="dt-alarm-features">{types.map((x, i) => <span className={i === (mouse ? 0 : 3) ? 'active' : ''} key={x}>● {x}</span>)}</div><div className="dt-ledger-card"><div className="dt-ledger-head"><h3>{mouse ? '老鼠检测报警记录' : '人员行为检测报警记录'}</h3><span>更新时间：11:26:42 · 固定演示数据</span></div><table><thead><tr>{['报警编号', '检测位置', '检测类型', '发生时间', '等级', '处置状态'].map(h => <th key={h}>{h}</th>)}</tr></thead><tbody>{rows.map(row => <tr key={row[0]}>{row.map((cell, i) => <td className={i === 4 && cell === '高' ? 'bad' : i === 5 && cell.includes('待') ? 'warn' : i === 5 && cell.includes('正常') ? 'ok' : ''} key={cell}>{cell}</td>)}</tr>)}</tbody></table><div className="dt-ledger-foot">报警信息已自动归档 · 当前{mouse ? '老鼠活动' : '行为'}风险需持续关注</div></div></div>;
 }
 
-export default function CanteenDigitalTwinCockpit() {
-    const [group, setGroup] = useState('all');
+/**
+ * 原有“食堂驾驶舱”内容，保留生产与行为监控主链路，通过 #page=cockpit 进入。
+ * 生产页保留原有结构并优化演示口径；营养与食品安全不纳入本次客户驾驶舱范围。
+ */
+function LegacyCanteenCockpit() {
+    const [group, setGroup] = useState('production');
     const [selected, setSelected] = useState<string | null>(null);
     const [frontPage, setFrontPage] = useState<'safety' | 'kitchen' | 'complaint'>('safety');
     const visibleZones = useMemo(() => {
@@ -221,7 +261,7 @@ export default function CanteenDigitalTwinCockpit() {
         const button = document.querySelector<HTMLButtonElement>('[data-global-tab]');
         if (button) button.className = group === 'all' ? 'active' : '';
         const label = document.querySelector('.dt-stage-label p');
-        if (label && !selectedZone) label.textContent = `当前查看：${group === 'all' ? '全局视图' : group === 'production' ? '生产烹饪' : group === 'nutrition' ? '营养健康' : group === 'behavior' ? '行为监控' : '食品安全'} · 8 个区域实时状态`;
+        if (label && !selectedZone) label.textContent = `当前查看：${group === 'all' ? '全局视图' : group === 'production' ? '生产烹饪' : group === 'nutrition' ? '营养健康' : group === 'behavior' ? '行为监控' : '食品安全'} · 8 个区域演示状态`;
     }, [group, selectedZone]);
     useEffect(() => {
         const label = document.querySelector('.dt-stage-label p');
@@ -240,41 +280,77 @@ export default function CanteenDigitalTwinCockpit() {
             return () => { root.unmount(); app.classList.remove('production-mode'); host.remove(); };
         }
     }, [group, selected]);
+    return <main className="dt-app"><header className="dt-top"><div className="dt-brand"><div className="dt-logo">食</div><div><h1>无人智厨驾驶舱</h1><p>生产现场 · 设备协同 · 行为监控一体化展示</p></div></div><div className="dt-meta"><span>客户演示环境</span><span>午餐班次</span><span className="dt-online">● 演示数据</span><span>11:26:42</span></div></header><nav className="dt-tabs">{[['production', '生产烹饪'], ['behavior', '行为监控']].map(([id, name]) => <button className={group === id ? 'active' : ''} onClick={() => { setGroup(id); setSelected(null); }} key={id}>{name}</button>)}</nav><div className="dt-layout"><aside className="dt-panel"><h2>空间区域</h2><div className="dt-area-list"><button className={!selected ? 'selected' : ''} onClick={() => setSelected(null)}><b>全局视图</b><span>8 个区域 · 15 台设备</span></button>{visibleZones.map(z => <button className={selected === z.id ? 'selected' : ''} onClick={() => openZone(z.id)} key={z.id}><b>{z.name}</b><span>{z.summary}</span></button>)}</div></aside><section className="dt-stage"><div className="dt-stage-label"><h2>食堂现场 3D 模型</h2><p>{selectedZone ? `当前查看：${selectedZone.name} · 区域点位详情` : `当前查看：${group === 'production' ? '生产烹饪' : '行为监控'} · 8 个区域演示状态`}</p></div><img src={modelImage} alt="食堂现场3D模型" /><div className="dt-zone-legend"><b>区域点位</b>{zones.map((z, index) => <button key={z.id} onClick={() => openZone(z.id)} className={z.id === selected ? 'active' : ''}><i>{String(index + 1).padStart(2, '0')}</i>{z.name}</button>)}</div>{zones.map((z, index) => <button key={z.id} aria-label={`${String(index + 1).padStart(2, '0')}号点位：${z.name}`} className={`dt-marker ${markerPositions[z.id]} ${z.id === selected ? 'selected' : ''}`} onClick={() => openZone(z.id)}><span>{index + 1}</span><em>{z.name.replace('区', '')}</em></button>)}<div className="dt-stage-focus"><b>{selectedZone?.name || '全局视图'}</b><span>{selectedZone?.data || '点击模型点位或右上角区域编号，查看对应功能和现场数据'}</span></div></section><aside className="dt-right"><section className="dt-panel"><h2>现场概况</h2><div className="dt-stat-grid"><Stat value="15" label="接入设备" /><Stat value="14" label="正常运行" /><Stat value="2" label="关注事项" /><Stat value="1" label="异常告警" /></div></section><section className="dt-panel"><h2>设备状态</h2><div className="dt-device"><span>智能晨检仪 A01</span><b className="ok">正常 · 42人</b></div><div className="dt-device"><span>智能留样柜 D01</span><b className="ok">正常 · 4℃</b></div><div className="dt-device"><span>仓库温湿度 C01</span><b className="warn">关注 · 27.8℃</b></div><div className="dt-device"><span>油烟监测 F01</span><b className="bad">离线</b></div></section><section className="dt-panel"><h2>实时告警</h2><div className="dt-alert bad-border"><b>油烟监测 F01 离线</b><small>设备运维 · 2 小时前</small></div><div className="dt-alert"><b>仓储区温度偏高</b><small>食材仓储区 · 26 分钟前</small></div></section></aside></div>{selected && <div className="dt-modal-backdrop" onClick={() => setSelected(null)}><section className="dt-modal" onClick={e => e.stopPropagation()}><button className="dt-close" onClick={() => setSelected(null)}>×</button>{selected === 'front' ? <FrontCockpit page={frontPage} setPage={setFrontPage} /> : selected === 'morning' ? <Ledger type="morning" /> : selected === 'testing' ? <Ledger type="testing" /> : selected === 'retention' ? <Ledger type="retention" /> : selected === 'office' ? <Ledger type="office" /> : <div className="dt-generic"><h2>{selectedZone?.name}区域驾驶舱</h2><p>{selectedZone?.features}</p><strong>{selectedZone?.data}</strong></div>}</section></div>}</main>;
+}
+
+/**
+ * 客户驾驶舱需求：原型页面入口。
+ *
+ * 页面（#page=<id>）：
+ * - operations 运营驾驶舱（生产、设备、用料与能耗；默认首页）
+ * - behavior  行为监控
+ * - control   iPad 展示控制页
+ * - cockpit   原有生产驾驶舱（保留优化）
+ *
+ * 暂时下线（2026-09-23 按需求暂停展示）：overview 厨房总览、process 无人烹饪流程、equipment 核心设备与能力。
+ * 页面文件仍保留在 pages/ 下，恢复时取消下方注释及对应 import 即可。
+ */
+const CUSTOMER_COCKPIT_ROUTE = defineHashPageRoute(
+    [
+        { id: 'operations', title: '运营驾驶舱' },
+        // { id: 'overview', title: '厨房总览' },
+        // { id: 'process', title: '无人烹饪流程' },
+        // { id: 'equipment', title: '核心设备与能力' },
+        { id: 'behavior', title: '行为监控' },
+        { id: 'control', title: 'iPad 展示控制页' },
+        { id: 'cockpit', title: '生产驾驶舱（保留优化）' },
+    ],
+    { defaultPageId: 'operations' },
+);
+
+export default function CustomerCockpitRequirements() {
+    const { page, setPage } = useHashPage(CUSTOMER_COCKPIT_ROUTE);
+    const { pageId, period, monitorState } = useDisplayState();
+    /** 上一次已同步的展示页；null 表示尚未同步过。 */
+    const lastSyncedPageId = useRef<string | null>(null);
+    /** 进入时 URL 是否显式指定了页面；显式指定时以 URL 为准，不被控制端状态改写。 */
+    const urlPageSpecified = useRef(parseHashPage(window.location.hash) !== null);
+
+    // 大屏跟随 iPad 控制端切换：
+    // - 控制页与保留旧页自身不参与跟随，否则控制端点按钮后会被这条同步逻辑导航走。
+    // - 首次进入且 URL 未显式指定页面时，采纳控制端当前页，避免两端长期不一致。
     useEffect(() => {
-        const stage = document.querySelector('.dt-stage');
-        if (!stage || stage.querySelector('.dt-point-copy')) return;
-        const panel = document.createElement('div');
-        panel.className = 'dt-point-copy';
-        zones.forEach((z, index) => {
-            const card = document.createElement('article');
-            card.className = `point-${z.id} ${z.id === 'front' || z.id === 'office' ? 'computer-card' : z.data.startsWith('设备：') ? 'device-card' : ''}`;
-            const title = document.createElement('b'); title.textContent = z.name; title.dataset.index = String(index + 1).padStart(2, '0');
-            const features = document.createElement('span');
-            z.features.split('；').forEach(item => {
-                const line = document.createElement('em');
-                line.textContent = `• ${item}`;
-                features.append(line);
-            });
-            const data = document.createElement('small'); data.textContent = z.data.replace(/^(设备|示意)：\s*/, '');
-            const icon = document.createElement('i'); icon.textContent = z.id === 'front' || z.id === 'office' ? '▣' : '◈';
-            card.append(title, features, data);
-            if (z.data.startsWith('设备：') || z.id === 'front' || z.id === 'office') card.append(icon);
-            panel.append(card);
-        });
-        stage.append(panel);
-        const arrowTargets: Record<string, { left: string; top: string }> = {
-            m1: { left: '23%', top: '59%' },
-            m2: { left: '15%', top: '63%' },
-            m3: { left: '20%', top: '38%' },
-            m4: { left: '34%', top: '25%' },
-        };
-        Object.entries(arrowTargets).forEach(([marker, position]) => {
-            const target = stage.querySelector<HTMLElement>(`.dt-marker.${marker}`);
-            if (target) {
-                target.style.setProperty('left', position.left, 'important');
-                target.style.setProperty('top', position.top, 'important');
-            }
-        });
-    }, []);
-    return <main className="dt-app"><header className="dt-top"><div className="dt-brand"><div className="dt-logo">食</div><div><h1>食堂驾驶舱</h1><p>现场空间 · 设备状态 · 风险定位一体化监管</p></div></div><div className="dt-meta"><span>江南校区 · 第一食堂</span><span>午餐班次</span><span className="dt-online">● 实时连接</span><span>2026-09-15 11:26:42</span></div></header><nav className="dt-tabs">{[['production', '生产烹饪'], ['nutrition', '营养健康'], ['behavior', '行为监控'], ['safety', '食品安全']].map(([id, name]) => <button className={group === id ? 'active' : ''} onClick={() => { setGroup(id); setSelected(null); }} key={id}>{name}</button>)}</nav><div className="dt-layout"><aside className="dt-panel"><h2>空间区域</h2><div className="dt-area-list"><button className={!selected ? 'selected' : ''} onClick={() => setSelected(null)}><b>全局视图</b><span>8 个区域 · 15 台设备</span></button>{visibleZones.map(z => <button className={selected === z.id ? 'selected' : ''} onClick={() => openZone(z.id)} key={z.id}><b>{z.name}</b><span>{z.summary}</span></button>)}</div></aside><section className="dt-stage"><div className="dt-stage-label"><h2></h2><p>{selectedZone ? `当前查看：${selectedZone.name} · 区域点位详情` : `当前查看：${group === 'production' ? '生产烹饪' : group === 'nutrition' ? '营养健康' : group === 'behavior' ? '行为监控' : '食品安全'} · 8 个区域实时状态`}</p></div><img src={modelImage} alt="食堂现场3D模型" /><div className="dt-zone-legend"><b>区域点位</b>{zones.map((z, index) => <button key={z.id} onClick={() => openZone(z.id)} className={z.id === selected ? 'active' : ''}><i>{String(index + 1).padStart(2, '0')}</i>{z.name}</button>)}</div>{zones.map((z, index) => <button key={z.id} aria-label={`${String(index + 1).padStart(2, '0')}号点位：${z.name}`} className={`dt-marker ${markerPositions[z.id]} ${z.id === selected ? 'selected' : ''}`} onClick={() => openZone(z.id)}><span>{index + 1}</span><em>{z.name.replace('区', '')}</em></button>)}<div className="dt-stage-focus"><b>{selectedZone?.name || '全局视图'}</b><span>{selectedZone?.data || '点击模型点位或右上角区域编号，查看对应功能和现场数据'}</span></div></section><aside className="dt-right"><section className="dt-panel"><h2>现场概况</h2><div className="dt-stat-grid"><Stat value="15" label="接入设备" /><Stat value="14" label="正常运行" /><Stat value="2" label="关注事项" /><Stat value="1" label="异常告警" /></div></section><section className="dt-panel"><h2>设备状态</h2><div className="dt-device"><span>智能晨检仪 A01</span><b className="ok">正常 · 42人</b></div><div className="dt-device"><span>智能留样柜 D01</span><b className="ok">正常 · 4℃</b></div><div className="dt-device"><span>仓库温湿度 C01</span><b className="warn">关注 · 27.8℃</b></div><div className="dt-device"><span>油烟监测 F01</span><b className="bad">离线</b></div></section><section className="dt-panel"><h2>实时告警</h2><div className="dt-alert bad-border"><b>油烟监测 F01 离线</b><small>设备运维 · 2 小时前</small></div><div className="dt-alert"><b>仓储区温度偏高</b><small>食材仓储区 · 26 分钟前</small></div></section></aside></div>{selected && <div className="dt-modal-backdrop" onClick={() => setSelected(null)}><section className="dt-modal" onClick={e => e.stopPropagation()}><button className="dt-close" onClick={() => setSelected(null)}>×</button>{selected === 'front' ? <FrontCockpit page={frontPage} setPage={setFrontPage} /> : selected === 'morning' ? <Ledger type="morning" /> : selected === 'testing' ? <Ledger type="testing" /> : selected === 'retention' ? <Ledger type="retention" /> : selected === 'office' ? <Ledger type="office" /> : <div className="dt-generic"><h2>{selectedZone?.name}区域驾驶舱</h2><p>{selectedZone?.features}</p><strong>{selectedZone?.data}</strong></div>}</section></div>}</main>;
+        if (page === 'control' || page === 'cockpit') {
+            lastSyncedPageId.current = pageId;
+            return;
+        }
+        if (lastSyncedPageId.current === pageId) return;
+        const isFirstSync = lastSyncedPageId.current === null;
+        lastSyncedPageId.current = pageId;
+        if (isFirstSync && urlPageSpecified.current) return;
+        if (isDisplayPageId(pageId)) setPage(pageId);
+    }, [page, pageId, setPage]);
+
+    // 大屏侧切换时回写当前页，保证 iPad 控制端高亮与实际展示结果一致。
+    const navigate = useCallback((id: string) => {
+        setPage(id);
+        if (isDisplayPageId(id)) writeDisplayPageId(id);
+    }, [setPage]);
+
+    const switcher = <PageSwitcher current={page} onSelect={navigate} />;
+
+    if (page === 'cockpit') {
+        return <><LegacyCanteenCockpit />{switcher}</>;
+    }
+    if (page === 'control') {
+        return <><DisplayControl onNavigate={navigate} />{switcher}</>;
+    }
+    if (page === 'behavior') {
+        return <><BehaviorMonitor period={period} monitorState={monitorState} onNavigate={navigate} />{switcher}</>;
+    }
+    // 暂时下线的页面（厨房总览 / 无人烹饪流程 / 核心设备与能力）不再有独立分支：
+    // 旧链接（如 #page=overview）与未知页面统一回落到默认首页「运营驾驶舱」。
+    // if (page === 'process') { return <><CookingProcess onNavigate={navigate} />{switcher}</>; }
+    // if (page === 'equipment') { return <><EquipmentCapability onNavigate={navigate} />{switcher}</>; }
+    return <><OperationsDashboard onNavigate={navigate} />{switcher}</>;
 }

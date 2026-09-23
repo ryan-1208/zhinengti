@@ -1,0 +1,1012 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+.uk-viewport {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: #04122e;
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
+.uk-screen {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 1920px;
+  height: 1080px;
+  flex: none;
+  padding: 28px 32px;
+  transform-origin: center center;
+  overflow: hidden;
+  color: #dcecff;
+  background: radial-gradient(circle at 50% 42%, #103d78 0, #061b46 62%);
+}
+
+.uk-top {
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #1875bd;
+  background: linear-gradient(90deg, transparent, #0d3b7a55 45%, transparent);
+}
+
+.uk-brand {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.uk-logo {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #ffffff;
+  color: #173e79;
+  font-size: 26px;
+  font-weight: 800;
+}
+
+.uk-brand h1 {
+  margin: 0;
+  color: #10e4f2;
+  font-size: 34px;
+  letter-spacing: 3px;
+}
+
+.uk-meta {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  font-size: 16px;
+  color: #a9c4e2;
+}
+
+.uk-mode {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 18px;
+  border: 1px solid #2de3a0;
+  border-radius: 20px;
+  color: #3bebb0;
+  background: #0a3f5c66;
+  font-weight: 600;
+}
+
+.uk-mode i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #3bebb0;
+  box-shadow: 0 0 10px #3bebb0;
+  animation: uk-pulse 1.8s ease-in-out infinite;
+}
+
+/* 演示标识：中性琥珀色、不闪烁。闪烁圆点会被读成「运行中」这类无依据状态（PRD:129）。 */
+.uk-mode.is-demo {
+  border-color: #e0a629;
+  color: #f0c164;
+  background: #4a360f66;
+}
+
+.uk-mode.is-demo i {
+  background: #e0a629;
+  box-shadow: 0 0 10px #e0a629;
+  animation: none;
+}
+
+@keyframes uk-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.45; transform: scale(0.78); }
+}
+
+.uk-online b {
+  color: #3bebb0;
+  font-size: 19px;
+}
+
+.uk-clock {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 1px;
+}
+
+.uk-body {
+  display: grid;
+  grid-template-columns: 420px minmax(0, 1fr) 420px;
+  gap: 20px;
+  height: 794px;
+  margin-top: 20px;
+}
+
+.uk-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.uk-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #1674bd;
+  background: linear-gradient(180deg, #0a2c60cc, #061f4acc);
+  box-shadow: inset 0 0 30px #0c438322;
+  padding: 16px 20px 18px;
+  min-height: 0;
+}
+
+.uk-panel h2 {
+  position: relative;
+  margin: 0 0 14px;
+  padding-left: 16px;
+  color: #10e4f2;
+  font-size: 20px;
+  letter-spacing: 2px;
+}
+
+.uk-panel h2::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 4px;
+  bottom: 4px;
+  width: 4px;
+  background: #0be4f0;
+  box-shadow: 0 0 10px #0be4f0;
+}
+
+/* 「流程演示」标注：PRD:189 要求说明性动画必须标注为流程演示 */
+.uk-tag-demo {
+  margin-left: 12px;
+  padding: 3px 9px;
+  border: 1px solid #e0a629;
+  border-radius: 4px;
+  color: #f0c164;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  vertical-align: middle;
+}
+
+/* 左栏 */
+.uk-served {
+  flex: 0 0 330px;
+}
+
+.uk-bignum {
+  font-size: 118px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -3px;
+  color: #ffffff;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 36px #10e4f266;
+}
+
+.uk-bignum em {
+  margin-left: 12px;
+  color: #7da8d1;
+  font-size: 28px;
+  font-style: normal;
+  font-weight: 500;
+}
+
+.uk-delta {
+  margin: 10px 0 0;
+  color: #8fb4d8;
+  font-size: 15px;
+}
+
+.uk-delta b {
+  color: #3bebb0;
+}
+
+/* 「待接入」用中性色，避免与已确认的增量数据混同（PRD:32） */
+.uk-delta b.is-pending {
+  color: #8fb4d8;
+  font-weight: 500;
+}
+
+.uk-spark {
+  display: flex;
+  align-items: flex-end;
+  gap: 7px;
+  height: 46px;
+  margin-top: 16px;
+}
+
+.uk-spark i {
+  flex: 1;
+  border-radius: 2px;
+  background: linear-gradient(180deg, #10e4f2, #0a6ea8);
+  opacity: 0.85;
+}
+
+/* X 轴日期刻度：列数与 gap 必须与 .uk-spark 完全一致，标签才会对准柱子。
+   近 7 天 = 7 列，每列约 48px，`09-17` 这一档日期（约 30px）放得下，因此 7 天全标。 */
+.uk-spark-axis {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 7px;
+  margin-top: 5px;
+  color: #6f9ac2;
+  font-size: 12px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.uk-spark-axis span {
+  grid-row: 1;
+  text-align: center;
+}
+
+.uk-note {
+  margin: 12px 0 0;
+  color: #6f9ac2;
+  font-size: 14px;
+}
+
+.uk-dishes {
+  flex: 1;
+}
+
+.uk-dish-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* 三列：菜品名 + 投料称重 + 状态词。
+   注意：原先的第三列是「进度条 + N/M 盆」，属虚构的任务百分比与当前批次，
+   已按 PRD:189 移除；现在这列是称重加料区实测投料量，与那个不是一回事。 */
+.uk-dish {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 84px 72px;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-height: 0;
+  padding: 0 10px;
+  background: #0b2b5c88;
+}
+
+.uk-dish-name {
+  font-size: 15px;
+  color: #d9e9fb;
+}
+
+.uk-dish b {
+  text-align: right;
+  color: #8fb4d8;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.uk-dish b.is-done {
+  color: #3bebb0;
+}
+
+/* 投料称重列：数字右对齐 + 等宽数字，竖着扫视才能比较大小。
+   口径 = 称重加料区实测投料量。出餐端未接入称重，故不展示成品重量与出成率（PRD:199/217）。 */
+.uk-dish b.uk-dish-feed {
+  color: #ffffff;
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+}
+
+.uk-dish .uk-dish-feed i {
+  margin-left: 3px;
+  color: #6f95bd;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+}
+
+/* 未称重显示「—」用中性色：缺失不等于零（PRD:122） */
+.uk-dish b.uk-dish-feed.is-empty {
+  color: #6f95bd;
+}
+
+/* 面板底部合计：给这一列数字一个整体参照，避免成为 10 个互不相干的孤立数字 */
+.uk-dish-total {
+  flex: none;
+  margin: 10px 0 0;
+  color: #8fb4d8;
+  font-size: 13px;
+  text-align: right;
+  letter-spacing: 0.5px;
+}
+
+.uk-dish-total b {
+  margin: 0 3px;
+  color: #10e4f2;
+  font-size: 16px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 中栏 */
+.uk-line {
+  flex: 0 0 330px;
+}
+
+.uk-line-stage {
+  flex: 1;
+  min-height: 0;
+}
+
+.uk-line-stage svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.uk-rail {
+  stroke: #17497e;
+  stroke-width: 3;
+}
+
+/* 轨道流光：速度与在途料箱一致（约 28.7px/s，见 .uk-box-move）。
+   虚线段周期 44px（12 实 + 32 虚），1.5s 走完一个周期 ≈ 29px/s。 */
+.uk-rail-glow {
+  stroke: #10e4f2;
+  stroke-width: 2;
+  stroke-dasharray: 12 32;
+  opacity: 0.75;
+  animation: uk-dash 1.5s linear infinite;
+}
+
+@keyframes uk-dash {
+  to { stroke-dashoffset: -44; }
+}
+
+.uk-zone > rect:first-of-type {
+  fill: #0a2f6388;
+  stroke: #1b6ba8;
+  stroke-width: 1;
+}
+
+.uk-zone > text {
+  fill: #6fb6e6;
+  font-size: 15px;
+  letter-spacing: 2px;
+}
+
+.uk-box {
+  fill: #12457f;
+  stroke: #2a7fbd;
+  stroke-width: 1;
+}
+
+.uk-box.is-ready {
+  fill: #10e4f2;
+  stroke: #7ff5ff;
+}
+
+/* 称重加料区与摆盆区的料位：与 .uk-box 同色系，语义独立便于后续单独调色 */
+.uk-weigh,
+.uk-tray {
+  fill: #12457f;
+  stroke: #2a7fbd;
+  stroke-width: 1;
+}
+
+.uk-weigh.is-ready,
+.uk-tray.is-ready {
+  fill: #10e4f2;
+  stroke: #7ff5ff;
+}
+
+/* 炒菜机呼吸灯：4.2s 一轮（原 3.2s），台间错开 1.4s。
+   错峰延迟改由 index.tsx 内联给出——原来的 .uk-cooker:nth-of-type(2n) 永不命中，
+   因为每台炒菜机都是各自 <g> 里唯一的 rect，nth-of-type 恒为 1。 */
+.uk-cooker {
+  fill: #0d3669;
+  stroke: #2a7fbd;
+  stroke-width: 1;
+  animation: uk-breathe 4.2s ease-in-out infinite;
+}
+
+@keyframes uk-breathe {
+  0%, 100% { fill: #0d3669; }
+  50% { fill: #17558f; }
+}
+
+.uk-cooker-label,
+.uk-oven-label,
+.uk-port-label {
+  fill: #bfe4ff;
+  font-size: 13px;
+  letter-spacing: 1px;
+}
+
+.uk-oven {
+  fill: #123a6e;
+  stroke: #3d8fc4;
+  stroke-width: 1;
+}
+
+.uk-port {
+  fill: #12457f;
+  stroke: #2de3a0;
+  stroke-width: 1.5;
+}
+
+.uk-arm rect {
+  fill: #10e4f2;
+}
+
+.uk-arm circle {
+  fill: #7ff5ff;
+}
+
+.uk-arm {
+  animation: uk-arm 4.2s ease-in-out infinite;
+}
+
+@keyframes uk-arm {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+/* 在途料箱：投料区 x=90 → 出餐区 x=950，全程 860px，30s 走完 ≈ 28.7px/s。
+   节拍「15 秒 / 趟」= 每 15 秒投入一个料箱，故线上同时 2 个在途、相位相差 180°。
+   原实现 6.4s 走完 716px（≈112px/s），比节拍快约 5 倍，与面板上的节拍数不符。 */
+.uk-box-move {
+  fill: #10e4f2;
+  opacity: 0.9;
+  animation: uk-move 30s linear infinite;
+}
+
+@keyframes uk-move {
+  0% { transform: translateX(90px); opacity: 0; }
+  6% { opacity: 0.95; }
+  92% { opacity: 0.95; }
+  100% { transform: translateX(950px); opacity: 0; }
+}
+
+.uk-outflow {
+  flex: 1;
+}
+
+.uk-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.uk-flow-row {
+  display: grid;
+  grid-template-columns: 62px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-height: 0;
+  padding: 0 8px;
+  background: #0b2b5c88;
+  transition: opacity 0.4s ease;
+}
+
+.uk-flow-port {
+  padding: 3px 0;
+  border: 1px solid;
+  border-radius: 3px;
+  font-size: 13px;
+  text-align: center;
+}
+
+.uk-flow-dish {
+  color: #dcecff;
+  font-size: 14px;
+}
+
+.uk-flow-row b {
+  color: #8fb4d8;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* 右栏 */
+.uk-device {
+  flex: 0 0 160px;
+}
+
+.uk-device-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.uk-device-grid > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 12px 6px;
+  background: #0b2b5c88;
+  border: 1px solid #17518a;
+}
+
+.uk-device-grid b {
+  color: #10e4f2;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.uk-device-grid span {
+  color: #7da8d1;
+  font-size: 13px;
+}
+
+.uk-cooking {
+  flex: 0 0 330px;
+}
+
+.uk-cook-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* 移除了原进度条与轮播，故用纵向居中填满行高 */
+.uk-cook {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+  min-height: 0;
+  padding: 9px 13px;
+  background: #0b2b5c88;
+  border-left: 3px solid #17518a;
+}
+
+.uk-cook-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 7px;
+}
+
+.uk-cook-head b {
+  color: #dcecff;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.uk-cook-head span {
+  font-size: 15px;
+}
+
+.uk-cook-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 6px;
+  color: #6f9ac2;
+  font-size: 13px;
+}
+
+.uk-cook-foot b {
+  color: #8fb4d8;
+}
+
+.uk-realtime {
+  flex: 1;
+}
+
+.uk-camera {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid #1b72b2;
+  background: #061a38;
+}
+
+.uk-camera img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: saturate(0.85) contrast(1.06) brightness(0.92);
+}
+
+/* 已移除原扫描线动效：扫描线暗示视频直播，而 PRD:131 明确不默认增加直播或录像回放。 */
+
+.uk-camera-tag {
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 12px;
+  background: #061a38cc;
+  border-left: 3px solid #ff4d6d;
+  color: #e8fbff;
+  font-size: 13px;
+  letter-spacing: 1px;
+}
+
+.uk-camera-tag i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ff4d6d;
+  animation: uk-pulse 1.4s ease-in-out infinite;
+}
+
+/* 演示素材标识：去掉红色 LIVE 观感与闪烁（PRD:129、PRD:131） */
+.uk-camera-tag.is-demo {
+  border-left-color: #e0a629;
+}
+
+.uk-camera-tag.is-demo i {
+  background: #e0a629;
+  animation: none;
+}
+
+/* 底部 */
+.uk-bottom {
+  display: grid;
+  grid-template-columns: 760px minmax(0, 1fr);
+  gap: 20px;
+  height: 90px;
+  margin-top: 20px;
+}
+
+.uk-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.uk-metric {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 18px;
+  border: 1px solid #1674bd;
+  background: linear-gradient(180deg, #0a2c60cc, #061f4acc);
+}
+
+.uk-metric span {
+  color: #7da8d1;
+  font-size: 13px;
+}
+
+.uk-metric b {
+  color: #10e4f2;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.uk-ticker {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  border: 1px solid #1674bd;
+  background: linear-gradient(180deg, #0a2c60cc, #061f4acc);
+}
+
+.uk-ticker-track {
+  display: flex;
+  gap: 40px;
+  padding-left: 20px;
+  white-space: nowrap;
+  animation: uk-ticker 42s linear infinite;
+}
+
+@keyframes uk-ticker {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.uk-ticker-track span {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: #b9d6f0;
+  font-size: 16px;
+}
+
+.uk-ticker-track i {
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+}
+
+/* ── 视图切换：驾驶舱 / 行为监控 ───────────────────────── */
+
+/* hidden 必须显式声明：.uk-body/.uk-bottom 自身的 display 会盖掉 UA 的 [hidden] 规则 */
+.uk-body[hidden],
+.uk-bottom[hidden] {
+  display: none;
+}
+
+.uk-switch {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px;
+  border: 1px solid #17518a;
+  border-radius: 26px;
+  background: #0a2a5599;
+}
+
+.uk-switch button {
+  padding: 9px 26px;
+  border: 0;
+  border-radius: 22px;
+  background: transparent;
+  color: #7da8d1;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: background .18s ease, color .18s ease;
+}
+
+.uk-switch button:hover {
+  color: #cfe6fb;
+}
+
+.uk-switch button.active {
+  background: linear-gradient(180deg, #1c86d8, #1065b4);
+  color: #fff;
+  box-shadow: 0 4px 14px #0d4f8d99;
+}
+
+/* ── 行为监控视图 ──────────────────────────────────────────── */
+/* 高度 = 794(主体) + 20(间距) + 90(底栏) = 904，与驾驶舱主体区等高 */
+
+.uk-monitor {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  height: 904px;
+  margin-top: 20px;
+}
+
+.uk-mon-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex: 0 0 72px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #1875bd;
+}
+
+.uk-mon-head h2 {
+  margin: 0;
+  color: #10e4f2;
+  font-size: 26px;
+  letter-spacing: 2px;
+}
+
+.uk-mon-head p {
+  margin: 8px 0 0;
+  color: #7da8d1;
+  font-size: 15px;
+}
+
+.uk-mon-tags {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.uk-mon-tag {
+  padding: 7px 14px;
+  border: 1px solid #17518a;
+  border-radius: 4px;
+  background: #0b2b5c88;
+  color: #9dc0e2;
+  font-size: 14px;
+}
+
+/* 演示标识用中性琥珀色，与驾驶舱顶部的演示徽标一致 */
+.uk-mon-tag.is-demo {
+  border-color: #b98a2e;
+  background: #4a341266;
+  color: #e8c26a;
+}
+
+.uk-mon-stats {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+  flex: 0 0 108px;
+}
+
+.uk-mon-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1px solid #17518a;
+  background: #0b2b5c88;
+}
+
+.uk-mon-stat.is-total {
+  border-color: #1e9fd8;
+  background: #0d3a6e88;
+}
+
+.uk-mon-stat b {
+  color: #10e4f2;
+  font-size: 38px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.uk-mon-stat.is-total b {
+  color: #7ff5ff;
+}
+
+.uk-mon-stat span {
+  color: #b9d6f0;
+  font-size: 15px;
+}
+
+.uk-mon-stat em {
+  color: #6f9ac2;
+  font-size: 12px;
+  font-style: normal;
+}
+
+.uk-mon-grid {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.uk-mon-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid #17518a;
+  background: #0b2b5c88;
+}
+
+.uk-mon-card-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 13px;
+  border-bottom: 1px solid #17518a;
+}
+
+.uk-mon-card-head b {
+  color: #ffd166;
+  font-size: 16px;
+}
+
+.uk-mon-card-head span {
+  color: #7da8d1;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.uk-mon-shot {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  background: #061c3d;
+}
+
+.uk-mon-shot img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.uk-mon-shot-missing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 100%;
+  padding: 0 20px;
+  text-align: center;
+}
+
+.uk-mon-shot-missing b {
+  color: #9dc0e2;
+  font-size: 15px;
+}
+
+.uk-mon-shot-missing span {
+  color: #6f9ac2;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.uk-mon-shot small {
+  position: absolute;
+  left: 8px;
+  bottom: 8px;
+  padding: 3px 8px;
+  border-radius: 3px;
+  background: #04122eb8;
+  color: #b9d6f0;
+  font-size: 12px;
+}
+
+.uk-mon-shot i {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  padding: 3px 8px;
+  border-radius: 3px;
+  background: #ffd166d9;
+  color: #3a2b00;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+}
+
+.uk-mon-card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 13px;
+  border-top: 1px solid #17518a;
+  color: #7da8d1;
+  font-size: 13px;
+}
+
+.uk-mon-card-meta span:first-child {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.uk-mon-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex: 0 0 40px;
+  padding: 0 14px;
+  border: 1px solid #17518a;
+  background: #0b2b5c88;
+  color: #7da8d1;
+  font-size: 13px;
+}

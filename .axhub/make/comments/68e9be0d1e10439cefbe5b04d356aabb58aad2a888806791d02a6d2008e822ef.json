@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 3,
+  "kind": "prototype-edit-comments",
+  "resource": {
+    "id": "canteen-digital-twin-cockpit-copy",
+    "targetPath": "prototypes/canteen-digital-twin-cockpit-copy",
+    "filePath": ".axhub/make/comments/68e9be0d1e10439cefbe5b04d356aabb58aad2a888806791d02a6d2008e822ef.json"
+  },
+  "comments": [],
+  "images": [
+    {
+      "id": "6ae741fe-9fb7-47d6-ab0e-c8a6f9d11b2e:target-screenshot",
+      "commentId": "6ae741fe-9fb7-47d6-ab0e-c8a6f9d11b2e",
+      "name": "target-screenshot.png",
+      "mimeType": "image/png",
+      "size": 28166,
+      "createdAt": 1789697516708,
+      "source": "target-screenshot",
+      "pageScope": "/prototypes/canteen-digital-twin-cockpit-copy",
+      "assetPath": ".axhub/make/comment-assets/68e9be0d1e10439cefbe5b04d356aabb58aad2a888806791d02a6d2008e822ef/6ae741fe-9fb7-47d6-ab0e-c8a6f9d11b2e-target-screenshot.png"
+    }
+  ]
+}

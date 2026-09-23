@@ -69,6 +69,26 @@ export function adminAssetProxyPlugin(): Plugin {
         return null;
       }
 
+      async function fetchAdminAsset(targetPath: string, accept: string): Promise<Response | null> {
+        for (let attempt = 0; attempt < 2; attempt += 1) {
+          const adminOrigin = await resolveAdminOrigin();
+          if (!adminOrigin) return null;
+
+          try {
+            const response = await fetch(new URL(targetPath, adminOrigin).toString(), {
+              method: 'GET',
+              headers: { accept },
+            });
+            if (response.ok || attempt === 1) return response;
+          } catch {
+            // Refresh the cached origin once when the local admin server reconnects.
+          }
+          cachedOrigin = null;
+          cachedAt = 0;
+        }
+        return null;
+      }
+
       server.middlewares.use(async (req: IncomingMessage, res: ServerResponse, next: () => void) => {
         try {
           if (req.method && req.method !== 'GET') {
@@ -82,21 +102,12 @@ export function adminAssetProxyPlugin(): Plugin {
             return;
           }
 
-          const adminOrigin = await resolveAdminOrigin();
-          if (!adminOrigin) {
-            next();
-            return;
-          }
+          const response = await fetchAdminAsset(
+            url.pathname + url.search,
+            getHeaderValue(req.headers.accept) || '*/*',
+          );
 
-          const target = new URL(url.pathname + url.search, adminOrigin);
-          const response = await fetch(target.toString(), {
-            method: 'GET',
-            headers: {
-              accept: getHeaderValue(req.headers.accept) || '*/*',
-            },
-          });
-
-          if (!response.ok) {
+          if (!response || !response.ok) {
             next();
             return;
           }
@@ -104,7 +115,7 @@ export function adminAssetProxyPlugin(): Plugin {
           if (!loggedOnce) {
             loggedOnce = true;
             server.config?.logger?.info?.(
-              `[admin-asset-proxy] Proxying ${PROXY_PATH_PREFIXES.join(', ')} → ${adminOrigin}`,
+              `[admin-asset-proxy] Direct proxy for ${PROXY_PATH_PREFIXES.join(', ')}`,
             );
           }
 

@@ -1,0 +1,681 @@
+<!doctype html>
+<html lang="zh-CN" data-page-node-id="wyYyjIT0rUGlTjYt1umDU4">
+<head data-page-node-id="8hhuKT5Av3qkXY9RDUIZY1">
+  <meta charset="utf-8" data-page-node-id="qWx3EyrQtcvlPWt5u21Dj4">
+  <meta name="viewport" content="width=device-width, initial-scale=1" data-page-node-id="URzHBjrlwFpT3gbM7ZeWid">
+  <title>客户驾驶舱需求 · 原型主规格</title>
+  <style>
+    :root {
+      font-family:
+        ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+      --brand: #008f5d;
+      --brand-ink: #007a50;
+      --brand-soft: #e6f5ef;
+      --brand-surface: #f2faf7;
+      --brand-border: #b7ddcf;
+      --text: #222832;
+      --text-secondary: #4b5565;
+      --text-muted: #6f7888;
+      --text-placeholder: #8b94a3;
+      color: var(--text);
+      background: #f5f7fb;
+      scrollbar-gutter: stable;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 32px 20px 64px;
+    }
+
+    .shell {
+      display: grid;
+      grid-template-columns: 220px minmax(0, 1fr);
+      gap: 24px;
+      width: min(1200px, 100%);
+      margin: 0 auto;
+      align-items: start;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 32px;
+      padding: 18px 14px;
+      border: 1px solid #dfe4ee;
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .sidebar-title {
+      margin: 0 8px 10px;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .page-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .page-nav button {
+      width: 100%;
+      padding: 8px 10px;
+      border: 0;
+      border-radius: 8px;
+      color: var(--text-secondary);
+      background: transparent;
+      font: inherit;
+      font-size: 13px;
+      line-height: 1.45;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .page-nav button:hover,
+    .page-nav button[aria-current="page"] {
+      color: var(--brand-ink);
+      background: var(--brand-soft);
+    }
+
+    .page-nav button[aria-current="page"] { font-weight: 600; }
+
+    main {
+      min-width: 0;
+      padding: 40px;
+      border: 1px solid #dfe4ee;
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 0 4px 16px rgb(30 45 75 / 6%);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 32px;
+      line-height: 1.3;
+    }
+
+    h2 {
+      margin: 44px 0 20px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e7eaf0;
+      font-size: 21px;
+      line-height: 1.55;
+    }
+
+    h3 {
+      margin: 28px 0 12px;
+      font-size: 17px;
+      line-height: 1.5;
+    }
+
+    p,
+    li {
+      font-size: 15px;
+      line-height: 2;
+    }
+
+    p { margin: 20px 0; }
+
+    td,
+    th {
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    .definition {
+      margin: 16px 0 0;
+      padding: 14px 16px;
+      border-left: 3px solid var(--brand);
+      color: var(--text-secondary);
+      background: var(--brand-surface);
+    }
+
+    .hint { color: var(--text-muted); }
+
+    ul {
+      margin: 10px 0 20px;
+      padding-left: 22px;
+    }
+
+    .placeholder-list { padding-left: 0; }
+
+    .placeholder-list li {
+      list-style: none;
+      color: var(--text-placeholder);
+    }
+
+    .placeholder-list li::before {
+      margin-right: 8px;
+      color: #b2bac6;
+      content: "—";
+    }
+
+    table {
+      width: 100%;
+      margin-top: 14px;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      min-width: 120px;
+      padding: 10px 12px;
+      border: 1px solid #dfe4ee;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th { background: #f6f8fb; }
+
+    td:empty::after {
+      content: "待补充";
+      color: var(--text-placeholder);
+    }
+
+    code {
+      padding: 2px 5px;
+      border-radius: 5px;
+      background: #eef1f6;
+    }
+
+    .mermaid {
+      display: flex;
+      justify-content: center;
+      margin: 12px 0 0;
+      padding: 16px;
+      overflow-x: auto;
+      border: 1px solid var(--brand-border);
+      border-radius: 8px;
+      background: var(--brand-surface);
+    }
+
+    .mermaid svg {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .spec-page[hidden] { display: none; }
+
+    @media (max-width: 720px) {
+      body { padding: 0 8px 40px; }
+      .shell { display: block; }
+
+      .sidebar {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        margin: 0 -8px 12px;
+        padding: 10px 8px;
+        border-width: 0 0 1px;
+        border-radius: 0;
+      }
+
+      .sidebar-title {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+      }
+
+      .page-nav {
+        flex-direction: row;
+        gap: 6px;
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+
+      .page-nav::-webkit-scrollbar { display: none; }
+
+      .page-nav button {
+        width: auto;
+        flex: 0 0 auto;
+        white-space: nowrap;
+      }
+
+      main {
+        padding: 24px 18px;
+        border-radius: 8px;
+      }
+
+      .table-wrap { overflow: visible; }
+
+      table,
+      tbody,
+      tr,
+      td {
+        display: block;
+        width: 100%;
+      }
+
+      thead { display: none; }
+
+      tbody {
+        display: grid;
+        gap: 12px;
+      }
+
+      tr {
+        overflow: hidden;
+        border: 1px solid #dfe4ee;
+        border-radius: 6px;
+        background: #fff;
+      }
+
+      td {
+        display: grid;
+        grid-template-columns: minmax(96px, 36%) minmax(0, 1fr);
+        gap: 12px;
+        min-width: 0;
+        padding: 10px 12px;
+        border: 0;
+        border-bottom: 1px solid #e7eaf0;
+      }
+
+      td:last-child { border-bottom: 0; }
+
+      td::before {
+        content: attr(data-label);
+        color: var(--text-secondary);
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 1.5;
+      }
+    }
+  </style>
+</head>
+<body data-page-node-id="CzMiNJa0MEQ424NeciEPXN">
+  <div class="shell" data-page-node-id="LOspk0AvTHqGcKYpedq5KZ">
+    <aside class="sidebar" data-page-node-id="sTi729H4bM9SHNWswyE1iR">
+      <p class="sidebar-title" data-page-node-id="Rq09B2aKyxONPAcPVAk0BE">目录</p>
+      <nav class="page-nav" aria-label="规格文档页面" data-page-node-id="H9pbsOzPhQNWhURIZenoZX">
+        <button type="button" data-page-target="overview" aria-current="page" data-page-node-id="GKxdC1icypFmnSH90ClemF">当前方案</button>
+        <button type="button" data-page-target="pages" data-page-node-id="ggaTd5gWp4gXdEKXt0871P">页面方案</button>
+        <button type="button" data-page-target="boundary" data-page-node-id="B0Uwiu6y8hiONI3wO9p5EE">边界与待确认</button>
+      </nav>
+    </aside>
+
+    <main data-page-node-id="slMgFIL8HmAZmnOGkcBRkF">
+      <article class="spec-page" data-spec-page="overview" data-page-node-id="ZUDYi6qWrSGzDNyCTxlC95">
+        <h1 data-page-node-id="Gqqctf2aJBACKgcKk1qdMe">客户驾驶舱需求 · 原型主规格</h1>
+        <p class="definition" data-page-node-id="ryEqZLxzeSqsApviNxF7Bp">本文档是用户与 Agent 围绕「客户驾驶舱需求」原型进行方案沟通、确认和持续生成的事实依据。需求来源为《客户驾驶舱需求 PRD》（V0.1，需求评审稿）。</p>
+
+        <section id="current-plan" data-page-node-id="PhqHXxeIa7cGe1ICxumgsf">
+          <h2 data-page-node-id="NEZ1mjlTwOcFWGQOhTCHOI">当前方案</h2>
+          <ul data-page-node-id="sL9cC3wecbpvXcLnD2FGcS">
+            <li data-page-node-id="KgKn0GIgmopFY3DKqcEW64">原型意图：面向客户领导与参观人员的无人智厨展示大屏，通过设备协同示意、烹饪流程、设备能力与行为监控，帮助接待人员讲清无人厨房的组成与价值。</li>
+            <li data-page-node-id="INAKOQz0HxyoamboLPboIS">使用场景：大屏（非触摸）持续展示；接待／讲解人员用 iPad 控制端切换展示主题，不执行任何生产操作。</li>
+            <li data-page-node-id="ildh2FxaJsCQKSLEuJEBy4">当前表达：深蓝 + 青色大屏视觉，横屏 16:9 基准；两个展示页（运营驾驶舱、行为监控）+ 一个 iPad 控制页 + 一个保留优化的生产驾驶舱旧页；全部数据为演示数据并显式标注。</li>
+          </ul>
+        </section>
+
+        <section id="facts-inputs" data-page-node-id="IPrzDsyVSQKQskD8wuMxnR">
+          <h2 data-page-node-id="XFHDokxEY0ZPG7L2kXob7s">事实与输入</h2>
+          <h3 data-page-node-id="A6zV4oL7CRbcnYjXlXqCDA">用户确认事实</h3>
+          <ul data-page-node-id="BKGP5vUU7ypPsa3MmWpJbq">
+            <li data-page-node-id="QvsRPlmmQmmqHCZE3MZkO9">大屏页面：运营驾驶舱、行为监控；默认首页为运营驾驶舱。（2026-09-23 按需求暂时下线：厨房总览、无人烹饪流程、核心设备与能力，页面实现保留可恢复。）</li>
+            <li data-page-node-id="pcrOReqEr8ePlICidJPDI4">厨房总览采用「设备协同示意图」，不依赖真实三维模型，不冒充现场还原。</li>
+            <li data-page-node-id="aPtGqlKTGmD6xjlQBYt00v">五类候选设备与器具：炒菜机、机械臂、烤箱、容器、层架；容器与层架按器具展示，不默认计为联网设备。</li>
+            <li data-page-node-id="ljuJyuPTjXKr2d9WQ4LCcz">行为监控五类异常：未佩戴口罩、未佩戴帽子、发现老鼠、发现抽烟、发现人员；「发现人员」计入全部异常。</li>
+            <li data-page-node-id="EXEsDDbVyXmBTAMaEqUsY6">非触摸大屏适配；iPad 仅控制展示，不提供设备操作入口。</li>
+            <li data-page-node-id="0QtlFlbaAAosuxmhAsYcZe">本次改造只在「客户驾驶舱需求」副本内进行，不改动原「单独展示版」及其他原型。</li>
+            <li data-page-node-id="tUAmX7FLNoSegDICkJb4Uh">本次实现范围：大屏展示页 + iPad 控制页；原有生产驾驶舱保留并优化为独立页面，保留生产进度、投料、烹饪和出餐结构；营养健康与食品安全入口不纳入客户展示范围。（2026-09-23 起展示页由五页缩减为运营驾驶舱、行为监控两页。）</li>
+            <li>用户已移除能源消耗、无人厨房现场、独立设备运行状态和物料运维提醒模块。当前运营驾驶舱聚合生产任务、烹饪区设备标注、用料／出成；不纳入食安、营养和就餐服务模块。</li>
+          </ul>
+          <h3 data-page-node-id="R8xWIp0deDdH7NWCGlObGl">参考资料</h3>
+          <ul data-page-node-id="YMVTyIoPeZFQhzZBwM9gHT">
+            <li data-page-node-id="HKD8GFRzu0HiU8iXPFQiA8"><code data-page-node-id="SxXh8K4TO3TlKLsJFCTJQC">/Users/xiaoyang/Documents/Obsidian Vault/客户驾驶舱需求PRD.md</code>：需求、业务规则、验收标准与开放问题的唯一来源。</li>
+            <li data-page-node-id="jPl2UUsRAdDOotXorxVqRz">行为监控参考截图结构：项目标识、异常分类统计、抓拍卡片网格（桌面两行四列）。</li>
+            <li data-page-node-id="Dz3oSN88hamluwZrBaFd2N">原型内既有素材：<code data-page-node-id="VOyWqiqYhX36tJxNGtYG9e">assets/</code> 下的抓拍类图片，用于行为监控抓拍卡片。</li>
+          </ul>
+          <h3 data-page-node-id="C85s3FNVhLNVBiVSioPZjd">当前假设</h3>
+          <ul data-page-node-id="6As63Zo0IeMdXAhRRPeDOG">
+            <li data-page-node-id="O3P8liCPlEqXGr5MlpgP9J">大屏按横屏 16:9 设计，最小宽度 1180px；最终分辨率、物理尺寸与观看距离待确认。</li>
+            <li data-page-node-id="YJx6nrj8zlLDD5zrZD3JZC">原型内用 localStorage + 自定义事件模拟 iPad 与大屏的跨端联动；同浏览器模拟不构成跨设备联动验收。</li>
+            <li data-page-node-id="uiSW5rw0YCAhQQK0RMDt9i">客户／项目名称、品牌素材未确认，页面以「待确认」占位，不沿用参考页的「江南校区」。</li>
+            <li data-page-node-id="HUhjqwJGYPTJqVsStiBBAj">行为监控数值为自洽的演示数据（全部异常 = 五类之和），不代表真实去重口径。</li>
+            <li data-page-node-id="U23OJC0ymwG25c7vK0n8SS">烹饪流程环节为结构示例，具体菜品与生产流程待业务方补充。</li>
+          </ul>
+        </section>
+
+        <section id="prototype-scope" data-page-node-id="bD31dmiT2thSjkZIdO8dV8">
+          <h2 data-page-node-id="ZwBvKVDngrW6wfAqGWVvVx">原型范围</h2>
+          <h3 data-page-node-id="iWSQjW5reKP2UG7v4SuIoh">本次呈现</h3>
+          <ul data-page-node-id="DallgAd99ypqpwH5hDOgz4">
+            <li data-page-node-id="tGCJd5sqMEjDkgE7oGQup2">运营驾驶舱（默认首页）：顶部提供「运营驾驶舱」「行为监控」两个大按钮，生产任务、烹饪区设备标注、用料／出成总览；底部不展示页面导航。</li>
+            <li data-page-node-id="HJweCLcn1BERPvKGvYrTIn">暂时下线（2026-09-23 按需求暂停展示）：厨房总览、无人烹饪流程、核心设备与能力。页面实现仍保留在 <code data-page-node-id="uwEsixzG429bWyvHKuqQjy">pages/</code> 下，恢复时取消路由、导航与 import 中的注释即可。</li>
+            <li data-page-node-id="rFVtKo3WpvVgUNM3HsQPeH">已下线页面的既有约定仍然有效，恢复后照此呈现：厨房总览为设备协同示意图、节点职责与假设关系标注；无人烹饪流程中炒菜机与烤箱按并行加工路径呈现、人工环节如实保留；核心设备与能力含五类候选设备与器具，型号与数量缺省为「—」。</li>
+            <li data-page-node-id="oblIRZESbw4MaVz2BUGjsr">行为监控：五类异常分类统计、抓拍卡片网格（时间倒序）、缺图缺失态、演示数据标识。</li>
+            <li data-page-node-id="18UCoUSYb3lNzXNd7bpB6e">iPad 展示控制页：目标大屏名称、连接状态、展示页直达（当前为运营驾驶舱、行为监控）、当前页反馈、返回首页、切换中与切换失败状态、监控周期筛选（仅行为监控控制区）、演示开关。</li>
+            <li data-page-node-id="cEaYuVtQf5FsBUolH5uAm8">原有「生产驾驶舱」内容保留并优化，通过 <code data-page-node-id="cOmaPIzxv4NvT2Evvkkr2j">#page=cockpit</code> 或页面切换器进入；生产任务统计明确为演示数据。</li>
+          </ul>
+          <h3 data-page-node-id="7tzlNQ1tPW13pLmBAGhmeJ">本次不呈现</h3>
+          <ul data-page-node-id="Mf9Tm5dx1g9ppoGdCw5O15">
+            <li data-page-node-id="abHGtELglcDzbTX8Yiogg7">厨房设备启停、配方修改、任务下发、生产调度、异常处置与工单操作。</li>
+            <li data-page-node-id="soAMlNOCsRLJt7BSLcnfd1">食安台账、晨检、留样、农残检测、营养健康等独立模块。</li>
+            <li data-page-node-id="0p1B77oZpiqGrtvwlSsyOj">真实厨房三维建模或数字孪生状态同步。</li>
+            <li data-page-node-id="G15BjYbrwH6FCqC6z0v3ap">未确认可获取的称重、任务进度、运行状态、人工介入及节省人工等真实量化指标接入；运营驾驶舱只保留明确标注的演示值。</li>
+            <li data-page-node-id="XGlvrRHscla6B3mahOjCdH">多场地、多大屏集群管理；原生 iPad App。</li>
+            <li data-page-node-id="vrcKFU4ofQJK11vhbdTOIS">监控视频直播与录像回放（本期以抓拍事件为基准）。</li>
+          </ul>
+        </section>
+
+        <section id="decision-history" data-page-node-id="8th5Ks7ITGZw7itZDPghvR">
+          <h2 data-page-node-id="kSdu6x7QkT35vzx8hHjc3u">用户重要决策与变更</h2>
+          <div class="table-wrap" data-page-node-id="AuoBy7C6SebvQxc9F7Ox3E">
+            <table data-page-node-id="EuCFJInpFkvl1MWBuT8gsx">
+              <thead data-page-node-id="8pB4nNu2aZdOUG4W3F8rqo"><tr data-page-node-id="NEWkCu2Vxp7kDe0aaMWJAz"><th data-page-node-id="AuiasoqwYYnQnGsrsjWNCE">日期</th><th data-page-node-id="Sol4wL6FOawyKBGh9AyEDq">用户决策或变更</th><th data-page-node-id="yQQkY9OMuU4vYjwhe9NelS">对当前原型的影响</th></tr></thead>
+              <tbody data-page-node-id="hBmvcHAiXbQu8RC7Bgu3ho">
+                <tr data-page-node-id="fhdNmi70HQiTDlFWflw40R">
+                  <td data-label="日期" data-page-node-id="Zxyl4KhUkvVOx5IZ6lOchB">2026-09-23</td>
+                  <td data-label="用户决策或变更" data-page-node-id="SmE50xjqnBOqPzbZeT9627">实现范围选择「五页大屏 + iPad 控制页」</td>
+                  <td data-label="对当前原型的影响" data-page-node-id="ibRfddDgOg2gQFBM1F5PpJ">新增 5 个页面，并建立大屏与控制页的展示状态联动。</td>
+                </tr>
+                <tr data-page-node-id="PimqG7s8BSlvDVyAq9X6Kt">
+                  <td data-label="日期" data-page-node-id="Y5685cAvoFbBKQkukdztnG">2026-09-23</td>
+                  <td data-label="用户决策或变更" data-page-node-id="C8cTzxSHaJK4VP5zDMqoxb">现有内容处理选择「保留旧内容并新增子页面」</td>
+                  <td data-label="对当前原型的影响" data-page-node-id="4TddE3gNdgTt07Zy8yCcN9">原「食堂驾驶舱」内容不改动，通过 <code data-page-node-id="uq2A2odr7acVyUcXABNHPW">#page=cockpit</code> 保留入口。</td>
+                </tr>
+                <tr data-page-node-id="53ob7EbQsNVihXv3uMyuUJ">
+                  <td data-label="日期" data-page-node-id="IFHlXH4Jvti5M5gvJFYZ0g">2026-09-23</td>
+                  <td data-label="用户决策或变更" data-page-node-id="S30fv8wb1q3rbogOysffYN">数据模式选择「演示数据并显式标注」</td>
+                  <td data-label="对当前原型的影响" data-page-node-id="srPY8i2lTlNwHdut7KfSSE">五页统一展示「演示数据」标识，行为监控与运营驾驶舱使用自洽演示数值。</td>
+                </tr>
+                <tr>
+                  <td data-label="日期">2026-09-23</td>
+                  <td data-label="用户决策或变更">补齐 PRD 状态表中的监控异常分支（加载中／无事件／获取失败／未接入）与图片加载失败兜底</td>
+                  <td data-label="对当前原型的影响">行为监控新增 4 个模块级状态；iPad 控制页新增数据状态演示开关；新增评审用 URL 深链。</td>
+                </tr>
+                <tr>
+                  <td data-label="日期">2026-09-23</td>
+                  <td data-label="用户决策或变更">暂时下线「厨房总览、无人烹饪流程、核心设备与能力」三个页面</td>
+                  <td data-label="对当前原型的影响">三个页面从路由、底部导航、iPad 控制页与页面切换器中移除，默认首页改为「运营驾驶舱」；页面文件保留在 <code>pages/</code> 下，取消注释即可恢复。</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </article>
+
+      <article class="spec-page" data-spec-page="pages" hidden data-page-node-id="azp06LH6QE7ZJY23lQ8hYb">
+        <h1 data-page-node-id="SaUEcVG8zgcmxKCopWn2n0">页面与交互方案</h1>
+
+        <section id="pages-content" data-page-node-id="imvRlU0OJ26zw93V6bT5je">
+          <h2 data-page-node-id="mUiNGStGCBbUO9elWTEFK5">页面与内容方案</h2>
+          <div class="table-wrap" data-page-node-id="E1LYuxEtNNUj2uHH2DqKxs">
+            <table data-page-node-id="qb1wegdUQ0ntEvGdKSxyYa">
+              <thead data-page-node-id="CpySoH7fuhN1KDYhW7VlZ2"><tr data-page-node-id="umOVjhXokmQ0PM6fsbJjrP"><th data-page-node-id="KyFmXvxMOC7a9AsuLcU7fM">页面/视图</th><th data-page-node-id="0XzkFb7XAypIr8R98h7mZ2">页面作用</th><th data-page-node-id="a8n7jDCl5Cx1eus0JahpK9">主要模块与内容</th><th data-page-node-id="EM2XdcXLSRxkWYJSOm9iiS">示例数据或素材</th><th data-page-node-id="Q9wUuO0NqX6GTtt0Zxo2sJ">与其他页面的关系</th></tr></thead>
+              <tbody data-page-node-id="xvNoUsm84lXnNZZef53RnM">
+                <tr data-page-node-id="QzRYWKAF5yTEMGJ9VfFHOK">
+                  <td data-label="页面/视图" data-page-node-id="zrlU2XTCAlZAiTDriNBqha">厨房总览（暂时下线）<br data-page-node-id="IzIOGzaEGDyCiX0dUSDC0f"><code data-page-node-id="uwEsixzG429bWyvHKuqQjy">#page=overview</code></td>
+                  <td data-label="页面作用" data-page-node-id="uBajyMDpKTxXfMZdHBIqsH">默认首页，让参观者理解设备组成与职责。</td>
+                  <td data-label="主要模块与内容" data-page-node-id="YqfFvNIMIWqBm1LEYsIuym">顶部产品标题／客户项目名称占位／当前页面；设备协同示意图（机械臂居中，炒菜机与烤箱为加工节点，容器与层架为器具）；每节点名称 + 一句职责；假设关系虚线图例；四条说明卡。</td>
+                  <td data-label="示例数据或素材" data-page-node-id="6TD6kdBlr0be6BjkoSRmI3">SVG 线框示意图标；无实时指标。</td>
+                  <td data-label="与其他页面的关系" data-page-node-id="kxlOouSd9mJ1U6uUArdpeH">底部导航可切至流程、设备、监控；「返回首页」回到本页。</td>
+                </tr>
+                <tr data-page-node-id="operations-page-row">
+                  <td data-label="页面/视图">运营驾驶舱<br><code>#page=operations</code></td>
+                  <td data-label="页面作用">面向客户领导说明无人智厨的运营管理能力。</td>
+                  <td data-label="主要模块与内容">生产进度、生产状态、投料区、烹饪区、出餐区、用料／出成；烹饪区放大展示无人厨房画面并标注炒菜机与烤箱；生产进度使用表格布局，增加生产趋势折线图和计划／投料／出成对比柱状图；所有指标显式标注演示或待接入。</td>
+                  <td data-label="示例数据或素材">结构演示数值；使用无人厨房生产烹饪区图片；称重、设备物联、能源计量、库存和维保数据待系统接入。</td>
+                  <td data-label="与其他页面的关系">由 iPad 控制端或底部导航进入；不提供设备启停、任务下发等操作。</td>
+                </tr>
+                <tr data-page-node-id="6Blbt3hP3zF4Xh0FOVHNDS">
+                  <td data-label="页面/视图" data-page-node-id="InzxZJGuYQYrFPL4H8xBbY">无人烹饪流程（暂时下线）<br data-page-node-id="zpMcZADE18p2mHRpo0BX3W"><code data-page-node-id="ljUz5xGv7N4V7xIDjIAuLd">#page=process</code></td>
+                  <td data-label="页面作用" data-page-node-id="ugAXgNpRYCAOs6oCXGsOAz">解释加工步骤，区别于首页的设备组成介绍。</td>
+                  <td data-label="主要模块与内容" data-page-node-id="ARiDKXUuIkAigUrf8JMTsY">流程演示标识；顺序环节（原料接收与暂存、人工备料）→ 并行加工路径（炒菜机加工 / 烤箱加工）→ 汇合（出品分装、层架暂存与出餐）；每环节展示参与设备、负责事项、输入／输出。</td>
+                  <td data-label="示例数据或素材" data-page-node-id="KQg7H1ZaUDw8PzYuvwSyHy">结构示例数据，标注「环节待业务方确认」。</td>
+                  <td data-label="与其他页面的关系" data-page-node-id="jKtg8ekH9Myr00hoq1Vi44">由 iPad 控制端或底部导航进入。</td>
+                </tr>
+                <tr data-page-node-id="V14YMNSFKbpqqv9kkkrLid">
+                  <td data-label="页面/视图" data-page-node-id="Oe8L8bffp250aRCmMfgpA5">核心设备与能力（暂时下线）<br data-page-node-id="DC3L4zU2uWRsF0amHLtrYQ"><code data-page-node-id="yZDL5zY5v7pJ8IHpr2WDFk">#page=equipment</code></td>
+                  <td data-label="页面作用" data-page-node-id="FjuLZmpTQlqlxnYN5mRSJt">说明各设备与器具的用途和已确认能力。</td>
+                  <td data-label="主要模块与内容" data-page-node-id="ParLlZDGoEw8dbhzMSi9Sc">五张卡片：类别标签（候选设备／器具）、名称、示意图、用途、能力清单（含确认状态）、型号与数量。</td>
+                  <td data-label="示例数据或素材" data-page-node-id="vozATcjMw5M7FCgFus3eP8">SVG 示意图标；能力状态「已确认／待确认」；型号与数量「—」。</td>
+                  <td data-label="与其他页面的关系" data-page-node-id="IQ8Ksmb3foUFgUso6CVHLT">长说明集中在本页，总览不重复。</td>
+                </tr>
+                <tr data-page-node-id="YENkEt50vsgSqkGsMFn2ex">
+                  <td data-label="页面/视图" data-page-node-id="4GK2uPx4MMZ7Wlu0buyMi8">行为监控<br data-page-node-id="STEXxyZQB8TFUGWA1W5gc8"><code data-page-node-id="FSWE27GYbxYwPvhhvVNLni">#page=behavior</code></td>
+                  <td data-label="页面作用" data-page-node-id="OGILADZyEalo6lVKIZLTuA">展示异常分类统计与抓拍事件记录。</td>
+                  <td data-label="主要模块与内容" data-page-node-id="1CJ43kNYW1q8FzGNXwtL56">全部异常 + 五类分类统计；统计口径与去重说明；抓拍卡片网格（事件类型、相对与绝对时间、区域、摄像头、抓拍图、异常标签）；缺失态；演示数据与更新时间页脚。</td>
+                  <td data-label="示例数据或素材" data-page-node-id="bRLBOMgYq7mvYdHeGyAuZR">自洽演示数值（如最近一天：全部异常 29 = 12 + 9 + 1 + 2 + 5）；8 条事件均展示抓拍示例图，不设置缺图演示记录。</td>
+                  <td data-label="与其他页面的关系" data-page-node-id="7iAHHa7yDQF4vRqykIGg4Q">统计周期由 iPad 控制页切换，本页只读展示当前周期。</td>
+                </tr>
+                <tr data-page-node-id="oYGEkwCBezSimZrLpmNBdD">
+                  <td data-label="页面/视图" data-page-node-id="xNeAdw6Ed9d8fE9dfrUWOS">iPad 展示控制页<br data-page-node-id="rs8hUikVlrmR4bIMqtBEbD"><code data-page-node-id="r6g87LBo0Fpks30kOcxSQl">#page=control</code></td>
+                  <td data-label="页面作用" data-page-node-id="V9MdqibBmrG1tnBzC3GqVR">讲解人员控制大屏展示主题。</td>
+                  <td data-label="主要模块与内容" data-page-node-id="HV7G0ViIHbF6fDG3x8QdGA">目标大屏名称、连接状态与重试、当前展示、展示页按钮、返回首页、行为监控周期筛选、演示开关。</td>
+                  <td data-label="示例数据或素材" data-page-node-id="ykAJRtxrX3HM6IyTM4BftG">连接状态与切换结果由演示开关模拟。</td>
+                  <td data-label="与其他页面的关系" data-page-node-id="b5c7NDlExHLooidTaigcqu">写入共享展示状态，大屏页跟随切换；大屏侧切页会回写当前页。</td>
+                </tr>
+                <tr data-page-node-id="nGqO2XKsqVKT4XdEO0uHz5">
+                  <td data-label="页面/视图" data-page-node-id="c4NIvBhg4fIjgZa3FNl8Aa">生产驾驶舱（保留优化）<br data-page-node-id="SCJvDMDZ4P8y2POB8CFDX3"><code data-page-node-id="eW2ThHKV7CHFzumUFHKq9w">#page=cockpit</code></td>
+                  <td data-label="页面作用" data-page-node-id="aqQBiyDWrQLH0F24fYgnPI">保留原有生产烹饪页的现场表达，补充自洽的生产统计与演示口径。</td>
+                  <td data-label="主要模块与内容" data-page-node-id="x3xBwYKdY3hHOqsp9DWHCh">生产进度、投料区、烹饪区、出餐区；保留设备协同图片和出口任务列表；隐藏营养健康与食品安全入口。</td>
+                  <td data-label="示例数据或素材" data-page-node-id="17CIq3BsdZXUv4YSBEIirs">固定演示任务、炒菜机与烤箱示意图；标题、状态、时间明确标注演示属性。</td>
+                  <td data-label="与其他页面的关系" data-page-node-id="NLN8ghZCmdGDaeKIMe88Tf">通过页面切换器进入，作为展示页之外的保留优化页。</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="interaction-states" data-page-node-id="ObN3DYkjIo6zDInM4lZCZp">
+          <h2 data-page-node-id="YFM0VCSQBEUgO8tfDNESLE">交互与状态方案</h2>
+          <div class="table-wrap" data-page-node-id="CiXlGShH0sJSf45MsQArAc">
+            <table data-page-node-id="xsFSWeDsHXQA2t12IQqDHm">
+              <thead data-page-node-id="REkmg16wu9DGVgtOPHLwlO"><tr data-page-node-id="RfTcTOmmglPGOZxFxXInGM"><th data-page-node-id="tNlo0oFH4DlTd53Z4SwXGN">对象/场景</th><th data-page-node-id="xyUiYNK6a3P9gXAFb6HDqy">前置状态</th><th data-page-node-id="CXdhtXQasBtiSv6WTpEyd7">用户操作</th><th data-page-node-id="CZW7yyNRCdvaFGVu2FYmRR">原型表现</th><th data-page-node-id="fmmfWvggGKsRWWOFVFExx7">后续状态</th></tr></thead>
+              <tbody data-page-node-id="9SeEXwcRNXXlpBNPgASKQZ">
+                <tr data-page-node-id="EoF7MUlzAiXAi7XFAGa7HD">
+                  <td data-label="对象/场景" data-page-node-id="EtmZwmBXEFrhHq0AJsKp7B">正常连接</td>
+                  <td data-label="前置状态" data-page-node-id="wcrsLUDoXDAs8BAqBye3RV">控制端已连接</td>
+                  <td data-label="用户操作" data-page-node-id="kIyATXWvXp09xueZHCBYwU">点击非当前页按钮</td>
+                  <td data-label="原型表现" data-page-node-id="pHJXB0XWu5q1HgCjQsGsn9">按钮显示「切换中…」，大屏保持原内容直至目标内容可展示</td>
+                  <td data-label="后续状态" data-page-node-id="BI88gip9clQAeS3UrdwOng">大屏显示目标页，控制端高亮同步更新</td>
+                </tr>
+                <tr data-page-node-id="THWqxhvA9zYLxrVrrEDA9I">
+                  <td data-label="对象/场景" data-page-node-id="jhByWGx2wUqYnn8ynhgFG7">切换失败</td>
+                  <td data-label="前置状态" data-page-node-id="ZHfm8YPor8HRodwl76RPnP">已开启「模拟切换失败」</td>
+                  <td data-label="用户操作" data-page-node-id="i1Mqtzw3Aen0YrezqDAaH8">点击其他页面</td>
+                  <td data-label="原型表现" data-page-node-id="TIHlneO8S4Oyb0JGfRonUM">提示切换失败并保留当前页面，提供重试</td>
+                  <td data-label="后续状态" data-page-node-id="0c2a1en4QBiJr79pnixqeb">重试或关闭演示开关后可再次切换</td>
+                </tr>
+                <tr data-page-node-id="aeyBttNx1Fa4wQcxJZqljb">
+                  <td data-label="对象/场景" data-page-node-id="epLx1Oc5NQAf0u6OB0oWWr">控制连接中断</td>
+                  <td data-label="前置状态" data-page-node-id="3TTHoPOp2idGi9aF1nftNF">已开启「模拟控制连接中断」</td>
+                  <td data-label="用户操作" data-page-node-id="Km7hTxHEXnZ0gG6OiyrgB1">尝试切页</td>
+                  <td data-label="原型表现" data-page-node-id="ubCjORO9rfNLPA6TRj6sl1">显示未连接与重试；切页按钮禁用并说明原因；大屏保留最后成功内容</td>
+                  <td data-label="后续状态" data-page-node-id="bGpHOYnCFdEM3jiav0okLM">重连成功后读取大屏现状，不覆盖为控制端旧页面</td>
+                </tr>
+                <tr data-page-node-id="zZlMQr8xDo93zQMvh8JEuF">
+                  <td data-label="对象/场景" data-page-node-id="5L20WhZ36TcxRZt0KKmG39">点击当前页</td>
+                  <td data-label="前置状态" data-page-node-id="oUvCEAEpCLmZdXNYVOZBN3">当前页已展示</td>
+                  <td data-label="用户操作" data-page-node-id="7oxSaeISwHRgQaUqRBcIzh">点击当前页按钮</td>
+                  <td data-label="原型表现" data-page-node-id="q5lWM0tmgD09mBeUzh3PGj">按钮禁用并标注「当前页」，不重复加载</td>
+                  <td data-label="后续状态" data-page-node-id="W0020KOrM6rrTIxt6h3Nt9">状态不变</td>
+                </tr>
+                <tr data-page-node-id="lx3CtQJd1Eu19A8sXE0Gx2">
+                  <td data-label="对象/场景" data-page-node-id="z5bkmkgKWKK3efjuvxIGx0">图片加载失败</td>
+                  <td data-label="前置状态" data-page-node-id="w0WmymGJHkltS95NidF1kZ">事件缺少抓拍图</td>
+                  <td data-label="用户操作" data-page-node-id="MbFBlDLgeP9yEvJaP5H5al">浏览抓拍网格</td>
+                  <td data-label="原型表现" data-page-node-id="x647Vx3HY9q2bSeKtZCOAy">显示「图片暂不可用」，保留事件类型、时间、区域与编号</td>
+                  <td data-label="后续状态" data-page-node-id="ueLDiB2ugkTFU7fQcszucY">页面其余功能不受影响</td>
+                </tr>
+                <tr data-page-node-id="GomJ0ocQ4d6KPWh0Qj1PwT">
+                  <td data-label="对象/场景" data-page-node-id="sjtBrFljd0epwgvSFM9WJh">监控数据加载中</td>
+                  <td data-label="前置状态">数据源请求未返回</td>
+                  <td data-label="用户操作">进入行为监控页</td>
+                  <td data-label="原型表现">模块内显示「监控数据加载中…」，不显示骨架数字</td>
+                  <td data-label="后续状态">不阻塞其他页面切换，数据返回后展示统计与卡片</td>
+                </tr>
+                <tr>
+                  <td data-label="对象/场景">监控无事件</td>
+                  <td data-label="前置状态">所选周期无异常事件</td>
+                  <td data-label="用户操作">浏览行为监控页</td>
+                  <td data-label="原型表现">显示「所选时段暂无异常记录」，不填充零值、不借用其他时段数据</td>
+                  <td data-label="后续状态">可切换周期（由 iPad 控制页操作）</td>
+                </tr>
+                <tr>
+                  <td data-label="对象/场景">监控未接入</td>
+                  <td data-label="前置状态">未接入监控数据源</td>
+                  <td data-label="用户操作">进入行为监控页</td>
+                  <td data-label="原型表现">显示「监控数据暂未接入」，不展示无效筛选</td>
+                  <td data-label="后续状态">可由 iPad 控制页演示开关切换为正常展示以评审结构</td>
+                </tr>
+                <tr>
+                  <td data-label="对象/场景">监控获取失败</td>
+                  <td data-label="前置状态">请求失败但存在缓存</td>
+                  <td data-label="用户操作">浏览行为监控页</td>
+                  <td data-label="原型表现">顶部红色提示获取失败，并保留缓存内容且标明更新时间</td>
+                  <td data-label="后续状态">页面仍可用，可切换其他页面</td>
+                </tr>
+                <tr>
+                  <td data-label="对象/场景" data-page-node-id="sjtBrFljd0epwgvSFM9WJh">数据字段缺失</td>
+                  <td data-label="前置状态" data-page-node-id="yPC1t42wpb9CkxohjJb6op">型号／数量未确认</td>
+                  <td data-label="用户操作" data-page-node-id="VtMXqHYXngYjLvuN4Thnv8">查看设备页</td>
+                  <td data-label="原型表现" data-page-node-id="wbcoiO1bdXBJePGzzkJ9zr">数值显示「—」，不填零</td>
+                  <td data-label="后续状态" data-page-node-id="UE6Ddlk3nnNGkP3Pdoa4Ey">确认后替换为真实值</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="hint" data-page-node-id="AYDncSerJ1H4zoVzhCEUGF">跨端展示控制流程：</p>
+          <pre id="display-control-flow" class="mermaid" data-page-node-id="OAlOGnCx8gkjOnprca9hgo">flowchart TD
+  A[启动大屏] --> B[运营驾驶舱（默认首页）]
+  C[iPad 打开展示控制页] --> D{能否连接指定大屏}
+  D -->|可以| E[读取大屏当前页面]
+  D -->|不可以| F[提示未连接并提供重试]
+  E --> G[选择展示页面]
+  G --> H{切换结果}
+  H -->|成功| I[大屏显示目标页并回写当前页]
+  H -->|失败| J[保持原页面并提示重试]
+  I --> G
+  I --> K[返回首页]
+  K --> B
+  J --> G
+  F --> D</pre>
+        </section>
+
+        <section id="design-basis" data-page-node-id="MZX7WmFuRxj3g7RMJOJPvh">
+          <h2 data-page-node-id="oGwar7l1BHNO99LN39S92l">设计基底与原型特有调整</h2>
+          <ul data-page-node-id="4NpS6jzalw1n4wxn5kUx5Y">
+            <li data-page-node-id="u9wsi3FER6PWSHa7eoDo9o">采用的 <code data-page-node-id="LjbpqPA2PN9bKdQVheX1e6">DESIGN.md</code>：未选用 <code data-page-node-id="q4xhBAznBueFPzBS6rJhr8">src/themes/</code> 下的主题；沿用本原型已有的 <code data-page-node-id="kTsQuW2C4xDKh20L9S4wEs">style.css</code> 深蓝 + 青色大屏视觉语言（来自「单独展示版」副本）。</li>
+            <li data-page-node-id="kG3vdqt7eShAkHGHqLpm6z">继承方式：新增页面统一使用 <code data-page-node-id="6YqojyII9ZGlXy3O0WyoXB">cc-</code> 前缀类名，与原有 <code data-page-node-id="8EsXdbjlKQ91t9aysWiQYu">dt-</code> 内容完全隔离，不修改全局主题与共享样式。</li>
+            <li data-page-node-id="6DZ48rgUOEhlFKXZ8KaAwt">本原型特有调整：</li>
+          </ul>
+          <ul data-page-node-id="aCJ77WIVdGmStBmUPJnH1B">
+            <li data-page-node-id="E4bwiTeABmtxy1m7qHixKK">关键信息不依赖悬停、颜色单独编码或滚动查找。</li>
+            <li data-page-node-id="QsJfFBq4w2BcJKga8ET8xf">未确认内容统一使用「待确认」「—」「待业务方确认」等显式标注。</li>
+            <li data-page-node-id="UQJkxh3akF9pkxxpDt9WKj">演示内容统一展示「演示数据」标识，不使用「实时连接」「设备运行中」等无依据状态。</li>
+          </ul>
+          <p class="hint" data-page-node-id="Ga1QFbyDRcYdNgDDGjyIwK">正式视觉基底（含品牌色、字体、素材）待确认后统一替换。</p>
+        </section>
+      </article>
+
+      <article class="spec-page" data-spec-page="boundary" hidden data-page-node-id="c6Me7Gm7lHmlTHbwHdXozw">
+        <h1 data-page-node-id="fqk5DtvASQv3RIOMyjAqlH">边界与待确认</h1>
+
+        <section id="open-questions" data-page-node-id="mBjuZallrAegDrp2SPJg9j">
+          <h2 data-page-node-id="9uSKrtH0iLPVwZUMjiGzdY">当前待确认事项</h2>
+          <ul data-page-node-id="1tG4ZUvWi8FGFUQPWe23Sy">
+            <li data-page-node-id="Wd3GJYLPBYXPCmNnFVmGZq">实际设备型号、数量、容器及层架用途：现仅列为候选，不填数量与型号。</li>
+            <li data-page-node-id="4EKeCwH7bfBErFuNDeck8N">机械臂搬运哪些对象、连接哪些设备：现按评审建议的中央布局展示，协同线不作为现场事实。</li>
+            <li data-page-node-id="6oHKaXl5bI8QkQIR356kzZ">一条真实生产流程如何运行：流程页保留内容结构，具体环节待补充。</li>
+            <li data-page-node-id="dI5v3x5S1RTkFg6I334pO0">行为监控提供抓拍还是另有视频需求、能否接入：首期按抓拍事件设计，未接入时明确演示。</li>
+            <li data-page-node-id="qhaU3B6QxboEbyAcqU1EPm">全部异常的去重口径与「发现人员」检测条件：现使用自洽演示数值，不代表真实口径。</li>
+            <li data-page-node-id="yboiYpS3dNWWUSSh1VwgfF">是否保留监控周期筛选、周期如何定义：现作为建议功能，周期定义待确认。</li>
+            <li data-page-node-id="mHd5MjnmjtXyK9Wazq73Kd">屏幕、播放终端、iPad 与网络配置：草案按横屏与单控制端考虑。</li>
+            <li data-page-node-id="arwN1EgeNIJljnF7CIPRtG">品牌名称、设备图片、正式视觉基底：现使用示意图与占位名称。</li>
+            <li data-page-node-id="4NT4HyiQqSmD4pn4NVHeoD">控制端与大屏的接入与授权方式：现用同浏览器 localStorage 模拟，不构成跨设备联动验收。</li>
+          </ul>
+        </section>
+
+        <section id="acceptance-notes" data-page-node-id="bqHdsoWhZ6s1Y16bBlGhAw">
+          <h2 data-page-node-id="CDmb3cyFq8lmPOxQKXARC4">验收关注点</h2>
+          <ul data-page-node-id="vXcgebef2gAgfnqZcFu9Eh">
+            <li data-page-node-id="xaNRjbGf6fnvTOwIbupEyE">运营驾驶舱与行为监控两个展示页面可到达，默认运营驾驶舱；厨房总览、无人烹饪流程、核心设备与能力暂时下线，不出现在页面列表、底部导航与 iPad 控制页中；无食安、营养健康等非本期页面入口。</li>
+            <li data-page-node-id="pnDBON4C8HI0jlHByqs0tP">iPad 切页后大屏实际变化，两端当前页一致；同浏览器模拟仅用于原型演示。</li>
+            <li data-page-node-id="3fjUu4Wptv3INuWX2ArMwP">非触摸大屏无需触摸操作即可完成展示过程。</li>
+            <li data-page-node-id="Oc1BYLxAHGRAsypQANeqDj">（随「厨房总览」暂时下线而挂起）厨房总览为设备协同示意，候选清单与已确认清单有明确区别；恢复该页后按此验收。</li>
+            <li data-page-node-id="M5quDPiTMveazLdGAWlney">不存在未经确认的实时称重、任务进度、运行状态与人工介入数字。</li>
+            <li data-page-node-id="q7FGzDvfVOWvmhVmNdIe66">行为监控含五类异常，「发现人员」计入全部异常；缺图、空数据与加载失败时页面仍可用。</li>
+            <li data-page-node-id="S1MEjUAC1KLB4G2tkx2cwT">演示数据明确标识；断开控制连接后不虚报切页成功。</li>
+            <li data-page-node-id="pocYsYUnZA6JgECVc2E802">回归风险：只在「客户驾驶舱需求」副本实施改造，不改变原「单独展示版」及其他原型。</li>
+          </ul>
+        </section>
+
+        <section id="prototype-files" data-page-node-id="E2zCHJNXAyqjsYt0aDCEft">
+          <h2 data-page-node-id="BQxu1xCjM8z95zJrgDLQji">文件结构</h2>
+          <ul data-page-node-id="95D9gBQdyNqKUFZrDRDjkU">
+            <li data-page-node-id="Y450BhlFRsSjzwNDbWmECa"><code data-page-node-id="dcXIuTd02cAkk5hSAs6Uxs">index.tsx</code>：hash 路由入口，保留原有食堂驾驶舱组件。</li>
+            <li data-page-node-id="VPzHNOD3yOjoUHvttjb6sS"><code data-page-node-id="SgPTNyeVFxP6bIAZoNReO1">pages/KitchenOverview.tsx</code>、<code>pages/OperationsDashboard.tsx</code>、<code data-page-node-id="a5nGxv7WQeGOY2wPYRO4eB">pages/CookingProcess.tsx</code>、<code data-page-node-id="wyIUA8mWemIGE5CsGBWOU3">pages/EquipmentCapability.tsx</code>、<code data-page-node-id="4rRfL4KARRtbB4dA92O1vB">pages/BehaviorMonitor.tsx</code>、<code data-page-node-id="a9ZZSDtqbtoIGMFDSnxkya">pages/DisplayControl.tsx</code>。</li>
+            <li data-page-node-id="iAO2sSdZ2Ik4TNK41ZCK5o"><code data-page-node-id="Z17lv24xoY1QNujfuJ8BVs">components/displaySync.ts</code>（展示状态同步）、<code data-page-node-id="SBmlsMDnjBcgjqY3HYhHia">components/monitorDemo.ts</code>（监控演示数据）、<code data-page-node-id="0vXWoidzbBskFHi9kYglGT">components/DeviceGlyph.tsx</code>、<code data-page-node-id="meZOLpwpOZR0UtW5274tQR">components/DisplayShell.tsx</code>、<code data-page-node-id="h8xQqvpTnkug4OvwCfqIhd">components/DisplayNav.tsx</code>、<code data-page-node-id="4tkwDQ2o5pOe6frAX88OoW">components/PageSwitcher.tsx</code>。</li>
+            <li data-page-node-id="fOIhtR0NKsbw6sMSpYjgKA"><code data-page-node-id="2EQDbFbKSADro1KZgNzCSF">style.css</code>：新增 <code data-page-node-id="VA6y4ci7pw36ZZqfB1mVeS">cc-</code> 前缀样式段，原有 <code data-page-node-id="RHm73blBHKv1S85LmwhXlH">dt-</code> 样式不变。</li>
+          </ul>
+        </section>
+
+        <section id="review-deeplink">
+          <h2>评审用深链</h2>
+          <p class="hint">行为监控的数据状态可用 URL 参数直接打开，便于逐一核对异常分支（仅读不写，不影响 iPad 控制端状态）：</p>
+          <ul>
+            <li><code>#page=behavior&amp;monitor=ready</code>：正常展示</li>
+            <li><code>#page=behavior&amp;monitor=loading</code>：数据加载中</li>
+            <li><code>#page=behavior&amp;monitor=empty</code>：所选时段无事件</li>
+            <li><code>#page=behavior&amp;monitor=failed</code>：获取失败（保留缓存）</li>
+            <li><code>#page=behavior&amp;monitor=offline</code>：监控未接入</li>
+          </ul>
+          <p class="hint">跨窗口联动：同一浏览器另开一个窗口打开大屏页，在 iPad 控制页切页或切换周期即可看到大屏跟随。此为原型模拟，不构成跨设备联动验收。</p>
+          <p class="hint">iPad 控制页的「演示开关」可模拟控制连接中断、切换失败，以及行为监控的五种数据状态；正式交付不含该区域。</p>
+        </section>
+      </article>
+    </main>
+  </div>
+
+  <script>
+    const navItems = [...document.querySelectorAll('[data-page-target]')];
+    const pages = [...document.querySelectorAll('[data-spec-page]')];
+
+    const showPage = (pageId) => {
+      for (const navItem of navItems) {
+        const isCurrent = navItem.dataset.pageTarget === pageId;
+        if (isCurrent) {
+          navItem.setAttribute('aria-current', 'page');
+        } else {
+          navItem.removeAttribute('aria-current');
+        }
+      }
+
+      for (const page of pages) {
+        page.hidden = page.dataset.specPage !== pageId;
+      }
+    };
+
+    for (const navItem of navItems) {
+      navItem.addEventListener('click', () => showPage(navItem.dataset.pageTarget));
+    }
+  </script>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#e6f5ef',
+        primaryTextColor: '#222832',
+        primaryBorderColor: '#008f5d',
+        lineColor: '#008f5d',
+        secondaryColor: '#f2faf7',
+        tertiaryColor: '#ffffff',
+        edgeLabelBackground: '#ffffff',
+        fontFamily: 'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+      },
+    });
+  </script>
+</body>
+</html>

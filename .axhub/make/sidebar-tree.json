@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-09-17T03:19:55.160Z",
+  "updatedAt": "2026-09-23T09:01:53.652Z",
   "prototypes": [
     {
       "id": "item:prototypes:canteen-digital-twin-cockpit-copy",
@@ -13,6 +13,18 @@
       "kind": "item",
       "title": "单独展示版",
       "itemKey": "prototypes/canteen-digital-twin-cockpit"
+    },
+    {
+      "id": "item:prototypes:customer-cockpit-requirements",
+      "kind": "item",
+      "title": "客户驾驶舱需求",
+      "itemKey": "prototypes/customer-cockpit-requirements"
+    },
+    {
+      "id": "item:prototypes:customer-cockpit-requirements-2",
+      "kind": "item",
+      "title": "客户驾驶舱需求 2",
+      "itemKey": "prototypes/customer-cockpit-requirements-2"
     },
     {
       "id": "folder-1787208039122-xv0wxx",
