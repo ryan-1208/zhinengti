@@ -84,7 +84,7 @@ const EVENTS: Record<string, MonitorEvent[]> = {
     ],
 };
 
-const PERIOD_TITLE: Record<string, string> = { day: '最近一天', week: '最近一周', month: '最近一月' };
+const PERIOD_TITLE: Record<string, string> = { day: '今天', week: '最近一周', month: '最近一月' };
 
 const SCOPE_NOTE: Record<string, string> = {
     day: '统计口径：当日 00:00 至当前（演示）',
