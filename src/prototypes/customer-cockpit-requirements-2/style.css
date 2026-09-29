@@ -1368,7 +1368,7 @@ body {
 .uk-kpi-toolbar + .uk-module-kpis{margin-top:8px}
 .uk-module-kpis{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:12px;margin:20px 0 16px}
 .uk-module-kpi{min-height:100px;padding:14px 16px;border:1px solid #1d5f9c;border-radius:7px;background:linear-gradient(120deg,#10417f,#102c63);box-shadow:inset 0 0 18px #0b4c7c55}
-.uk-module-kpi span,.uk-module-kpi small{display:block;color:#8fb6dc;font-size:12px}.uk-module-kpi b{display:block;margin:7px 0 4px;color:#eaf7ff;font-size:29px;line-height:1.05}.uk-module-kpi small{font-size:11px;color:#6f9ac2}.uk-module-kpi.cyan{border-color:#25e0ee}.uk-module-kpi.cyan b{color:#6ff0fa}.uk-module-kpi.green{border-color:#2f9f6f}.uk-module-kpi.green b{color:#4ff0ad}.uk-module-kpi.blue b{color:#70b5ff}.uk-module-kpi.amber{border-color:#b8871f}.uk-module-kpi.amber b{color:#ffcc3b}
+.uk-module-kpi span,.uk-module-kpi small{display:block;color:#8fb6dc;font-size:12px}.uk-module-kpi b{display:block;margin:7px 0 4px;color:#eaf7ff;font-size:29px;line-height:1.05}.uk-module-kpi-value-row{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:7px 0 4px}.uk-module-kpi-value-row b{margin:0}.uk-module-kpi-value-row strong{color:#eaf7ff;font-size:29px;line-height:1.05;font-variant-numeric:tabular-nums;white-space:nowrap}.uk-module-kpi-meta{display:flex;align-items:baseline;gap:12px;margin-top:8px;color:#8fb6dc;font-size:13px;line-height:1.1;white-space:nowrap}.uk-module-kpi-meta span{display:inline;color:#8fb6dc;font-size:13px}.uk-module-kpi-meta span+span{padding-left:12px;border-left:1px solid #2c6fa5}.uk-module-kpi-meta i{font-style:normal;color:#eaf7ff;font-size:16px;font-weight:700;font-variant-numeric:tabular-nums}.uk-module-kpi small{font-size:11px;color:#6f9ac2}.uk-module-kpi.cyan{border-color:#25e0ee}.uk-module-kpi.cyan b{color:#6ff0fa}.uk-module-kpi.green{border-color:#2f9f6f}.uk-module-kpi.green b,.uk-module-kpi.green .uk-module-kpi-value-row strong{color:#4ff0ad}.uk-module-kpi.blue b{color:#70b5ff}.uk-module-kpi.amber{border-color:#b8871f}.uk-module-kpi.amber b,.uk-module-kpi.amber .uk-module-kpi-value-row strong{color:#ffcc3b}
 .uk-workorder-filters{display:flex;align-items:center;gap:14px;margin:0 0 16px;padding:11px 13px;border:1px solid #1d5f9c;border-radius:7px;background:#0b2f6acc;box-shadow:inset 0 0 18px #0b4c7c33}
 /* 筛选条：原来在 KPI 与图表之间独立占一条带，现移入「餐段计划 / 完成对比」面板内部。
    面板标题已有 border-bottom，再套一层外框会变成「框里套框」并且多出两条水平线，
@@ -1447,6 +1447,12 @@ body {
 .uk-date-switch{display:flex;align-items:center;gap:7px;color:#9fc3e4;font-size:11px;white-space:nowrap}
 .uk-date-switch input{padding:4px 7px;border:1px solid #2c6fa5;border-radius:4px;background:#0a2752;color:#eaf7ff;font-size:11px;font-family:inherit;color-scheme:dark}
 .uk-date-switch input:focus{outline:none;border-color:#25e0ee;box-shadow:0 0 0 2px #25e0ee33}
+/* 餐段范围用原生 `<select>`，配色跟着日期框走 —— 两个控件同属"这一屏数据的限定条件"，
+   长得不一样读者会以为是两种东西。color-scheme:dark 是为了让**展开后的下拉面板**也是深色，
+   不加的话在 macOS 上会弹出一块亮白的长列表，和大屏主题割裂。 */
+.uk-date-switch select{padding:4px 7px;border:1px solid #2c6fa5;border-radius:4px;background:#0a2752;color:#eaf7ff;font-size:11px;font-family:inherit;color-scheme:dark}
+.uk-date-switch select:focus{outline:none;border-color:#25e0ee;box-shadow:0 0 0 2px #25e0ee33}
+.uk-date-switch option{background:#0a2752;color:#eaf7ff}
 .uk-capability-list,.uk-boundary-list{display:flex;flex-direction:column;gap:8px;padding-top:12px}.uk-capability-list>div,.uk-boundary-list>div{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 10px;border:1px solid #14568f;border-radius:4px;background:#061c4499}.uk-capability-list b,.uk-boundary-list b{color:#eaf7ff;font-size:12px}.uk-capability-list span{color:#8fb6dc;font-size:11px;text-align:right}.uk-boundary-list span{flex:0 0 auto;padding:3px 7px;border-radius:3px;font-size:10px}.uk-boundary-list .ready{border:1px solid #2c6fa5;background:#0e3776;color:#70b5ff}.uk-boundary-list .linked{border:1px solid #2f9f6f;background:#0d3f2c;color:#4ff0ad}.uk-boundary-list .pending{border:1px solid #b8871f;background:#3a2f10;color:#ffcc3b}
 .uk-machine-list,.uk-output-list{display:flex;flex-direction:column;gap:7px;padding-top:11px}.uk-machine-row{display:grid;grid-template-columns:10px 1fr 1.2fr auto;align-items:center;gap:7px;padding:8px 9px;border:1px solid #14568f;border-radius:4px;background:#061c4499;font-size:11px}.uk-machine-row b{color:#eaf7ff}.uk-machine-row span:not(.uk-machine-dot){color:#8fb6dc;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.uk-machine-row em{color:#4ff0ad;font-style:normal}.uk-machine-dot{display:inline-block;width:8px;height:8px;border-radius:50%;box-shadow:0 0 8px currentColor}.uk-output-list>div{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:9px;padding:8px 4px;border-bottom:1px solid #14568f;font-size:11px}.uk-output-list span{font-weight:600}.uk-output-list b{color:#eaf7ff}.uk-output-list em{color:#6ff0fa;font-style:normal}
 .uk-device-dashboard{margin-top:0}.uk-device-grid-dashboard{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}.uk-device-card{padding:12px;border:1px solid #14568f;border-radius:6px;background:#061c4499}.uk-device-card-head{display:flex;align-items:center;gap:7px}.uk-device-card-head b{color:#eaf7ff;font-size:13px}.uk-device-card-head em{margin-left:auto;padding:3px 6px;border-radius:3px;font-size:10px;font-style:normal}.uk-device-card-head em.running{color:#4ff0ad;background:#0d3f2c;border:1px solid #2f9f6f}.uk-device-card-head em.idle{color:#9fc3e4;background:#0e3776;border:1px solid #2c6fa5}.uk-device-card p{margin:13px 0 10px;color:#6ff0fa;font-size:13px}.uk-device-progress{height:7px;border-radius:8px;background:#0a2752;overflow:hidden}.uk-device-progress i{display:block;height:100%;border-radius:8px}.uk-device-card small{display:block;margin-top:7px;color:#7da8d1;font-size:10px}.uk-device-type-bars{display:flex;flex-direction:column;gap:14px;padding-top:15px}.uk-device-type-bars>div{display:grid;grid-template-columns:60px 1fr auto;align-items:center;gap:10px;color:#b9d7ee;font-size:12px}.uk-device-type-bars i,.uk-exit-cards i{height:8px;border-radius:8px;background:#0a2752;overflow:hidden}.uk-device-type-bars i b,.uk-exit-cards i em{display:block;height:100%;border-radius:8px;background:linear-gradient(90deg,#13a4cc,#25e0ee)}.uk-device-type-bars em{color:#6ff0fa;font-style:normal}.uk-status-legend{display:flex;gap:16px;flex-wrap:wrap;padding:16px 0 9px;color:#b9d7ee;font-size:12px}.uk-status-legend span{display:flex;align-items:center;gap:6px}.uk-status-legend i{width:8px;height:8px;border-radius:50%;background:#4ff0ad}.uk-status-legend i.idle{background:#70b5ff}.uk-status-legend i.warn{background:#ffcc3b}.uk-module-note{margin:9px 0 0;color:#7da8d1;font-size:11px;line-height:1.6}
@@ -1456,20 +1462,455 @@ body {
 .uk-pending-row{grid-template-columns:100px 1fr}
 .uk-schedule-page{height:calc(100% - 120px);margin-top:20px;display:flex;flex-direction:column;gap:14px;overflow:auto}.uk-schedule-summary{display:flex;align-items:center;justify-content:space-between;gap:24px;flex:0 0 88px;padding:16px 20px;border:1px solid #1d5f9c;border-radius:7px;background:linear-gradient(105deg,#0e3976,#0b2a5c);box-shadow:inset 0 0 24px #0c438322}.uk-schedule-summary h2{margin:7px 0 0;color:#10e4f2;font-size:24px;letter-spacing:1px}.uk-schedule-summary p{margin:7px 0 0;color:#86acd1;font-size:12px}.uk-schedule-status{display:flex;align-items:center;gap:8px;padding:9px 14px;border:1px solid #2f9f6f;border-radius:4px;background:#0d3f2c;color:#4ff0ad;font-size:13px;white-space:nowrap}.uk-schedule-status i{width:8px;height:8px;border-radius:50%;background:#4ff0ad;box-shadow:0 0 8px #4ff0ad}.uk-schedule-kpis{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:0;flex:0 0 100px}.uk-schedule-kpis .uk-module-kpi{min-height:100px}.uk-schedule-panel{flex:1;min-height:0;overflow:hidden}.uk-schedule-note{flex:0 0 auto;padding:5px 9px;border:1px solid #1b548d;border-radius:3px;background:#0e3776;color:#8eb5d6;font-size:11px}.uk-schedule-list{display:flex;flex-direction:column;padding-top:4px}.uk-schedule-row{display:grid;grid-template-columns:250px minmax(0,1fr);align-items:center;min-height:91px;border-bottom:1px solid #14568f}.uk-schedule-row:last-child{border-bottom:0}.uk-schedule-dish{display:flex;flex-direction:column;gap:11px;padding-left:4px}.uk-schedule-alert{align-self:flex-start;padding:5px 9px;border:2px solid #10e4f2;border-radius:4px;color:#10e4f2;font-size:11px;font-weight:600}.uk-schedule-alert i{margin-left:4px;font-size:14px;font-style:normal}.uk-schedule-dish>div{display:flex;align-items:center;gap:9px}.uk-schedule-dish b{color:#eaf7ff;font-size:17px}.uk-schedule-dish em{padding:4px 7px;border:1px solid #10e4f2;border-radius:16px;color:#10e4f2;font-size:11px;font-style:normal}.uk-schedule-track{min-width:0;padding:9px 18px 7px}.uk-schedule-reminder{margin-bottom:4px;color:#eaf7ff;font-size:12px;text-align:right}.uk-schedule-reminder b{color:#10e4f2;font-size:15px}.uk-schedule-stages{display:grid;grid-template-columns:minmax(100px,1fr) 1fr minmax(100px,1fr) 1fr minmax(100px,1fr) 1fr minmax(100px,1fr);align-items:end;min-height:59px}.uk-schedule-node{display:flex;min-width:0;flex-direction:column;align-items:center;gap:3px}.uk-schedule-node small{color:#a9c4e2;font-size:10px;white-space:nowrap}.uk-schedule-node b{color:#10e4f2;font-size:15px;font-variant-numeric:tabular-nums}.uk-schedule-node i{display:grid;place-items:center;width:36px;height:36px;border:2px solid #70b5ff;border-radius:50%;background:#f5f8ff;color:#1f5ba5;font-size:20px;font-style:normal;font-weight:700}.uk-schedule-connector{position:relative;display:flex;align-items:center;justify-content:center;height:36px}.uk-schedule-connector i{display:block;width:100%;border-top:1px dashed #70b5ff}.uk-schedule-connector span{position:absolute;top:1px;padding:0 5px;background:#0b2f6a;color:#eaf7ff;font-size:11px;white-space:nowrap}.uk-schedule-rule{display:flex;align-items:center;justify-content:space-between;gap:24px;flex:0 0 72px;padding:12px 16px}.uk-schedule-rule>div{display:flex;min-width:0;flex-direction:column;gap:5px}.uk-schedule-rule b{color:#eaf7ff;font-size:12px}.uk-schedule-rule span{color:#7da8d1;font-size:11px}.uk-schedule-rule strong{color:#4ff0ad;font-size:13px}
 
-/* 餐段保障页：围绕“当前餐段能否按计划完成”组织信息。 */
-.uk-plan-page{height:calc(100% - 120px);margin-top:20px;display:flex;flex-direction:column;gap:14px;overflow:auto}
+/* 菜品任务统计页：保留「出餐统计」按盆数的第一方案，新增按去重菜品的第二方案。 */
+.uk-dish-page{height:calc(100% - 120px);margin-top:20px;display:flex;flex-direction:column;gap:14px;overflow:auto}
+.uk-dish-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex:0 0 88px;padding:16px 20px;border:1px solid #1d5f9c;border-radius:7px;background:linear-gradient(105deg,#0e3976,#0b2a5c);box-shadow:inset 0 0 24px #0c438322}
+.uk-dish-head h1{margin:7px 0 0;color:#10e4f2;font-size:28px;letter-spacing:1px}.uk-dish-head p{margin:7px 0 0;color:#86acd1;font-size:12px}.uk-dish-head .uk-date-switch{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+.uk-dish-kpis{grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;margin:0;flex:0 0 96px}.uk-dish-kpis .uk-module-kpi{min-height:92px}
+.uk-dish-main{display:grid;grid-template-columns:1.25fr .75fr;gap:14px;flex:0 0 270px;min-height:270px}.uk-dish-segment-panel,.uk-dish-rule-panel,.uk-dish-table-panel{min-height:0;overflow:hidden}
+.uk-dish-legend{display:flex;align-items:center;gap:18px;padding:13px 0 3px;color:#8fb6dc;font-size:11px}.uk-dish-legend span{display:flex;align-items:center;gap:6px}.uk-dish-legend i{width:9px;height:9px;border-radius:2px}.uk-dish-legend i.done{background:#4ff0ad}.uk-dish-legend i.partial{background:#ffcc3b}.uk-dish-legend i.pending{background:#f16a8d}
+.uk-dish-segment-list{display:flex;flex-direction:column;gap:15px;padding-top:13px}.uk-dish-segment-row{display:grid;grid-template-columns:95px minmax(0,1fr) 45px;align-items:center;gap:12px}.uk-dish-segment-label{display:flex;flex-direction:column;gap:3px}.uk-dish-segment-label b{color:#eaf7ff;font-size:13px}.uk-dish-segment-label small{color:#7da8d1;font-size:10px}.uk-dish-segment-track{display:flex;height:24px;overflow:hidden;border-radius:5px;background:#0a2752}.uk-dish-segment-track i{display:flex;align-items:center;justify-content:center;min-width:0;color:#062040;font-size:11px;font-style:normal;font-weight:700}.uk-dish-segment-track i.done{background:linear-gradient(90deg,#2f9f6f,#4ff0ad)}.uk-dish-segment-track i.partial{background:linear-gradient(90deg,#b8871f,#ffcc3b)}.uk-dish-segment-track i.pending{background:linear-gradient(90deg,#a8425f,#f16a8d)}.uk-dish-segment-row>strong{color:#b9d7ee;font-size:12px;font-variant-numeric:tabular-nums;text-align:right}
+.uk-dish-rules{display:flex;flex-direction:column;gap:10px;padding-top:14px}.uk-dish-rules>div{display:flex;flex-direction:column;gap:5px;padding:10px 11px;border:1px solid #14568f;border-left:3px solid #70b5ff;border-radius:4px;background:#061c4499}.uk-dish-rules b{color:#eaf7ff;font-size:12px}.uk-dish-rules span{color:#8fb6dc;font-size:11px;line-height:1.45}.uk-dish-example{display:flex;align-items:center;gap:10px;margin-top:12px;padding:10px 11px;border:1px solid #2f9f6f;border-radius:4px;background:#0d3f2c}.uk-dish-example strong{color:#4ff0ad;font-size:12px}.uk-dish-example span{color:#a9d9c0;font-size:11px}
+.uk-dish-table-panel{flex:1;min-height:360px}.uk-dish-table-panel>.uk-module-panel-head{flex:0 0 auto}.uk-dish-table-panel>.uk-module-panel-head>strong{color:#6ff0fa;font-size:18px}.uk-dish-table{display:flex;flex-direction:column;height:calc(100% - 51px);min-height:0;padding-top:10px}.uk-dish-table-head,.uk-dish-table-row{display:grid;grid-template-columns:minmax(0,1.8fr) .8fr .45fr .45fr .65fr .65fr .8fr;align-items:center;gap:10px}.uk-dish-table-head{flex:0 0 30px;padding:7px 9px;background:#10417f;color:#a9c8e4;font-size:11px}.uk-dish-table-body{min-height:0;overflow:auto}.uk-dish-table-row{min-height:39px;padding:5px 9px;border-bottom:1px solid #14568f;color:#dcecff;font-size:11px}.uk-dish-name{display:flex;align-items:center;min-width:0;gap:7px;overflow:hidden;color:#eaf7ff;text-overflow:ellipsis;white-space:nowrap}.uk-dish-name i{flex:0 0 7px;width:7px;height:7px;border-radius:2px}.uk-dish-name small{margin-left:3px;color:#7da8d1;font-size:10px}.uk-dish-table-row>b{color:#b9d7ee;font-variant-numeric:tabular-nums}.uk-dish-table-row>em{justify-self:start;padding:4px 7px;border-radius:3px;font-size:10px;font-style:normal;white-space:nowrap}.uk-dish-table-row>em.done{border:1px solid #2f9f6f;background:#0d3f2c;color:#4ff0ad}.uk-dish-table-row>em.partial{border:1px solid #b8871f;background:#3a2f10;color:#ffcc3b}.uk-dish-table-row>em.pending{border:1px solid #a8425f;background:#3a1726;color:#f16a8d}.uk-dish-table-row>span.ok{color:#4ff0ad}.uk-dish-table-row>span.late{color:#ffcc3b}
+
+/* 餐段结果分析页：围绕实际出餐、计划偏差和临时加菜组织信息。 */
+.uk-plan-page{height:calc(100% - 120px);margin-top:20px;display:flex;flex-direction:column;gap:12px;overflow:auto}
 .uk-plan-hero{display:flex;align-items:center;justify-content:space-between;gap:24px;flex:0 0 88px;padding:16px 20px;border:1px solid #1d5f9c;border-radius:7px;background:linear-gradient(105deg,#0e3976,#0b2a5c);box-shadow:inset 0 0 24px #0c438322}
+/* 日期控件与结论徽标并排：两者都是「关于这一屏数据的限定条件」，
+   放一起读者才会连着读 —— 先看是哪天，再看那天什么结论。 */
+.uk-plan-hero-side{display:flex;flex:0 0 auto;align-items:center;gap:18px}
 .uk-plan-hero h2{margin:7px 0 0;color:#10e4f2;font-size:24px;letter-spacing:1px}.uk-plan-hero p{margin:7px 0 0;color:#86acd1;font-size:12px}
-.uk-plan-verdict{display:flex;align-items:center;gap:8px;padding:9px 14px;border:1px solid #2f9f6f;border-radius:4px;background:#0d3f2c;color:#4ff0ad;font-size:13px;white-space:nowrap}.uk-plan-verdict i{width:8px;height:8px;border-radius:50%;background:#4ff0ad;box-shadow:0 0 8px #4ff0ad}
+.uk-plan-verdict{display:flex;align-items:center;gap:8px;padding:9px 14px;border:1px solid #2f9f6f;border-radius:4px;background:#0d3f2c;color:#4ff0ad;font-size:13px;white-space:nowrap}.uk-plan-verdict i{width:8px;height:8px;border-radius:50%;background:#4ff0ad;box-shadow:0 0 8px #4ff0ad}.uk-plan-verdict.warn{border-color:#b8871f;background:#3a2f10;color:#ffcc3b}.uk-plan-verdict.warn i{background:#ffcc3b;box-shadow:0 0 8px #ffcc3b}
 .uk-meal-status-summary{display:grid;grid-template-columns:170px 1fr;align-items:stretch;gap:12px;flex:0 0 74px;padding:10px 12px;border:1px solid #1d5f9c;border-radius:7px;background:#0b2f6acc}.uk-meal-status-title{display:flex;flex-direction:column;justify-content:center;gap:4px;padding-left:4px;border-right:1px solid #14568f}.uk-meal-status-title b{color:#eaf7ff;font-size:14px}.uk-meal-status-title span{color:#7da8d1;font-size:10px}.uk-meal-status-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.uk-meal-status-card{display:grid;grid-template-columns:auto 1fr;grid-template-rows:1fr 1fr;align-items:center;column-gap:10px;padding:7px 11px;border:1px solid #2c6fa5;border-left-width:3px;border-radius:4px;background:#061c4499}.uk-meal-status-card span{grid-row:1 / 3;color:#9fc3e4;font-size:10px;white-space:nowrap}.uk-meal-status-card strong{overflow:hidden;color:#eaf7ff;font-size:13px;text-overflow:ellipsis;white-space:nowrap}.uk-meal-status-card small{overflow:hidden;color:#7da8d1;font-size:10px;text-overflow:ellipsis;white-space:nowrap}.uk-meal-status-card.done{border-left-color:#4ff0ad}.uk-meal-status-card.done span{color:#4ff0ad}.uk-meal-status-card.focus{border-color:#25e0ee;border-left-color:#25e0ee;background:#0c3e6755}.uk-meal-status-card.focus span{color:#6ff0fa}.uk-meal-status-card.future{border-left-color:#70b5ff}.uk-meal-status-card.future span{color:#70b5ff}
-.uk-plan-kpis{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:0;flex:0 0 100px}.uk-plan-kpis .uk-module-kpi{min-height:100px}
-.uk-plan-main{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(300px,.85fr);gap:14px;flex:1;min-height:360px}.uk-plan-table-panel,.uk-plan-judgement,.uk-plan-stage-panel{min-height:0;overflow:hidden}.uk-plan-note{flex:0 0 auto;padding:5px 9px;border:1px solid #1b548d;border-radius:3px;background:#0e3776;color:#8eb5d6;font-size:11px}
-.uk-plan-chart-panel{min-height:0;overflow:hidden}.uk-plan-chart-legend{display:flex;align-items:center;gap:16px;padding:12px 0 4px;color:#8fb6dc;font-size:10px}.uk-plan-chart-legend span{display:flex;align-items:center;gap:6px}.uk-plan-chart-legend i{display:inline-block;width:10px;height:4px;border-radius:3px;background:#25e0ee}.uk-plan-chart-legend i.prep{background:#70b5ff}.uk-plan-chart-legend i.weigh{background:#25e0ee}.uk-plan-chart-legend i.cook{background:#4ff0ad}.uk-plan-chart-legend i.buffer{background:#2f9f6f}.uk-plan-chart-legend i.deadline{width:2px;height:11px;background:#ffcc3b}
+/* ⚠️ 原来是 `padding-top:38px` + 右上角绝对定位的**单个**日期控件。
+   现在控件从 1 个变成 2 个（统计日期 + 餐段范围），且"餐段范围"是**版式自适应的入口**
+   （选到某一段 = 单餐段形态，选「全部」= 多餐段形态），必须和日期并列出现在最前面，
+   绝对定位一行放不下会互相压 —— 改成正常流里的控件行。
+   ⚠️ 高度账必须守恒：原来 38(padding) + 96(KPI) = 134px；
+      现在 0 + 38(控件行) + 96 = 134px。多出来的高度不会报错，只会静默把主面板压矮
+      （`.uk-plan-page` 是 overflow:auto），到时候三栏的行高从 40px 掉到 32px 才知道。 */
+.uk-plan-kpi-row{padding-top:0}
+.uk-plan-controls{display:flex;align-items:center;justify-content:flex-end;gap:10px;height:38px}
+.uk-plan-kpis{grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin:0;flex:0 0 96px}.uk-plan-kpis .uk-module-kpi{min-height:92px}
+.uk-plan-main{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(300px,.85fr);gap:14px;flex:1;min-height:340px}.uk-plan-table-panel,.uk-plan-judgement,.uk-plan-stage-panel{min-height:0;overflow:hidden}.uk-plan-note{flex:0 0 auto;padding:5px 9px;border:1px solid #1b548d;border-radius:3px;background:#0e3776;color:#8eb5d6;font-size:11px}
+.uk-plan-chart-panel{min-height:0;overflow:hidden}.uk-plan-chart-legend{display:flex;align-items:center;gap:16px;padding:12px 0 4px;color:#8fb6dc;font-size:10px}.uk-plan-chart-legend span{display:flex;align-items:center;gap:6px}.uk-plan-chart-legend i{display:inline-block;width:10px;height:4px;border-radius:3px;background:#25e0ee}.uk-plan-chart-legend i.prep{background:#70b5ff}.uk-plan-chart-legend i.weigh{background:#25e0ee}.uk-plan-chart-legend i.cook{background:#4ff0ad}.uk-plan-chart-legend i.buffer{background:#2f9f6f}.uk-plan-chart-legend i.planned-marker{width:2px;height:11px;border-radius:0;background:#ffcc3b}.uk-plan-chart-legend i.actual-marker{width:9px;height:9px;border:2px solid #eaf7ff;border-radius:50%;background:#25e0ee}.uk-plan-chart-legend i.deadline{width:2px;height:11px;border-radius:0;background:repeating-linear-gradient(180deg,#ffcc3b 0 3px,#ffcc3b00 3px 6px)}
 .uk-plan-batch-strip{display:flex;align-items:center;gap:10px;margin-top:8px;padding:7px 9px;border:1px solid #1b548d;border-radius:4px;background:#061c4499;color:#7da8d1;font-size:10px}.uk-plan-batch-strip b{padding:3px 7px;border:1px solid #25e0ee;border-radius:3px;background:#0c3e67;color:#6ff0fa;font-size:11px}.uk-plan-batch-strip em{padding:3px 7px;border-radius:3px;background:#0e3776;color:#a9c4e2;font-style:normal}.uk-plan-batch-strip strong{margin-left:auto;color:#eaf7ff;font-size:10px;font-weight:500}
-.uk-plan-schedule-chart{padding-top:11px}.uk-plan-schedule-axis{position:relative;height:15px;margin-left:178px;border-bottom:1px solid #14568f;color:#6f9ac2;font-size:10px;font-variant-numeric:tabular-nums}.uk-plan-schedule-axis span{position:absolute;bottom:3px;transform:translateX(-50%);white-space:nowrap}.uk-plan-schedule-axis span:first-child{transform:none}.uk-plan-schedule-axis span:last-child{transform:translateX(-100%);color:#ffcc3b}.uk-plan-schedule-row{display:grid;grid-template-columns:164px minmax(0,1fr) 66px;align-items:center;gap:14px;min-height:34px}.uk-plan-schedule-name{display:flex;min-width:0;flex-direction:column;gap:2px}.uk-plan-schedule-name b{overflow:hidden;color:#6ff0fa;font-size:10px;text-overflow:ellipsis;white-space:nowrap}.uk-plan-schedule-name span{overflow:hidden;color:#eaf7ff;font-size:10px;text-overflow:ellipsis;white-space:nowrap}.uk-plan-schedule-track{position:relative;height:10px;border-radius:6px;background:repeating-linear-gradient(90deg,#0a2752 0,#0a2752 calc(25% - 1px),#14568f calc(25% - 1px),#14568f 25%);overflow:visible}.uk-plan-schedule-track:after{position:absolute;top:-6px;right:0;bottom:-6px;border-right:2px solid #ffcc3b;content:'';opacity:.9}.uk-plan-phase{position:absolute;top:0;height:100%;min-width:3px;border-radius:4px;box-shadow:0 0 7px #25e0ee55}.uk-plan-phase.prep{background:#70b5ff}.uk-plan-phase.weigh{background:#25e0ee}.uk-plan-phase.cook{background:#4ff0ad}.uk-plan-schedule-marker{position:absolute;top:50%;z-index:1;width:11px;height:11px;border:2px solid #eaf7ff;border-radius:50%;background:#ffcc3b;box-shadow:0 0 7px #ffcc3b99;transform:translate(-50%,-50%)}.uk-plan-schedule-row>strong{display:flex;flex-direction:column;gap:2px;color:#eaf7ff;text-align:right;white-space:nowrap}.uk-plan-schedule-row>strong b{color:#6ff0fa;font-size:11px;font-variant-numeric:tabular-nums}.uk-plan-schedule-row>strong small{color:#4ff0ad;font-size:9px;font-weight:500}
+.uk-plan-schedule-chart{padding-top:11px}.uk-plan-schedule-axis{position:relative;height:15px;margin-left:178px;margin-right:108px;border-bottom:1px solid #14568f;color:#6f9ac2;font-size:10px;font-variant-numeric:tabular-nums}.uk-plan-schedule-axis span{position:absolute;bottom:3px;transform:translateX(-50%);white-space:nowrap}.uk-plan-schedule-axis span:first-child{transform:none}.uk-plan-schedule-axis span:last-child{color:#ffcc3b;font-weight:600}/* 第三列 66px → 94px：右列从「时间 + 偏差」两行变成「时间 + 偏差 + 计划/实际盆数」三行，
+   94px 刚好容下「10 / 4 盆」这种最宽的一档（tabular-nums 已开，宽度稳定）。
+   ⚠️ 第一列 164px 与 gap 14px 没动，所以 .uk-plan-schedule-axis 的 margin-left:178px 仍然对得上。
+   ⚠️ margin-right:108px 是**必须**的，不是凑数：轴是块级元素，不加这一项它会一直铺到面板右缘，
+      宽度比轨道宽 108px（= 右列 94 + gap 14）。而轴上的刻度用百分比定位、条和标记也用百分比定位，
+      父宽不同就是两套基准 —— 实测刻度整体偏右 9 个百分点（19:00 落在轨道的 84% 处），
+      读者顺着刻度读条就会读错时间。加上后轴宽 869.6 = 轨道宽 869.6，两边共用一个基准。 */
+.uk-plan-schedule-row{display:grid;grid-template-columns:164px minmax(0,1fr) 94px;align-items:center;gap:14px;min-height:34px}.uk-plan-schedule-name{display:flex;min-width:0;flex-direction:column;gap:2px}.uk-plan-schedule-name b{overflow:hidden;color:#6ff0fa;font-size:10px;text-overflow:ellipsis;white-space:nowrap}.uk-plan-schedule-name span{overflow:hidden;color:#eaf7ff;font-size:10px;text-overflow:ellipsis;white-space:nowrap}.uk-plan-schedule-name em{margin-left:5px;padding:1px 4px;border:1px solid #b8871f;border-radius:3px;background:#3a2f10;color:#ffcc3b;font-size:9px;font-style:normal}.uk-plan-schedule-track{position:relative;height:10px;border-radius:6px;background:repeating-linear-gradient(90deg,#0a2752 0,#0a2752 calc(20% - 1px),#14568f calc(20% - 1px),#14568f 20%);overflow:visible}/* 网格线间距 20% 与 JS 里的 chartSpan(150 分钟) 绑定：20% = 30 分钟 = 一个整半点，
+   刻度才落得上去。只改 JS 的跨度而不改这里，网格会和刻度错开。 */
+.uk-plan-schedule-deadline{position:absolute;top:-13px;z-index:0;width:2px;height:calc(100% + 26px);background:repeating-linear-gradient(180deg,#ffcc3b 0 5px,#ffcc3b00 5px 11px);filter:drop-shadow(0 0 4px #ffcc3b88);opacity:.95;pointer-events:none}/* 用虚线而不是实线：图例里「备餐提醒」和「批次时间点」两个色块原本定义**完全相同**
+   （都是 2px×11px 实心黄），读者分不出哪根是哪根，而图上恰恰是「短竖线」和
+   「贯穿长线」两种东西。改虚线后两者一眼可分，也贴合「截止边界」的视觉语汇。
+   发光只能用 filter:drop-shadow，不能用 box-shadow —— 后者描的是元素矩形，
+   会在虚线背后铺出一条实心光带，把虚线糊没。
+   另外：这条线原来写成 .uk-plan-schedule-track:after{right:0}，只上下延 6px，
+   每行只画 22px、行间留 12px 断口 —— 看上去是 6 条孤立短线，不是一条边界线；
+   而且 `right:0` 把线钉死在轨道右端，仅仅因为批次时间点恰好等于轴终点。
+   现在位置由 JS 用 chartPercent(dueAt) 给出（80%），轨道右边空出的一格就是「窗口之外」，
+   每段上下各延伸 13px（行高 34、轨道高 10）才接得上。 */.uk-plan-phase{position:absolute;top:0;height:100%;min-width:3px;border-radius:4px;box-shadow:0 0 7px #25e0ee55}.uk-plan-phase.prep{background:#70b5ff}.uk-plan-phase.weigh{background:#25e0ee}.uk-plan-phase.cook{background:#4ff0ad}.uk-plan-schedule-marker{position:absolute;top:50%;z-index:1;transform:translate(-50%,-50%)}.uk-plan-schedule-marker.planned{width:2px;height:18px;border:0;border-radius:0;background:#ffcc3b;box-shadow:0 0 7px #ffcc3b99}.uk-plan-schedule-marker.actual{width:11px;height:11px;border:2px solid #eaf7ff;border-radius:50%;background:#25e0ee;box-shadow:0 0 7px #25e0ee99}.uk-plan-schedule-marker.actual.late{background:#ffcc3b;border-color:#ffcc3b;box-shadow:0 0 7px #ffcc3b99}.uk-plan-schedule-row>strong{display:flex;flex-direction:column;gap:2px;color:#eaf7ff;text-align:right;white-space:nowrap}.uk-plan-schedule-row>strong b{color:#6ff0fa;font-size:11px;font-variant-numeric:tabular-nums}.uk-plan-schedule-row>strong small{color:#4ff0ad;font-size:9px;font-weight:500}.uk-plan-schedule-row>strong small.late{color:#ffcc3b}
 .uk-plan-readiness-chart{padding-top:11px}.uk-plan-readiness-axis{position:relative;height:15px;margin-left:164px;border-bottom:1px solid #14568f;color:#6f9ac2;font-size:10px;font-variant-numeric:tabular-nums}.uk-plan-readiness-axis span{position:absolute;bottom:3px;transform:translateX(-50%);white-space:nowrap}.uk-plan-readiness-axis span:first-child{transform:none}.uk-plan-readiness-axis span:last-child{transform:translateX(-100%);color:#ffcc3b}.uk-plan-readiness-row{display:grid;grid-template-columns:150px minmax(0,1fr) 56px;align-items:center;gap:14px;min-height:34px}.uk-plan-readiness-name{display:flex;min-width:0;flex-direction:column;gap:2px}.uk-plan-readiness-name b{overflow:hidden;color:#eaf7ff;font-size:11px;text-overflow:ellipsis;white-space:nowrap}.uk-plan-readiness-name small{color:#7da8d1;font-size:9px}.uk-plan-readiness-track{position:relative;height:8px;border-radius:6px;background:repeating-linear-gradient(90deg,#0a2752 0,#0a2752 calc(25% - 1px),#14568f calc(25% - 1px),#14568f 25%);overflow:visible}.uk-plan-readiness-track:after{position:absolute;top:-6px;right:0;bottom:-6px;border-right:2px solid #ffcc3b;content:'';opacity:.9}.uk-plan-readiness-buffer{position:absolute;top:0;height:100%;min-width:3px;border-radius:6px;background:linear-gradient(90deg,#25e0ee,#4ff0ad);box-shadow:0 0 8px #4ff0ad55}.uk-plan-readiness-marker{position:absolute;top:50%;z-index:1;width:12px;height:12px;border:2px solid #eaf7ff;border-radius:50%;background:#25e0ee;box-shadow:0 0 8px #25e0ee99;transform:translate(-50%,-50%)}.uk-plan-readiness-row>strong{color:#4ff0ad;font-size:10px;font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}.uk-plan-chart-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:5px;padding:6px 0 0;border-top:1px solid #14568f;color:#7da8d1;font-size:10px}.uk-plan-chart-foot b{color:#4ff0ad;font-weight:500;white-space:nowrap}
 .uk-plan-table{padding-top:10px}.uk-plan-table-head,.uk-plan-table-row{display:grid;grid-template-columns:minmax(0,1.6fr) .72fr .8fr .78fr .65fr;align-items:center;gap:10px}.uk-plan-table-head{padding:7px 9px;background:#10417f;color:#a9c8e4;font-size:11px}.uk-plan-table-row{min-height:43px;padding:6px 9px;border-bottom:1px solid #14568f;color:#dcecff;font-size:11px}.uk-plan-table-row:last-child{border-bottom:0}.uk-plan-table-row>div{display:flex;min-width:0;flex-direction:column;gap:3px}.uk-plan-table-row b{overflow:hidden;color:#eaf7ff;font-size:12px;text-overflow:ellipsis;white-space:nowrap}.uk-plan-table-row small{color:#7da8d1;font-size:10px}.uk-plan-table-row strong{color:#6ff0fa;font-size:15px;font-variant-numeric:tabular-nums}.uk-plan-table-row span{color:#b9d7ee;font-variant-numeric:tabular-nums}.uk-plan-table-row em{justify-self:start;padding:4px 7px;border:1px solid #2f9f6f;border-radius:3px;background:#0d3f2c;color:#4ff0ad;font-size:10px;font-style:normal;white-space:nowrap}.uk-plan-table-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:8px;padding:8px 9px;border-top:1px solid #14568f;color:#7da8d1;font-size:10px}.uk-plan-table-foot b{color:#4ff0ad;font-weight:500;white-space:nowrap}
-.uk-plan-judgement{display:flex;flex-direction:column;padding-bottom:14px}.uk-plan-judgement-main{display:flex;flex-direction:column;gap:6px;margin-top:14px;padding:14px;border:1px solid #2f9f6f;border-radius:5px;background:#0d3f2c}.uk-plan-judgement-main strong{color:#4ff0ad;font-size:18px}.uk-plan-judgement-main span{color:#a9d9c0;font-size:11px}.uk-plan-facts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.uk-plan-facts>div{display:flex;min-width:0;flex-direction:column;gap:5px;padding:9px 10px;border:1px solid #14568f;border-radius:4px;background:#061c4499}.uk-plan-facts span{color:#7da8d1;font-size:10px}.uk-plan-facts b{overflow:hidden;color:#eaf7ff;font-size:12px;text-overflow:ellipsis;white-space:nowrap}.uk-plan-check-list{display:flex;flex-direction:column;gap:8px;margin-top:12px}.uk-plan-check-list>div{display:grid;grid-template-columns:8px 1fr auto;align-items:center;gap:8px;padding:8px 9px;border-bottom:1px solid #14568f;color:#b9d7ee;font-size:10px}.uk-plan-check-list i{width:7px;height:7px;border-radius:50%;background:#4ff0ad;box-shadow:0 0 6px #4ff0ad}.uk-plan-check-list b{color:#4ff0ad;font-size:10px;font-weight:500}.uk-plan-change-card{display:flex;flex-direction:column;gap:5px;margin-top:12px;padding:11px 12px;border:1px solid #2c6fa5;border-left:3px solid #70b5ff;border-radius:4px;background:#061c4499}.uk-plan-change-card span{color:#7da8d1;font-size:10px}.uk-plan-change-card strong{color:#70b5ff;font-size:13px}.uk-plan-change-card small{color:#8fb6dc;font-size:10px}.uk-plan-explain{margin:12px 0 0;color:#7da8d1;font-size:10px;line-height:1.6}
+.uk-plan-judgement{display:flex;flex-direction:column;padding-bottom:14px}.uk-plan-judgement-main{display:flex;flex-direction:column;gap:6px;margin-top:14px;padding:14px;border:1px solid #2f9f6f;border-radius:5px;background:#0d3f2c}.uk-plan-judgement-main strong{color:#4ff0ad;font-size:18px}.uk-plan-judgement-main span{color:#a9d9c0;font-size:11px}.uk-plan-judgement-main.warn{border-color:#b8871f;background:#3a2f10}.uk-plan-judgement-main.warn strong{color:#ffcc3b}.uk-plan-judgement-main.warn span{color:#e2c879}.uk-plan-facts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.uk-plan-facts>div{display:flex;min-width:0;flex-direction:column;gap:5px;padding:9px 10px;border:1px solid #14568f;border-radius:4px;background:#061c4499}.uk-plan-facts span{color:#7da8d1;font-size:10px}.uk-plan-facts b{overflow:hidden;color:#eaf7ff;font-size:12px;text-overflow:ellipsis;white-space:nowrap}.uk-plan-check-list{display:flex;flex-direction:column;gap:8px;margin-top:12px}.uk-plan-check-list>div{display:grid;grid-template-columns:8px 1fr auto;align-items:center;gap:8px;padding:8px 9px;border-bottom:1px solid #14568f;color:#b9d7ee;font-size:10px}.uk-plan-check-list i{width:7px;height:7px;border-radius:50%;background:#4ff0ad;box-shadow:0 0 6px #4ff0ad}.uk-plan-check-list i.warn{background:#ffcc3b;box-shadow:0 0 6px #ffcc3b}.uk-plan-check-list i.info{background:#70b5ff;box-shadow:0 0 6px #70b5ff}.uk-plan-check-list b{color:#4ff0ad;font-size:10px;font-weight:500}.uk-plan-check-list>div:nth-child(2) b{color:#ffcc3b}.uk-plan-change-card{display:flex;flex-direction:column;gap:5px;margin-top:12px;padding:11px 12px;border:1px solid #2c6fa5;border-left:3px solid #70b5ff;border-radius:4px;background:#061c4499}.uk-plan-change-card span{color:#7da8d1;font-size:10px}.uk-plan-change-card strong{color:#70b5ff;font-size:13px}.uk-plan-change-card small{color:#8fb6dc;font-size:10px}.uk-plan-explain{margin:12px 0 0;color:#7da8d1;font-size:10px;line-height:1.6}
+
+/* ── 出餐效率复盘页（原「计划与进度」）─────────────────────────────
+   这一页回答的问题是「有多少没按计划」，所以红色是**主题色**而不是告警色：
+   「未按计划」这张 KPI 卡必须比旁边几张先被看到。
+   取 #f16a8d 而不是正红 —— 和「工单作废」那条异常行同一个色，全站只有一个「负向」色。 */
+.uk-module-kpi.red{border-color:#a8425f}
+.uk-module-kpi.red b{color:#f16a8d}
+.uk-module-kpi.red .uk-module-kpi-value-row strong{color:#f16a8d}
+/* hero 右上角徽章与「未按计划」KPI 卡同色 —— 同一个数不要用两种颜色。 */
+.uk-plan-verdict.danger{border-color:#a8425f;background:#3a1726;color:#f16a8d}
+.uk-plan-verdict.danger i{background:#f16a8d;box-shadow:0 0 8px #f16a8d}
+
+/* 甘特行的左侧状态线：临时加菜（蓝）/ 数量缺口（红）/ 出餐延误（琥珀）。
+   用 border-left 而不是 ::before，是为了让行内盒宽度不变 ——
+   一改就动 grid 第二列的起点，所有生产阶段条会跟着整体平移。 */
+.uk-plan-schedule-row.addon,.uk-plan-schedule-row.gap,.uk-plan-schedule-row.late{border-left:3px solid;padding-left:9px;margin-left:-12px}
+.uk-plan-schedule-row.addon{border-left-color:#70b5ff;background:linear-gradient(90deg,#0e377644,#0000)}
+.uk-plan-schedule-row.gap{border-left-color:#f16a8d;background:linear-gradient(90deg,#3a172655,#0000)}
+.uk-plan-schedule-row.late{border-left-color:#ffcc3b;background:linear-gradient(90deg,#3a2f1055,#0000)}
+/* 右列第二行是「偏差 + 量」的合体文案（如 `少 1 盆 · 3/4`），
+   所以着色规则要能分别命中缺口 / 延误 / 计划外三种情况。 */
+.uk-plan-schedule-row>strong small.addon{color:#70b5ff}
+.uk-plan-schedule-row>strong small.gap{color:#f16a8d}
+
+/* 未按计划归因：四条 rail 共用「计划出餐」这个满宽基准。
+   长度差本身就是答案，所以右侧只给绝对值、不给百分比 ——
+   多一个百分数读者反而要拿计算器去核对。
+   ⚠️ 行距压到 5px 是量过的：再加 2px，右栏就会比左栏高，
+      把「批次设备结果」的页脚挤出面板。 */
+.uk-plan-attribution{margin-top:14px;padding-top:12px;border-top:1px solid #14568f}
+.uk-plan-attribution-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:10px}
+.uk-plan-attribution-head span{color:#9fc3e4;font-size:11px}
+.uk-plan-attribution-head b{color:#f16a8d;font-size:15px;font-variant-numeric:tabular-nums}
+.uk-plan-attribution-row{display:grid;grid-template-columns:58px minmax(0,1fr) 46px;align-items:center;gap:10px;margin-bottom:5px}
+.uk-plan-attribution-row>span{color:#7da8d1;font-size:10px}
+.uk-plan-attribution-rail{height:9px;border-radius:6px;background:#0a2752;overflow:hidden}
+.uk-plan-attribution-rail i{display:block;height:100%;border-radius:6px;transition:width .25s}
+.uk-plan-attribution-row.plan .uk-plan-attribution-rail i{background:linear-gradient(90deg,#15558f,#1d72ba)}
+.uk-plan-attribution-row.ontime .uk-plan-attribution-rail i{background:linear-gradient(90deg,#159c73,#4ff0ad);box-shadow:0 0 9px #4ff0ad55}
+.uk-plan-attribution-row.late .uk-plan-attribution-rail i{background:linear-gradient(90deg,#b8871f,#ffcc3b);box-shadow:0 0 9px #ffcc3b55}
+.uk-plan-attribution-row.gap .uk-plan-attribution-rail i{background:linear-gradient(90deg,#a8425f,#f16a8d);box-shadow:0 0 9px #f16a8d55}
+.uk-plan-attribution-row>b{color:#dff6ff;font-size:11px;font-variant-numeric:tabular-nums;text-align:right}
+
+/* 四个事实数排成**一行**（原为 2×2）。
+   2×2 要比一行高 50px，而这一栏本来就比左边甘特还高 —— 先瘦自己。
+   ⚠️ 这里的四个数分别是「计划出餐 / 实际出餐 / 按时出餐 / 未按计划」，
+      与上面 KPI 卡的措辞刻意保持一致，别改其中一个的用词。 */
+
+/* 下排：与 .uk-plan-main 用**逐字相同**的列宽，否则上下两块面板左右边界会错开。
+   ⚠️ 高度 320px 不是随手定的，是**从折线图的 viewBox 倒推出来的**：
+      下排卡内容高 = 卡高 − 上下内距 30 − 上下边框 2 = 卡高 − 32
+      其中折线卡的固定开销 = 标题 head 37 + 图例 20 = 57
+      ⇒ 要让 `<svg>` 拿到 231px，卡高必须 = 231 + 32 + 57 = 320。
+      231 这个数的来历：卡片宽 1048.4，`viewBox` 宽 1200 ⇒ 缩放 0.874（被**宽**约束），
+      若 SVG 高度不足 240 × 0.874 = 209.8 就会翻过来被**高**约束，
+      于是 SVG 按 meet 等比缩放、左右各留一条空白 —— 折线图看着变窄、变糊。
+      这就是「标题一升字号，图就变窄」的传导链。改标题/图例的高度都要重算这个数。
+      主面板（`.uk-detail-panel`）是 flex:1，会被挤掉同样的高度。
+      ⚠️ 但这一版**不必再为它算余量**：明细区自己带 `overflow-y:auto`，
+         高度被挤时它自己滚，不会把行压扁、也不会溢出面板 ——
+         这是"明细"这个形态顺带带来的好处（旧的三栏版式没有滚动退路，
+         少 1px 就只能靠把行压到 32px 来吸收）。 */
+.uk-plan-bottom{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.35fr);gap:12px;flex:0 0 320px;min-height:0}
+.uk-plan-offpanel,.uk-plan-addon{min-height:0}
+
+/* ── 出餐时间判定（本页最核心的两条口径）────────────────────────────
+   ① 单菜 · 备餐提醒   ② 批次 · 出齐截止
+   两块并排而不是上下摞：摞起来相加约 240px，整页会因此多出一次滚动。
+   并排后行高取较大者，① 稍高，② 下方的留白刚好给批次余量条呼吸。
+   ⚠️ 两块之间的竖线用 `+` 选择器给第二块加 border-left，不要在 JSX 里插分隔元素 ——
+      插了就会多出一个 grid item，两栏宽度立刻错位。 */
+.uk-plan-crit-grid{display:grid;grid-template-columns:1.12fr 1fr;gap:20px;padding-top:12px}
+.uk-plan-crit{display:flex;min-width:0;flex-direction:column}
+.uk-plan-crit+.uk-plan-crit{padding-left:20px;border-left:1px solid #14568f}
+.uk-plan-crit-head{display:flex;align-items:center;gap:9px;margin-bottom:10px}
+.uk-plan-crit-no{display:grid;place-items:center;flex:0 0 auto;width:22px;height:22px;border:1px solid #1d5f9c;border-radius:50%;color:#7da8d1;font-size:10px}
+.uk-plan-crit-head>b{color:#eaf7ff;font-size:13px}
+.uk-plan-crit-head>em{margin-left:auto;flex:0 0 auto;padding:3px 8px;border-radius:3px;font-size:10px;font-style:normal;white-space:nowrap}
+.uk-plan-crit-head>em.bad{border:1px solid #a8425f;background:#3a1726;color:#f16a8d}
+.uk-plan-crit-head>em.ok{border:1px solid #2f9f6f;background:#0d3f2c;color:#4ff0ad}
+
+/* 未按提醒的菜逐条列出。右列固定 58px 右对齐，保证两行的「晚 X 分」上下齐平。 */
+.uk-plan-crit-row{display:flex;align-items:center;gap:9px;margin-bottom:6px;padding:7px 10px;border-radius:4px;background:#061c4499}
+.uk-plan-crit-row>b{flex:0 0 auto;color:#eaf7ff;font-size:12px}
+.uk-plan-crit-row>em{flex:0 0 auto;padding:2px 6px;border:1px dashed #70b5ff;border-radius:3px;color:#70b5ff;font-size:9px;font-style:normal}
+.uk-plan-crit-row>span{margin-left:auto;color:#7da8d1;font-size:11px;font-variant-numeric:tabular-nums}
+.uk-plan-crit-row>strong{flex:0 0 58px;color:#ffcc3b;font-size:11px;font-variant-numeric:tabular-nums;text-align:right}
+
+/* 批次余量条：画的是「批次窗口被用掉了多少」。
+   满格 = 刚好卡在批次时间点上出齐；留白 = 余量。 */
+.uk-plan-crit-batch{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.uk-plan-crit-batch>span{color:#b9d7ee;font-size:11px;font-variant-numeric:tabular-nums}
+.uk-plan-crit-batch>span b{color:#eaf7ff}
+.uk-plan-crit-batch>strong{margin-left:auto;flex:0 0 auto;font-size:12px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.uk-plan-crit-batch>strong.ok{color:#4ff0ad}
+.uk-plan-crit-batch>strong.bad{color:#f16a8d}
+.uk-plan-crit-rail{height:10px;border-radius:6px;background:#0a2752;overflow:hidden}
+.uk-plan-crit-rail i{display:block;height:100%;border-radius:6px;transition:width .25s}
+.uk-plan-crit-rail i.ok{background:linear-gradient(90deg,#15558f,#4ff0ad);box-shadow:0 0 9px #4ff0ad55}
+.uk-plan-crit-rail i.bad{background:linear-gradient(90deg,#15558f,#f16a8d);box-shadow:0 0 9px #f16a8d55}
+.uk-plan-crit-foot{margin:9px 0 0;color:#6f9ac2;font-size:10px;line-height:1.5}
+
+/* 数量口径单独一行，并明说「与时间无关」—— 它既不是提醒偏差也不是出齐偏差，
+   混进上面两块会让读者以为缺口也是时间问题。 */
+.uk-plan-crit-note{display:flex;align-items:center;gap:10px;margin-top:14px;padding:9px 11px;border:1px solid #14568f;border-radius:5px;background:#061c4499}
+.uk-plan-crit-note>span{flex:0 0 auto;color:#7da8d1;font-size:10px;white-space:nowrap}
+.uk-plan-crit-note>b{overflow:hidden;flex:0 1 auto;color:#eaf7ff;font-size:11px;font-weight:500;text-overflow:ellipsis;white-space:nowrap}
+.uk-plan-crit-note>em{margin-left:auto;flex:0 0 auto;color:#ffcc3b;font-size:12px;font-style:normal;font-variant-numeric:tabular-nums}
+
+/* 批次未按时出齐时，面板右上角那个 note 也要变红，否则「已/未」只靠文字区分，远处看不清。 */
+.uk-plan-note.bad{border-color:#a8425f;background:#3a1726;color:#f16a8d}
+
+/* 计划外加菜卡：蓝色左边线与甘特里那一行同色，一眼能对上。
+   「计划外」徽标用虚线边框 —— 它不是错误，只是不在计划里。 */
+.uk-plan-addon-card{margin-top:12px;padding:12px 13px;border:1px solid #2c6fa5;border-left:3px solid #70b5ff;border-radius:5px;background:#061c4499}
+.uk-plan-addon-head{display:flex;align-items:center;gap:9px}
+.uk-plan-addon-head b{color:#eaf7ff;font-size:14px}
+.uk-plan-addon-head em{padding:3px 7px;border:1px dashed #70b5ff;border-radius:3px;color:#70b5ff;font-size:10px;font-style:normal;white-space:nowrap}
+.uk-plan-addon-head strong{margin-left:auto;color:#70b5ff;font-size:17px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.uk-plan-addon-time{display:flex;align-items:center;gap:14px;margin-top:9px;color:#9fc3e4;font-size:11px;font-variant-numeric:tabular-nums}
+.uk-plan-addon-time .late{color:#ffcc3b}
+.uk-plan-addon-meta{margin-top:6px;color:#7da8d1;font-size:10px}
+
+/* 加菜面板的口径说明。样式极轻（虚线框），因为它是注解不是结论 ——
+   但必须存在：本页数量口径只算计划内，时间口径连计划外一起判，
+   不说清加菜为什么出现在时间口径里、又不进出餐效率，读者会自己得出错误结论。 */
+.uk-plan-addon-foot{margin-top:12px;padding:9px 11px;border:1px dashed #2c6fa5;border-radius:4px;background:#061c4499;color:#8fb6dc;font-size:10px;line-height:1.6}
+
+@media(max-width:1000px){.uk-plan-bottom{grid-template-columns:1fr}.uk-plan-crit-grid{grid-template-columns:1fr}.uk-plan-crit+.uk-plan-crit{padding-top:14px;padding-left:0;border-top:1px solid #14568f;border-left:0}}
+@media(max-width:1450px){.uk-plan-kpis{grid-template-columns:repeat(3,minmax(0,1fr))}}
 .uk-plan-stage-panel{display:flex;flex:1;flex-direction:column}.uk-plan-stage-cards{display:grid;flex:1;align-items:stretch;grid-template-columns:repeat(4,1fr);gap:10px;padding-top:14px}.uk-plan-stage-card{display:flex;min-width:0;min-height:62px;flex-direction:column;justify-content:center;gap:5px;padding:11px 12px;border:1px solid #14568f;border-radius:5px;background:#061c4499}.uk-plan-stage-card span{color:#7da8d1;font-size:11px}.uk-plan-stage-card strong{color:#10e4f2;font-size:17px;font-variant-numeric:tabular-nums}.uk-plan-stage-card small{color:#6f9ac2;font-size:10px}
 @media(max-width:1000px){.uk-plan-main{grid-template-columns:1fr;flex-basis:auto}.uk-plan-kpis{grid-template-columns:repeat(2,1fr)}.uk-plan-stage-cards{grid-template-columns:repeat(2,1fr)}}
 .uk-assurance{height:calc(100% - 120px);margin-top:20px;display:flex;flex-direction:column;gap:14px;overflow:auto}.uk-assurance-hero{display:flex;align-items:center;justify-content:space-between;gap:24px;flex:0 0 88px;padding:16px 20px;border:1px solid #1d5f9c;border-radius:7px;background:linear-gradient(105deg,#0e3976,#0b2a5c);box-shadow:inset 0 0 24px #0c438322}.uk-assurance-kicker{display:block;color:#58b8e9;font-size:12px;letter-spacing:1px}.uk-assurance-hero h2{margin:7px 0 0;color:#10e4f2;font-size:24px;letter-spacing:1px}.uk-assurance-hero p{margin:7px 0 0;color:#86acd1;font-size:12px}.uk-assurance-badge{display:flex;align-items:center;gap:8px;padding:9px 14px;border:1px solid #2f9f6f;border-radius:4px;background:#0d3f2c;color:#4ff0ad;font-size:13px;white-space:nowrap}.uk-assurance-badge i{width:8px;height:8px;border-radius:50%;background:currentColor;box-shadow:0 0 8px currentColor}.uk-assurance-badge.warn{border-color:#b8871f;background:#3a2f10;color:#ffcc3b}.uk-assurance-kpis{grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin:0;flex:0 0 100px}.uk-assurance-kpis .uk-module-kpi{min-height:100px}.uk-assurance-main{display:grid;grid-template-columns:1.2fr 1fr;gap:14px;flex:0 0 248px;min-height:248px}.uk-assurance-bottom{display:grid;grid-template-columns:1.25fr 1fr;gap:14px;flex:1;min-height:0}.uk-assurance-panel{min-height:0;overflow:hidden}.uk-assurance-meals{display:flex;flex-direction:column;gap:17px;padding-top:16px}.uk-assurance-meal{display:flex;flex-direction:column;gap:7px}.uk-assurance-meal-head,.uk-assurance-meal-meta{display:flex;align-items:center;justify-content:space-between;gap:12px}.uk-assurance-meal-head b{color:#eaf7ff;font-size:14px}.uk-assurance-meal-head span{font-size:11px}.uk-assurance-meal-head span.done,.uk-assurance-meal-meta strong{color:#4ff0ad}.uk-assurance-meal-head span.active{color:#6ff0fa}.uk-assurance-meal-head span.warn{color:#ffcc3b}.uk-assurance-meal-track{height:12px;border-radius:8px;background:#0a2752;overflow:hidden}.uk-assurance-meal-track i{display:block;height:100%;min-width:4px;border-radius:8px}.uk-assurance-meal-track i.done{background:linear-gradient(90deg,#2f9f6f,#4ff0ad)}.uk-assurance-meal-track i.active{background:linear-gradient(90deg,#1485bc,#25e0ee)}.uk-assurance-meal-track i.warn{background:linear-gradient(90deg,#b8871f,#ffcc3b)}.uk-assurance-meal-meta{color:#7da8d1;font-size:11px}.uk-assurance-judgement{display:flex;flex-direction:column;gap:7px;margin-top:16px;padding:16px;border:1px solid #2f9f6f;border-radius:5px;background:#0d3f2c}.uk-assurance-judgement strong{color:#4ff0ad;font-size:17px}.uk-assurance-judgement span{color:#a9d9c0;font-size:11px}.uk-assurance-judgement.warn{border-color:#b8871f;background:#3a2f10}.uk-assurance-judgement.warn strong{color:#ffcc3b}.uk-assurance-judgement.warn span{color:#e2c879}.uk-assurance-checks{display:flex;flex-direction:column;gap:10px;padding-top:15px}.uk-assurance-checks>div{display:grid;grid-template-columns:10px 1fr auto;align-items:center;gap:8px;color:#b9d7ee;font-size:11px}.uk-assurance-checks i{width:8px;height:8px;border-radius:50%;background:#4ff0ad;box-shadow:0 0 7px currentColor}.uk-assurance-checks i.warn{background:#ffcc3b}.uk-assurance-checks i.info{background:#70b5ff}.uk-assurance-checks b{color:#eaf7ff;font-weight:500;white-space:nowrap}.uk-assurance-flow{display:flex;align-items:stretch;gap:8px;height:calc(100% - 48px);padding-top:16px}.uk-assurance-flow-item{display:flex;flex:1;min-width:0;flex-direction:column;gap:5px;padding:11px 10px;border:1px solid #2c6fa5;border-radius:5px;background:#061c4499}.uk-assurance-flow-item>span{color:#7da8d1;font-size:10px}.uk-assurance-flow-item b{color:#eaf7ff;font-size:13px}.uk-assurance-flow-item small{min-height:26px;color:#7da8d1;font-size:10px;line-height:1.4}.uk-assurance-flow-item em{align-self:flex-start;padding:3px 6px;border-radius:3px;background:#0e3776;color:#70b5ff;font-size:10px;font-style:normal}.uk-assurance-flow-item.done{border-color:#2f9f6f}.uk-assurance-flow-item.done em{background:#0d3f2c;color:#4ff0ad}.uk-assurance-flow-item.active{border-color:#25e0ee}.uk-assurance-flow-item.active em{background:#0c3e67;color:#6ff0fa}.uk-assurance-flow-item.warn{border-color:#b8871f}.uk-assurance-flow-item.warn em{background:#3a2f10;color:#ffcc3b}.uk-assurance-flow-arrow{align-self:center;color:#25e0ee;font-size:20px;font-style:normal}.uk-assurance-attention{display:flex;flex-direction:column;gap:9px;padding-top:16px}.uk-assurance-attention-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px;border:1px solid #14568f;border-left:3px solid #ffcc3b;border-radius:4px;background:#061c4499}.uk-assurance-attention-row>div{display:flex;min-width:0;flex-direction:column;gap:4px}.uk-assurance-attention-row b{overflow:hidden;color:#eaf7ff;font-size:12px;text-overflow:ellipsis;white-space:nowrap}.uk-assurance-attention-row span{color:#7da8d1;font-size:10px}.uk-assurance-attention-row strong{color:#ffcc3b;font-size:11px;white-space:nowrap}.uk-assurance-empty{padding:24px 12px;color:#7da8d1;font-size:12px;text-align:center}
+
+
+/* ══ 计划达成页（标准统计图表版）════════════════════════════════════════
+   这一页用四种标准图，**每种只回答一个问题**，彼此不重叠：
+     环形饼图 = 全天达成率   /  柱状图 = 哪个餐段出问题
+     折线图   = 哪一批最紧   /  横向柱 = 哪几道菜
+   四个图共用一套语义色：绿 = 达标、粉 = 没按计划、黄 = 晚出。
+   **新图不要再引入第四种颜色**，否则同一屏里绿色会有两种含义。 */
+.uk-cht-panel{display:flex;flex:1;min-height:0;flex-direction:column;gap:10px}
+.uk-cht-row{display:grid;flex:1.55;min-height:0;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.uk-cht-card{display:flex;min-height:0;flex-direction:column;padding:10px 12px;border:1px solid #14568f;border-radius:6px;background:#08213f}
+.uk-cht-card-wide{flex:1;min-height:0}
+/* 下排两张卡的标题**不再有专属样式** —— 直接用 `.uk-module-panel-head > h2`
+   （= 主面板「出餐统计」那一套：18px / #eaf7ff / 700 / 下边线），
+   所以标题的长相由构造保证一致，不靠"照着抄一遍"。
+   下面只剩折线图的**图例**，它从标题里搬出来单独占一行（放在标题下面）。
+   放在 HTML 里比塞进 SVG 里强：**HTML 文字是 1:1 的，SVG 里的一切都要乘 0.87**。
+   ⚠️ 文案要写成「相对什么」而不是只说「超时/提前」，而且**必须跟着折线图的模式一起换**：
+      批次视图的基准是**每个批次各自的计划时刻**，逐菜视图的基准是**每道菜各自的备餐提醒**。
+      不点明基准、或者两个视图共用一句图例，读者都会拿错尺子。
+      （`lineMode` 在 index.tsx 里，标题和图例**一起**切 —— 只切标题是这里最常见的漏改。） */
+.uk-cht-legend{display:flex;flex:0 0 auto;align-items:center;gap:16px;padding:7px 0 0;color:#8fb6dc;font-size:11px}
+.uk-cht-legend span{display:inline-flex;align-items:center;gap:6px}
+.uk-cht-legend i{width:9px;height:9px;flex:0 0 auto;border-radius:2px}
+.uk-cht-legend i.bad{background:#f16a8d}
+.uk-cht-legend i.ok{background:#4ff0ad}
+
+/* ── 环形饼图：环用 stroke-dasharray 画，百分比由 ok/total 现算 ── */
+.uk-cht-donuts{display:flex;flex:1;min-height:0;align-items:center;justify-content:space-around;gap:10px}
+.uk-cht-donut{position:relative;width:132px;height:132px;flex:0 0 auto}
+.uk-cht-donut svg{display:block;width:100%;height:100%}
+.uk-cht-donut-c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px}
+.uk-cht-donut-c b{color:#eaf6ff;font-size:20px;font-variant-numeric:tabular-nums}
+.uk-cht-donut-c small{color:#8fb6dc;font-size:11px;font-variant-numeric:tabular-nums}
+
+/* ── 柱状图：柱高 = 该餐段批次数，段内按 达标/未达标 堆叠 ── */
+.uk-cht-bars{display:flex;flex:1;min-height:0;align-items:flex-end;gap:8px;padding-top:10px}
+.uk-cht-bar{display:flex;flex:1;height:100%;min-height:0;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px}
+.uk-cht-bar-track{display:flex;flex:1;width:52px;min-height:0;align-items:flex-end}
+/* column-reverse 让「达标」贴基线、「没按计划」浮在上面 —— 异常段在上更容易被看见 */
+.uk-cht-bar-stack{display:flex;width:100%;flex-direction:column-reverse;overflow:hidden;border-radius:3px}
+.uk-cht-seg{min-height:0}
+.uk-cht-seg.ok{background:linear-gradient(180deg,#4ff0ad,#2f9f6f)}
+.uk-cht-seg.bad{background:linear-gradient(180deg,#f16a8d,#a8425f)}
+.uk-cht-bar b{flex:0 0 auto;color:#8fb6dc;font-size:11px}
+.uk-cht-bar small{flex:0 0 auto;color:#4ff0ad;font-size:10px;font-variant-numeric:tabular-nums}
+.uk-cht-bar small.bad{color:#f16a8d}
+
+/* ── 折线图：y = 相对**该对象自己的承诺时刻**的超时分钟（负值提前），零线即计划线 ──
+   ⚠️ 零线画的是「每个对象各自的承诺时刻」之差，不是餐段窗口结束那条统一截止线。
+      批次视图里它 = 本批次的计划出餐时刻；逐菜视图里它 = 该菜自己的备餐提醒时刻。
+      用统一基准会让同餐段里越早的批次提前量越大，详见 index.tsx 里 MEAL_ACHIEVEMENTS 上方注释。
+   ⚠️ 纵轴也是**每套模式各一套写死值**（批次 +25/−30、单菜 +45/−15），见 index.tsx 规矩 ②。
+   ⚠️ 这里所有 font-size 都是 **viewBox 单位**，最终会被 SVG 缩放到约 0.87 倍
+      （卡片约 1082 宽、viewBox 1200 宽，viewBox 高 240）。所以声明值比「想要的像素数」大一号：
+      想要 13px 就写 15px。原先是声明 9px → 实际 **7.9px**，大屏上根本看不清。 */
+.uk-cht-line{flex:1;min-width:0;min-height:0}
+.uk-line-card .uk-cht-line{width:100%;height:100%}
+.uk-cht-line text{font-family:inherit}
+/* 零线两侧的语义分区带：铺一层底色让「超没超计划」一眼可见，不用读者去数像素。
+   批次模式下两带高度接近（纵轴 +25/−30、实际偏差 −27~+20），不再有「超时区被压得很扁」的问题 ——
+   那是**基准取错**（用餐段截止当基准）时的症状，基准下沉到批次级之后自己就好了。
+   逐菜模式下纵轴是 +45/−15 ⇒ 零线落在 75% 高度处，绿色带（提前侧）只有 42px：
+   这是被数据逼的（单菜偏差是"绝大多数准点 + 少数几道晚半小时以上"的分布，
+   要容下 +37 的尖峰，零线只能压下去），不是画歪了。红带才是要读的那条信息。 */
+.uk-cht-zone-bad{fill:#f16a8d;opacity:.10}
+.uk-cht-zone-ok{fill:#4ff0ad;opacity:.06}
+.uk-cht-zero{stroke:#ffcc3b;stroke-width:1.2;stroke-dasharray:6 5;opacity:.85}
+.uk-cht-zero-t{fill:#ffcc3b;font-size:12px}
+.uk-cht-poly{fill:none;stroke:#10e4f2;stroke-width:2.2;stroke-linejoin:round}
+.uk-cht-line circle.ok{fill:#4ff0ad;stroke:#08213f;stroke-width:2}
+.uk-cht-line circle.bad{fill:#f16a8d;stroke:#08213f;stroke-width:2}
+/* 贴底的点画成空心：位置是假的（被夹到下界），圆下面的标注写的才是真实值 */
+.uk-cht-line circle.clamped{fill:#08213f;stroke-width:2.6}
+/* paint-order:stroke 让描边画在填充**下面** —— 数值标注贴着折线时（尤其是 V 形谷底那个点）
+   有一圈深色光晕才读得出来。不加这层，青色折线会从数字中间穿过去。 */
+.uk-cht-pt{font-size:15px;font-weight:600;paint-order:stroke fill;stroke:#08213f;stroke-width:3.5px;stroke-linejoin:round}
+.uk-cht-pt.ok{fill:#4ff0ad}
+.uk-cht-pt.bad{fill:#f16a8d}
+.uk-cht-xt{fill:#a9cbeb;font-size:15px}
+
+/* ⚠️ 这里原本有一组 `.uk-cht-legend / .uk-cht-bars / .uk-cht-hgroups / .uk-cht-hscale /
+   .uk-cht-hnote`，是早先"横向条形图"那个版本留下的 —— 全 `src` 下已无任何 JSX 引用，已删。
+   删的原因不只是洁癖：**`.uk-cht-legend` 和新加的折线图图例同名**，而它在文件里位于后面，
+   CSS 同权重后写者胜 ⇒ 新图例被静默套上旧样式（10px / #7da8d1 / 11px 色块），
+   探针量出来是 `rgb(125,168,209)` 而不是我写的 `#8fb6dc` 才发现的。
+   → 教训：**加新类名之前先 grep 一遍**，尤其在这个已经堆了两千行的 style.css 里。 */
+
+/* ── 横向柱状图（没按计划的菜）──
+   ⚠️ 两组单位不同（分钟 / 盆），**各自归一化到本组最大值**，因此两组的条长
+      不可跨组直接比长短 —— 这是刻意的：混在一根轴上比 37 分和 1 盆是错的。 */
+.uk-cht-hgroups{display:grid;flex:1;min-height:0;grid-template-columns:1fr 1fr;gap:20px;padding-top:6px}
+.uk-cht-hgroup{display:flex;min-height:0;flex-direction:column;gap:6px}
+.uk-cht-hlabel{color:#7da8d1;font-size:10px}
+.uk-cht-hbar{display:grid;align-items:center;grid-template-columns:76px minmax(0,1fr) 42px;gap:8px}
+.uk-cht-hbar b{overflow:hidden;color:#c8dcef;font-size:11px;text-overflow:ellipsis;white-space:nowrap}
+.uk-cht-hbar-track{height:13px;overflow:hidden;border-radius:2px;background:#0a2752}
+.uk-cht-hbar-track i{display:block;height:100%;border-radius:2px}
+.uk-cht-hbar-track i.late{background:linear-gradient(90deg,#7d5a0e,#ffcc3b)}
+.uk-cht-hbar-track i.short{background:linear-gradient(90deg,#7d2b43,#f16a8d)}
+.uk-cht-hbar small{font-size:10px;font-variant-numeric:tabular-nums;text-align:right}
+.uk-cht-hgroups > .uk-cht-hgroup:nth-child(1) .uk-cht-hbar small{color:#ffcc3b}
+.uk-cht-hgroups > .uk-cht-hgroup:nth-child(2) .uk-cht-hbar small{color:#f16a8d}
+/* 每组的刻度轴：两个 span 都落在第 2 列（轨道那一列），一个贴左一个贴右，
+   正好标出本组条长的 0 与满值 —— 读者据此知道两组的长度标准不同。 */
+.uk-cht-hscale{display:grid;align-items:center;grid-template-columns:76px minmax(0,1fr) 42px;gap:8px;color:#5f88ad;font-size:9px;font-variant-numeric:tabular-nums}
+.uk-cht-hscale span:first-child{grid-column:2;text-align:left}
+.uk-cht-hscale span:last-child{grid-column:2;text-align:right}
+/* margin-top:auto 把这句推到本组底部 —— 组内条目少时（少做那组只有 1 条）
+   下方会空出一大片，让它兜住底，顺带把「为什么只有这一条」交代掉。 */
+.uk-cht-hnote{margin-top:auto;padding-top:8px;color:#5f88ad;font-size:9px;line-height:1.5}
+
+/* ── 脚注 ── */
+.uk-cht-foot{display:flex;flex:0 0 auto;align-items:center;justify-content:space-between;gap:12px;padding-top:10px;border-top:1px solid #14568f;color:#7da8d1;font-size:10px}
+.uk-cht-foot b{flex:0 0 auto;color:#8fb6dc;font-weight:500;white-space:nowrap}
+
+@media(max-width:1000px){.uk-cht-row{grid-template-columns:1fr}.uk-cht-hgroups{grid-template-columns:1fr}}
+
+/* ══ 计划达成页 · 四状态分解（计划 / 及时 / 延迟 / 未完成）═════════════════
+   **三个状态色全站统一**：绿 = 及时、黄 = 延迟、粉 = 未完成。
+   这三色同时用于堆叠条、环形图、图例 —— 换个地方就换色的话，读者要重新学一遍。 */
+
+/* KPI 的第四个语义色：延迟用黄。绿/红/蓝之外必须补这一档，
+   否则「延迟 10 盆」只能借红色，会跟「未完成」混成同一档严重度。 */
+.uk-module-kpi.amber{border-color:#b8871f}
+.uk-module-kpi.amber b{color:#ffcc3b}
+
+/* ── 主面板：按批次分组的**明细** ──
+   形态从「三栏并列对比」改成「筛选 + 明细」：
+   对比（谁比谁多、谁比谁晚）交给环形图和折线图 —— 图本来就该干这个；
+   面板只负责把当前范围里**每一道菜**摊开。
+   这不是把三栏删掉降级，而是分工归位：原来那张 100% 堆叠条既想说比例又想说对比，
+   结果两件事都只说了一半。 */
+.uk-detail-panel{display:flex;flex:1;min-height:0;flex-direction:column}
+.uk-detail-legend{display:flex;flex:0 0 auto;align-items:center;gap:16px;padding-top:6px;color:#8fb6dc;font-size:11px}
+/* ⚠️ 上面 padding-top 由 8px 收到 6px：图例字号 10→11px 后图例行高从 22 涨到 24，
+   会从明细体那里吃掉 2px 可视高。收 2px 上内距正好抵平，图例占位回到 22px。 */
+.uk-detail-legend span{display:flex;align-items:center;gap:6px}
+.uk-detail-legend i{width:13px;height:13px;border-radius:3px}
+.uk-detail-legend i.ontime{background:#4ff0ad}
+.uk-detail-legend i.late{background:#ffcc3b}
+.uk-detail-legend i.undone{background:#f16a8d}
+.uk-detail-legend em{margin-left:auto;color:#5f88ad;font-style:normal}
+
+/* ── 明细区：**整个面板唯一允许滚动的地方** ──
+   ⚠️ 这里开内部滚动是**故意的**，不是漏了"零滚动"那条验收：
+      全部餐段下有 6 个批次、27 道菜，任何排版都塞不进约 300px 的可视高度 ——
+      硬压只有两条路（把行压到 20px 高，或者砍掉一大半菜），两条都会让"明细"名不副实。
+      筛到具体餐段/批次之后（用户说的"大概率"情形）一屏放得下，滚动条根本不出现 ——
+      也就是说**这条滚动条只在"全部餐段"这种浏览态才出现**，代价可以接受。 */
+/* ⚠️ `scrollbar-gutter:stable` 不是可有可无的：不加的话，滚动条出现与否会改变
+   可见宽度（1822 ↔ 1816），两列的行宽跟着来回跳 3px —— 切一次范围跳一次。
+   留着 6px 的空槽，宽度就恒定，代价只是一条几乎看不见的深色窄条。 */
+.uk-detail-body{display:flex;flex:1;min-height:0;flex-direction:column;gap:12px;padding:8px 8px 0 0;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable}
+.uk-detail-body::-webkit-scrollbar{width:6px}
+.uk-detail-body::-webkit-scrollbar-track{background:#0a2752;border-radius:3px}
+.uk-detail-body::-webkit-scrollbar-thumb{background:#1d5f9c;border-radius:3px}
+.uk-detail-body::-webkit-scrollbar-thumb:hover{background:#2c6fa5}
+
+.uk-detail-group{display:flex;flex-direction:column;gap:6px}
+/* 组头 = 原来的「结论带」：3px 左边框 + 深底 + 右侧徽标，和 KPI 卡同一档存在感。
+   一个批次一组，这一条是组内唯一的"结论"，不能弱化成一行小字。 */
+.uk-detail-grouphead{display:flex;align-items:center;gap:12px;padding:8px 12px;border:1px solid #2f9f6f;border-left-width:3px;border-radius:4px;background:#0d3f2c;font-size:12px}
+.uk-detail-grouphead b{flex:0 0 auto;color:#eaf7ff;font-size:13px;white-space:nowrap}
+.uk-detail-grouphead span{color:#a9d9c0;font-size:12px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.uk-detail-grouphead em{margin-left:auto;padding:3px 9px;border-radius:3px;background:#0f4a34;color:#4ff0ad;font-size:12px;font-style:normal;white-space:nowrap}
+/* ⚠️ 「延迟/及时」这对词和图例里菜品级那对**同名**，但这里是**批次级**判据
+   （基准 = 本批 dueAt）。所以徽章的颜色必须跟着**词**走，不能跟着「异常」走：
+   原来写的是红/粉（#a8425f / #f16a8d）——那是图例里「未完成」的颜色，
+   徽章一改叫「延迟」，红粉就会和「未完成」撞色，读者会以为这批有菜没做完。
+   改成琥珀（= 图例里的延迟色 #b8871f→#ffcc3b）。 */
+.uk-detail-grouphead.bad{border-color:#b8871f;background:#3a2b0f}
+.uk-detail-grouphead.bad b{color:#ffe6a8}
+.uk-detail-grouphead.bad span{color:#dfc98e}
+.uk-detail-grouphead.bad em{background:#5c4410;color:#ffd25e}
+
+/* ⚠️ 组内排**两列**，不是一列。单栏全宽实测 1822px，一行里的条会长到 1600px ——
+   一根 100% 堆叠条拉到这么长，段与段的**长度对比**就失效了（读者只能靠条里的数字
+   读比例，等于把条画废）。两列之后每列约 890px、条约 500px，回到可读区间。
+   ⚠️ 两列是**同一个 grid 的两条轨道**，所以左右两列的行天然等高对齐；
+      不要改成两个独立的 flex 容器 —— 那样两列的基线会各自漂移，读起来就散了。 */
+/* ⚠️ 行间距保持 4px 不动。抬字号时本来担心会顶破"单批次不滚动"，
+   实测发现**多虑了**：字号涨的是**行内文字的行盒**（菜名 17 + 小注 14 + 1 = 32px），
+   行高 36px 是**写死的**，行盒变高不会让行变高 —— 单个批次的内容高只涨了
+   组头那 1px（40→41）。所以行间距、行高、两列宽（887）、条宽（495）全部原样。
+   ⚠️ 量余量时**别信 `scrollHeight`**：滚动容器里 content < clientHeight 时，
+      `scrollHeight` 会被下限顶到等于 `clientHeight`，看起来像"零余量"。
+      要量真实余量，用 `最后一个子元素的 bottom − body 内容盒 top + paddingBottom`。
+      （本案按 `scrollHeight` 算出的是 300/300=0，真实是 278/300=**22px** 余量。） */
+.uk-detail-rows{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 34px}
+
+/* 明细行：左边「菜名 + 时间」两行文字，中间 100% 堆叠条，右边「计划 / 实际」。
+   ⚠️ 行高必须**显式写 height**：在 grid 容器里 `flex:1 1 40px` 是失效的，
+      不写的话行高会退回按内容撑（实测约 32px），和别处的行对不上。
+   ⚠️ 36px 是**实测倒推出来的，不是审美选择**：两行文字的内容高约 32px（菜名 12px→17px + 小注 10px→14px + 1px 行距），
+      36px 上下各留 2px；同时 12 道菜的单个批次是 6 行 × 36 + 5 × 4 = 236px，
+      加上组头 40 + 组间距 6 + 明细区内距 8 = 290px，才装得进约 300px 的可视高度。
+      **按 38px 算过一次是 306px，正好多出 6px 逼出一条滚动条** ——
+      也就是说"单批次也要滚动"和"不滚动"之间只差这 2px，改行高前先重算。
+   ⚠️ 字号是**明细区唯一一套比页面其它区域更小的字**，所以有一份硬底：
+      全页其余部分最小 11px（折线图轴标签），明细区**不允许出现 9px**——
+      早先用过 9px 小注，实测 54 个元素比全页最小字号还小一档，已整体抬到 10/11/12。
+      行高不变（仍 36）时抬字号是**安全的**：内容高 32 < 36，上面那笔 290px 的账一分不动。
+      再往上抬就要跟行高打架了（小注 9→11 会让内容高变 35px，贴死行框）。
+   ⚠️ `--detail-name:300px` 由最长的那条 note 定：`提醒 07:12 → 出餐 07:12 · 超 28 分`
+      在 10px + tabular-nums 下约 167px，300px 是留给两位数偏差和更长菜名的余量。 */
+.uk-detail-row{--detail-name:300px;display:grid;height:36px;align-items:center;grid-template-columns:var(--detail-name) minmax(0,1fr) 76px;gap:8px}
+.uk-detail-name{display:flex;min-width:0;flex-direction:column;gap:1px}
+.uk-detail-name b{overflow:hidden;color:#c8dcef;font-size:12px;text-overflow:ellipsis;white-space:nowrap}
+.uk-detail-name small{overflow:hidden;color:#5f88ad;font-size:10px;font-variant-numeric:tabular-nums;text-overflow:ellipsis;white-space:nowrap}
+.uk-detail-row.bad .uk-detail-name b{color:#f7c0d1}
+.uk-detail-row.bad .uk-detail-name small{color:#8d6d7c}
+
+/* 尾列 `已完成 / 计划`（顺序别改，理由见 index.tsx 里那段注释）。
+   ⚠️ 76px 是按最长那一档定的：`12 / 12`（两位数的计划量）
+   在 12px + tabular-nums 下加「盆」约 68px，正好卡住，所以别再往上抬字号。
+   ⚠️ `tabular-nums` 不能省：不加的话 `4 / 4` 和 `12 / 12` 的斜杠不在同一条竖线上，
+      一列数字看着就是歪的。 */
+.uk-detail-tail{display:flex;align-items:baseline;justify-content:flex-end;gap:3px}
+.uk-detail-tail b{color:#8fb6dc;font-size:12px;font-variant-numeric:tabular-nums}
+.uk-detail-tail small{color:#5f88ad;font-size:10px}
+
+.uk-detail-empty{margin:0;padding:14px 0;color:#5f88ad;font-size:11px}
+
+/* ── 100% 堆叠条（明细行与图例共用）──
+   三段用 flexGrow 分配宽度：flex-basis:0 让 flexGrow:0 的段自然宽 0，
+   比写三个百分比 width 稳（百分比会因舍入出现总和 99.9% 的缝）。 */
+.uk-detail-track{display:flex;height:18px;overflow:hidden;border-radius:3px;background:#0a2752}
+.uk-detail-track > i{display:flex;flex-basis:0;min-width:0;align-items:center;justify-content:center;overflow:visible}
+.uk-detail-track > i b{color:#062040;font-size:11px;font-weight:700;line-height:1;white-space:nowrap;text-shadow:0 0 2px #ffffff66}
+.uk-detail-track > i.ontime{background:linear-gradient(90deg,#2f9f6f,#4ff0ad)}
+.uk-detail-track > i.late{background:linear-gradient(90deg,#b8871f,#ffcc3b)}
+.uk-detail-track > i.undone{background:linear-gradient(90deg,#a8425f,#f16a8d)}
+.uk-detail-track.bad{box-shadow:0 0 0 1px #a8425f}
+
+/* ── 下排：全天构成环形图 + 各批次出齐偏差折线 ──
+   下排两张卡复用 `.uk-module-panel`（跟主面板同一套渐变底/圆角/内阴影），
+   只补上纵向 flex —— 之前图省事挂 `.uk-cht-card`，结果这两张卡比主面板暗一档，
+   同一屏里两种底色看着像两个系统。 */
+.uk-donut-card,.uk-line-card{display:flex;min-height:0;flex-direction:column}
+.uk-donut-wrap{display:flex;flex:1;min-height:0;align-items:center;justify-content:center;gap:56px;padding-top:10px}
+.uk-donut-card .uk-cht-donut{width:176px;height:176px}
+.uk-donut-card .uk-cht-donut-c b{font-size:24px}
+.uk-donut-card .uk-cht-donut-c small{font-size:12px}
+.uk-donut-card .uk-donut-item b{font-size:18px}
+.uk-donut-card .uk-donut-item small{font-size:12px}
+.uk-donut-seg.ontime{stroke:#4ff0ad}
+.uk-donut-seg.late{stroke:#ffcc3b}
+.uk-donut-seg.undone{stroke:#f16a8d}
+.uk-donut-legend{display:flex;flex:1;min-width:0;flex-direction:column;gap:9px}
+.uk-donut-item{display:grid;align-items:baseline;grid-template-columns:12px auto minmax(0,1fr);gap:9px}
+.uk-donut-item i{width:12px;height:12px;border-radius:3px;align-self:center}
+.uk-donut-item b{font-size:16px;font-variant-numeric:tabular-nums}
+.uk-donut-item small{color:#8fb6dc;font-size:11px;font-variant-numeric:tabular-nums}
+.uk-donut-item.ontime i{background:#4ff0ad}
+.uk-donut-item.ontime b{color:#4ff0ad}
+.uk-donut-item.late i{background:#ffcc3b}
+.uk-donut-item.late b{color:#ffcc3b}
+.uk-donut-item.undone i{background:#f16a8d}
+.uk-donut-item.undone b{color:#f16a8d}
+
+@media(max-width:1000px){.uk-detail-rows{grid-template-columns:1fr}.uk-detail-grouphead{flex-wrap:wrap}}
+@media(max-width:1450px){.uk-dish-kpis{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:1000px){.uk-dish-head{align-items:flex-start;flex-direction:column}.uk-dish-head .uk-date-switch{width:100%;justify-content:flex-end}.uk-dish-main{grid-template-columns:1fr;flex-basis:auto}.uk-dish-segment-panel,.uk-dish-rule-panel{min-height:270px}.uk-dish-table-panel{min-height:420px}}

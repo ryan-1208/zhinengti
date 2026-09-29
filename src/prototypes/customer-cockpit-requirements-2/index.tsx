@@ -15,7 +15,7 @@
  * 智厨生产驾驶舱通过 page=overview 进入；旧的 process / equipment 链接会兼容回落到这个合并页。
  * 行为监控视图的数据口径见 ./components/BehaviorView.tsx。
  */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { BehaviorView } from './components/BehaviorView';
 import './style.css';
 import kitchenImage from './assets/realtime-kitchen.png';
@@ -142,25 +142,30 @@ const ACTIVE_ROUTE_PATHS = [
    也不在 PRD 的运营驾驶舱指标清单里（PRD:194）。移除理由与「日后要放回需先定什么」
    记在 style.css 的 .uk-kpi 注释处。 */
 
-type ViewId = 'cockpit' | 'behavior' | 'overview' | 'process' | 'equipment';
+type ViewId = 'cockpit' | 'behavior' | 'overview' | 'dish' | 'process' | 'equipment';
 
 function readViewFromLocation(): ViewId {
   if (typeof window === 'undefined') return 'cockpit';
   const page = new URLSearchParams(window.location.search).get('page');
   if (page === 'behavior') return 'behavior';
+  if (page === 'dish') return 'dish';
   if (page === 'overview' || page === 'process' || page === 'equipment') return 'overview';
   return 'cockpit';
 }
 
 function normalizeViewId(id: string): ViewId {
   if (id === 'behavior') return 'behavior';
+  if (id === 'dish') return 'dish';
   if (id === 'overview' || id === 'process' || id === 'equipment') return 'overview';
   return 'cockpit';
 }
 
 const TOP_NAV_ITEMS: Array<{ id: ViewId; label: string }> = [
   { id: 'cockpit', label: '总览' },
-  { id: 'overview', label: '计划与进度' },
+  /* 「计划与进度」→「出餐效率」→「计划达成」：这一页的定位改过两次，
+     现在它回答的是「哪些批次、哪些菜没按计划」的跨餐段汇总。
+     名字必须跟页内 h1 逐字一致，否则点进来看到的大标题跟刚点的词对不上。 */
+  { id: 'overview', label: '出餐统计' },
   { id: 'behavior', label: '行为监控' },
 ];
 
@@ -188,7 +193,6 @@ function TopHeader({ current, clock, onNavigate }: { current: ViewId; clock: str
         <div className="uk-logo">智</div>
         <div>
           <h1>智慧厨房驾驶舱</h1>
-          <p className="uk-brand-subtitle">后厨管理 · 设备协同</p>
         </div>
       </div>
       <PageTopNav current={current} onNavigate={onNavigate} />
@@ -215,12 +219,15 @@ function CockpitModuleShell({ current, clock, onNavigate, children }: CockpitMod
   );
 }
 
-function ModuleKpi({ label, value, note, tone = '' }: { label: string; value: string; note?: string; tone?: string }) {
+function ModuleKpi({ label, value, sideValue, note, meta, tone = '' }: { label: string; value: string; sideValue?: string; note?: string; meta?: React.ReactNode; tone?: string }) {
   return (
     <div className={`uk-module-kpi ${tone}`.trim()}>
       <span>{label}</span>
-      <b>{value}</b>
-      {note ? <small>{note}</small> : null}
+      <div className="uk-module-kpi-value-row">
+        <b>{value}</b>
+        {sideValue ? <strong>{sideValue}</strong> : null}
+      </div>
+      {meta ? <div className="uk-module-kpi-meta">{meta}</div> : note ? <small>{note}</small> : null}
     </div>
   );
 }
@@ -860,128 +867,1157 @@ function MealAssuranceModule({ data, clock, onNavigate }: { data: ModuleSharedDa
   );
 }
 
-type ScheduledDish = {
+/* ══════════════════════════════════════════════════════════════════════
+   计划达成复盘（导航「计划达成」）
+
+   这一页只回答两个问题，别的都不回答：
+     ① 每个餐段有哪些**批次**没按计划
+     ② 每个餐段有哪些**菜**没按计划
+   所以它是**跨餐段的汇总页**，不做单批次的逐菜时间线 —— 那是明细，已撤。
+
+   ── 判定口径（改口径前先读这一段）───────────────────────────────
+   · 「按计划」= 时间与数量**都**达标。
+   · **批次**是否按计划 = 只看**出餐时间**：该批最后一道菜的出餐时刻晚于
+     **本批次自己的计划出餐时刻**（`batch.dueAt`），这个批次才算没按计划。
+     批内个别菜晚出**不影响**批次达标 —— 菜是一道一道做的，中间被前一道挤掉
+     几分钟是常态。
+     ⚠️ 这个时刻是**每个批次各自**的，不是餐段共用一个。共用是错的：
+       一个餐段只有**一个**截止时刻时，同餐段里越早的批次「提前量」必然越大，
+       折线图上会出现「早两个小时」这种没有度量意义的点，把真正的信号压成细缝。
+       （踩过：见 MEAL_ACHIEVEMENTS 上方那段注释。）
+   · **菜**是否按计划 = 时间与数量**任一**不满足即算。一道菜只归一类：
+     少做优先于晚出，避免同一道菜被计两次（既少又晚时，「少做」更该被看见）。
+   · ⚠️ **计划外的临时加菜不在任何批次内**：它不参与批次达标判定，也不进
+     「没按计划的菜」，只作为事实单独统计（它确实占了设备时间）。
+     上一版把加菜算进了批次的时间口径，是错的，已按用户要求剔除。
+   ══════════════════════════════════════════════════════════════════════ */
+
+/** 一道菜的结果。三态互斥，`short` 优先于 `late`。 */
+type DishOutcome = 'ontime' | 'late' | 'short';
+
+type BatchDish = {
   name: string;
-  batch: string;
-  device: string;
-  prep: string | null;
-  weigh: string;
-  cook: string;
-  out: string;
+  /** 计划出餐量（盆） */
+  planTrays: number;
+  /** 实际出餐量（盆） */
+  actualTrays: number;
+  /** 备餐提醒：系统按批次节奏提醒「该出这道菜了」的时刻 */
+  remindAt: string;
+  /** 实际出餐时刻 */
+  actualOut: string;
 };
 
-const SCHEDULED_DISHES: ScheduledDish[] = [
-  { name: '小炒鸡胗肉', batch: '批次1', device: '炒菜机 CCJ1', prep: null, weigh: '17:57', cook: '18:00', out: '18:17' },
-  { name: '丝瓜炒蛋', batch: '批次1', device: '炒菜机 CCJ2', prep: '17:45', weigh: '17:55', cook: '18:17', out: '18:33' },
-  { name: '小炒杏鲍菇肉片', batch: '批次1', device: '炒菜机 CCJ3', prep: '17:43', weigh: '17:53', cook: '18:33', out: '18:49' },
-  { name: '韭菜炒香干', batch: '批次1', device: '炒菜机 CCJ4', prep: null, weigh: '17:51', cook: '18:49', out: '19:01' },
-  { name: '清炒豆皮', batch: '批次1', device: '烤箱 KX1', prep: null, weigh: '17:49', cook: '19:01', out: '19:13' },
+type MealBatch = {
+  /** 批次号，从 1 开始 */
+  no: number;
+  /** 本批次的计划出餐时刻（**批次级判据**：这批菜必须在这个时刻前全部出完，
+      晚一分钟就算这批没按计划）。取值须 ≥ 本批最后一道菜的备餐提醒时刻 ——
+      排产计划给的时刻如果早于自己发的提醒，就是「照着提醒做也必然不达标」。 */
+  dueAt: string;
+  dishes: BatchDish[];
+};
+
+type MealAchievement = {
+  id: string;
+  label: string;
+  /** 餐段窗口，如 07:00—09:30 */
+  window: string;
+  /* ⚠️ 这里**故意没有** dueAt。上一版有一个餐段级的截止时刻，被批次级 dueAt 取代了：
+     留着两个「截止」就是两个真相源，迟早有一处忘了改。餐段的时间边界由 window 表达。 */
+  batches: MealBatch[];
+};
+
+/* 四个餐段共 6 个批次：**早餐 1 批 / 午餐 2 批 / 晚餐 2 批 / 夜宵 1 批**。
+
+   ── 批次怎么分（这决定了折线图好不好看）────────────────────────────
+   ⚠️ 上一版是「早餐 3 批 / 午餐 1 / 晚餐 1 / 夜宵 1」——**那个分配把口径的毛病暴露成了常态**：
+   当时批次判据挂的是**餐段级**截止时刻（= 餐段窗口结束），一个餐段只有**一个**截止时刻，
+   那么同一餐段里越早的批次「提前量」必然越大。早餐拆 3 批时，前两批必然早两个多小时出齐，
+   折线图上就是「−114 / −70」这种**没有度量意义**的数字把纵轴撑爆（真正的信号 +8/+17 被压成细缝）。
+   真实的食堂反过来：**早餐是一次性出齐的一轮，午晚两餐才是分两轮补菜**。
+   → 教训：图表不好看时，先回头看**数据模型本身合不合理**，别急着在渲染层打补丁。
+
+   ── 每个批次各自的计划出餐时刻（dueAt）怎么定 ─────────────────────
+   一条规则就能把下面六个值**精确**推出来，不是手挑的：
+     · 一个餐段的**最后一个批次**（含只有一批的餐段）→ 取**餐段窗口结束**。
+       道理：收餐前必须出完，这是这个餐段最硬的那条时间线。
+     · 其余批次（= 多批次餐段的**前面**那几批）→ 取**本批末道菜提醒 + 10 分钟**，
+       再向上取到 5 分整。
+     · 两个约束：必须 ≥ 本批末道菜的备餐提醒（否则「照着提醒做也必然不达标」，
+       那不是评价执行，是判据自相矛盾）；且不超过餐段窗口结束。
+   逐个验算：
+     | 批次        | 末道菜提醒 | 规则      | 计划 dueAt | 实际出餐 | 偏差  |
+     | 早餐·批次1  | 09:12     | 唯一批→窗末 | 09:30     | 09:38    | +8  ✗ |
+     | 午餐·批次1  | 12:34     | +10→取5整  | 12:45     | 12:34    | −11 ✓ |
+     | 午餐·批次2  | 13:10     | 末批→窗末  | 13:30     | 13:47    | +17 ✗ |
+     | 晚餐·批次1  | 19:01     | +10→取5整  | 19:15     | 19:01    | −14 ✓ |
+     | 晚餐·批次2  | 19:22     | 末批→窗末  | 19:30     | 19:24    | −6  ✓ |
+     | 夜宵·批次1  | 22:18     | 唯一批→窗末 | 22:30     | 22:26    | −4  ✓ |
+
+   偏差落 −14 ~ +17，两侧都有界、零线落在中间，折线图红/绿两带高度相当。
+   （跨所有日期：上界 +20、下界 −27，见折线图的纵轴注释。）
+
+   ⚠️ 这条规则有个**可预期的后果**：4/6 的批次拿的是餐段窗口结束，那通常离末道菜提醒
+      还有 8~20 分钟缓冲 —— 所以**历史日期上大多数批次都达标**（点全在零线下面）。
+      这不是 bug，是「批次级判据本来就比菜品级判据宽」的必然结果：
+      菜品级问「哪道菜晚了」（一批里只要有一道晚就算），
+      批次级问「这批有没有拖过承诺的出餐时刻」（十几道菜挤几分钟不影响承诺）。
+      想让批次级判据更常咬人，就调小上面那个 10 分钟缓冲 —— 但别调到 ±1 分钟，
+      那种「超 1 分」会落在零线上、读不出真假。
+
+   两个批次未达标，成因**故意不同**，这样一眼能看出图是按「出餐时间」判批次：
+     · 早餐·批次1 —— 末道菜「手撕包」晚了 26 分，把整批拖过计划 8 分；
+     · 午餐·批次2 —— 末道菜「清蒸鲈鱼」晚了 37 分，直接拖过计划 17 分。
+
+   反过来，**单菜晚出不等于批次不达标**。本案特意留了反例，用来体现两套口径各答各的问题：
+     · 晚餐·批次2「蒜蓉菠菜」晚 2 分，整批仍比计划早 6 分出齐 → 菜延迟、批次达标；
+     · 夜宵·批次1「凉拌黄瓜」晚 8 分，整批仍早 4 分出齐，同理；
+     · 晚餐·批次1「韭菜炒香干」少做 1 盆（数量缺口），出餐时刻没问题 → 菜少做、批次达标。
+
+   ⚠️ 每道菜的 name / planTrays / remindAt / actualOut **一个都没动**（只换分组、只加批次 dueAt），
+      所以四个状态的合计（92 / 81 / 10 / 1）与那 5 个异常点（手撕包、清蒸鲈鱼、
+      韭菜炒香干、蒜蓉菠菜、凉拌黄瓜）和上一版完全一致。 */
+const MEAL_ACHIEVEMENTS: MealAchievement[] = [
+  {
+    id: 'breakfast', label: '早餐', window: '07:00—09:30',
+    batches: [
+      { no: 1, dueAt: '09:30', dishes: [
+        { name: '小米粥', planTrays: 4, actualTrays: 4, remindAt: '07:12', actualOut: '07:12' },
+        { name: '奶黄包', planTrays: 4, actualTrays: 4, remindAt: '07:20', actualOut: '07:20' },
+        { name: '白煮蛋', planTrays: 3, actualTrays: 3, remindAt: '07:28', actualOut: '07:27' },
+        { name: '凉拌豆芽', planTrays: 3, actualTrays: 3, remindAt: '07:36', actualOut: '07:36' },
+        { name: '现磨豆浆', planTrays: 4, actualTrays: 4, remindAt: '07:50', actualOut: '07:50' },
+        { name: '葱油饼', planTrays: 4, actualTrays: 4, remindAt: '08:00', actualOut: '08:00' },
+        { name: '清炒时蔬', planTrays: 3, actualTrays: 3, remindAt: '08:10', actualOut: '08:09' },
+        { name: '原味酸奶', planTrays: 3, actualTrays: 3, remindAt: '08:20', actualOut: '08:20' },
+        { name: '阳春面', planTrays: 4, actualTrays: 4, remindAt: '08:40', actualOut: '08:40' },
+        { name: '白粥', planTrays: 3, actualTrays: 3, remindAt: '08:52', actualOut: '08:52' },
+        { name: '卤蛋', planTrays: 3, actualTrays: 3, remindAt: '09:02', actualOut: '09:02' },
+        { name: '手撕包', planTrays: 3, actualTrays: 3, remindAt: '09:12', actualOut: '09:38' },
+      ] },
+    ],
+  },
+  {
+    id: 'lunch', label: '午餐', window: '11:00—13:30',
+    batches: [
+      { no: 1, dueAt: '12:45', dishes: [
+        { name: '红烧肉', planTrays: 4, actualTrays: 4, remindAt: '12:10', actualOut: '12:10' },
+        { name: '番茄炒蛋', planTrays: 4, actualTrays: 4, remindAt: '12:22', actualOut: '12:22' },
+        { name: '蒜蓉西兰花', planTrays: 3, actualTrays: 3, remindAt: '12:34', actualOut: '12:34' },
+      ] },
+      { no: 2, dueAt: '13:30', dishes: [
+        { name: '紫菜蛋汤', planTrays: 3, actualTrays: 3, remindAt: '12:46', actualOut: '12:45' },
+        { name: '香米饭', planTrays: 5, actualTrays: 5, remindAt: '12:58', actualOut: '12:58' },
+        { name: '清蒸鲈鱼', planTrays: 3, actualTrays: 3, remindAt: '13:10', actualOut: '13:47' },
+      ] },
+    ],
+  },
+  {
+    id: 'dinner', label: '晚餐', window: '17:30—19:30',
+    batches: [
+      { no: 1, dueAt: '19:15', dishes: [
+        { name: '小炒鸡胗肉', planTrays: 4, actualTrays: 4, remindAt: '18:17', actualOut: '18:17' },
+        { name: '丝瓜炒蛋', planTrays: 4, actualTrays: 4, remindAt: '18:33', actualOut: '18:33' },
+        { name: '韭菜炒香干', planTrays: 4, actualTrays: 3, remindAt: '19:01', actualOut: '19:01' },
+      ] },
+      { no: 2, dueAt: '19:30', dishes: [
+        { name: '清炒豆皮', planTrays: 3, actualTrays: 3, remindAt: '19:13', actualOut: '19:12' },
+        { name: '蒜蓉菠菜', planTrays: 2, actualTrays: 2, remindAt: '19:22', actualOut: '19:24' },
+      ] },
+    ],
+  },
+  {
+    id: 'late-night', label: '夜宵', window: '21:00—22:30',
+    batches: [
+      { no: 1, dueAt: '22:30', dishes: [
+        { name: '三丝炒面', planTrays: 4, actualTrays: 4, remindAt: '21:40', actualOut: '21:40' },
+        { name: '卤味拼盘', planTrays: 3, actualTrays: 3, remindAt: '21:55', actualOut: '21:55' },
+        { name: '皮蛋瘦肉粥', planTrays: 3, actualTrays: 3, remindAt: '22:08', actualOut: '22:08' },
+        { name: '凉拌黄瓜', planTrays: 2, actualTrays: 2, remindAt: '22:18', actualOut: '22:26' },
+      ] },
+    ],
+  },
 ];
 
-const MEAL_DEADLINE = '19:30';
+/** 计划外的临时加菜：**不在任何批次内**，不参与任何判定，只作为事实统计。 */
+const OFF_PLAN_ADDS = [
+  { meal: '晚餐', name: '小炒杏鲍菇肉片', trays: 3, remindAt: '18:49', actualOut: '18:55', reason: '临时接待加菜' },
+];
 
-const MEAL_WINDOWS = [
-  { id: 'breakfast', label: '早餐', start: '07:00', deadline: '09:30', batchCount: 3 },
-  { id: 'lunch', label: '午餐', start: '11:00', deadline: '13:30', batchCount: 1 },
-  { id: 'dinner', label: '晚餐', start: '17:30', deadline: MEAL_DEADLINE, batchCount: 1 },
-  { id: 'late-night', label: '夜宵', start: '21:00', deadline: '22:30', batchCount: 1 },
-] as const;
+/* ══ 日期筛选：当天用上面那套写死的数据，其它日期用**确定性**演示数据 ══════════
+   菜单结构（菜名 / 计划量 / 备餐提醒时刻）对应「排产计划」，每天一样，所以直接沿用；
+   随日期变的只有**实际执行结果**：实际出餐量、实际出餐时刻。
+   ——这也让「计划 / 未完成 / 及时 / 延迟」四状态的对比在任意一天都成立。
+
+   两条硬规矩（本项目在 demoRate 上方已经踩过，照抄同样的做法）：
+   ① **不能用 Math.random()** —— 同一日期必须每次算出同一个值。否则重渲染、切日期再切回来、
+      刷新页面都会变，截图汇报两张图对不上（AC05 / AC13）。
+   ② **不能只用纯哈希噪声** —— 那样相邻两天毫无关联，切日期时整套数据整体跳变、看着像换了家食堂。
+      所以「当天整体出餐水平」走低频正弦漂移（周期 5.7 / 13.3 天），
+      哈希只负责每道菜的小幅抖动。好日子连着好、差日子连着差。 */
+/* ══ 出餐明细的自动滚动 ══════════════════════════════════════════════════
+   明细区是这一页唯一允许滚动的地方，而"全部餐段"下装着 926px 的内容、
+   只露出 300px —— 大屏是**无人值守**的，不会有人去拖那根 6px 的滚动条，
+   看不见的那 626px 等于不存在。所以让它自己滚：6 个批次挨个送到读者眼前。
+   一轮 ≈ 25 秒（下 21s + 停在底部 2.5s + 跳回顶部 + 停在顶部 1.2s）。
+
+   四处必须做对：
+   ① ⚠️ **不能监听 `scroll` 事件来判定"用户动了"**。自己滚出来的也触发 `scroll`，
+      监听它等于每滚一帧就把自己判成"用户操作"→ 第一次滚动后就永久暂停。
+      只认**输入意图**：`wheel` / `touchstart` / `pointerdown`。
+   ② **内容一变就回顶并重新判定**（靠 `resetKey`）。停在旧的 `scrollTop` 上，
+      轻则停在半截、重则直接空白（新内容比旧的短）。
+   ③ **不溢出就一点都不滚**。早餐/午餐/晚餐/夜宵都放得下，这时候绝不能让画面
+      慢慢往下漂一两像素 —— 那是最像 bug 的一种表现。判据留 2px 给子像素舍入。
+   ④ **`prefers-reduced-motion` 下直接不启动**。这和大屏的"无人值守"不冲突：
+      它是一条无障碍底线，而且开了这个开关的人本来就不想看自动动画。
+
+   ⚠️ **"鼠标在面板上"不能当成暂停条件**，只能"鼠标在面板上**动**"才算。
+      用 `pointerenter` 暂停的话，墙屏上刚好有人把鼠标遗留在明细区，
+      这块就**再也不会滚**了 —— 对一个无人值守的页面来说是致命的。
+      所以做成"动过之后 4 秒内不滚，4 秒不动（人走了）自动接着滚"。
+
+   ⚠️ **只向下滚，不回滚**。滚到底停一下，然后**直接回到顶部**再继续向下。
+      早先做成"反向滚回顶部（3 倍速）"，看着像录像倒放 —— 读者的眼睛会跟着往上追，
+      而且"顺着读一遍"和"上下往复"是两种节奏，前者才像"翻页"。
+      代价是回顶那一瞬间是**跳变**，所以两头都要停顿：到底停够（让人看完最后一组），
+      回顶也停一下（让人重新认出"这是第一组"），不然连读两遍会分不清轮次。
+   ⚠️ `dt` 要钳在 100ms：标签页切到后台再切回来时 `rAF` 的时间差会是几十秒，
+      不钳的话画面会"咻"地跳到最后。 */
+const AUTO_SCROLL = {
+  speed: 30,          // 向下滚 px/s。行高 36px ⇒ 约 0.83 行/秒，够读完一行小注
+  holdBottom: 2500,   // 滚到底停多久（ms）—— 留够时间看最后一个批次
+  holdTop: 1200,      // 跳回顶之后停多久（ms）—— 让人认出"这是第一组"
+  resumeDelay: 3000,  // 用户手动滚过之后多久恢复自动（ms）
+  hoverPark: 4000,    // 鼠标在面板里动过之后，多久不动就认为"人走了"（ms）
+  hoverLeave: 600,    // 鼠标移出面板之后多久恢复（ms）
+};
+
+function useAutoScroll(ref: React.RefObject<HTMLDivElement | null>, resetKey: string) {
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return undefined;
+    if (typeof window.matchMedia === 'function'
+      && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return undefined;
+    }
+
+    let raf = 0;
+    let last = 0;
+    let waitUntil = 0;      // 停在两端的截止时间戳
+    let manualUntil = 0;    // 用户手动滚动的截止时间戳
+    let hoverUntil = 0;     // 鼠标在面板里动过的截止时间戳（到点就认为人走了）
+    /* 到底之后要**分两步**：先在底部停 `holdBottom`，再跳回顶停 `holdTop`。
+       用一个标志位记住"现在处于'已到底、等着回顶'这一步"。 */
+    let pendingReset = false;
+
+    /* 内容变了 → 回到顶部、重新来过。 */
+    el.scrollTop = 0;
+    waitUntil = 0;
+    pendingReset = false;
+
+    const markManual = () => { manualUntil = performance.now() + AUTO_SCROLL.resumeDelay; };
+    const markHover = () => { hoverUntil = performance.now() + AUTO_SCROLL.hoverPark; };
+    const onLeave = () => {
+      hoverUntil = 0;
+      manualUntil = performance.now() + AUTO_SCROLL.hoverLeave;
+    };
+
+    el.addEventListener('wheel', markManual, { passive: true });
+    el.addEventListener('touchstart', markManual, { passive: true });
+    el.addEventListener('pointerdown', markManual);
+    el.addEventListener('pointermove', markHover, { passive: true });
+    el.addEventListener('pointerenter', markHover);
+    el.addEventListener('pointerleave', onLeave);
+
+    const tick = (now: number) => {
+      raf = requestAnimationFrame(tick);
+      if (!last) { last = now; return; }
+      const dt = Math.min(now - last, 100) / 1000;
+      last = now;
+
+      const max = el.scrollHeight - el.clientHeight;
+      if (max <= 2) {                    // ③ 放得下：一点都不滚，顺手把位置归零
+        if (el.scrollTop !== 0) el.scrollTop = 0;
+        pendingReset = false;
+        return;
+      }
+      if (now < hoverUntil || now < manualUntil) return;
+
+      if (pendingReset) {                // 底部那一停结束 → 回顶，再停一下
+        if (now < waitUntil) return;
+        el.scrollTop = 0;
+        pendingReset = false;
+        waitUntil = now + AUTO_SCROLL.holdTop;
+        return;
+      }
+      if (now < waitUntil) return;
+
+      const next = el.scrollTop + AUTO_SCROLL.speed * dt;
+      if (next >= max) {
+        el.scrollTop = max;
+        pendingReset = true;
+        waitUntil = now + AUTO_SCROLL.holdBottom;
+      } else {
+        el.scrollTop = next;
+      }
+    };
+
+    raf = requestAnimationFrame(tick);
+    return () => {
+      cancelAnimationFrame(raf);
+      el.removeEventListener('wheel', markManual);
+      el.removeEventListener('touchstart', markManual);
+      el.removeEventListener('pointerdown', markManual);
+      el.removeEventListener('pointermove', markHover);
+      el.removeEventListener('pointerenter', markHover);
+      el.removeEventListener('pointerleave', onLeave);
+    };
+  }, [ref, resetKey]);
+}
+
+const parseClock = (value: string) => {
+  const [hour, minute] = value.split(':').map(Number);
+  return hour * 60 + minute;
+};
+
+/** 分钟数 → "HH:MM"，并夹在 06:00~23:59 内（偏移可能把时刻推出当天）。 */
+const formatClock = (total: number) => {
+  const clamped = Math.max(6 * 60, Math.min(23 * 60 + 59, total));
+  return `${pad2(Math.floor(clamped / 60))}:${pad2(clamped % 60)}`;
+};
+
+/** 某天的整体出餐水平，约 −1.4 ~ +1.4（负 = 整体偏早，正 = 整体偏晚）。相邻日期彼此接近。 */
+const dayLevel = (dateISO: string) => {
+  const ordinal = dayOrdinalOf(new Date(`${dateISO}T00:00:00`));
+  return Math.sin(ordinal / 5.7) * 0.62
+    + Math.sin(ordinal / 13.3) * 0.34
+    + (hashUnit(`level|${dateISO}`) - 0.5) * 0.9;
+};
+
+/** 按日期生成当天的实际执行结果。
+
+    ⚠️ 偏移量**不能是「整体水平 + 均匀抖动」**。第一版写的是
+   `level*6.5 + (hash-0.5)*16`（±17 分），而菜与菜之间的备餐提醒只隔 8~12 分钟 ——
+   抖动跟间隔同量级时，「这道菜晚没晚」就变成了掷硬币，算出来及时率在 40%~85% 之间乱跳，
+   比当天的 88% 差一大截，看着像「历史全都很糟」。**真实情况恰恰相反：大多数菜是准时的。**
+
+   ⚠️ 第二版又错了一次：「准时」分支写成 `-5 + roll*7`（−5 ~ **+2**），
+   上界 +2 分钟**已经晚于备餐提醒**了，于是那 34% 的「准时」菜被算成延迟，
+   及时率只有 59%~80%。**判据是「actualOut ≤ remindAt」，所以准时分支必须严格 ≤ 0。**
+
+   最终改成两个明确的量：
+   ① 先按概率决定这道菜晚不晚 —— `lateChance` 由当日整体水平决定
+      （好日子 0、坏日子约 17%），「好日子连着好、差日子连着差」的趋势仍然平滑；
+   ② 晚了的菜取一个幅度（2~28 分），准时的菜则**严格落在提醒时刻之前** 0~7 分钟。
+   结果及时率稳定在 83%~100%，且每天不同 —— 这才像一家正常运转的食堂。 */
+const buildDemoDay = (dateISO: string): MealAchievement[] => {
+  const lateChance = Math.max(0, 0.08 + dayLevel(dateISO) * 0.062);
+  return MEAL_ACHIEVEMENTS.map((meal) => ({
+    ...meal,
+    batches: meal.batches.map((batch) => ({
+      /* ⚠️ `...batch` 把批次号和 `dueAt` 整份带过来 —— **这是故意的**：
+         批次的计划出餐时刻属于「排产计划」，每天一样，不能随日期重新生成。
+         随日期变的只有下面 dishes 里的实际执行结果（实际出餐量、实际出餐时刻）。
+         如果哪天给 dueAt 也套上一个「按日期抖动」，那「偏差」就不再是「执行 vs 计划」，
+         而是「计划 vs 计划」—— 指标会彻底失去意义。 */
+      ...batch,
+      dishes: batch.dishes.map((dish) => {
+        const roll = hashUnit(`out|${dateISO}|${dish.name}`);
+        const magnitude = hashUnit(`mag|${dateISO}|${dish.name}`);
+        const offset = roll < lateChance
+          ? 2 + Math.pow(magnitude, 1.3) * 26   // 晚 2~28 分
+          : -magnitude * 7;                     // 提前 0~7 分（严格 ≤ 0，必定按时）
+        const trayRoll = hashUnit(`tray|${dateISO}|${dish.name}`);
+        const drop = dish.planTrays > 1 && trayRoll < 0.06 ? (trayRoll < 0.012 ? 2 : 1) : 0;
+        return {
+          ...dish,
+          actualTrays: Math.max(dish.planTrays - drop, 0),
+          actualOut: formatClock(parseClock(dish.remindAt) + Math.round(offset)),
+        };
+      }),
+    })),
+  }));
+};
 
 function MealPlanModule({ clock, onNavigate }: { clock: string; onNavigate: (id: string) => void }) {
   const toMinutes = (value: string) => {
     const [hour, minute] = value.split(':').map(Number);
     return hour * 60 + minute;
   };
-  const latestDish = SCHEDULED_DISHES.reduce((latest, dish) => toMinutes(dish.out) > toMinutes(latest.out) ? dish : latest, SCHEDULED_DISHES[0]);
-  const safetyMinutes = toMinutes(MEAL_DEADLINE) - toMinutes(latestDish.out);
-  const chartStart = '17:30';
-  const chartSpan = toMinutes(MEAL_DEADLINE) - toMinutes(chartStart);
-  const chartPercent = (time: string) => Math.min(100, Math.max(0, ((toMinutes(time) - toMinutes(chartStart)) / chartSpan) * 100));
-  const currentTime = clock.match(/\d{2}:\d{2}/)?.[0] ?? '17:00';
-  const currentMinutes = toMinutes(currentTime);
-  const mealWindowState = (meal: (typeof MEAL_WINDOWS)[number]) => {
-    if (currentMinutes >= toMinutes(meal.deadline)) return 'done';
-    if (currentMinutes >= toMinutes(meal.start) - 90) return 'focus';
-    return 'future';
+
+  /* 统计日期，默认当天。
+     ⚠️ 当天走**写死的那套**数据（故事完整、每个数字都核对过），其它日期才走 buildDemoDay
+        生成的值 —— 这样「打开就是一份讲得通的样板」，点别的日期又能看到数据真的在变。
+     ⚠️ 日期必须真的驱动数据。挂一个日期框但数字纹丝不动，是最容易被当场试穿的假控件。 */
+  const todayISO = toISODate(new Date());
+  const [statDate, setStatDate] = useState(todayISO);
+  /* ══ 餐段范围 ══════════════════════════════════════════════════════════
+     用户的实际情况是「**大概率单餐段单批次，偶尔多餐段多批次**」，所以两种形态
+     必须在**同一页**里都能走到：范围选到某一段 → 单餐段形态；选「全部」→ 多餐段形态。
+     ⚠️ **不做成两套页面**（"单批版页面 + 多批版页面"）。两份迟早长得不一样，
+        而且口径会分叉。
+     ⚠️ 这个控件必须**真的改数**（KPI、明细、环形图、折线全部跟着变），
+        挂一个不生效的范围选择器是最容易被当场试穿的假控件 —— 和日期筛选同一条规矩。 */
+  const [mealScope, setMealScope] = useState<string>('all');
+  /* ══ 批次筛选 ══════════════════════════════════════════════════════════
+     主面板做成「按批次分组的明细」之后，"看哪个批次"就成了一个独立的入口。
+     ⚠️ 批次筛选**必须和餐段筛选一样驱动整页**（KPI / 环形图 / 折线 / 明细），
+        不能只筛明细 —— 只筛明细的话，KPI 说 92 盆、明细只列批次1 的 34 盆，
+        同一屏两组数打架，读者第一个问题就是"哪个对"。
+     ⚠️ 切餐段时要把它**重置回全部**：选项是按餐段联动生成的（早餐只有批次1），
+        不重置会留下一个"当前餐段里不存在"的值，明细直接空掉。 */
+  const [batchScope, setBatchScope] = useState<string>('all');
+  /* 明细区的自动滚动（见上方的 `useAutoScroll`）。
+     `resetKey` 只放**决定内容的那三个筛选**，不放 `clock` —— 时钟每秒 tick 一次，
+     放进去会每秒把明细拽回顶部。 */
+  const detailBodyRef = useRef<HTMLDivElement | null>(null);
+  useAutoScroll(detailBodyRef, `${statDate}|${mealScope}|${batchScope}`);
+  const dayMeals = statDate === todayISO ? MEAL_ACHIEVEMENTS : buildDemoDay(statDate);
+  const sourceMeals = mealScope === 'all'
+    ? dayMeals
+    : dayMeals.filter((meal) => meal.id === mealScope);
+  const scopeLabel = mealScope === 'all'
+    ? '全部餐段'
+    : (dayMeals.find((meal) => meal.id === mealScope)?.label ?? '全部餐段');
+  /* 批次下拉的选项**按餐段联动生成**：早餐只有批次1，就不该让读者选到批次2 再看到空明细。 */
+  const batchNos = Array.from(new Set(sourceMeals.flatMap((meal) => meal.batches.map((batch) => batch.no))))
+    .sort((a, b) => a - b);
+  const nowMinutes = clock ? toMinutes(clock.slice(-8, -3)) : new Date().getHours() * 60 + new Date().getMinutes();
+  /* 已经过**本批计划出餐时刻**的批次不能再显示「未完成」：演示里把短缺量归入延迟出餐，
+     只有还没到计划时刻的批次才保留未完成，避免出现「早餐还差 1 盆」这种不合业务的画面。
+     选择历史日期时，整天都视为已结束，同样不保留未完成。
+     ⚠️ 判据必须跟着**批次**走（`batch.dueAt`）。用原来那个餐段级截止时刻，
+        午餐两个批次（计划 12:45 / 13:30）会共用 13:30 —— 第一批判定要硬等到 13:30 才生效，
+        跟上面三栏、折线用的批次级判据不是同一个口径。
+     ⚠️ 这段改写只把实际出餐时刻往**后**推（`max(actualOut, remindAt + 1)`），
+        所以它只会让批次更接近「超时」、绝不会让它变早。前提是每个 `dueAt` 都比本批
+        末道菜的备餐提醒晚至少 8 分钟（见 MEAL_ACHIEVEMENTS 的取值规则）——
+        否则补这 1 分钟就可能把一批从达标翻成未达标，而**达标与否不该受当前时钟影响**。 */
+  const activeMeals = sourceMeals.map((meal) => ({
+    ...meal,
+    /* ⚠️ 批次筛选用**过滤**（不是把某一批提到最前）：筛掉之后整页只剩这一个批次，
+        餐段名照旧、批次号照旧 —— 明细的组头、KPI、环形图、折线全都自然跟着走，
+        不需要任何一处单独改口径。 */
+    batches: meal.batches
+      .filter((batch) => batchScope === 'all' || String(batch.no) === batchScope)
+      .map((batch) => {
+        const batchHasPassed = statDate !== todayISO || nowMinutes >= toMinutes(batch.dueAt);
+        if (!batchHasPassed) return batch;
+        return {
+          ...batch,
+          dishes: batch.dishes.map((dish) => {
+            if (dish.actualTrays >= dish.planTrays) return dish;
+            const lateOut = Math.max(toMinutes(dish.actualOut), toMinutes(dish.remindAt) + 1);
+            return { ...dish, actualTrays: dish.planTrays, actualOut: formatClock(lateOut) };
+          }),
+        };
+      }),
+  }));
+
+  const allDishes = activeMeals.flatMap((meal) => meal.batches.flatMap((batch) => batch.dishes));
+  const allBatches = activeMeals.flatMap((meal) => meal.batches);
+
+  /* ══════════════════════════════════════════════════════════════════════
+     一套四状态分解，三个维度都套用同一套：
+
+         计划出餐量  =  已完成·及时  +  已完成·延迟  +  未完成
+
+     ── 为什么这四个状态能严格加和 ─────────────────────────────────────
+     计数单位统一用**盆**（不是道）。一道菜计划 4 盆、实出 3 盆：
+         未完成 = 4 − 3 = 1 盆；已完成 = 3 盆，这 3 盆再按出餐时刻落进「及时」或「延迟」。
+     于是每一盆都有唯一归属，三个维度各自求和都等于计划量 ——
+     餐段 = Σ批次 = Σ菜，读者可以任意交叉核对，不会出现两处对不上账。
+     （上一版按「道数」判、且一道菜只归一类，「晚出 3 道 + 少做 1 道」并不等于总数，
+       既做不了加和校验，也没法在三个粒度上保持一致。）
+
+     ── 三个状态的定义 ───────────────────────────────────────────────
+     · 已完成·及时 = 实际出餐时刻**不晚于**备餐提醒、且数量足额的那部分盆数
+     · 已完成·延迟 = 实际出餐时刻晚于备餐提醒、但数量足额的那部分盆数
+     · 未完成     = 计划量 − 实际出餐量（没做出来的那部分）
+     ⚠️ 一道菜「既少又晚」时：少的那部分算未完成、做到的那部分算延迟 —— 两部分各归其位，
+        不像上一版那样整道菜只归一类、把信息压扁。
+     ⚠️ 计划外的临时加菜**不进这四个状态里的任何一个**，只作为事实单独统计。
+
+     ── 图表为什么这么排 ─────────────────────────────────────────────
+     要求是「计划 / 未完成 / 及时完成 / 延迟完成 在图表里**体现对比**」，维度有菜品 / 批次 / 餐段。
+     所以主图是**三栏并排的 100% 堆叠横向柱**：
+       每栏 = 一个维度，每根条 = 该维度的一个对象，条内三段 = 三个状态，
+       条长按计划量归一到 100%，右侧标出绝对计划量。
+     这样两个方向的对比同时成立：**同一栏内不同对象之间**（哪个餐段/批次/菜更差），
+     以及**同一根条内三个状态之间**（到底是没做完还是做晚了）。
+     ══════════════════════════════════════════════════════════════════════ */
+
+  type TraySplit = { plan: number; ontime: number; late: number; undone: number };
+  const EMPTY_SPLIT: TraySplit = { plan: 0, ontime: 0, late: 0, undone: 0 };
+
+  /** 一道菜的盆数分解。**三段之和恒等于 plan** —— 这是全页所有数字能对上的前提。 */
+  const splitOfDish = (dish: BatchDish): TraySplit => {
+    const done = Math.max(Math.min(dish.actualTrays, dish.planTrays), 0);
+    const isLate = toMinutes(dish.actualOut) > toMinutes(dish.remindAt);
+    return {
+      plan: dish.planTrays,
+      ontime: isLate ? 0 : done,
+      late: isLate ? done : 0,
+      undone: Math.max(dish.planTrays - done, 0),
+    };
   };
-  const focusedMeal = MEAL_WINDOWS.find((meal) => mealWindowState(meal) === 'focus') ?? MEAL_WINDOWS.find((meal) => toMinutes(meal.start) > currentMinutes) ?? MEAL_WINDOWS[0];
-  const productionStart = (dish: ScheduledDish) => dish.prep ?? dish.weigh;
-  const phaseLegend = [
-    { label: '预处理', className: 'prep' },
-    { label: '称重加料', className: 'weigh' },
-    { label: '烹饪', className: 'cook' },
-  ];
+  const addSplit = (a: TraySplit, b: TraySplit): TraySplit => ({
+    plan: a.plan + b.plan,
+    ontime: a.ontime + b.ontime,
+    late: a.late + b.late,
+    undone: a.undone + b.undone,
+  });
+  const sumSplits = (list: TraySplit[]) => list.reduce(addSplit, EMPTY_SPLIT);
+
+  /* 批次的达标判定看**出餐时间**，基准是**本批次自己的计划出餐时刻** `batch.dueAt`。
+     两套口径各答各的问题，互不替代：
+       四状态回答「这一盆做没做出来、及不及时」（基准 = 单菜的备餐提醒）；
+       批次达标回答「这一批有没有在本批计划时刻前全部出完」（基准 = 批次的计划时刻）。
+     ⚠️ 基准必须是 `batch.dueAt` 而不是餐段窗口结束。用餐段窗口会让同餐段里
+        越早的批次「提前量」越大（结构性假信号），细节见 MEAL_ACHIEVEMENTS 上方注释。 */
+  const finishOf = (batch: MealBatch) => batch.dishes.reduce(
+    (latest, dish) => (toMinutes(dish.actualOut) > toMinutes(latest.actualOut) ? dish : latest),
+    batch.dishes[0],
+  );
+  const batchOver = (batch: MealBatch) =>
+    toMinutes(finishOf(batch).actualOut) - toMinutes(batch.dueAt);
+  const formatOver = (over: number) => (over > 0 ? `超 ${over} 分` : `提前 ${-over} 分`);
+
+  /* ══ 明细：按批次分组的逐道菜清单 ═════════════════════════════════════
+     主面板的形态从「三栏并列对比」改成「筛选 + 明细」：
+       · 对比（谁比谁多、谁比谁晚）交给环形图和折线图 —— 图本来就该干这个；
+       · 面板只负责**把当前范围里的每一道菜摊开**，读者要核对哪一行都查得到。
+     这不是"把三栏删掉降级"，而是分工归位：原来那张 100% 堆叠条既想说比例
+     又想说对比，结果两件事都只说了一半。
+
+     ⚠️ 分组依据是**批次**，不是餐段：批次才是"没按计划"的判定单位（判据是
+        `batch.dueAt`），也是四状态里唯一自带"计划时刻"的那一级。餐段名挂在
+        组头标签里（`早餐·批次1`），所以筛到具体餐段时上下文也不会丢。
+     ⚠️ 菜品行的 note 是**菜级**口径：`提醒 07:12 → 出餐 07:12 · 超 2 分`。
+        基准是**这道菜自己的备餐提醒**，不是批次计划时刻 ——
+        同一批的菜本来就错开一两小时出，拿批次的时刻当基准会让前面每道菜
+        都显示"提前两小时"，那就是结构性假信号（详见折线图上方注释）。 */
+  const detailGroups = activeMeals.flatMap((meal) => meal.batches.map((batch) => {
+    const over = batchOver(batch);
+    return {
+      key: `${meal.id}-${batch.no}`,
+      label: `${meal.label}·批次${batch.no}`,
+      /* 组头就是原来那条「结论带」的内容，一个字没改 —— 批次的三段时间必须显示出来，
+         不然读者没法核对「超 17 分」是怎么来的，只能凭信任接受。 */
+      note: `计划 ${batch.dueAt} · 实际 ${finishOf(batch).actualOut} · ${formatOver(over)}`,
+      bad: over > 0,
+      dishes: batch.dishes.map((dish) => {
+        const dishOver = toMinutes(dish.actualOut) - toMinutes(dish.remindAt);
+        const split = splitOfDish(dish);
+        return {
+          key: `${meal.id}-${batch.no}-${dish.name}`,
+          name: dish.name,
+          note: `提醒 ${dish.remindAt} → 出餐 ${dish.actualOut} · ${
+            dishOver > 0 ? `超 ${dishOver} 分` : dishOver < 0 ? `提前 ${-dishOver} 分` : '准时'
+          }`,
+          /* 高亮的判据是「这一道有没有偏差」，**不是**「晚没晚」：
+             少做 1 盆但准点出餐的菜也要标出来（它的条里有红段，行名却不红就是自相矛盾）。 */
+          bad: split.late > 0 || split.undone > 0,
+          split,
+        };
+      }),
+    };
+  }));
+
+  /* ⚠️ KPI 和环形图必须**从明细反推**（`detailGroups`），不能再各自 flatMap 一遍 ——
+        两个来源看着一样，但只要有一处改了筛选条件就会分叉，而分叉的现象是
+        "KPI 说 92 盆、明细只有 34 盆"这种一眼可见的矛盾。单一来源最省心。 */
+  const detailDishCount = detailGroups.reduce((total, group) => total + group.dishes.length, 0);
+  const daySplit = sumSplits(detailGroups.flatMap((group) => group.dishes.map((dish) => dish.split)));
+  const ontimeRate = daySplit.plan ? (daySplit.ontime / daySplit.plan) * 100 : 0;
+
+  /* 计划外的临时加菜：不进四状态、不进任何判定，也不进明细（用户明确要求不要）。
+     只作为事实留在 KPI 里。 */
+  const offPlanTrays = OFF_PLAN_ADDS.reduce((sum, add) => sum + add.trays, 0);
+
+  /* ══ 折线图：不换图表类型，换「把哪个维度摊到 x 轴上」═══════════════════
+     x 轴上的维度只有 1 个值就画不出线。单餐段单批次时「批次」维度只有 1 个值，
+     所以**换一个对象数 ≥ 2 的维度继续用折线** —— 不改成柱子、不改成一行数字。
+
+     ⚠️ 换 x 轴的同时**必须换基准**：
+        · 批次视图：y = 批次出齐时刻 − **本批次自己的计划出餐时刻**；
+        · 逐菜视图：y = 该菜出餐时刻 − **该菜自己的备餐提醒时刻**。
+        逐菜视图**绝不能**用"批次计划时刻"当基准 —— 同一批的菜本来就按顺序错开一两小时出，
+        拿批次的时刻当基准，前面每道菜都会显示"提前两小时"，正是那个结构性假信号。
+        ⇒ 通用版：**换到更细的粒度时，基准也要一起下沉到那个粒度自己的承诺时刻。**
+     ⚠️ 逐菜视图的 y 口径正好和 KPI 的「已完成·延迟」是同一条判据（都看备餐提醒），
+        所以折线和 KPI 天然对得上账，这也顺带解决了之前「同屏两套基准看着打架」的问题。
+
+     ⚠️ 阈值取 3 不取 2：一条折线至少要 3 个点才成立，2 个点只是一根线段（等价于柱状图）。
+        2 个批次时退回逐菜视图，信息更多（6 道菜 > 2 个批次），
+        而且批次级的对比本来就已经由批次栏承担了，没有信息损失。
+
+     ⚠️ 必须取 `activeMeals`（而不是 `MEAL_ACHIEVEMENTS`）。写成固定数据时，切日期只改
+        上面的 KPI 和三栏、折线纹丝不动 —— 会出现「KPI 说延迟 14 盆、折线只有 2 个批次超时」
+        这种自相矛盾的画面。加了日期筛选/餐段范围之后，凡是从日期或范围派生的东西都要一起换源。 */
+  const lineMode: 'batch' | 'dish' = allBatches.length >= 3 ? 'batch' : 'dish';
+  const linePoints = lineMode === 'batch'
+    ? activeMeals
+      .flatMap((meal) => meal.batches.map((batch) => ({
+        key: `${meal.label}-${batch.no}`,
+        label: meal.batches.length > 1 ? `${meal.label}${batch.no}` : meal.label,
+        dueAt: batch.dueAt,
+        finish: finishOf(batch).actualOut,
+        over: batchOver(batch),
+      })))
+      /* 批次视图按出餐先后排 —— 折线要读"这一餐是怎么一步步做完的"（时间序）。 */
+      .sort((a, b) => toMinutes(a.finish) - toMinutes(b.finish))
+    /* 逐菜视图**不排序**：数据本身就是按备餐提醒的先后排的，那就是生产顺序，
+       按偏差大小重排会把时间序打乱，反而看不出"是从哪一道开始崩的"。 */
+    : allDishes.map((dish) => ({
+      key: dish.name,
+      label: dish.name,
+      dueAt: dish.remindAt,
+      finish: dish.actualOut,
+      over: toMinutes(dish.actualOut) - toMinutes(dish.remindAt),
+    }));
+
+  const pct = (value: number) => (daySplit.plan ? (value / daySplit.plan) * 100 : 0);
+
+  /** 一根 100% 堆叠横条。三段用 flexGrow 分配宽度，和为 0 的段自然宽 0。 */
+  const SplitBar = ({ split, bad }: { split: TraySplit; bad?: boolean }) => (
+    <div className={`uk-detail-track${bad ? ' bad' : ''}`} aria-label={`及时 ${split.ontime} 盆，延迟 ${split.late} 盆，未完成 ${split.undone} 盆`}>
+      <i className="ontime" style={{ flexGrow: split.ontime }}>{split.ontime > 0 ? <b>{split.ontime}</b> : null}</i>
+      <i className="late" style={{ flexGrow: split.late }}>{split.late > 0 ? <b>{split.late}</b> : null}</i>
+      <i className="undone" style={{ flexGrow: split.undone }}>{split.undone > 0 ? <b>{split.undone}</b> : null}</i>
+    </div>
+  );
 
   return (
     <CockpitModuleShell current="overview" clock={clock} onNavigate={onNavigate}>
       <main className="uk-plan-page">
-        <section className="uk-plan-hero">
-          <div>
-            <span className="uk-assurance-kicker">晚餐餐段 · 计划保障</span>
-            <h2>计划与进度</h2>
-            <p>计划时间按餐段出餐时间倒排，确保所有菜品在出餐前完成；当前最晚计划出餐为 {latestDish.out}。</p>
+        <div className="uk-plan-kpi-row">
+          {/* 页面级控件：统计日期 + 餐段范围 + 批次。它们共同决定"这一屏统计的是哪一段"，
+              所以 KPI 行、环形图、折线图、明细全都跟着变。 */}
+          <div className="uk-plan-controls">
+            <label className="uk-date-switch">
+              <span>统计日期</span>
+              <input
+                type="date"
+                value={statDate}
+                max={todayISO}
+                onChange={(event) => setStatDate(event.target.value || todayISO)}
+              />
+            </label>
+            <label className="uk-date-switch">
+              <span>餐段范围</span>
+              <select
+                value={mealScope}
+                /* ⚠️ 切餐段要**顺便把批次重置回全部**：批次选项是按餐段联动生成的
+                   （早餐只有批次1），不重置会留下一个当前餐段里不存在的值，
+                   明细直接空掉、KPI 全是 0 —— 而控件看上去一切正常，最难查的那种 bug。 */
+                onChange={(event) => {
+                  setMealScope(event.target.value);
+                  setBatchScope('all');
+                }}
+              >
+                <option value="all">全部餐段</option>
+                {dayMeals.map((meal) => (
+                  <option key={meal.id} value={meal.id}>{meal.label}</option>
+                ))}
+              </select>
+            </label>
+            <label className="uk-date-switch">
+              <span>批次</span>
+              <select value={batchScope} onChange={(event) => setBatchScope(event.target.value)}>
+                <option value="all">全部批次</option>
+                {batchNos.map((no) => (
+                  <option key={no} value={String(no)}>批次{no}</option>
+                ))}
+              </select>
+            </label>
           </div>
-          <div className="uk-plan-verdict"><i />计划可保障</div>
-        </section>
-
-        <section className="uk-meal-status-summary">
-          <div className="uk-meal-status-title"><b>餐段计划</b><span>{focusedMeal.label}为当前关注窗口</span></div>
-          <div className="uk-meal-status-cards">
-            {MEAL_WINDOWS.map((item) => (
-              <div className={`uk-meal-status-card ${mealWindowState(item)}`} key={item.id} aria-label={`${item.label} ${item.start} 至 ${item.deadline}`}>
-                <span>{item.label}</span><strong>{item.start}—{item.deadline}</strong><small>{item.batchCount} 批{item.id === 'dinner' ? ' · 5 道菜' : ''}</small>
-              </div>
-            ))}
+          <div className="uk-module-kpis uk-plan-kpis">
+            <ModuleKpi
+              label="计划出餐"
+              value={`${daySplit.plan} 盆`}
+              meta={
+                <>
+                  <span><i>{allDishes.length}</i> 道菜</span>
+                  <span><i>{allBatches.length}</i> 个批次</span>
+                </>
+              }
+            />
+            <ModuleKpi label="已完成 · 及时" value={`${daySplit.ontime} 盆`} sideValue={`${pct(daySplit.ontime).toFixed(1)}%`} tone="green" />
+            <ModuleKpi label="已完成 · 延迟" value={`${daySplit.late} 盆`} sideValue={`${pct(daySplit.late).toFixed(1)}%`} tone="amber" />
+            <ModuleKpi label="未完成" value={`${daySplit.undone} 盆`} sideValue={`${pct(daySplit.undone).toFixed(1)}%`} tone="red" />
+            <ModuleKpi label="临时加菜" value={`${offPlanTrays} 盆`} tone="blue" />
           </div>
-        </section>
-
-        <div className="uk-module-kpis uk-plan-kpis">
-          <ModuleKpi label="餐段最晚出餐" value={MEAL_DEADLINE} note="计划截止时间" tone="blue" />
-          <ModuleKpi label="计划最晚完成" value={latestDish.out} note={latestDish.name} tone="cyan" />
-          <ModuleKpi label="计划安全余量" value={`${safetyMinutes} 分钟`} note="截止时间 - 最晚出餐" tone="green" />
         </div>
 
-        <div className="uk-plan-main">
-        <section className="uk-module-panel uk-plan-chart-panel">
+        <section className="uk-module-panel uk-detail-panel">
           <div className="uk-module-panel-head">
-            <div><h2>批次设备排程</h2><p>按批次查看设备占用、菜品生产阶段和预计出餐</p></div>
-            <span className="uk-plan-note">截止 {MEAL_DEADLINE}</span>
+            <div>
+              <h2>出餐明细</h2>
+              {/* 副标题把「这一屏看的是哪一段的账」写一遍，顺带交代明细的规模
+                  （几个批次、几道菜、多少盆）。 */}
+              <p>
+                {scopeLabel}{batchScope === 'all' ? '' : ` · 批次${batchScope}`}
+                {' · '}{detailGroups.length} 个批次 · {detailDishCount} 道菜 · 计划 {daySplit.plan} 盆
+              </p>
+            </div>
           </div>
-          <div className="uk-plan-chart-legend">{phaseLegend.map((phase) => <span key={phase.className}><i className={phase.className} />{phase.label}</span>)}<span><i className="deadline" />餐段截止</span></div>
-          <div className="uk-plan-schedule-chart">
-            <div className="uk-plan-schedule-axis"><span style={{ left: '0%' }}>{chartStart}</span><span style={{ left: '25%' }}>18:00</span><span style={{ left: '50%' }}>18:30</span><span style={{ left: '75%' }}>19:00</span><span style={{ left: '100%' }}>{MEAL_DEADLINE}</span></div>
-            {SCHEDULED_DISHES.map((dish) => (
-              <div className="uk-plan-schedule-row" key={dish.name}>
-                <div className="uk-plan-schedule-name"><b>{dish.device}</b><span>{dish.batch} · {dish.name}</span></div>
-                <div className="uk-plan-schedule-track">
-                  {[dish.prep ? toMinutes(dish.weigh) - toMinutes(dish.prep) : 0, toMinutes(dish.cook) - toMinutes(dish.weigh), toMinutes(dish.out) - toMinutes(dish.cook)].map((duration, index, durations) => duration > 0 ? <i className={`uk-plan-phase ${phaseLegend[index].className}`} key={phaseLegend[index].className} style={{ left: `${chartPercent(productionStart(dish)) + (durations.slice(0, index).reduce((sum, value) => sum + value, 0) / chartSpan) * 100}%`, width: `${(duration / chartSpan) * 100}%` }} /> : null)}
-                  <b className="uk-plan-schedule-marker" style={{ left: `${chartPercent(dish.out)}%` }} />
+
+          <div className="uk-detail-legend">
+            <span><i className="ontime" />已完成 · 及时</span>
+            <span><i className="late" />已完成 · 延迟</span>
+            <span><i className="undone" />未完成</span>
+            {/* 尾列写的是 `3 / 4` 这种紧凑写法，不给标签一定会被读反（详见该行的注释），
+                所以在图例里统一交代一次，比每行都写一遍省地方。
+                ⚠️ 这里的顺序必须和尾列的 JSX 保持一致 —— 图例说反了比不说更糟。 */}
+            <em>条长 = 计划量（100%） · 尾列 = 已完成 / 计划 盆</em>
+          </div>
+
+          {/* ⚠️ 明细区**允许内部滚动**。这是这一版唯一一处滚动，而且是有意的：
+              全部餐段下有 6 个批次、27 道菜，任何排版都塞不进 300px，
+              硬压只能变成 20px 高的行或砍掉大部分菜 —— 那就不是"明细"了。
+              筛到具体餐段/批次之后（用户说的"大概率"情形）基本一屏放得下。
+              ⚠️ 溢出时**自己滚**（`useAutoScroll`）：大屏无人值守，没人会去拖滚动条。 */}
+          <div className="uk-detail-body" ref={detailBodyRef}>
+            {detailGroups.map((group) => (
+              <div className="uk-detail-group" key={group.key}>
+                {/* 组头 = 原来那条「结论带」的内容，一个字没改。批次的三段时间必须显示，
+                    否则读者没法核对「超 17 分」是怎么来的。 */}
+                <div className={`uk-detail-grouphead${group.bad ? ' bad' : ''}`}>
+                  <b>{group.label}</b>
+                  <span>{group.note}</span>
+                  {/* ⚠️ 这里是**批次级**判据（基准 = 本批 dueAt），和图例里菜品级的
+                      「已完成·及时 / 已完成·延迟」是两套口径、共用一对词。别把它们当同一个数：
+                      早餐·批次1 组头是「延迟」（末菜超 8 分），组内 11 道菜却都是及时的。 */}
+                  <em>{group.bad ? '延迟' : '及时'}</em>
                 </div>
-                <strong><b>{dish.out}</b><small>余量 {toMinutes(MEAL_DEADLINE) - toMinutes(dish.out)} 分</small></strong>
+                {/* ⚠️ 组内排**两列**。单栏全宽实测 1822px，一行里的条会长到 1600px ——
+                    一根 100% 堆叠条拉到这么长，段与段的**长度对比**就失效了
+                    （读者只能靠条里的数字读比例，等于把条画废）。
+                    两列之后每列约 890px、条约 500px，回到可读区间。 */}
+                <div className="uk-detail-rows">
+                  {group.dishes.map((dish) => (
+                    <div className={`uk-detail-row${dish.bad ? ' bad' : ''}`} key={dish.key}>
+                      <div className="uk-detail-name">
+                        <b>{dish.name}</b>
+                        <small>{dish.note}</small>
+                      </div>
+                      <SplitBar split={dish.split} bad={dish.bad} />
+                      <div className="uk-detail-tail">
+                        {/* ⚠️ 顺序是**已完成 / 计划**，不是"计划 / 已完成"。别改回去：
+                            早先写的是"计划在前"（`4 / 3` = 计划 4、完成 3），用户一眼看成
+                            "做了 4 盆但只计划 3 盆"（超产），当场问"这个是不是反了"。
+                            根因不是数字错，是这个写法**不自证**：27 行里 **26 行两数相等**
+                            （4/4、3/3），两种读法都自洽 —— 唯一能暴露"谁在前"的就是那唯一
+                            不等的一行，于是它看起来像写错的，而不是像异常数据。
+                            斜杠 `/` 不携带方向，所以顺序必须挑**读者默认就会这么读**的那个：
+                            "做了 3 盆、本来要 4 盆" ⇒ **已完成在前**。
+                            已完成 = plan − undone（没做出来的那部分才是缺口）。 */}
+                        <b>{dish.split.plan - dish.split.undone} / {dish.split.plan}</b>
+                        <small>盆</small>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             ))}
+            {/* 空态给一句实话，不要留一片空白让读者以为是加载失败。 */}
+            {detailGroups.length === 0
+              ? <p className="uk-detail-empty">这个范围里没有批次。</p>
+              : null}
           </div>
-          <div className="uk-plan-chart-foot"><span>横轴为计划生产窗口，黄色线为餐段截止时间</span><b>{SCHEDULED_DISHES.length} 道菜 · {new Set(SCHEDULED_DISHES.map((dish) => dish.device)).size} 台设备</b></div>
         </section>
 
-        <section className="uk-module-panel uk-plan-judgement">
-          <div className="uk-module-panel-head"><div><h2>餐段保障判断</h2><p>先回答能否按时出餐</p></div></div>
-          <div className="uk-plan-judgement-main"><strong>可按计划完成</strong><span>最晚菜品仍比餐段截止时间提前 {safetyMinutes} 分钟</span></div>
-          <div className="uk-plan-facts">
-            <div><span>餐段截止</span><b>{MEAL_DEADLINE}</b></div>
-            <div><span>最晚菜品</span><b>{latestDish.name}</b></div>
-            <div><span>最晚出餐</span><b>{latestDish.out}</b></div>
-            <div><span>计划状态</span><b>无超时风险</b></div>
-          </div>
-          <div className="uk-plan-check-list">
-            <div><i /><span>批次设备已分配</span><b>{new Set(SCHEDULED_DISHES.map((dish) => dish.device)).size} / {new Set(SCHEDULED_DISHES.map((dish) => dish.device)).size}</b></div>
-            <div><i /><span>生产阶段已排程</span><b>{SCHEDULED_DISHES.length * 3} 个节点</b></div>
-            <div><i /><span>计划出餐满足截止</span><b>全部通过</b></div>
-          </div>
-          <div className="uk-plan-change-card"><span>临时加菜影响</span><strong>当前无临时加菜</strong><small>批次1预计生产时长未增加</small></div>
-          <p className="uk-plan-explain">系统会根据设备占用和阶段时长重新计算批次完成时间，若影响截止时间则自动转为需要关注。</p>
-        </section>
+        <div className="uk-plan-bottom">
+          <section className="uk-module-panel uk-donut-card">
+            {/* 标题改用**和「出餐统计」逐字相同**的 `.uk-module-panel-head > h2` 结构。
+                不手写一套「18px + #eaf7ff + 下边线」的样式去"模仿"——那样等上面那张卡
+                调了字号/颜色/间距，这里不会跟着变，两张卡迟早长得不一样。 */}
+            <div className="uk-module-panel-head">
+              <div><h2>出餐情况占比</h2></div>
+            </div>
+            <div className="uk-donut-wrap">
+              {(() => {
+                const radius = 44;
+                const circumference = 2 * Math.PI * radius;
+                const segments = [
+                  { cls: 'ontime', value: daySplit.ontime },
+                  { cls: 'late', value: daySplit.late },
+                  { cls: 'undone', value: daySplit.undone },
+                ];
+                let cursor = 0;
+                return (
+                  <div className="uk-cht-donut">
+                    <svg viewBox="0 0 100 100">
+                      <circle cx="50" cy="50" r={radius} fill="none" stroke="#123c5e" strokeWidth="12" />
+                      {segments.map((segment) => {
+                        const fraction = daySplit.plan ? segment.value / daySplit.plan : 0;
+                        const dash = `${(circumference * fraction).toFixed(1)} ${(circumference * (1 - fraction)).toFixed(1)}`;
+                        const offset = (-circumference * cursor).toFixed(1);
+                        cursor += fraction;
+                        return (
+                          <circle
+                            key={segment.cls}
+                            className={`uk-donut-seg ${segment.cls}`}
+                            cx="50" cy="50" r={radius} fill="none" strokeWidth="12"
+                            strokeDasharray={dash} strokeDashoffset={offset}
+                            transform="rotate(-90 50 50)"
+                          />
+                        );
+                      })}
+                    </svg>
+                    <div className="uk-cht-donut-c">
+                      <b>{ontimeRate.toFixed(1)}%</b>
+                      <small>按时完成</small>
+                    </div>
+                  </div>
+                );
+              })()}
+              <div className="uk-donut-legend">
+                {[
+                  { cls: 'ontime', label: '及时', value: daySplit.ontime },
+                  { cls: 'late', label: '延迟', value: daySplit.late },
+                  { cls: 'undone', label: '未完成', value: daySplit.undone },
+                ].map((item) => (
+                  <div className={`uk-donut-item ${item.cls}`} key={item.cls}>
+                    <i />
+                    <b>{item.value} 盆</b>
+                    <small>{item.label} {pct(item.value).toFixed(1)}%</small>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          <section className="uk-module-panel uk-line-card">
+            <div className="uk-module-panel-head">
+              <div>
+                {/* ⚠️ 标题和图例**一起跟着 `lineMode` 换文案**，不能只换一半：
+                    x 轴换成「菜」之后，图例还写「本批计划」的话，读者会拿两条不同的
+                    基准去读同一张图。标题说"哪根轴"、图例说"基准是谁"，两个都得对。 */}
+                <h2>{lineMode === 'batch' ? '各批次出餐偏差（分钟）' : '各道菜出餐偏差（分钟）'}</h2>
+              </div>
+            </div>
+            {/* 图例从标题里**搬出来单独一行**，放在标题下面。
+                原因：标题升到 18px 之后，`<em>` 再挂在同一行会跟标题抢视觉权重，
+                而且标题变长时图例会先被挤到换行、把标题和图的间距搞乱。
+                ⚠️ 标题升字号会让这一栏的**垂直空间净增约 40px**，下排卡的行高
+                   （`.uk-plan-bottom` 的 flex-basis）必须同步加高，否则 SVG 会被压矮、
+                   viewBox 的宽高比失配 → 折线图左右两侧留白（详见 style.css 的注释）。 */}
+            <div className="uk-cht-legend">
+              {lineMode === 'batch' ? (
+                <>
+                  <span><i className="bad" />超时 · 晚于本批计划</span>
+                  <span><i className="ok" />提前 · 早于本批计划</span>
+                </>
+              ) : (
+                <>
+                  <span><i className="bad" />超时 · 晚于本菜备餐提醒</span>
+                  <span><i className="ok" />提前 · 早于本菜备餐提醒</span>
+                </>
+              )}
+            </div>
+            <svg className="uk-cht-line" viewBox="0 0 1200 240">
+              {(() => {
+                /* ⚠️ 六条被实测逼出来的规矩，改这张图前先读完：
+
+                   ① **y 恒等于「实际出餐时刻 − 该对象自己的承诺时刻」**（负值 = 提前），
+                      承诺时刻是**哪一级**由 `lineMode` 决定，两套模式各一个基准：
+
+                      · `batch` 模式：y = 批次出齐时刻 − **本批次自己的计划出餐时刻**
+                        （`batch.dueAt`），不是餐段窗口结束 —— 这条最要紧。
+                        上一版用的是餐段级截止时刻，而一个餐段只有**一个**截止时刻，
+                        于是同餐段里越早的批次「提前量」必然越大，出现「早两个小时」这种
+                        **没有度量意义**的数字（早餐拆 3 批时纵轴被 −114/−70 撑爆，
+                        真正要看的 +8/+17 被压成一条细缝）。下沉到批次级之后偏差落到 −14~+17。
+                      · `dish` 模式：y = 该菜出餐时刻 − **该菜自己的备餐提醒时刻**。
+                        **绝不能**在图例/实现里偷偷用「批次计划时刻」当基准 ——
+                        同一批的菜本来就按顺序错开一两小时出，拿批次的时刻当基准，
+                        前面每道菜都会显示"提前两小时"，是结构性假信号。
+                      ⇒ 通用版：**对象的粒度决定了基准取谁的承诺时刻，换 x 轴必须同时换基准。**
+                        两个基准的区别只写在标题和图例里（`lineMode` 一起切），SVG 内不重复。
+
+                      → 教训：图表不好看时，先回头看**数据模型本身合不合理**，
+                        别急着在渲染层打补丁（当时打过一版「负半轴 ×0.16 压缩」的补丁，
+                          模型改对之后整个删掉了）。
+
+                   ② 纵轴写死，**不做自适应**。写死才能横向比不同日期 —— 一天一个刻度，
+                      「今天偏差比昨天大」这种结论根本读不出来。
+                      取值范围要**罩得住所有日期**，否则会被夹成一条平线（这个坑踩过两次：
+                      先试过夹到下限、又试过压缩负半轴，都是因为模型错、范围取不出来）。
+                      ⚠️ 写死的是**每一套模式各自一套**，不是全局一套：两套模式的基准不同、
+                        数据分布完全不同（批次最多 +20，单道菜能到 +37），
+                        硬凑一套刻度只会让其中一套永远贴边。它们也**永远不会同屏出现**，
+                        所以"各自写死"并不违反"可比"这条 —— 可比性要求的是**同模式、跨日期**可比。
+
+                      · `batch` 模式写死 **+25 / −30**：
+                        上界：每道菜的偏移最多 +28 分，批次的出齐时刻取批内最晚，
+                          所以 `over_max = 末道菜提醒 + 28 − dueAt`，六个批次里最大 = 晚2 的 +20；
+                        下界：所有菜都提前 7 分时出齐时刻取「最晚那道提醒 − 7」，
+                          最小 = 午2 的 −27。
+                        即跨所有日期 over ∈ [−27, +20]，+25/−30 两侧都留了余量，**永远不会夹到**。
+                        零线落在 45% 高度处（不是正中），红/绿两带高度接近，读起来对称。
+                      · `dish` 模式写死 **+45 / −15**：
+                        上界：demo 日的单菜偏移最多 +28（`2 + mag^1.3 × 26`），
+                          但当天写死那套里**清蒸鲈鱼 13:10 → 13:47 = +37** 是全量最大，
+                          所以取 +45（不是 +40 —— +40 时那个点的数值标注会顶到绘图区上沿）；
+                        下界：准时分支严格落在提醒之前 0~7 分，最小 = −7，取 −15。
+                        即跨所有日期 over ∈ [−7, +37]，两侧都留了余量。
+                        零线落在 75% 高度处（比批次模式低）—— 这是**被数据逼的、不是画歪了**：
+                          单菜偏差天然"绝大多数准点、少数几道晚半小时以上"，
+                          要让那根 +37 的尖峰进得来，零线就只能压在下面。
+                          代价是绿色带（提前侧）只有 42px 高 —— 但提前侧本来就只有 −7 的幅度，
+                          真正要读的是"哪几道晚、晚了多少"，那条信息全在红带里。
+                      `offScale` 的空心点分支保留着兜底，正常日期走不到。
+
+                   ③ SVG 里的字号会被缩放。viewBox 是 1200 宽、卡片实际不到 1200，
+                      缩放比 ≈0.87 —— 声明 9px 只有 **7.9px**，大屏上根本看不清。
+                      这里的字号都比直觉大一号（`.uk-cht-pt` 声明 15 → 实际约 13）。
+
+                   ④ 数值标注一律放在点的**上方**（py − 13）。原来写的是
+                      「超时放上方、提前放下方」（py + 20），最低那个点的标注落在 y=180.4，
+                      和 X 轴标注（y=182）**直接叠在一起**，第一个点的数值永远读不出来。
+
+                   ⑤ 说明文字全部搬到 SVG **外面**（标题下面那行图例），SVG 内只留一个 "0"。
+                      原因是零线位置随数据走，红带高度有限，
+                      塞不下「超时 · 晚于本批计划 / 计划线 0 / 提前出餐」三行 12px 文字
+                      （会互相压）。**HTML 文字是 1:1 的、SVG 文字要乘 0.87** ——
+                      能搬出 SVG 的说明就搬出去。
+                      ⚠️ 这一条同时也是「模式切换必须在 HTML 层做」的理由：
+                        SVG 里的文字要跟着 `lineMode` 换说法的话，三处文案（标题/图例/SVG 内）
+                        会分散在两个渲染层，改一处漏一处的概率大幅上升。
+
+                   ⑥ y 值必须来自 `activeMeals`（见上面 linePoints 的注释），否则切日期时
+                      这条折线不跟着变，和 KPI 自相矛盾。
+
+                   ⚠️ viewBox 的**宽高比要和卡片接近**（1200:240 = 5.0），
+                      否则 SVG 按 meet 等比缩放会左右留白（第一版 620×190 只用了中间 700px）。 */
+                const viewW = 1200;
+                /* 纵轴写死，但**两套模式各一套**（见规矩 ②）。
+                   批次 over ∈ [−27, +20] ⇒ +25/−30；单菜 over ∈ [−7, +37] ⇒ +45/−15。 */
+                const isBatchMode = lineMode === 'batch';
+                const maxOver = isBatchMode ? 25 : 45;
+                const minOver = isBatchMode ? -30 : -15;
+                /* 基准叫什么，只在原生 tooltip 里用一次 —— 图例已经写清了，这里不重复占版面。 */
+                const dueWord = isBatchMode ? '计划出餐' : '备餐提醒';
+                const topPad = 34;
+                const plotH = 170;
+                const plotBottom = topPad + plotH;
+                const axisY = 232;
+                /* 左侧只留一个 "0" 刻度，所以 90 够 —— 第一个数据点的数值标注
+                   （居中在 x=90、宽约 35）从 72 起，不会碰到 x=6 那个 "0"。 */
+                const leftPad = 90;
+                const px = (index: number) => leftPad + ((viewW - leftPad - 40) / Math.max(linePoints.length - 1, 1)) * index;
+                const py = (over: number) => topPad
+                  + ((maxOver - Math.max(minOver, Math.min(maxOver, over))) / (maxOver - minOver)) * plotH;
+                const zeroY = py(0);
+                const path = linePoints
+                  .map((point, index) => `${index === 0 ? 'M' : 'L'} ${px(index).toFixed(1)} ${py(point.over).toFixed(1)}`)
+                  .join(' ');
+                return (
+                  <g>
+                    <rect x="0" y={topPad} width={viewW} height={(zeroY - topPad).toFixed(1)} className="uk-cht-zone-bad" />
+                    <rect x="0" y={zeroY.toFixed(1)} width={viewW} height={(plotBottom - zeroY).toFixed(1)} className="uk-cht-zone-ok" />
+                    <text x="6" y={(zeroY - 7).toFixed(1)} className="uk-cht-zero-t">0</text>
+                    <line x1="0" y1={zeroY.toFixed(1)} x2={viewW} y2={zeroY.toFixed(1)} className="uk-cht-zero" />
+                    <path d={path} className="uk-cht-poly" />
+                    {linePoints.map((point, index) => {
+                      const cy = py(point.over);
+                      const offScale = point.over < minOver || point.over > maxOver;
+                      return (
+                        <g key={point.key}>
+                          {/* 原生 tooltip：图上只有一个偏差数字，读者想核对「这几分钟是从哪个时刻
+                              算出来的」时不用切回上面的栏。`dueWord` 负责按模式换基准的说法。 */}
+                          <title>{`${point.label} ｜ ${dueWord} ${point.dueAt} ｜ 实际出餐 ${point.finish} ｜ ${point.over > 0 ? `超 ${point.over} 分` : point.over < 0 ? `提前 ${-point.over} 分` : '准点'}`}</title>
+                          <circle
+                            cx={px(index).toFixed(1)} cy={cy.toFixed(1)} r="5.5"
+                            className={`${point.over > 0 ? 'bad' : 'ok'}${offScale ? ' clamped' : ''}`}
+                          />
+                          <text
+                            x={px(index).toFixed(1)}
+                            y={(cy - 13).toFixed(1)}
+                            className={point.over > 0 ? 'uk-cht-pt bad' : 'uk-cht-pt ok'}
+                            textAnchor="middle"
+                          >
+                            {point.over > 0 ? `+${point.over}` : point.over}
+                          </text>
+                          <text x={px(index).toFixed(1)} y={axisY} className="uk-cht-xt" textAnchor="middle">{point.label}</text>
+                        </g>
+                      );
+                    })}
+                  </g>
+                );
+              })()}
+            </svg>
+          </section>
         </div>
+      </main>
+    </CockpitModuleShell>
+  );
+}
+
+function DishStatsModule({ clock, onNavigate }: { clock: string; onNavigate: (id: string) => void }) {
+  const todayISO = toISODate(new Date());
+  const [statDate, setStatDate] = useState(todayISO);
+  const sourceMeals = statDate === todayISO ? MEAL_ACHIEVEMENTS : buildDemoDay(statDate);
+  const nowMinutes = clock ? parseClock(clock.slice(-8, -3)) : new Date().getHours() * 60 + new Date().getMinutes();
+  const activeMeals = sourceMeals.map((meal) => ({
+    ...meal,
+    batches: meal.batches.map((batch) => {
+      const batchHasPassed = statDate !== todayISO || nowMinutes >= parseClock(batch.dueAt);
+      if (!batchHasPassed) return batch;
+      return {
+        ...batch,
+        dishes: batch.dishes.map((dish) => {
+          if (dish.actualTrays >= dish.planTrays) return dish;
+          const lateOut = Math.max(parseClock(dish.actualOut), parseClock(dish.remindAt) + 1);
+          return { ...dish, actualTrays: dish.planTrays, actualOut: formatClock(lateOut) };
+        }),
+      };
+    }),
+  }));
+
+  type DishRollup = {
+    key: string;
+    name: string;
+    segments: Set<string>;
+    color: string;
+    taskCount: number;
+    batchKeys: Set<string>;
+    planTrays: number;
+    actualTrays: number;
+    doneTasks: number;
+    pendingTasks: number;
+    lateTasks: number;
+  };
+  const rollups = new Map<string, DishRollup>();
+  activeMeals.forEach((meal) => meal.batches.forEach((batch) => batch.dishes.forEach((dish) => {
+    const key = dish.name;
+    const current = rollups.get(key) ?? {
+      key,
+      name: dish.name,
+      segments: new Set<string>(),
+      color: DISHES.find((item) => item.name === dish.name)?.color ?? '#25e0ee',
+      taskCount: 0,
+      batchKeys: new Set<string>(),
+      planTrays: 0,
+      actualTrays: 0,
+      doneTasks: 0,
+      pendingTasks: 0,
+      lateTasks: 0,
+    };
+    const done = dish.actualTrays >= dish.planTrays;
+    current.segments.add(meal.label);
+    current.taskCount += 1;
+    current.batchKeys.add(`${meal.id}-${batch.no}`);
+    current.planTrays += dish.planTrays;
+    current.actualTrays += Math.min(dish.actualTrays, dish.planTrays);
+    if (done) {
+      current.doneTasks += 1;
+      if (parseClock(dish.actualOut) > parseClock(dish.remindAt)) current.lateTasks += 1;
+    } else {
+      current.pendingTasks += 1;
+    }
+    rollups.set(key, current);
+  })));
+
+  const dishRows = Array.from(rollups.values());
+  const statusOf = (dish: DishRollup) => dish.pendingTasks === 0 ? '已完成' : dish.doneTasks === 0 ? '未完成' : '部分完成';
+  const statusClass = (status: string) => status === '已完成' ? 'done' : status === '部分完成' ? 'partial' : 'pending';
+  const doneDishes = dishRows.filter((dish) => statusOf(dish) === '已完成').length;
+  const partialDishes = dishRows.filter((dish) => statusOf(dish) === '部分完成').length;
+  const pendingDishes = dishRows.filter((dish) => statusOf(dish) === '未完成').length;
+  const segmentRows = MEAL_ORDER.map((segment) => {
+    const items = dishRows.filter((dish) => dish.segments.has(segment));
+    return {
+      segment,
+      total: items.length,
+      done: items.filter((dish) => statusOf(dish) === '已完成').length,
+      partial: items.filter((dish) => statusOf(dish) === '部分完成').length,
+      pending: items.filter((dish) => statusOf(dish) === '未完成').length,
+    };
+  }).filter((row) => row.total > 0);
+  const totalBatches = activeMeals.reduce((sum, meal) => sum + meal.batches.length, 0);
+
+  return (
+    <CockpitModuleShell current="dish" clock={clock} onNavigate={onNavigate}>
+      <main className="uk-dish-page">
+        <div className="uk-dish-head">
+          <div>
+            <span className="uk-module-kicker">出餐统计 · 方案二</span>
+            <h1>菜品任务统计</h1>
+            <p>按去重菜品看计划覆盖，工单数和批次数作为生产拆分信息补充</p>
+          </div>
+          <label className="uk-date-switch">
+            <span>统计日期</span>
+            <input type="date" value={statDate} max={todayISO} onChange={(event) => setStatDate(event.target.value || todayISO)} />
+          </label>
+        </div>
+
+        <div className="uk-module-kpis uk-dish-kpis">
+          <ModuleKpi label="计划菜品" value={`${dishRows.length} 道`} note="按菜品去重" />
+          <ModuleKpi label="已完成" value={`${doneDishes} 道`} note="所有工单已完成" tone="green" />
+          <ModuleKpi label="部分完成" value={`${partialDishes} 道`} note="同一道菜有未完成工单" tone="amber" />
+          <ModuleKpi label="未完成" value={`${pendingDishes} 道`} note="尚未完成生产" tone="red" />
+          <ModuleKpi label="生产工单" value={`${activeMeals.flatMap((meal) => meal.batches.flatMap((batch) => batch.dishes)).length} 个`} note="不去重" tone="blue" />
+          <ModuleKpi label="覆盖批次" value={`${totalBatches} 个`} note="按批次去重" tone="cyan" />
+        </div>
+
+        <div className="uk-dish-main">
+          <section className="uk-module-panel uk-dish-segment-panel">
+            <div className="uk-module-panel-head">
+              <div><h2>餐段菜品完成度</h2><p>每道菜只计一次，工单拆分不会放大菜品总数</p></div>
+            </div>
+            <div className="uk-dish-legend"><span><i className="done" />已完成</span><span><i className="partial" />部分完成</span><span><i className="pending" />未完成</span></div>
+            <div className="uk-dish-segment-list">
+              {segmentRows.map((row) => (
+                <div className="uk-dish-segment-row" key={row.segment}>
+                  <div className="uk-dish-segment-label"><b>{row.segment}</b><small>{row.total} 道菜</small></div>
+                  <div className="uk-dish-segment-track" aria-label={`${row.segment}：已完成 ${row.done} 道，部分完成 ${row.partial} 道，未完成 ${row.pending} 道`}>
+                    <i className="done" style={{ flexGrow: row.done }}>{row.done > 0 ? <b>{row.done}</b> : null}</i>
+                    <i className="partial" style={{ flexGrow: row.partial }}>{row.partial > 0 ? <b>{row.partial}</b> : null}</i>
+                    <i className="pending" style={{ flexGrow: row.pending }}>{row.pending > 0 ? <b>{row.pending}</b> : null}</i>
+                  </div>
+                  <strong>{row.done}/{row.total}</strong>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section className="uk-module-panel uk-dish-rule-panel">
+            <div className="uk-module-panel-head"><div><h2>统计口径</h2><p>避免把菜品数和生产次数混成一个数字</p></div></div>
+            <div className="uk-dish-rules">
+              <div><b>菜品数</b><span>按菜品去重。同一道菜拆成多个工单，仍只算 1 道。</span></div>
+              <div><b>生产工单</b><span>按工单实例统计。同一道菜拆成 3 个工单，就显示 3 个。</span></div>
+              <div><b>覆盖批次</b><span>按批次去重，说明一道菜分布在哪些生产批次。</span></div>
+            </div>
+            <div className="uk-dish-example"><strong>示例</strong><span>青椒肉丝 · 1 道菜 / 3 个工单 / 2 个批次</span></div>
+          </section>
+        </div>
+
+        <section className="uk-module-panel uk-dish-table-panel">
+          <div className="uk-module-panel-head"><div><h2>菜品任务明细</h2><p>状态按该菜的全部工单汇总，延迟单独标注</p></div><strong>{dishRows.length} 道</strong></div>
+          <div className="uk-dish-table">
+            <div className="uk-dish-table-head"><span>菜品</span><span>状态</span><span>工单</span><span>批次</span><span>计划盆</span><span>完成盆</span><span>延迟工单</span></div>
+            <div className="uk-dish-table-body">
+              {dishRows.map((dish) => {
+                const status = statusOf(dish);
+                return (
+                  <div className="uk-dish-table-row" key={dish.key}>
+                    <span className="uk-dish-name"><i style={{ background: dish.color }} />{dish.name}<small>{Array.from(dish.segments).join(' / ')}</small></span>
+                    <em className={statusClass(status)}>{status}</em>
+                    <b>{dish.taskCount}</b>
+                    <b>{dish.batchKeys.size}</b>
+                    <b>{dish.planTrays}</b>
+                    <b>{dish.actualTrays}</b>
+                    <span className={dish.lateTasks > 0 ? 'late' : 'ok'}>{dish.lateTasks > 0 ? `${dish.lateTasks} 个` : '无'}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
       </main>
     </CockpitModuleShell>
   );
@@ -1159,6 +2195,13 @@ export default function UnmannedKitchenCockpit() {
     dishState,
     workOrderStatus,
   };
+  if (view === 'dish') return (
+    <div className="uk-viewport">
+      <div className="uk-screen uk-module-screen" style={{ transform: `translate(-50%, -50%) scale(${scale})` }}>
+        <DishStatsModule clock={clock} onNavigate={navigate} />
+      </div>
+    </div>
+  );
   if (view === 'overview' || view === 'process' || view === 'equipment') return (
     <div className="uk-viewport">
       <div className="uk-screen uk-module-screen" style={{ transform: `translate(-50%, -50%) scale(${scale})` }}>
