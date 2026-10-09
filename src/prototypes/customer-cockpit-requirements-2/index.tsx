@@ -10,7 +10,7 @@
  * 今日出餐量采用“演示动态”递增，用于展示实际 / 计划 / 完成率的联动；
  * 增量与料箱到达出口的时刻绑定，现场接入后由真实出餐事件替换。
  *
- * 页内切换：顶部提供「驾驶舱 / 行为监控」两个视图（本页演示讲解用，
+ * 页内切换：顶部提供「总览 / 营养健康 / 出餐统计 / 行为监控」视图（本页演示讲解用，
  * 与 PRD 中由 iPad 切页的五页体系并行，不替代该体系）。
  * 智厨生产驾驶舱通过 page=overview 进入；旧的 process / equipment 链接会兼容回落到这个合并页。
  * 行为监控视图的数据口径见 ./components/BehaviorView.tsx。
@@ -18,44 +18,115 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { BehaviorView } from './components/BehaviorView';
 import './style.css';
-import kitchenImage from './assets/realtime-kitchen.png';
+import kitchenImage from './assets/realtime-kitchen-generated.png';
+import dishMilletPumpkinPorridge from './assets/dish-millet-pumpkin-porridge.png';
+import dishSteamedEggCustard from './assets/dish-steamed-egg-custard.png';
+import dishShiitakeBokChoy from './assets/dish-shiitake-bok-choy.png';
+import dishGreenPepperPork from './assets/dish-green-pepper-pork.png';
+import dishTomatoScrambledEgg from './assets/dish-tomato-scrambled-egg.png';
+import dishBraisedBeefPotato from './assets/dish-braised-beef-potato.png';
+import dishDryPotCauliflower from './assets/dish-dry-pot-cauliflower.png';
+import dishStirFriedBeefCelery from './assets/dish-stir-fried-beef-celery.png';
+import dishChiveMungBeanSprout from './assets/dish-chive-mung-bean-sprout.png';
+import dishOysterSauceBeef from './assets/dish-oyster-sauce-beef.png';
+import dietPagoda3d from './assets/diet-pagoda-3d.png';
+
+const DISH_IMAGES: Record<string, string> = {
+  小米南瓜粥: dishMilletPumpkinPorridge,
+  蒸蛋羹: dishSteamedEggCustard,
+  香菇青菜: dishShiitakeBokChoy,
+  青椒肉丝: dishGreenPepperPork,
+  番茄炒蛋: dishTomatoScrambledEgg,
+  土豆烧牛肉: dishBraisedBeefPotato,
+  干锅花菜: dishDryPotCauliflower,
+  小炒黄牛肉: dishStirFriedBeefCelery,
+  韭菜绿豆芽: dishChiveMungBeanSprout,
+  蚝油牛柳: dishOysterSauceBeef,
+};
 
 type MealSegment = '早餐' | '午餐' | '晚餐' | '宵夜' | '其他';
-type Dish = { segment: MealSegment; name: string; done: number; total: number; onTimeDone: number; color: string; feedKg?: number };
-type Machine = { id: string; dish: string; state: string; color: string };
+/** 「颜色建议」用的三色标签（用户口径：只做三种颜色的示例）。
+    原本按《中国居民膳食指南》五色食物（白/绿/红/黄/黑）分类，现按需求收敛到三色：
+    绿=蔬菜类、黄=蛋类与谷薯、红=畜肉类。
+    一道菜只打**一个**色 —— 它要占今日菜单卡上的一行；归类锚点是 `ingredients[0]`（第一主料）。
+    自检：绿 4（香菇青菜/番茄炒蛋/干锅花菜/韭菜绿豆芽）、黄 2（小米南瓜粥/蒸蛋羹）、红 4（青椒肉丝/土豆烧牛肉/小炒黄牛肉/蚝油牛柳）；
+          「建议频次」不放在这里，而是由颜色推导（见 FOOD_COLOR_ADVICE），避免同一颜色出现两个频次。 */
+type FoodColor = '绿' | '黄' | '红';
+type Dish = { segment: MealSegment; name: string; done: number; total: number; onTimeDone: number; color: string; device: string; feedKg?: number; productionKg?: number; ingredients: string[]; seasonings: string[]; foodColor: FoodColor; nutrition: { energy: number; protein: number; fat: number; carbs: number; fiber: number; cholesterol: number } };
+type Machine = { id: string; dish: string; state: string; color: string; model?: string };
 type OutItem = { port: string; dish: string; qty: string; color: string };
 type WorkOrderStatus = '未开始' | '待称重' | '称重中' | '待加料' | '加料中' | '称重加料完成' | '待摆盆' | '摆盆中' | '摆盆完成' | '待烹饪' | '预热中' | '烹饪中' | '烹饪完成' | '开始出餐' | '出餐完成' | '取餐中' | '取餐完成' | '已作废';
 const LINE_CYCLE_MS = 14_000;
 
 /** feedKg = 称重加料区实测投料量（kg）。演示口径，非客户现场数据。
-    自检：合计 82.0 kg ÷ 26 盆 ≈ 3.2 kg/盆，与盆量级吻合。 */
-const DISHES: Dish[] = [
-  { segment: '早餐', name: '紫菜蛋汤', done: 2, total: 2, onTimeDone: 2, color: '#e0a629', feedKg: 9.8 },
-  { segment: '早餐', name: '蒜蓉娃娃菜', done: 2, total: 3, onTimeDone: 2, color: '#079f96', feedKg: 5.2 },
-  { segment: '早餐', name: '清炒莲藕片', done: 3, total: 3, onTimeDone: 3, color: '#e85d75', feedKg: 8.7 },
-  { segment: '午餐', name: '青椒肉丝', done: 4, total: 4, onTimeDone: 4, color: '#3b8be0', feedKg: 13.2 },
-  { segment: '午餐', name: '番茄炒蛋', done: 4, total: 4, onTimeDone: 4, color: '#42a885', feedKg: 12.8 },
-  { segment: '午餐', name: '土豆烧牛肉', done: 3, total: 4, onTimeDone: 2, color: '#9367d8', feedKg: 9.6 },
-  { segment: '午餐', name: '干锅花菜', done: 3, total: 4, onTimeDone: 3, color: '#f09a4b', feedKg: 8.4 },
-  { segment: '晚餐', name: '小炒黄牛肉', done: 2, total: 3, onTimeDone: 2, color: '#6f8fe8', feedKg: 6.4 },
-  { segment: '晚餐', name: '韭菜绿豆芽', done: 2, total: 3, onTimeDone: 1, color: '#d879b0', feedKg: 4.8 },
-  { segment: '晚餐', name: '蚝油牛柳', done: 1, total: 3, onTimeDone: 1, color: '#56a66f', feedKg: 3.1 },
-];
+    自检：合计 82.0 kg ÷ 26 盆 ≈ 3.2 kg/盆，与盆量级吻合。
 
-/** 已称重菜品与累计投料量。由数组推导而非写死，避免与明细行对不上。 */
-const WEIGHED = DISHES.filter((dish) => dish.feedKg != null);
-const FEED_TOTAL_KG = WEIGHED.reduce((sum, dish) => sum + (dish.feedKg ?? 0), 0);
+    device = 这道菜固定的生产设备（整机park：2 台炒菜机 + 1 台烤箱）。
+    演示口径：一天内一道菜只在一台设备上分批生产，不换机，所以「生产进度」每行都能给出设备。
+    注意：青椒肉丝 / 番茄炒蛋 / 蒸蛋羹的 device 必须与 COCKPIT_MACHINES 里同菜名的 id 一致，
+    否则「生产进度」显示的设备会和上方动线动画里托盘停靠的设备对不上。
+
+    ingredients = 主料（品牌公示的名单由它推导，见 INGREDIENT_BRANDS）；
+    seasonings  = 调料（只用于「配方示例」口径，不进品牌公示）。
+    nutrition  = 熟制成品每100g的估算营养值
+                 （能量 kcal / 蛋白质·脂肪·碳水·膳食纤维 g / 胆固醇 mg）；
+                 参考《中国食物成分表》单种食材数据，按示例菜谱比例估算，不代表实测。
+    自检：能量约等于 4×蛋白质 + 9×脂肪 + 4×碳水；实际值还会随菜谱比例和熟制出成率变化。
+    膳食纤维：蔬菜类的「香菇青菜 / 韭菜绿豆芽 / 干锅花菜」明显高一档（1.9~2.2g），蛋奶肉类接近 0；
+              这样单品卡上的纤维值才随菜变化，不然 10 道菜这一格全一样，轮播就白播了。
+    胆固醇：只有含蛋和畜肉的高（蒸蛋羹 185、番茄炒蛋 152 最高，五花肉/牛肉类 36~56），
+            纯蔬菜两道为 0。与「膳食纤维」正好一高一低，两格形成对照。
+
+    foodColor = 「今日菜单」菜品卡上「颜色建议」那一行的色标：只取三种颜色，
+    归类锚点是 `ingredients[0]`（第一主料），不看配菜和调料。
+    这一行显示的建议频次**不写在这里** —— 它由颜色推导（绿=每餐、黄=每天、红=每周 2-3 次，见 FOOD_COLOR_ADVICE），
+    这样同一颜色在 10 张卡上不会出现两个频次。 */
+const DISHES: Dish[] = [
+  { segment: '早餐', name: '小米南瓜粥', device: '炒菜机 CCJ1', done: 2, total: 2, onTimeDone: 2, color: '#e0a629', feedKg: 9.8, ingredients: ['小米', '南瓜'], seasonings: ['白糖'], foodColor: '黄', nutrition: { energy: 45, protein: 1.1, fat: 0.2, carbs: 9.8, fiber: 0.6, cholesterol: 0 } },
+  { segment: '早餐', name: '蒸蛋羹', device: '烤箱 KX1', done: 2, total: 3, onTimeDone: 2, color: '#079f96', feedKg: 5.2, productionKg: 4.8, ingredients: ['鸡蛋', '饮用水'], seasonings: ['盐', '香油'], foodColor: '黄', nutrition: { energy: 57, protein: 5.1, fat: 3.5, carbs: 1.2, fiber: 0, cholesterol: 185 } },
+  { segment: '早餐', name: '香菇青菜', device: '炒菜机 CCJ2', done: 3, total: 3, onTimeDone: 3, color: '#e85d75', feedKg: 8.7, ingredients: ['香菇', '青菜'], seasonings: ['食用油', '盐'], foodColor: '绿', nutrition: { energy: 56, protein: 2.0, fat: 3.5, carbs: 4.0, fiber: 2.2, cholesterol: 0 } },
+  { segment: '午餐', name: '青椒肉丝', device: '炒菜机 CCJ1', done: 4, total: 4, onTimeDone: 4, color: '#3b8be0', feedKg: 13.2, productionKg: 12.6, ingredients: ['猪肉', '青椒'], seasonings: ['生抽', '料酒', '淀粉'], foodColor: '红', nutrition: { energy: 121, protein: 10.0, fat: 7.0, carbs: 4.5, fiber: 1.0, cholesterol: 48 } },
+  { segment: '午餐', name: '番茄炒蛋', device: '炒菜机 CCJ2', done: 4, total: 4, onTimeDone: 4, color: '#42a885', feedKg: 12.8, productionKg: 12.4, ingredients: ['番茄', '鸡蛋'], seasonings: ['食用油', '盐', '糖'], foodColor: '绿', nutrition: { energy: 105, protein: 5.5, fat: 7.3, carbs: 4.4, fiber: 0.7, cholesterol: 152 } },
+  { segment: '午餐', name: '土豆烧牛肉', device: '烤箱 KX1', done: 3, total: 4, onTimeDone: 2, color: '#9367d8', feedKg: 9.6, ingredients: ['牛肉', '土豆'], seasonings: ['生抽', '老抽', '八角'], foodColor: '红', nutrition: { energy: 136, protein: 10.5, fat: 7.0, carbs: 8.0, fiber: 0.9, cholesterol: 42 } },
+  { segment: '午餐', name: '干锅花菜', device: '炒菜机 CCJ1', done: 3, total: 4, onTimeDone: 3, color: '#f09a4b', feedKg: 8.4, ingredients: ['花菜', '五花肉'], seasonings: ['干锅酱', '辣椒', '大蒜'], foodColor: '绿', nutrition: { energy: 151, protein: 5.5, fat: 11.0, carbs: 7.5, fiber: 2.0, cholesterol: 36 } },
+  { segment: '晚餐', name: '小炒黄牛肉', device: '炒菜机 CCJ2', done: 2, total: 3, onTimeDone: 2, color: '#6f8fe8', feedKg: 6.4, ingredients: ['黄牛肉', '辣椒', '芹菜'], seasonings: ['生抽', '蚝油', '豆豉'], foodColor: '红', nutrition: { energy: 147, protein: 13.5, fat: 8.5, carbs: 4.0, fiber: 0.8, cholesterol: 56 } },
+  { segment: '晚餐', name: '韭菜绿豆芽', device: '炒菜机 CCJ1', done: 2, total: 3, onTimeDone: 1, color: '#d879b0', feedKg: 4.8, ingredients: ['韭菜', '绿豆芽'], seasonings: ['食用油', '盐'], foodColor: '绿', nutrition: { energy: 50, protein: 2.5, fat: 2.7, carbs: 3.8, fiber: 1.9, cholesterol: 0 } },
+  { segment: '晚餐', name: '蚝油牛柳', device: '炒菜机 CCJ2', done: 1, total: 3, onTimeDone: 1, color: '#56a66f', feedKg: 3.1, ingredients: ['牛柳', '青椒'], seasonings: ['蚝油', '生抽', '黑胡椒'], foodColor: '红', nutrition: { energy: 131, protein: 12.0, fat: 7.0, carbs: 5.0, fiber: 0.5, cholesterol: 52 } },
+];
 
 /** 每盆约 140 份。内部进度仍以份计，界面按此比例向上取整为整盆。 */
 const PORTIONS_PER_TRAY = 140;
 const portionsToTrays = (portions: number) => Math.max(0, Math.ceil(portions / PORTIONS_PER_TRAY));
 const formatTrays = (portions: number) => portionsToTrays(portions).toLocaleString('zh-CN');
-const formatTrayTotal = (trays: number, portions: number) => formatTrays(trays * PORTIONS_PER_TRAY + portions);
-/** 今日计划总份数（演示口径：26 盆 × 140 份 = 3640 份） */
-const TOTAL_PLAN = DISHES.reduce((sum, dish) => sum + dish.done * PORTIONS_PER_TRAY, 0);
+/** 今日计划总份数（演示口径：33 盆 × 140 份 = 4620 份）。
+    注意这里仍是**全天**口径 —— 出餐量的推进与出餐率用它；
+    「生产进度」面板已改成只统计当前餐段，那三个格子由 segmentDishes 现场加，不读这两个常量。
+    今日菜单的「当前已完成」按全天菜品任务的 done 汇总，用于餐品统计图；生产进度面板仍按当前餐段单独统计。 */
+const TOTAL_PRODUCTION_TRAYS = DISHES.reduce((sum, dish) => sum + dish.total, 0);
+const COMPLETED_PRODUCTION_TRAYS = DISHES.reduce((sum, dish) => sum + dish.done, 0);
+const TOTAL_PLAN = TOTAL_PRODUCTION_TRAYS * PORTIONS_PER_TRAY;
+const TOTAL_FEED_KG = DISHES.reduce((sum, dish) => sum + (dish.feedKg ?? 0), 0);
+const COMPLETED_FEED_KG = DISHES.reduce((sum, dish) => sum + (dish.feedKg ?? 0) * (dish.done / Math.max(dish.total, 1)), 0);
+const formatKg = (kg: number) => `${kg.toFixed(1)} kg`;
+const formatDishWeight = (dish: Dish) => dish.feedKg == null ? '—' : `${(dish.feedKg * (dish.done / Math.max(dish.total, 1))).toFixed(1)}/${dish.feedKg.toFixed(1)}kg`;
 /** 今日出餐初始值（演示口径，随后按动线到达出口的批次递增） */
 const SERVED = 3182;
 const DEMO_TEMPORARY_ADD_ORDERS = 0;
+
+/* 「烹饪中」菜的实时烹饪信息（已烹饪时长 / 总时长 / 设备温度），随产线时钟实时推进。
+   总时长与目标温度按菜写死（现实口径）：炒菜类 ~190℃、烤箱 ~160℃、蒸/粥 ~100℃。
+   已烹饪时间随 cookPhase（见组件内）推进；设备温度围绕目标值小幅波动，
+   不做单向升温，避免演示画面一直往上加。 */
+const COOK_DURATION_SEC: Record<string, number> = {
+  小米南瓜粥: 25 * 60, 蒸蛋羹: 12 * 60, 香菇青菜: 6 * 60,
+  青椒肉丝: 8 * 60, 番茄炒蛋: 6 * 60, 土豆烧牛肉: 40 * 60, 干锅花菜: 8 * 60,
+  小炒黄牛肉: 8 * 60, 韭菜绿豆芽: 4 * 60, 蚝油牛柳: 8 * 60,
+};
+const COOK_TARGET_TEMP: Record<string, number> = {
+  小米南瓜粥: 98, 蒸蛋羹: 100, 香菇青菜: 180,
+  青椒肉丝: 190, 番茄炒蛋: 180, 土豆烧牛肉: 160, 干锅花菜: 190,
+  小炒黄牛肉: 190, 韭菜绿豆芽: 185, 蚝油牛柳: 190,
+};
 
 /** 近 7 天出餐趋势（演示口径）。v = 当日出餐份数，最后一天以当前今日出餐量更新。
     柱高不手写，由 v 按峰值归一化推导——否则「柱子高矮」和「柱顶数字」很容易自相矛盾。
@@ -70,29 +141,91 @@ const SPARK_TREND = [
   { label: '09-23', v: SERVED },
 ];
 
-/** 最高一根柱占图表带的比例。上限 70% 是给柱顶的数值标签让位：
-    图表带 48px → 标签 11px + 间距 2px ≈ 13px，33.6px 柱高 + 13px 正好贴顶不溢出。 */
 const SPARK_MAX_H = 70;
+
 const MACHINES: Machine[] = [
   { id: '炒菜机 CCJ1', dish: '青椒肉丝', state: '烹饪中', color: '#3b8be0' },
   { id: '炒菜机 CCJ2', dish: '番茄炒蛋', state: '烹饪中', color: '#42a885' },
-  { id: '炒菜机 CCJ3', dish: '土豆烧牛肉', state: '待出餐', color: '#9367d8' },
-  { id: '炒菜机 CCJ4', dish: '干锅花菜', state: '烹饪中', color: '#f09a4b' },
-  { id: '烤箱 KX1', dish: '蒜蓉娃娃菜', state: '待出餐', color: '#079f96' },
-  { id: '烤箱 KX2', dish: '清炒莲藕片', state: '烹饪中', color: '#e85d75' },
+  { id: '烤箱 KX1', dish: '蒸蛋羹', state: '待出餐', color: '#079f96' },
+];
+
+const COCKPIT_MACHINES: Machine[] = [
+  { id: '炒菜机 CCJ1', model: '600', dish: '青椒肉丝', state: '烹饪中', color: '#3b8be0' },
+  { id: '炒菜机 CCJ2', model: '800', dish: '番茄炒蛋', state: '烹饪中', color: '#42a885' },
+  { id: '烤箱 KX1', dish: '蒸蛋羹', state: '待出餐', color: '#079f96' },
 ];
 
 const OUTFLOW: OutItem[] = [
-  { port: '出口 1', dish: '清炒莲藕片', qty: `${formatTrayTotal(3, 75)} 盆`, color: '#e85d75' },
-  { port: '出口 2', dish: '土豆烧牛肉', qty: `${formatTrayTotal(2, 50)} 盆`, color: '#9367d8' },
-  { port: '出口 1', dish: '番茄炒蛋', qty: `${formatTrayTotal(3, 75)} 盆`, color: '#42a885' },
-  { port: '出口 2', dish: '青椒肉丝', qty: `${formatTrayTotal(2, 50)} 盆`, color: '#3b8be0' },
-  { port: '出口 1', dish: '紫菜蛋汤', qty: `${formatTrayTotal(2, 50)} 盆`, color: '#e0a629' },
-  { port: '出口 2', dish: '干锅花菜', qty: `${formatTrayTotal(1, 25)} 盆`, color: '#f09a4b' },
+  { port: '出口 1', dish: '香菇青菜', qty: '1 盆 / 1kg', color: '#e85d75' },
+  { port: '出口 1', dish: '番茄炒蛋', qty: '1 盆 / 2kg', color: '#42a885' },
+  { port: '出口 1', dish: '青椒肉丝', qty: '1 盆 / 1kg', color: '#3b8be0' },
+  { port: '出口 1', dish: '小米南瓜粥', qty: '1 盆 / 1kg', color: '#e0a629' },
+  { port: '出口 1', dish: '蒸蛋羹', qty: '1 盆 / 2kg', color: '#079f96' },
 ];
+
+/** 原料品牌公示（演示口径）：食堂要在公示屏上亮明主要原料的品牌与供货渠道。
+    名单**不写死**，由今日菜品的 ingredients 去重推导（按首次出现顺序）——
+    公示的原料必须和「今日菜品营养」里用到的原料是同一批。写死的名单会随菜谱漂移，
+    出现「菜谱写着青菜、公示写着小白菜」这种对不上的情况，是评审最容易逮住的不一致。
+    品牌值沿用兄弟原型 canteen-digital-twin-cockpit / customer-cockpit-requirements 的公示口径
+    （菜类「菜王 · 合作社供应」、猪肉「放心肉业 · 定点供应」），同一批货在不同原型里
+    不能换牌子；只有那份公示里没有的新原料才另给品牌。 */
+const INGREDIENT_BRAND_LOOKUP: Record<string, { brand: string; supplier: string }> = {
+  小米: { brand: '沁州黄', supplier: '杂粮定点供应' },
+  南瓜: { brand: '蜜本', supplier: '合作社供应' },
+  鸡蛋: { brand: '正大', supplier: '定点供应' },
+  香菇: { brand: '菇香源', supplier: '合作社供应' },
+  青菜: { brand: '菜王', supplier: '合作社供应' },
+  猪肉: { brand: '放心肉业', supplier: '定点供应' },
+  青椒: { brand: '绿丰', supplier: '合作社供应' },
+  番茄: { brand: '普罗旺斯', supplier: '合作社供应' },
+  牛肉: { brand: '放心肉业', supplier: '定点供应' },
+  土豆: { brand: '沃土', supplier: '合作社供应' },
+  花菜: { brand: '绿丰', supplier: '合作社供应' },
+  五花肉: { brand: '放心肉业', supplier: '定点供应' },
+  黄牛肉: { brand: '放心肉业', supplier: '定点供应' },
+  辣椒: { brand: '辣妹子', supplier: '合作社供应' },
+  芹菜: { brand: '菜王', supplier: '合作社供应' },
+  韭菜: { brand: '菜王', supplier: '合作社供应' },
+  绿豆芽: { brand: '芽苗记', supplier: '自产泡发' },
+  牛柳: { brand: '放心肉业', supplier: '定点供应' },
+};
+
+/** 不参与公示的原料：饮用水是生产介质，不是需要亮明品牌的主料。 */
+const NON_DISCLOSED_INGREDIENTS = ['饮用水'];
+
+const INGREDIENT_BRANDS = [...new Set(DISHES.flatMap((dish) => dish.ingredients))]
+  .filter((name) => !NON_DISCLOSED_INGREDIENTS.includes(name))
+  .map((name) => ({
+    name,
+    ...(INGREDIENT_BRAND_LOOKUP[name] ?? { brand: '待定', supplier: '待定' }),
+  }));
 
 const MEAL_ORDER: MealSegment[] = ['早餐', '午餐', '晚餐', '宵夜', '其他'];
 const DISH_GROUPS = MEAL_ORDER.map((segment) => ({ segment, dishes: DISHES.filter((dish) => dish.segment === segment) })).filter((group) => group.dishes.length > 0);
+
+/** 供餐时段（演示口径，含备餐与收尾）：「生产进度」只显示**现在这一餐**，餐段由页面时钟推导。
+    早餐 04:00–10:29 · 午餐 10:30–15:29 · 晚餐 15:30–03:59（跨零点）。
+    相邻两餐之间刻意不留空档 —— 现场这个时间本来就在备下一餐；留了空档就会出现
+    「15:40 面板不知道该显示哪一餐」的空白，反而要再写一条兜底规则。
+    演示菜谱没有宵夜菜（DISH_GROUPS 会把空餐段过滤掉），所以 21:00 之后仍归到晚餐段；
+    接入真实排餐表后，这张表替换成按排餐表推导，界面不用动。
+    秒级不用管：跨时段边界（如 15:30）时时钟下一跳就会切过去。 */
+const MEAL_TIME_WINDOWS: Array<{ segment: MealSegment; start: number; end: number }> = [
+  { segment: '早餐', start: 4 * 60, end: 10 * 60 + 29 },
+  { segment: '午餐', start: 10 * 60 + 30, end: 15 * 60 + 29 },
+  { segment: '晚餐', start: 15 * 60 + 30, end: 4 * 60 - 1 },
+];
+
+/** 由「当天第几分钟」推当前餐段。窗口首尾相接覆盖全天，所以一定能命中一个；
+    晚餐段跨零点，用 start > end 识别，命中条件改成「或」。 */
+function mealSegmentOf(minutesOfDay: number): MealSegment {
+  const hit = MEAL_TIME_WINDOWS.find(({ start, end }) =>
+    start <= end ? minutesOfDay >= start && minutesOfDay <= end : minutesOfDay >= start || minutesOfDay <= end,
+  );
+  return hit?.segment ?? '早餐';
+}
+
 const WORK_ORDER_STATUS_OPTIONS = ['全部', '未开始', '待称重', '称重中', '待加料', '加料中', '称重加料完成', '待摆盆', '摆盆中', '摆盆完成', '待烹饪', '预热中', '烹饪中', '烹饪完成', '开始出餐', '出餐完成', '取餐中', '取餐完成', '已作废'] as const;
 const WORK_ORDER_SEGMENT_OPTIONS = ['全部', '早餐', '午餐', '晚餐', '宵夜', '其他'] as const;
 const WORK_ORDER_MODE_OPTIONS = ['全部', '临时加菜', '计划烹饪'] as const;
@@ -120,19 +253,25 @@ const STATIC_VOID_ORDERS = 0;
 /** 产线动线演示：主线到摆盆区后分流到具体设备，再汇入指定出口。
     演示批次只负责表达“路线如何走”，接入现场数据后由设备与出口 ID 替换。 */
 const DEVICE_ROUTE_PATHS = [
-  'M350 240 C382 240 402 178 429 162',
-  'M350 240 C414 240 462 198 503 162',
-  'M350 240 C468 240 548 196 577 162',
-  'M350 240 C520 240 604 194 651 162',
-  'M350 240 C410 240 450 274 476 318',
-  'M350 240 C468 240 558 274 604 318',
+  'M350 240 C395 240 420 186 458 162',
+  'M350 240 C450 240 516 185 566 162',
+  'M350 240 C400 240 450 280 510 318',
 ] as const;
 
 const ACTIVE_ROUTE_PATHS = [
-  // 各路线移动段按路径长度分配时间，避免同一周期内出现忽快忽慢；设备停留统一约 2.5 秒。
-  { id: 'route-ccj1-out1', dish: '青椒肉丝', port: '出口 1', increment: 75, path: 'M125 240 H350 C382 240 402 178 429 162 C520 102 680 102 760 118 V162 H850', delay: '-3s', trayStart: 0.096, trayEnd: 0.226, pauseStart: 0.342, pauseEnd: 0.522, keyPoints: '0;0.417;0.417;1', keyTimes: '0;0.342;0.522;1' },
-  { id: 'route-ccj4-out1', dish: '干锅花菜', port: '出口 1', increment: 75, path: 'M125 240 H350 C520 240 604 194 651 162 C700 132 730 118 760 118 V162 H850', delay: '-7s', trayStart: 0.098, trayEnd: 0.232, pauseStart: 0.558, pauseEnd: 0.738, keyPoints: '0;0.681;0.681;1', keyTimes: '0;0.558;0.738;1' },
-  { id: 'route-ccj3-out2', dish: '土豆烧牛肉', port: '出口 2', increment: 50, path: 'M125 240 H350 C468 240 548 196 577 162 C640 170 700 246 760 318 H850', delay: '-11s', trayStart: 0.097, trayEnd: 0.229, pauseStart: 0.479, pauseEnd: 0.659, keyPoints: '0;0.584;0.584;1', keyTimes: '0;0.479;0.659;1' },
+  // 三条路线都从投料区入口通道的**左边缘**（入口 1 x=74）驶入：先经过入口 1 的称重加料队列，
+  // 再穿过入口 2 的称重加料等待通道，到岔路口（350,240）分流到各自设备，最后汇入出口 1。
+  // 起点必须是通道左边缘 —— 托盘要先「进入入口」再显现，不允许在通道中段凭空冒出。
+  // 三条路径长度接近（约 835），统一 14 秒节拍；在对应炒菜机或烤箱位置停留约 2.5 秒。
+  // 停留点约束：keyPoints 中间值必须等于「该设备中心（CCJ1=458,162 / CCJ2=566,162 / KX1=510,318）
+  // 在这条路径上的弧长比例」，否则托盘会在岔路口或半路停留（表现为「没进设备就出餐」）。
+  // 当前值：CCJ1=0.4972、CCJ2=0.6273、KX1=0.5585，均由设备中心在路径上的最近点反算得出。
+  // keyTimes 中间两帧 = 弧长比 × (14-2.5)/14、再 +2.5/14，保证托盘全程匀速且停留恒为 2.5 秒。
+  // delay 让三段停留均匀错开：约 0s / 4.67s / 9.33s 各停 2.5 秒，任意时刻只有一台设备在烹饪。
+  // trayStart/trayEnd = 托盘位于入口 2 通道（x 214~336）的时间区间，用来点亮入口 2 的等待卡片。
+  { id: 'route-ccj1-out1', dish: '青椒肉丝', port: '出口 1', increment: 75, path: 'M74 190 C150 190 260 232 350 240 C395 240 420 186 458 162 C520 120 680 130 760 216 C790 240 820 240 850 240', delay: '-1.05s', trayStart: 0.14, trayEnd: 0.2609, pauseStart: 0.4084, pauseEnd: 0.587, keyPoints: '0;0.4972;0.4972;1', keyTimes: '0;0.4084;0.587;1' },
+  { id: 'route-ccj2-out1', dish: '番茄炒蛋', port: '出口 1', increment: 75, path: 'M74 240 C160 240 265 240 350 240 C450 240 516 185 566 162 C640 150 710 180 760 220 C790 240 820 240 850 240', delay: '-7.21s', trayStart: 0.1423, trayEnd: 0.2652, pauseStart: 0.5152, pauseEnd: 0.6938, keyPoints: '0;0.6273;0.6273;1', keyTimes: '0;0.5152;0.6938;1' },
+  { id: 'route-kx1-out1', dish: '蒸蛋羹', port: '出口 1', increment: 50, path: 'M74 300 C160 320 262 265 350 240 C400 240 450 280 510 318 C600 360 705 320 760 255 C785 240 820 240 850 240', delay: '-11.09s', trayStart: 0.1402, trayEnd: 0.2663, pauseStart: 0.4588, pauseEnd: 0.6374, keyPoints: '0;0.5585;0.5585;1' },
 ].map((route) => ({
   ...route,
   color: DISHES.find((dish) => dish.name === route.dish)?.color ?? '#10e4f2',
@@ -142,12 +281,13 @@ const ACTIVE_ROUTE_PATHS = [
    也不在 PRD 的运营驾驶舱指标清单里（PRD:194）。移除理由与「日后要放回需先定什么」
    记在 style.css 的 .uk-kpi 注释处。 */
 
-type ViewId = 'cockpit' | 'behavior' | 'overview' | 'dish' | 'process' | 'equipment';
+type ViewId = 'cockpit' | 'behavior' | 'nutrition' | 'overview' | 'dish' | 'process' | 'equipment';
 
 function readViewFromLocation(): ViewId {
   if (typeof window === 'undefined') return 'cockpit';
   const page = new URLSearchParams(window.location.search).get('page');
   if (page === 'behavior') return 'behavior';
+  if (page === 'nutrition') return 'nutrition';
   if (page === 'dish') return 'dish';
   if (page === 'overview' || page === 'process' || page === 'equipment') return 'overview';
   return 'cockpit';
@@ -155,13 +295,15 @@ function readViewFromLocation(): ViewId {
 
 function normalizeViewId(id: string): ViewId {
   if (id === 'behavior') return 'behavior';
+  if (id === 'nutrition') return 'nutrition';
   if (id === 'dish') return 'dish';
   if (id === 'overview' || id === 'process' || id === 'equipment') return 'overview';
   return 'cockpit';
 }
 
 const TOP_NAV_ITEMS: Array<{ id: ViewId; label: string }> = [
-  { id: 'cockpit', label: '总览' },
+  { id: 'cockpit', label: '生产烹饪' },
+  { id: 'nutrition', label: '营养健康' },
   /* 「计划与进度」→「出餐效率」→「计划达成」：这一页的定位改过两次，
      现在它回答的是「哪些批次、哪些菜没按计划」的跨餐段汇总。
      名字必须跟页内 h1 逐字一致，否则点进来看到的大标题跟刚点的词对不上。 */
@@ -768,7 +910,7 @@ function MealAssuranceModule({ data, clock, onNavigate }: { data: ModuleSharedDa
   const flowStages = [
     { label: '计划确认', note: `${currentMeal.planned} 批计划`, status: '已完成', tone: 'done' },
     { label: '称重加料', note: '核对投料任务', status: currentMeal.rate >= 35 ? '进行中' : '待开始', tone: currentMeal.rate >= 35 ? 'active' : 'idle' },
-    { label: '烹饪加工', note: '关注未完成菜品', status: currentMeal.rate >= 65 ? '进行中' : '待进入', tone: currentMeal.rate >= 65 ? 'active' : 'idle' },
+    { label: '烹饪加工', note: '关注未完成菜品', status: currentMeal.rate >= 65 ? '进行中' : '待开始', tone: currentMeal.rate >= 65 ? 'active' : 'idle' },
     { label: '出餐保障', note: currentMeal.pending ? `还剩 ${currentMeal.pending} 批` : '当前餐段已完成', status: currentMeal.pending ? '待保障' : '已完成', tone: currentMeal.pending ? 'warn' : 'done' },
   ];
 
@@ -1006,7 +1148,7 @@ const MEAL_ACHIEVEMENTS: MealAchievement[] = [
         { name: '蒜蓉西兰花', planTrays: 3, actualTrays: 3, remindAt: '12:34', actualOut: '12:34' },
       ] },
       { no: 2, dueAt: '13:30', dishes: [
-        { name: '紫菜蛋汤', planTrays: 3, actualTrays: 3, remindAt: '12:46', actualOut: '12:45' },
+        { name: '小米南瓜粥', planTrays: 3, actualTrays: 3, remindAt: '12:46', actualOut: '12:45' },
         { name: '香米饭', planTrays: 5, actualTrays: 5, remindAt: '12:58', actualOut: '12:58' },
         { name: '清蒸鲈鱼', planTrays: 3, actualTrays: 3, remindAt: '13:10', actualOut: '13:47' },
       ] },
@@ -2023,14 +2165,286 @@ function DishStatsModule({ clock, onNavigate }: { clock: string; onNavigate: (id
   );
 }
 
+/* 膳食宝塔：位图（AI 生成的立体釉面食物宝塔）+ 矢量中文标注。
+   ── 为什么不再用 SVG 手绘梯形堆 ──
+   手绘只能到「渐变色块拼梯形」的程度，釉面/食物质感做不出来；换成实拍级位图后
+   塔身本身就够精致，SVG 只负责两件事：把位图摆到位、把中文标注叠上去。
+   ── 为什么中文不用生成在图里 ──
+   生成模型画中文必然缺笔画/错字，且改克数就得重新出图；中文留作矢量文字，
+   随《膳食指南》口径改字、缩放不糊、屏幕阅读器也能读。
+   ── 坐标约定 ──
+   viewBox 取 669×753 —— 正好是 1920×1080 下 .uk-pyramid-wrap 的内容盒
+   （面板宽 755 − 左右 padding 26×2 = 703… 实测 669×753），
+   所以下面每个数字就是屏幕像素，不用来回折算。 */
+const PAGODA = { w: 669, h: 726, imgW: 528, imgH: 429, imgX: 8, imgY: 149, labelX: 542, leadEnd: 536 };
+/* 位图原始尺寸 900×731（见 assets/diet-pagoda-3d.png），标注与引线的位置
+   按原图像素给出后除以此宽度换算 —— 换图/换尺寸只改 PAGODA.imgW 即可。 */
+const PAGODA_SRC_W = 900;
+const PAGODA_SRC_H = 731;
+/* 每一层「托盘中心」在原图里的纵向位置（拿刻度尺逐层量出来的）：
+   名字行 + 克数块整体以它为中心排布，因此标注永远对着自己那一层，
+   改字号只会让区块上下长一点，不会跑到隔壁层去。 */
+const PAGODA_ANCHORS = [68, 195, 300, 415, 520, 650];
+/* 每层引线的起点（原图 x）：从托盘右沿再往外让一点。
+   顶层要让开盐罐（盐罐右沿 ≈ x549），否则虚线会横穿盐罐。 */
+const PAGODA_LEAD_X = [560, 645, 705, 750, 825, 876];
+
+/** 立体膳食宝塔：位图塔身 + 右侧矢量中文层名/克数 + 虚线引线。 */
+function DietPagoda({ tiers }: { tiers: Array<{ label: string; tone: string; amounts: string[] }> }) {
+  return (
+    <svg
+      className="uk-pagoda"
+      viewBox={`0 0 ${PAGODA.w} ${PAGODA.h}`}
+      preserveAspectRatio="xMidYMid meet"
+      role="img"
+      aria-label="膳食结构建议 · 中国居民膳食宝塔（每日推荐摄入量）"
+    >
+      <defs>
+        {/* 塔身背光：深色面板上把宝塔「托」出来，同驾驶舱主色系（青蓝） */}
+        <radialGradient id="pagoda-halo">
+          <stop offset="0" stopColor="#2fd8ea" stopOpacity="0.20" />
+          <stop offset="0.55" stopColor="#1b7ad0" stopOpacity="0.07" />
+          <stop offset="1" stopColor="#020c1e" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <ellipse
+        cx={PAGODA.imgX + PAGODA.imgW * 0.49}
+        cy={PAGODA.imgY + PAGODA.imgH * 0.5}
+        rx={PAGODA.imgW * 0.78}
+        ry={PAGODA.imgH * 0.66}
+        fill="url(#pagoda-halo)"
+      />
+      <image
+        className="uk-pagoda-photo"
+        href={dietPagoda3d}
+        x={PAGODA.imgX}
+        y={PAGODA.imgY}
+        width={PAGODA.imgW}
+        height={PAGODA.imgH}
+        preserveAspectRatio="xMidYMid meet"
+      />
+      {tiers.map((tier, i) => {
+        const y = PAGODA.imgY + (PAGODA_ANCHORS[i] / PAGODA_SRC_H) * PAGODA.imgH;
+        const n = tier.amounts.length;
+        /* 区块高度 = 层名一行(16) + 每行克数(13)；yName 是层名行的中心。 */
+        const blockH = 16 + n * 13;
+        const yName = y - blockH / 2 + 8;
+        const leadX1 = Math.min(
+          PAGODA.imgX + (PAGODA_LEAD_X[i] / PAGODA_SRC_W) * PAGODA.imgW,
+          PAGODA.leadEnd - 14,
+        );
+        return (
+          <g className="uk-pagoda-tier" key={tier.label} style={{ animationDelay: `${240 + i * 70}ms` } as React.CSSProperties}>
+            <line className="uk-pagoda-lead" x1={leadX1} y1={y} x2={PAGODA.leadEnd} y2={y} />
+            <text className="uk-pagoda-name" x={PAGODA.labelX} y={yName} dominantBaseline="central">{tier.label}</text>
+            {tier.amounts.map((line, k) => (
+              <text className="uk-pagoda-amount" key={line} x={PAGODA.labelX} y={yName + 13 + k * 13} dominantBaseline="central">{line}</text>
+            ))}
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
+/* 「营养分析」单品轮播卡的六项指标：按用户给的版式排 3 列 × 2 行 ——
+   第一行 能量 / 蛋白质 / 脂肪，第二行 膳食纤维 / 碳水化合物 / 胆固醇。
+   顺序就是这个数组的顺序，改版式只改这里。
+   单位用 kcal（不是参考图里的 kj）：本原型其它地方（套餐卡、趋势、「生产进度」）都是 kcal，
+   一张页面上两种能量单位会让人以为有一处是错的。 */
+const SPOTLIGHT_METRICS: Array<{ key: keyof Dish['nutrition']; label: string; unit: string }> = [
+  { key: 'energy', label: '能量', unit: 'kcal' },
+  { key: 'protein', label: '蛋白质', unit: 'g' },
+  { key: 'fat', label: '脂肪', unit: 'g' },
+  { key: 'fiber', label: '膳食纤维', unit: 'g' },
+  { key: 'carbs', label: '碳水化合物', unit: 'g' },
+  { key: 'cholesterol', label: '胆固醇', unit: 'mg' },
+];
+/* 单品轮播的停留时长。4.5s ≈ 够把 6 个数扫一遍、又不至于干等。 */
+const NUTRITION_SLIDE_MS = 4500;
+
+/* 三色标签的小圆点色值。只给今日菜单卡上那个 9px 的圆点用，不影响卡片其余配色。
+   「绿」取偏青的 #3ddc84 而不是纯草绿 —— 深色科技蓝底上纯草绿会发脏。 */
+const FOOD_COLOR_TONE: Record<FoodColor, string> = {
+  绿: '#3ddc84', 黄: '#f7c948', 红: '#ff6b6b',
+};
+/* 「颜色建议」这一行要给的频次，**由颜色推导**（不是每道菜各写一遍）：
+   数据放在这里，10 张卡上的同一个颜色就不可能给出两个口径。
+   口径按《中国居民膳食指南（2022）》：蔬菜类建议每餐都有、蛋与谷薯建议天天吃、畜肉建议每周 2~3 次。 */
+const FOOD_COLOR_ADVICE: Record<FoodColor, string> = {
+  绿: '建议每餐食用', 黄: '建议每天食用', 红: '建议每周食用 2-3 次',
+};
+
+function NutritionHealthModule({ clock, onNavigate }: { clock: string; onNavigate: (id: string) => void }) {
+  /* 营养分析改成「一次只讲一道菜」的轮播卡：10 道菜 × 6 项指标铺成整表时，
+     一屏 60 个数字全在抢注意力，观众一个也记不住；改成单品卡后
+     「这道菜的图 + 它自己的 6 个值」是唯一焦点，10 道菜自动过一遍，讲解时不用手点。 */
+  const [slide, setSlide] = useState(0);
+  const [tick, setTick] = useState(0); // 手动选菜后 +1，用来把自动轮播的计时重置（见下）
+  const [hovering, setHovering] = useState(false);
+  /* 自动播放默认开，但系统开了「减少动态效果」时不自动播 —— 自动轮播的内容必须给
+     暂停入口（WCAG 2.2.2），顶部的暂停按钮 + 悬停暂停一起满足这条。 */
+  const [autoPlaying, setAutoPlaying] = useState(() => {
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return true;
+    return !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  });
+  const selectedDish = DISHES[slide % DISHES.length];
+  const recommendations = DISHES;
+
+  /* tick 出现在依赖里但函数体没用到 —— 这是故意的：点「今日菜单」选菜后要让计时重来，
+     否则刚点完 0.1 秒就被自动翻页抢走。改 tick 让 effect 重建定时器即可。 */
+  useEffect(() => {
+    if (!autoPlaying || hovering) return undefined;
+    const timer = window.setInterval(() => setSlide((i) => (i + 1) % DISHES.length), NUTRITION_SLIDE_MS);
+    return () => window.clearInterval(timer);
+  }, [autoPlaying, hovering, tick]);
+
+  const pickDish = (index: number) => {
+    setSlide(index);
+    setTick((n) => n + 1);
+  };
+  /* 膳食宝塔：按《中国居民膳食指南（2022）》的六层结构复刻参考图 ——
+     油盐（顶层最窄）→ 奶及奶制品/大豆坚果 → 动物性食物 → 蔬菜/水果 → 谷薯 → 水（最宽塔基）。
+     数值是各类食物的**每日推荐摄入量**，不是今日菜单的实测统计。 */
+  const pyramidTiers = [
+    { label: '油 · 盐', tone: 'oil', amounts: ['油 25~30克', '盐 <5克'] },
+    { label: '奶豆坚果', tone: 'dairy', amounts: ['奶及奶制品 300~500克', '大豆及坚果类 25~35克'] },
+    { label: '动物性食物', tone: 'protein', amounts: ['120~200克', '每周至少2次水产品', '每天一个鸡蛋'] },
+    { label: '蔬菜 · 水果', tone: 'produce', amounts: ['蔬菜类 300~500克', '水果类 200~350克'] },
+    { label: '谷薯类', tone: 'grain', amounts: ['谷类 200~300克', '全谷物和杂豆 50~150克', '薯类 50~100克'] },
+    { label: '水', tone: 'water', amounts: ['1500~1700毫升'] },
+  ];
+
+  return (
+    <CockpitModuleShell current="nutrition" clock={clock} onNavigate={onNavigate}>
+      <main className="uk-nutrition-page">
+        {/* 原「今日餐品 / 平均能量 / 早餐·午餐·晚餐 / 当前分析」四个 KPI 卡已删：
+            营养健康页的信息主体是「结构 + 每道菜的营养值」，这四张卡全是重复口径
+            （道数 hero 上有、平均能量没人用、餐段覆盖在出餐统计页、当前分析由选中高亮承担），
+            删掉后页面少一层横向分段，宝塔和营养分析的版面能直接顶上去。 */}
+        <div className="uk-nutrition-main">
+          <section className="uk-module-panel uk-nutrition-pyramid">
+            <div className="uk-module-panel-head"><div><h2>膳食结构建议</h2><p>参考《中国居民膳食指南》膳食宝塔的每日推荐结构</p></div></div>
+            <div className="uk-pyramid-wrap">
+              <DietPagoda tiers={pyramidTiers} />
+              {/* 图注：把「这张图在说什么」写清楚 —— 宝塔画的是每日推荐摄入量，
+                  不是今日菜单的实测营养（实测在右边「营养分析」表里）。
+                  压成一行：两行会把宝塔挤矮 6%，且这句本来也不用占两行。 */}
+              <div className="uk-pyramid-caption">
+                <strong>每日推荐摄入量</strong>
+              </div>
+            </div>
+          </section>
+
+          <div className="uk-nutrition-side">
+            {/* 单品轮播卡取代了原来的「营养分析」整表（整表已移到 .uk-nutrition-menu-table 的
+                旧规则保留在 style.css 里，回退时可直接复用；对应 JSX 已删）。
+                点击联动：点下方「今日菜单」任一卡 → 跳到那道菜并重置自动播放计时。 */}
+            <section
+              className="uk-module-panel uk-nutrition-spotlight"
+              onMouseEnter={() => setHovering(true)}
+              onMouseLeave={() => setHovering(false)}
+              onFocusCapture={() => setHovering(true)}
+              onBlurCapture={() => setHovering(false)}
+            >
+              <div className="uk-module-panel-head">
+                <div><h2>营养分析</h2><p>每 100g 熟制成品 · 演示估算值</p></div>
+                <div className="uk-spotlight-tools">
+                  <span className="uk-module-panel-count">{slide + 1} / {DISHES.length}</span>
+                  <button
+                    type="button"
+                    className="uk-spotlight-play"
+                    aria-pressed={autoPlaying}
+                    aria-label={autoPlaying ? '暂停自动轮播' : '继续自动轮播'}
+                    onClick={() => setAutoPlaying((v) => !v)}
+                  >
+                    {autoPlaying ? '暂停轮播' : '继续轮播'}
+                  </button>
+                </div>
+              </div>
+              <div className="uk-spotlight-body">
+                <figure className="uk-spotlight-figure">
+                  {/* key 绑菜名：换菜时 img 重新挂载，CSS 入场动画才会重播 */}
+                  <img key={selectedDish.name} src={DISH_IMAGES[selectedDish.name]} alt={`${selectedDish.name}菜品图`} />
+                  <figcaption>
+                    <span className="uk-spotlight-seg" style={{ background: selectedDish.color }}>{selectedDish.segment}</span>
+                    <strong style={{ color: selectedDish.color }}>{selectedDish.name}</strong>
+                  </figcaption>
+                </figure>
+                <div className="uk-spotlight-detail" key={`${selectedDish.name}-meta`}>
+                  {/* 右栏三段：设备/进度 → 6 项营养 → 主料调料。
+                      只放 6 个数字的话，右栏 555×328 会空掉大半（6 个标量撑不满），
+                      所以把生产状态和配方也放进来 —— 都是 DISHES 里已有的真实字段。 */}
+                  <div className="uk-spotlight-head">
+                  </div>
+                  <div className="uk-spotlight-grid">
+                    {SPOTLIGHT_METRICS.map((metric) => (
+                      <div className="uk-spotlight-cell" key={metric.key}>
+                        <span>{metric.label}</span>
+                        <b>{selectedDish.nutrition[metric.key]}<em>{metric.unit}</em></b>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="uk-spotlight-uses">
+                    <div><span>主料</span><b>{selectedDish.ingredients.join(' · ')}</b></div>
+                    <div><span>调料</span><b>{selectedDish.seasonings.join(' · ')}</b></div>
+                  </div>
+                </div>
+                <div className="uk-spotlight-dots" role="tablist" aria-label="选择要查看的菜品">
+                  {DISHES.map((dish, index) => (
+                    <button
+                      type="button"
+                      role="tab"
+                      key={dish.name}
+                      className={`uk-spotlight-dot${index === slide ? ' active' : ''}`}
+                      style={index === slide ? { background: dish.color, borderColor: dish.color } : undefined}
+                      aria-selected={index === slide}
+                      aria-label={`查看${dish.name}的营养`}
+                      onClick={() => pickDish(index)}
+                    />
+                  ))}
+                </div>
+              </div>
+            </section>
+
+            <section className="uk-module-panel uk-recommended-panel">
+              <div className="uk-module-panel-head"><div><h2>今日菜单</h2></div><span className="uk-module-panel-count">{recommendations.length} 道</span></div>
+              <div className="uk-recommended-grid">
+                {recommendations.map((dish, index) => <button type="button" className={`uk-recommended-card${selectedDish.name === dish.name ? ' active' : ''}`} key={dish.name} onClick={() => pickDish(index)}>
+                  <span className="uk-recommended-visual"><img src={DISH_IMAGES[dish.name]} alt={`${dish.name}餐品图片`} loading="lazy" /></span>
+                  {/* 卡面 3 行：①名称 + 餐段；②颜色建议（色点 + 色名 + 建议食用频次）；③份数。
+                      原来第②行是「151 kcal · 蛋白质 5.5g」，已按要求删掉 ——
+                      菜单卡上两个营养值既讲不清也记不住，这块位置让给颜色建议更可执行。
+                      频次由颜色推导（FOOD_COLOR_ADVICE），不在 DISHES 里逐菜重复写。
+                      份数取「人份」= total 盆 × PORTIONS_PER_TRAY：「盆」是生产单位，
+                      菜谱卡上写盆数对看菜单的人是绕的，直接给人份数。 */}
+                  <span className="uk-recommended-copy">
+                    <span className="uk-recommended-title"><strong>{dish.name}</strong><em>{dish.segment}</em></span>
+                    <span className="uk-recommended-color">
+                      <i className="uk-food-tone" style={{ background: FOOD_COLOR_TONE[dish.foodColor] }} aria-hidden="true" />
+                      <span className="uk-recommended-colorname">{dish.foodColor}</span>
+                      <span>{FOOD_COLOR_ADVICE[dish.foodColor]}</span>
+                    </span>
+                    <span className="uk-recommended-parts">份数 <b>{dish.total * PORTIONS_PER_TRAY}</b></span>
+                  </span>
+                </button>)}
+              </div>
+            </section>
+          </div>
+        </div>
+      </main>
+    </CockpitModuleShell>
+  );
+}
+
 function DeviceMonitorModule({ data, clock, onNavigate }: { data: ModuleSharedData; clock: string; onNavigate: (id: string) => void }) {
   const running = data.machines.filter((machine) => machine.state === '烹饪中').length;
-  const devices = [...data.machines, { id: '油炸炉 FR1', dish: '油炸炉任务', state: '加工中', color: '#25e0ee' }, { id: '油炸炉 FR2', dish: '待命', state: '待命', color: '#7da8d1' }];
+  const devices = data.machines;
   return (
     <CockpitModuleShell current="process" clock={clock} onNavigate={onNavigate}>
       <div className="uk-module-kpis"><ModuleKpi label="设备总数" value={`${devices.length} 台`} note="候选配置 · 演示" /><ModuleKpi label="加工中" value={`${running} 台`} note="炒菜机 / 烤箱" tone="green" /><ModuleKpi label="待命" value={`${devices.length - running} 台`} note="等待下一生产次" tone="blue" /><ModuleKpi label="当前加工菜品" value={`${data.machines.filter((machine) => machine.state === '烹饪中').length} 道`} note="设备任务关联" tone="cyan" /></div>
       <section className="uk-module-panel uk-device-dashboard"><div className="uk-module-panel-head"><div><h2>设备运行矩阵</h2><p>设备状态、当前菜品和任务进度集中展示</p></div></div><div className="uk-device-grid-dashboard">{devices.map((device, index) => <article className="uk-device-card" key={device.id}><div className="uk-device-card-head"><span className="uk-machine-dot" style={{ background: device.color }} /><b>{device.id}</b><em className={device.state === '烹饪中' || device.state === '协同中' ? 'running' : 'idle'}>{device.state}</em></div><p>{device.dish}</p><div className="uk-device-progress"><i style={{ width: `${device.state === '烹饪中' ? 48 + (index % 4) * 9 : device.state === '协同中' ? 64 : 12}%`, background: device.color }} /></div><small>{device.state === '烹饪中' ? `任务进行中 · ${58 + (index % 3) * 7}%` : device.state === '协同中' ? '设备协同中' : '等待任务下发'}</small></article>)}</div></section>
-      <div className="uk-module-grid uk-module-grid-bottom"><section className="uk-module-panel"><div className="uk-module-panel-head"><div><h2>设备分布</h2><p>按设备类型统计</p></div></div><div className="uk-device-type-bars"><div><span>炒菜机</span><i><b style={{ width: '82%' }} /></i><em>4 台</em></div><div><span>烤箱</span><i><b style={{ width: '56%' }} /></i><em>2 台</em></div><div><span>油炸炉</span><i><b style={{ width: '42%' }} /></i><em>2 台</em></div></div></section><section className="uk-module-panel"><div className="uk-module-panel-head"><div><h2>状态说明</h2><p>接入现场数据后替换演示值</p></div></div><div className="uk-status-legend"><span><i className="running" />烹饪 / 加工中</span><span><i className="idle" />待命</span><span><i className="warn" />待接入数据</span></div><p className="uk-module-note">当前页面用于向领导展示设备协同关系，不提供启停、配方修改或任务下发操作。</p></section></div>
+      <div className="uk-module-grid uk-module-grid-bottom"><section className="uk-module-panel"><div className="uk-module-panel-head"><div><h2>设备分布</h2><p>按设备类型统计</p></div></div><div className="uk-device-type-bars"><div><span>炒菜机</span><i><b style={{ width: '100%' }} /></i><em>2 台</em></div><div><span>烤箱</span><i><b style={{ width: '50%' }} /></i><em>1 台</em></div></div></section><section className="uk-module-panel"><div className="uk-module-panel-head"><div><h2>状态说明</h2><p>接入现场数据后替换演示值</p></div></div><div className="uk-status-legend"><span><i className="running" />烹饪 / 加工中</span><span><i className="idle" />待命</span><span><i className="warn" />待接入数据</span></div><p className="uk-module-note">当前页面用于向领导展示设备协同关系，不提供启停、配方修改或任务下发操作。</p></section></div>
     </CockpitModuleShell>
   );
 }
@@ -2039,7 +2453,7 @@ function TaskDispatchModule({ data, clock, onNavigate }: { data: ModuleSharedDat
   return (
     <CockpitModuleShell current="equipment" clock={clock} onNavigate={onNavigate}>
       <div className="uk-module-kpis"><ModuleKpi label="早餐任务" value={`${data.dishes.filter((dish) => dish.segment === '早餐').length} 道`} note="计划已生成" /><ModuleKpi label="午餐任务" value={`${data.dishes.filter((dish) => dish.segment === '午餐').length} 道`} note="当前主餐段" tone="cyan" /><ModuleKpi label="晚餐任务" value={`${data.dishes.filter((dish) => dish.segment === '晚餐').length} 道`} note="待后续生产" tone="blue" /><ModuleKpi label="实际 / 计划" value={`${formatTrays(data.servedNow)} / ${formatTrays(data.totalPlan)}`} note={`${data.serveRate.toFixed(1)}%`} tone="green" /></div>
-      <div className="uk-module-grid uk-module-grid-main"><section className="uk-module-panel uk-task-panel"><div className="uk-module-panel-head"><div><h2>今日菜品任务</h2><p>按餐段展示计划、完成和生产状态</p></div></div><div className="uk-task-table"><div className="uk-task-head"><span>餐段 / 菜品</span><span>计划</span><span>已完成</span><span>状态</span></div>{data.dishes.map((dish) => <div className="uk-task-row" key={dish.name}><span><i style={{ background: dish.color }} />{dish.segment} · {dish.name}</span><b>{dish.total} 批</b><b>{dish.done} 批</b><em className={data.dishState(dish) === '已出餐' ? 'done' : ''}>{data.dishState(dish)}</em></div>)}</div></section><section className="uk-module-panel"><div className="uk-module-panel-head"><div><h2>出口完成情况</h2><p>出餐数量按出口汇总</p></div></div><div className="uk-exit-cards"><div><b>出口 1</b><strong>{formatTrays(150)} 盆</strong><span>3 批已完成</span><i><em style={{ width: '76%' }} /></i></div><div><b>出口 2</b><strong>{formatTrays(100)} 盆</strong><span>2 批已完成</span><i><em style={{ width: '58%' }} /></i></div></div><div className="uk-module-note">到达出口的批次会同步更新右侧出餐记录与顶部完成率。</div></section></div>
+      <div className="uk-module-grid uk-module-grid-main"><section className="uk-module-panel uk-task-panel"><div className="uk-module-panel-head"><div><h2>今日菜品任务</h2><p>按餐段展示计划、完成和生产状态</p></div></div><div className="uk-task-table"><div className="uk-task-head"><span>餐段 / 菜品</span><span>计划</span><span>已完成</span><span>状态</span></div>{data.dishes.map((dish) => <div className="uk-task-row" key={dish.name}><span><i style={{ background: dish.color }} />{dish.segment} · {dish.name}</span><b>{dish.total} 批</b><b>{dish.done} 批</b><em className={data.dishState(dish) === '出餐完成' || data.dishState(dish) === '取餐完成' ? 'done' : ''}>{data.dishState(dish)}</em></div>)}</div></section><section className="uk-module-panel"><div className="uk-module-panel-head"><div><h2>出口完成情况</h2><p>出餐数量按出口汇总</p></div></div><div className="uk-exit-cards"><div><b>出口 1</b><strong>{formatTrays(150)} 盆</strong><span>3 批已完成</span><i><em style={{ width: '76%' }} /></i></div><div><b>出口 2</b><strong>{formatTrays(100)} 盆</strong><span>2 批已完成</span><i><em style={{ width: '58%' }} /></i></div></div><div className="uk-module-note">到达出口的批次会同步更新右侧出餐记录与顶部完成率。</div></section></div>
     </CockpitModuleShell>
   );
 }
@@ -2047,12 +2461,17 @@ function TaskDispatchModule({ data, clock, onNavigate }: { data: ModuleSharedDat
 export default function UnmannedKitchenCockpit() {
   const [scale, setScale] = useState(1);
   const [clock, setClock] = useState('');
+  /* 当天第几分钟。跟 clock 同一个 tick 更新 —— 「生产进度」要按它推当前餐段。
+     初值直接取真实时间，避免首帧先按 00:00 渲染成早餐再跳一下。 */
+  const [clockMinutes, setClockMinutes] = useState(() => {
+    const now = new Date();
+    return now.getHours() * 60 + now.getMinutes();
+  });
   const [servedNow, setServedNow] = useState(SERVED);
   const [servedBatches, setServedBatches] = useState<OutItem[]>([]);
   const [flowNow, setFlowNow] = useState(() => Date.now());
   const [flowStartedAt] = useState(() => Date.now());
   const [view, setView] = useState<ViewId>(readViewFromLocation);
-
   const navigate = (id: string) => {
     const next = normalizeViewId(id);
     setView(next);
@@ -2083,7 +2502,7 @@ export default function UnmannedKitchenCockpit() {
       const addServedBatch = () => {
         setServedNow((current) => Math.min(TOTAL_PLAN, current + route.increment));
         setServedBatches((current) => [
-          { port: route.port, dish: route.dish, qty: `${formatTrays(route.increment)} 盆`, color: route.color },
+          { port: route.port, dish: route.dish, qty: route.dish === '番茄炒蛋' || route.dish === '蒸蛋羹' ? '1 盆 / 2kg' : '1 盆 / 1kg', color: route.color },
           ...current,
         ].slice(0, 3));
       };
@@ -2111,6 +2530,7 @@ export default function UnmannedKitchenCockpit() {
       const now = new Date();
       const pad = (n: number) => String(n).padStart(2, '0');
       setClock(`${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}  ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`);
+      setClockMinutes(now.getHours() * 60 + now.getMinutes());
     };
     tickClock();
     const timer = window.setInterval(tickClock, 1000);
@@ -2124,8 +2544,29 @@ export default function UnmannedKitchenCockpit() {
     return ((elapsed % LINE_CYCLE_MS) + LINE_CYCLE_MS) % LINE_CYCLE_MS / LINE_CYCLE_MS;
   };
   const routeForDish = (dishName: string) => ACTIVE_ROUTE_PATHS.find((route) => route.dish === dishName);
+  /* 烹饪进度相位（0~1）：按真实秒数推进，用来算「已烹饪时间 / 状态」。
+     这里不复用 14 秒的动线循环：动线是流程演示，烹饪计时要和右上角真实时钟同速。
+     每道菜只错开 0~60 秒，保留不同菜品的时间差，但不会让时间突然跳很快。 */
+  const cookPhase = (dish: Dish) => {
+    const idx = DISHES.findIndex((item) => item.name === dish.name);
+    const offsetSec = (idx % 3) * 30;
+    const cookTotal = COOK_DURATION_SEC[dish.name] ?? 6 * 60;
+    return Math.min(1, ((flowNow - flowStartedAt) / 1000 + offsetSec) / cookTotal);
+  };
+  /* 「生产进度」面板专用的状态推导：与该面板的已烹饪时间 / 温度 / 投料区同一套时钟（cookPhase），
+     面板内部自洽。不复用 workOrderStatus（那是动画相位驱动、跟流程图托盘位置绑定、供其他页用），
+     两套口径的分工：本面板 = 本餐实时烹饪快照；workOrderStatus = 全局工单状态（跟流程图走）。
+     起止两档由盆数决定（done=0 → 未开始、done=total → 取餐完成），状态和盆数永远同源 ——
+     修掉了「蒸蛋羹状态未开始、盆数却是 2/3」这种打架；中间态才看烹饪相位
+     （<0.15 还在称重加料 = 投料区，之后开火 = 烹饪中）。
+     注意必须定义在 segmentFeedingTrays 之前 —— const 有暂时性死区，后定义先引用会直接抛错。 */
+  const cookState = (dish: Dish): WorkOrderStatus => {
+    if (dish.done === 0) return '未开始';
+    if (dish.done === dish.total) return '取餐完成';
+    return cookPhase(dish) < 0.15 ? '称重中' : '烹饪中';
+  };
   const isMachineCooking = (machineId: string) => {
-    const machine = MACHINES.find((item) => item.id === machineId);
+    const machine = COCKPIT_MACHINES.find((item) => item.id === machineId);
     const route = machine ? routeForDish(machine.dish) : undefined;
     if (!route) return false;
     const phase = routePhase(route);
@@ -2135,16 +2576,20 @@ export default function UnmannedKitchenCockpit() {
     const phase = routePhase(route);
     return phase >= route.trayStart && phase < route.trayEnd;
   };
-  const dishState = (dish: Dish) => {
-    const route = routeForDish(dish.name);
-    if (!route) return dish.done === dish.total ? '已出餐' : '烹饪中';
-    const phase = routePhase(route);
-    if (phase < 0.25) return '待称重';
-    if (phase < route.pauseStart) return '摆盆等待';
-    if (phase < route.pauseEnd) return '烹饪中';
-    if (phase < 0.88) return '烹饪中';
-    return '已出餐';
-  };
+  /* 原 feedingRoutes（正走在入口通道的动线集合）已删：它只被「投料区」KPI 引用，
+     而那个 KPI 已改成按烹饪进度推导（见 segmentFeedingTrays）—— 演示动线只有 3 条、
+     只覆盖早餐/午餐，晚餐段用它算出来永远是 0。入口通道的托盘高亮仍由 isTrayWaiting 驱动。 */
+
+  /* 当前餐段（由时钟推导，见 MEAL_TIME_WINDOWS）+ 这一餐的菜。
+     「生产进度」只显示这一餐，顶部 KPI 与下面列表同口径 ——
+     面板回答的是「此刻这一餐做到哪了」，不是「今天总共做了多少」（全天口径在「出餐统计」页）。
+     不吃切换控件：现场这块屏是盯着当下这一餐的，多一个控件就多一个要看的地方。 */
+  const currentSegment = mealSegmentOf(clockMinutes);
+  const segmentDishes = DISHES.filter((dish) => dish.segment === currentSegment);
+  /* 生产状态只认 18 态标准清单（见 WorkOrderStatus / WORK_ORDER_STATUS_OPTIONS）。
+     原型里的「示例」不再自造「摆盆等待 / 已出餐 / 待进入」这类词 ——
+     状态列显示的词必须能在「工单状态」筛选器里找到同一个，两边一份口径（2026-10-08 同步）。
+     阈值跟入口 2 通道的托盘窗口绑定，保证「状态词」和「托盘位置」说的是同一件事。 */
   const workOrderStatus = (dish: Dish): WorkOrderStatus => {
     const route = routeForDish(dish.name);
     if (!route) return dish.done === dish.total ? '取餐完成' : dish.done > 0 ? '烹饪中' : '未开始';
@@ -2165,24 +2610,52 @@ export default function UnmannedKitchenCockpit() {
     if (phase < 0.995) return '取餐中';
     return '取餐完成';
   };
-  const visibleMachines = MACHINES.slice(0, 4).map((machine) => {
+  /* 菜品状态 = 工单状态，同一份映射，不再各写一套阈值（两套阈值迟早会分叉）。 */
+  const dishState = (dish: Dish) => workOrderStatus(dish);
+  const visibleMachines = COCKPIT_MACHINES.map((machine) => {
     const route = routeForDish(machine.dish);
     if (!route) return machine;
     const phase = routePhase(route);
-    return { ...machine, state: phase < route.pauseStart ? '待进入' : phase < 0.88 ? '烹饪中' : '已出餐' };
+    return { ...machine, state: phase < route.pauseStart ? '未开始' : phase < 0.88 ? '烹饪中' : '出餐完成' };
   });
   const allMachines = MACHINES.map((machine) => {
     const route = routeForDish(machine.dish);
     if (!route) return machine;
     const phase = routePhase(route);
-    return { ...machine, state: phase < route.pauseStart ? '待进入' : phase < 0.88 ? '烹饪中' : '已出餐' };
+    return { ...machine, state: phase < route.pauseStart ? '未开始' : phase < 0.88 ? '烹饪中' : '出餐完成' };
   });
+  /* 汇总卡片和下面的列表必须共用这一组行数据：
+     四个数字都按列表行数统计，避免列表只有 3 道菜时「生产总数」却显示 9 盆。
+     盆数只在每行明细里展示，不混入这组菜品数量统计。 */
+  const productionRows = segmentDishes.map((dish) => {
+    const machine = visibleMachines.find((item) => item.dish === dish.name);
+    const stateText = cookState(dish);
+    const stateClass = ['称重中', '加料中', '摆盆中', '预热中', '烹饪中', '开始出餐', '取餐中'].includes(stateText)
+      ? 'is-cooking'
+      : ['称重加料完成', '摆盆完成', '烹饪完成', '出餐完成', '取餐完成'].includes(stateText)
+        ? 'is-done'
+        : 'is-waiting';
+    const isCooking = stateText === '烹饪中';
+    const cookTotal = COOK_DURATION_SEC[dish.name] ?? 6 * 60;
+    const phase = cookPhase(dish);
+    const cookElapsed = Math.floor(phase * cookTotal);
+    const targetTemp = COOK_TARGET_TEMP[dish.name] ?? 185;
+    const dishIndex = DISHES.findIndex((item) => item.name === dish.name);
+    const cookTemp = Math.round(targetTemp + Math.sin((flowNow - flowStartedAt) / 2600 + dishIndex) * 2);
+    return { dish, machine, stateText, stateClass, isCooking, cookTotal, cookElapsed, cookTemp };
+  });
+  const segmentDishCount = productionRows.length;
+  const segmentDoneDishCount = productionRows.filter((row) => row.dish.done === row.dish.total).length;
+  const segmentPendingDishCount = segmentDishCount - segmentDoneDishCount;
+  const segmentFeedingDishCount = productionRows.filter((row) => row.stateText === '称重中').length;
   const visibleFlow = [...servedBatches, ...OUTFLOW].slice(0, 5);
   const serveRate = Math.min(100, (servedNow / TOTAL_PLAN) * 100);
+  // sparkTrend 同时供总览页「今日出餐」摘要和模块页趋势使用。
   const sparkTrend = SPARK_TREND.map((point, index) => (
     index === SPARK_TREND.length - 1 ? { ...point, v: servedNow } : point
   ));
-  const sparkPeak = Math.max(...sparkTrend.map((point) => point.v));
+  const sparkPeak = Math.max(...sparkTrend.map((point) => point.v), 1);
+  const productionCompletionRate = COMPLETED_PRODUCTION_TRAYS / Math.max(TOTAL_PRODUCTION_TRAYS, 1);
 
   const sharedData: ModuleSharedData = {
     servedNow,
@@ -2195,6 +2668,13 @@ export default function UnmannedKitchenCockpit() {
     dishState,
     workOrderStatus,
   };
+  if (view === 'nutrition') return (
+    <div className="uk-viewport">
+      <div className="uk-screen uk-module-screen" style={{ transform: `translate(-50%, -50%) scale(${scale})` }}>
+        <NutritionHealthModule clock={clock} onNavigate={navigate} />
+      </div>
+    </div>
+  );
   if (view === 'dish') return (
     <div className="uk-viewport">
       <div className="uk-screen uk-module-screen" style={{ transform: `translate(-50%, -50%) scale(${scale})` }}>
@@ -2219,88 +2699,56 @@ export default function UnmannedKitchenCockpit() {
 
         <main className="uk-body" hidden={view !== 'cockpit'}>
           <aside className="uk-col">
-            <section className="uk-panel uk-served">
-              <h2 className="uk-served-heading">
-                <span>今日出餐</span>
-                <span className="uk-serve-summary">
-                  {/* 原「实际 / 计划」文字标签已去掉：数字本身用「/」分隔是通用写法，
-                      前缀反而把标题行拉长，跟左侧「今日出餐」抢位置 */}
-                  <b>{formatTrays(servedNow)} / {formatTrays(TOTAL_PLAN)}</b>
-                  <em>盆</em>
-                  <strong>{serveRate.toFixed(1)}%</strong>
-                </span>
-              </h2>
-              <div className="uk-bignum" aria-live="polite">
-                {formatTrays(servedNow)}<em>盆</em>
-              </div>
-              <p className="uk-delta">较去年同期 <b>↑ 12.4%</b></p>
-              <div className="uk-spark">
-                {sparkTrend.map((point) => (
-                  <div
-                    className="uk-spark-col"
-                    key={point.label}
-                    /* 柱高经 CSS 变量下发；数值标签用同一个变量把自己吸在柱顶上方，
-                       所以「柱子多高」和「数字浮多高」永远同步。 */
-                    style={{ '--bar-h': `${Math.round((point.v / sparkPeak) * SPARK_MAX_H)}%` } as React.CSSProperties}
-                  >
-                  <span className="uk-spark-val">{formatTrays(point.v)}</span>
-                    <i />
-                  </div>
-                ))}
-              </div>
-              <div className="uk-spark-axis">
-                {sparkTrend.map((point) => (
-                  <span key={point.label}>{point.label}</span>
-                ))}
-              </div>
-            </section>
-
-            <section className="uk-panel uk-dishes">
+            <section className="uk-panel uk-menu-dashboard">
               <h2>
-                今日菜品
-                {/* 数量从底栏挪到标题后面：它本来就是下面这 10 行的行数，贴着列表才对 */}
+                今日菜单
                 <em className="uk-h2-count">{DISHES.length} 道</em>
               </h2>
-              <div className="uk-dish-list">
-                <div className="uk-dish-head" aria-hidden="true">
-                  <span>菜品</span>
-                  <span>原料称重（kg）</span>
-                  <span>盆数</span>
-                </div>
-                {DISH_GROUPS.map((group) => (
-                  <div className="uk-dish-group" key={group.segment}>
-                    <div className="uk-dish-group-head"><b>{group.segment}</b><span>{group.dishes.length} 道</span></div>
-                    {group.dishes.map((dish) => (
-                      <div className="uk-dish" key={dish.name}>
-                        <span className="uk-dish-name" style={{ color: dish.color }}>{dish.name}</span>
-                        {dish.feedKg == null ? (
-                          /* 未称重显示「—」而非 0：缺失不等于零（PRD:122） */
-                          <b className="uk-dish-feed is-empty">—</b>
-                        ) : (
-                          <b className="uk-dish-feed">
-                            {dish.feedKg.toFixed(1)}
-                          </b>
-                        )}
-                        {/* 第三列由「状态词」改为「盆数」。
-                            原来那列读不出状态：它由 dishState() 跟着产线动画推导，
-                            每 14 秒在 待称重→摆盆等待→烹饪中→已出餐 之间循环跳，
-                            同一行隔几秒看是另一个值，且 10 行里只有 3 行有动线其余靠兜底。
-                            换成 done/total 后是静态数字，与「今日计划工单 / 已完成工单」
-                            和 TOTAL_PLAN（26 盆 × 140 份）同源，可核对、不跳变。
-                            done===total 时用绿色，表示该菜品已全部完成。 */}
-                        <b className={`uk-dish-tray${dish.done === dish.total ? ' is-done' : ''}`}>
-                          <i>{dish.done}</i>
-                          <span>/{dish.total}</span>
-                          <em>盆</em>
-                        </b>
-                      </div>
-                    ))}
-                  </div>
-                ))}
+              <div className="uk-menu-dashboard-summary">
+                <div className="uk-menu-dish-count"><b>{DISHES.length}</b><span>道</span></div>
+                <div className="uk-menu-output-stat"><span>总产量</span><strong>{TOTAL_PRODUCTION_TRAYS}<em>盆</em></strong><small><b>{formatKg(TOTAL_FEED_KG)}</b></small></div>
+                <div className="uk-menu-output-stat"><span>当前已完成</span><strong>{COMPLETED_PRODUCTION_TRAYS}<em>/ {TOTAL_PRODUCTION_TRAYS} 盆</em></strong><small><b>{formatKg(COMPLETED_FEED_KG)}</b></small></div>
               </div>
-              <p className="uk-dish-total">
-                今日累计称重<b>{FEED_TOTAL_KG.toFixed(1)}</b>kg · 已称重 {WEIGHED.length} 道
-              </p>
+              {/* 完成率压在进度条里（跟在填充条右端内侧），不另占一行也不另占一列。
+                  两版历史：① 百分比 position:absolute;bottom:12px 浮在 8px 条上方，
+                  实测条 top=303 / 百分比 bottom=299，骑在上一张摘要卡的底边上，
+                  看着就是「和进度条不在一行」；② 改成 flex 同行、条让出右侧宽度，条被压短 46px。
+                  现在叠回条上，条加厚到 16px 才装得下 11px 的字。
+                  条里还要再包一层 .uk-menu-overall-bar：填充条 width 是百分比，相对的是
+                  「轨道」宽度，不能让它直接相对整行算。
+                  数字贴着填充条右端（right 由完成率算出，永远跟在条尾），落在亮渐变上，
+                  所以用深色字；万一将来演示数据把完成率调到很低（<16%）就退回轨道右端改浅色字，
+                  免得数字跑到填充条外面看不见 —— 见 .uk-menu-overall-track.is-in-fill。 */}
+              {(() => {
+                const overallPct = productionCompletionRate * 100;
+                const pctInFill = overallPct >= 16;
+                return (
+                  <div
+                    className={`uk-menu-overall-track${pctInFill ? ' is-in-fill' : ''}`}
+                    aria-label={`当前已完成 ${COMPLETED_PRODUCTION_TRAYS} 盆，共 ${TOTAL_PRODUCTION_TRAYS} 盆，完成率 ${overallPct.toFixed(1)}%`}
+                  >
+                    <div className="uk-menu-overall-bar"><i style={{ width: `${overallPct}%` }} /></div>
+                    <span style={pctInFill ? { right: `calc(${(100 - overallPct).toFixed(2)}% + 10px)` } : undefined}>
+                      {overallPct.toFixed(1)}%
+                    </span>
+                  </div>
+                );
+              })()}
+              <div className="uk-dish-stat-chart">
+                <div className="uk-dish-stat-head"><span>餐品统计</span><span>已完成重量 / 总重量</span></div>
+                <div className="uk-dish-stat-body">
+                  {DISH_GROUPS.map((group) => (
+                    <section className="uk-dish-stat-group" key={group.segment}>
+                      <div className="uk-menu-group-heading"><span>{group.segment}</span><em>{group.dishes.length} 道</em></div>
+                      {group.dishes.map((dish) => <div className="uk-dish-stat-row" key={dish.name}>
+                        <span className="uk-nutrition-name" style={{ color: dish.color }}><i />{dish.name}</span>
+                        <div className="uk-dish-stat-track"><i style={{ width: `${(dish.done / Math.max(dish.total, 1)) * 100}%`, background: dish.color }} /></div>
+                        <b aria-label={`${dish.name} 已完成重量 ${dish.feedKg == null ? '暂无数据' : `${(dish.feedKg * (dish.done / Math.max(dish.total, 1))).toFixed(1)} kg`}，总重量 ${dish.feedKg == null ? '暂无数据' : `${dish.feedKg.toFixed(1)} kg`}`}>{formatDishWeight(dish)}</b>
+                      </div>)}
+                    </section>
+                  ))}
+                </div>
+              </div>
             </section>
           </aside>
 
@@ -2311,74 +2759,76 @@ export default function UnmannedKitchenCockpit() {
               </h2>
               <div className="uk-line-stage">
                 <svg viewBox="0 0 1040 400" preserveAspectRatio="xMidYMid meet">
-                  {/* 四个环节：预处理 → 称重加料 → 烹饪分流 → 出餐分流。
-                      主线走到称重加料区后分出 4 台炒菜机与 2 台烤箱，
-                      亮色料箱沿演示路线进入具体设备，再汇入出口 1 / 出口 2。 */}
-                  <path className="uk-rail" d="M125 240 H350" />
-                  <path className="uk-rail-glow" d="M125 240 H350" />
+                  {/* 左侧统一为投料区，保留两个入口；三类设备路线最终汇入单一出口。 */}
+                  <path className="uk-rail" d="M196 240 C250 240 294 240 350 240" />
+                  <path className="uk-rail" d="M336 240 H350" />
+                  <path className="uk-rail-glow" d="M196 240 C250 240 294 240 350 240" />
+                  <path className="uk-rail-glow" d="M336 240 H350" />
                   {DEVICE_ROUTE_PATHS.map((path, index) => (
                     <path className="uk-route" d={path} key={`device-route-${index}`} />
                   ))}
                   {ACTIVE_ROUTE_PATHS.map((route) => (
-                    <path className="uk-route-glow" d={route.path} key={`${route.id}-glow`} style={{ stroke: route.color }} />
+                    <path id={`active-route-${route.id}`} className="uk-route-glow" d={route.path} key={`${route.id}-glow`} style={{ stroke: route.color }} />
                   ))}
 
                   <g className="uk-zone">
-                    <rect x="60" y="80" width="130" height="300" rx="10" />
-                    <text x="125" y="64" textAnchor="middle">预处理区</text>
-                    {/* 预处理区等待队列：菜品进入称重加料区后，对应卡片淡出。 */}
-                    {ACTIVE_ROUTE_PATHS.map((route) => (
+                    <rect x="60" y="80" width="290" height="300" rx="10" />
+                    <text x="205" y="64" textAnchor="middle">投料区 · 2 个入口</text>
+                    <rect className="uk-entry-lane" x="74" y="100" width="122" height="258" rx="7" />
+                    <rect className="uk-entry-lane" x="214" y="100" width="122" height="258" rx="7" />
+                    <text className="uk-entry-label" x="135" y="123" textAnchor="middle">入口 1</text>
+                    <text className="uk-entry-label" x="275" y="123" textAnchor="middle">入口 2</text>
+                    {/* 入口 1：预处理队列；进入称重加料流程后卡片淡出。 */}
+                    {ACTIVE_ROUTE_PATHS.map((route, index) => (
                       <g className="uk-flow-queue-card uk-weigh-queue" key={`weigh-queue-${route.id}`} style={{ animationDelay: route.delay }}>
-                        <rect x="76" y="112" width="98" height="30" rx="5" style={{ stroke: route.color }} />
-                        <circle cx="88" cy="127" r="4" style={{ fill: route.color }} />
-                        <text className="uk-flow-queue-label" x="98" y="131">{route.dish}</text>
+                        <rect x="82" y={148 + index * 58} width="106" height="30" rx="5" style={{ stroke: route.color }} />
+                        <circle cx="94" cy={163 + index * 58} r="4" style={{ fill: route.color }} />
+                        <text className="uk-flow-queue-label" x="104" y={167 + index * 58}>{route.dish}</text>
                       </g>
                     ))}
-                  </g>
-
-                  <g className="uk-zone">
-                    <rect x="220" y="80" width="130" height="300" rx="10" />
-                    <text x="285" y="64" textAnchor="middle">称重加料区</text>
-                    {/* 称重加料区等待队列：进入烹饪分支后，对应卡片淡出。 */}
+                    {/* 入口 2：称重加料等待；进入烹饪分支后对应卡片淡出。 */}
                     {ACTIVE_ROUTE_PATHS.map((route, index) => (
                       <g className="uk-flow-queue-card uk-tray-queue" key={`tray-queue-${route.id}`} style={{ opacity: isTrayWaiting(route) ? 1 : 0 }}>
                         <rect
                           className="uk-tray-wait"
-                          x="236"
-                          y={112 + index * 48}
-                          width="98"
+                          x="222"
+                          y={148 + index * 58}
+                          width="106"
                           height="30"
                           rx="5"
                           style={{ stroke: route.color }}
                         />
-                        <circle cx="248" cy={127 + index * 48} r="4" style={{ fill: route.color }} />
-                        <text className="uk-tray-wait-label" x="258" y={131 + index * 48}>{route.dish}</text>
+                        <circle cx="234" cy={163 + index * 58} r="4" style={{ fill: route.color }} />
+                        <text className="uk-tray-wait-label" x="244" y={167 + index * 58}>{route.dish}</text>
                       </g>
                     ))}
                   </g>
 
                   <g className="uk-zone">
                     <rect x="380" y="80" width="320" height="300" rx="10" />
-                    <text x="540" y="64" textAnchor="middle">烹饪区 · 4 台炒菜机 / 2 台烤箱</text>
-                    {[0, 1, 2, 3].map((i) => (
+                    <text x="540" y="64" textAnchor="middle">烹饪区 · 2 台炒菜机 / 1 台烤箱</text>
+                    {[0, 1].map((i) => (
                       <g key={`c${i}`}>
                         {/* 台间呼吸灯错峰由内联延迟控制 */}
                         <rect
                           className={`uk-cooker ${isMachineCooking(`炒菜机 CCJ${i + 1}`) ? 'is-route-active' : ''}`}
-                          x={398 + i * 74}
+                          x={427 + i * 108}
                           y="128"
                           width="62"
                           height="68"
                           rx="8"
                           style={{ animationDelay: `${(i % 2) * 1.4}s` }}
                         />
-                        <text className="uk-cooker-label" x={429 + i * 74} y="166" textAnchor="middle">CCJ{i + 1}</text>
+                        <text className="uk-cooker-label" textAnchor="middle">
+                          <tspan x={458 + i * 108} y="158">{COCKPIT_MACHINES[i].model} 型</tspan>
+                          <tspan className="uk-cooker-id" x={458 + i * 108} dy="14">CCJ{i + 1}</tspan>
+                        </text>
                       </g>
                     ))}
-                    {[0, 1].map((i) => (
+                    {[0].map((i) => (
                       <g key={`o${i}`}>
-                        <rect className={`uk-oven ${isMachineCooking(`烤箱 KX${i + 1}`) ? 'is-route-active' : ''}`} x={424 + i * 128} y="284" width="104" height="68" rx="8" />
-                        <text className="uk-oven-label" x={476 + i * 128} y="323" textAnchor="middle">KX{i + 1}</text>
+                        <rect className={`uk-oven ${isMachineCooking(`烤箱 KX${i + 1}`) ? 'is-route-active' : ''}`} x="458" y="284" width="104" height="68" rx="8" />
+                        <text className="uk-oven-label" x="510" y="323" textAnchor="middle">KX{i + 1}</text>
                       </g>
                     ))}
                   </g>
@@ -2386,77 +2836,128 @@ export default function UnmannedKitchenCockpit() {
                   <g className="uk-zone">
                     <rect x="760" y="80" width="180" height="300" rx="10" />
                     <text x="850" y="64" textAnchor="middle">出餐区</text>
-                    <rect className="uk-port is-route-active" x="778" y="128" width="144" height="68" rx="8" />
-                    <text className="uk-port-label" x="850" y="167" textAnchor="middle">出口 1</text>
-                    <rect className="uk-port is-route-active" x="778" y="284" width="144" height="68" rx="8" />
-                    <text className="uk-port-label" x="850" y="323" textAnchor="middle">出口 2</text>
+                    <rect className="uk-port is-route-active" x="778" y="206" width="144" height="68" rx="8" />
+                    <text className="uk-port-label" x="850" y="245" textAnchor="middle">出口 1</text>
                   </g>
 
                   {/* 仅展示 3 条活动路线，避免大量并行动画遮住设备；标签直接显示菜名，
-                      现场接入后可替换成当前工单的菜品简称。 */}
-                  {ACTIVE_ROUTE_PATHS.map((route) => (
-                    <g className="uk-route-token" key={route.id}>
-                      <rect x="-36" y="-10" width="72" height="20" rx="4" style={{ fill: route.color, stroke: route.color, filter: `drop-shadow(0 0 4px ${route.color})` }} />
-                      <text x="0" y="4" textAnchor="middle" style={{ fill: '#ffffff' }}>{route.dish}</text>
-                      <animate
-                        attributeName="opacity"
-                        values="0;1;1;0"
-                        keyTimes="0;0.08;0.88;1"
-                        dur={`${LINE_CYCLE_MS / 1000}s`}
-                        begin={route.delay}
-                        repeatCount="indefinite"
-                      />
-                      <animateMotion
-                        dur={`${LINE_CYCLE_MS / 1000}s`}
-                        begin={route.delay}
-                        repeatCount="indefinite"
-                        rotate="0"
-                        path={route.path}
-                        calcMode="linear"
-                        keyPoints={route.keyPoints}
-                        keyTimes={route.keyTimes}
-                      />
-                    </g>
-                  ))}
+                      现场接入后可替换成当前工单的菜品简称。
+                      菜名带回底色芯片（72×20 圆角矩形，fill/stroke/发光均取菜品色，
+                      白字），在深色动线图上保证可读 —— 2026-10-08 按需求还原。 */}
+                  {ACTIVE_ROUTE_PATHS.map((route, index) => {
+                    /* 不用负数 begin：部分浏览器在 SVG 动画初始化时会把节点留在 (0,0)，
+                       也就是流程卡片左上角。正向错峰启动，初始化前保持透明。 */
+                    const animationBegin = `${(index * LINE_CYCLE_MS) / ACTIVE_ROUTE_PATHS.length / 1000}s`;
+                    return (
+                      <g className="uk-route-token" key={route.id} opacity="0">
+                        <rect x="-36" y="-10" width="72" height="20" rx="4" style={{ fill: route.color, stroke: route.color, filter: `drop-shadow(0 0 4px ${route.color})` }} />
+                        <text x="0" y="4" textAnchor="middle" style={{ fill: '#ffffff' }}>{route.dish}</text>
+                        <animate
+                          attributeName="opacity"
+                          values="0;1;1;0"
+                          keyTimes="0;0.08;0.88;1"
+                          dur={`${LINE_CYCLE_MS / 1000}s`}
+                          begin={animationBegin}
+                          repeatCount="indefinite"
+                        />
+                        <animateMotion
+                          dur={`${LINE_CYCLE_MS / 1000}s`}
+                          begin={animationBegin}
+                          repeatCount="indefinite"
+                          rotate="0"
+                          calcMode="linear"
+                          keyPoints={route.keyPoints}
+                          keyTimes={route.keyTimes}
+                        >
+                          <mpath href={`#active-route-${route.id}`} />
+                        </animateMotion>
+                      </g>
+                    );
+                  })}
                 </svg>
               </div>
             </section>
 
-            <section className="uk-panel uk-realtime">
-              <h2>后厨画面</h2>
-              <div className="uk-camera">
-                <img src={kitchenImage} alt="后厨画面" />
-                <span className="uk-camera-tag is-demo"><i />生产烹饪区</span>
+            <section className="uk-panel uk-cooking uk-production-progress">
+              <h2>
+                生产进度
+              </h2>
+              {/* 只统计当前餐段：四个格子的数字都能在下面 3–4 行里逐条加出来，
+                  不会被问「为什么 4 行菜加不出 33 盆」。全天口径在「出餐统计」页。 */}
+              <div className="uk-production-kpis">
+                <div><b>{segmentDishCount}</b><span>生产总数</span></div>
+                <div><b className="is-done">{segmentDoneDishCount}</b><span>已完成</span></div>
+                <div><b className="is-pending">{segmentPendingDishCount}</b><span>未完成</span></div>
+                <div><b className="is-feeding">{segmentFeedingDishCount}</b><span>投料区</span></div>
+              </div>
+              {/* 列名集中在表头，行里只留值 —— 和右栏「原料品牌公示」的表头做法一致。
+                  每行重复「生产重量」「盆数」既占宽度又抢眼，去掉之后列宽才腾得出来。
+                  行里也不重复餐段：面板已经只显示当前餐段、标题上写着，4 行说 4 遍是废话。 */}
+              <div className="uk-production-head" aria-hidden="true">
+                <span>菜品</span>
+                <span>状态</span>
+                <span>设备</span>
+                <span>生产重量</span>
+                <span>盆数</span>
+                <span>进度</span>
+              </div>
+              {/* 一行一条：菜品 / 状态 / 设备 / 生产重量 / 盆数 / 进度条 六列横排。
+                  只留一餐（3–4 道）之后行数本来就少，再摊成两列会让每行只剩 ~450px，
+                  设备名和重量都得截断；单列铺满 ~930px，六列各占其位，
+                  竖着扫一列就是「同一项在不同菜上的对比」。 */}
+              <div className="uk-production-list">
+                {productionRows.map(({ dish, machine, stateText, stateClass, isCooking, cookTotal, cookElapsed, cookTemp }) => {
+                  /* 状态列用 cookState（面板专用、与已烹饪时间/温度/投料区同一套时钟），
+                     仍然只取 18 态标准清单里的词，能在「工单状态」筛选器里找到同一个。
+                     不用 workOrderStatus：那是动画相位驱动、跟流程图托盘绑定，
+                     会让「状态未开始、盆数 2/3」这种打架出现在同一行里。 */
+                  /* 烹饪中的菜，在状态胶囊旁补三样实时信息：已烹饪时间 / 总时长 / 设备温度。
+                     三者都由 cookPhase 随产线时钟推进，不是写死的快照 ——
+                     时间越走越接近总时长、温度越升越接近目标温度，画面才「活」。
+                     只有「烹饪中」显示，别的状态这三项没意义（没开火哪来的已烹饪时间）。 */
+                  const fmtCook = (sec: number) => (sec >= 60 ? `${Math.floor(sec / 60)}分${sec % 60}秒` : `${sec}秒`);
+                  return (
+                    <div className="uk-production-row" key={dish.name}>
+                      <b className="uk-production-dish-name">{dish.name}</b>
+                      <span className="uk-production-state">
+                        <em className={stateClass}>{stateText}</em>
+                        {isCooking && (
+                          <span className="uk-production-cook-meta" aria-label={`${dish.name} 已烹饪 ${fmtCook(cookElapsed)}，总时长 ${fmtCook(cookTotal)}，设备温度 ${cookTemp} 摄氏度`}>
+                            <i>{fmtCook(cookElapsed)}<b>/ {fmtCook(cookTotal)}</b></i>
+                            <i>{cookTemp}<b>℃</b></i>
+                          </span>
+                        )}
+                      </span>
+                      {/* 设备取运行时设备（machine.id）优先，兜底取 dish.device —— 两者同源不会打架。
+                          生产重量口径 = 称重加料区实测投料量；出餐端未接入称重，
+                          所以不给成品重量与出成率（PRD:199/217）；未称重显示「—」，缺失不等于零（PRD:122）。 */}
+                      <span className="uk-production-device">{machine?.id ?? dish.device}</span>
+                      <span className="uk-production-feed">{dish.feedKg != null ? `${dish.feedKg.toFixed(1)} kg` : '—'}</span>
+                      <b className="uk-production-tray">{dish.done} / {dish.total} 盆</b>
+                      <div className="uk-production-dish-track" aria-label={`${dish.name} 完成 ${dish.done} 盆，计划 ${dish.total} 盆`}>
+                        <i style={{ width: `${Math.min(100, (dish.done / Math.max(1, dish.total)) * 100)}%`, background: dish.color }} />
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </section>
           </section>
 
           <aside className="uk-col">
-            <section className="uk-panel uk-device">
-              <h2>设备数据</h2>
-              <div className="uk-device-grid">
-                <div><b>4</b><span>炒菜机</span></div>
-                <div><b>2</b><span>烤箱</span></div>
-                <div><b>2</b><span>油炸炉</span></div>
-                <div><b>8</b><span>设备总数</span></div>
-              </div>
-            </section>
-
-            <section className="uk-panel uk-cooking">
-              <h2>设备任务</h2>
-              <div className="uk-cook-list">
-                {visibleMachines.map((machine) => (
-                  <div className="uk-cook" key={machine.id}>
-                    <div className="uk-cook-head">
-                      <b>{machine.id}</b>
-                      <span style={{ color: machine.color }}>{machine.dish}</span>
-                    </div>
-                    <div className="uk-cook-foot">
-                      <span>状态</span>
-                      <b>{machine.state}</b>
-                    </div>
-                  </div>
-                ))}
+            <section className="uk-panel uk-realtime">
+              <h2>明厨亮灶</h2>
+              <div className="uk-camera uk-kitchen-video" aria-label="仿真后厨视频，2台自动炒菜机和1台烤箱工作中">
+                <div className="uk-kitchen-grid" />
+                <div className="uk-cctv-vignette" />
+                <div className="uk-cctv-scanline" />
+                <div className="uk-cctv-topline"><span className="uk-cctv-rec"><i />REC</span><span>CAM-01 · 后厨生产区</span><time>{clock.split('  ')[1] || '--:--:--'}</time></div>
+                <div className="uk-kitchen-video-head"></div>
+                <div className="uk-kitchen-photo-frame">
+                  <img className="uk-kitchen-photo" src={kitchenImage} alt="仿真后厨画面：2台自动炒菜机和1台烤箱正在工作" />
+                  <div className="uk-kitchen-photo-shade" />
+                </div>
+                <div className="uk-kitchen-stream"><i /></div>
               </div>
             </section>
 

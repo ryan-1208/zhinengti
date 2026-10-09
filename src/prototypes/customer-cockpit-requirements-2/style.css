@@ -179,8 +179,9 @@ body {
 
 .uk-body {
   display: grid;
-  grid-template-columns: 420px minmax(0, 1fr) 420px;
+  grid-template-columns: 420px minmax(0, 820px) minmax(0, 1fr);
   gap: 20px;
+  --uk-top-row-height: 435px;
   /* 主体向下延展到跑马灯底部，收掉底栏下方的无效空白。 */
   height: 868px;
   margin-top: 20px;
@@ -252,6 +253,225 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
+/* 今日出餐：恢复为左栏的紧凑摘要，不再用一整块大卡片抢占明厨亮灶空间。 */
+.uk-served {
+  flex: 0 0 188px;
+}
+
+.uk-served-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.uk-serve-summary {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  color: #8fb4d8;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+}
+
+.uk-serve-summary b {
+  color: #eaf7ff;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.uk-serve-summary em {
+  color: #7da8d1;
+  font-size: 10px;
+  font-style: normal;
+}
+
+.uk-serve-summary strong {
+  margin-left: 5px;
+  color: #3bebb0;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.uk-served-main {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.uk-served-main-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+  min-width: 0;
+}
+
+.uk-bignum {
+  color: #ffffff;
+  font-size: 52px;
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -2px;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 24px #10e4f266;
+}
+
+.uk-bignum em {
+  margin-left: 7px;
+  color: #7da8d1;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.uk-served-weight {
+  margin: 0;
+  color: #8fb4d8;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.uk-served-weight b {
+  color: #eaf7ff;
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.uk-served-weight span {
+  color: #6f9ac2;
+  font-variant-numeric: tabular-nums;
+}
+
+.uk-delta {
+  margin: 0 0 3px;
+  color: #8fb4d8;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.uk-delta b {
+  color: #3bebb0;
+  font-weight: 600;
+}
+
+.uk-spark {
+  display: flex;
+  align-items: stretch;
+  flex: none;
+  gap: 7px;
+  height: 38px;
+  margin-top: 6px;
+}
+
+.uk-spark-col {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.uk-spark-col i {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: var(--bar-h);
+  border-radius: 2px;
+  background: linear-gradient(180deg, #10e4f2, #0a6ea8);
+  opacity: 0.85;
+}
+
+.uk-spark-val {
+  position: absolute;
+  right: 0;
+  bottom: calc(var(--bar-h) + 2px);
+  left: 0;
+  color: #cfeaff;
+  font-size: 8px;
+  line-height: 1;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.uk-spark-axis {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 7px;
+  margin-top: 4px;
+  color: #6f9ac2;
+  font-size: 9px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.uk-spark-axis span {
+  text-align: center;
+}
+
+/* 今日菜谱与营养合并为一张卡：同一张列表按餐段分组，
+   每行同时回答「吃什么」和「营养如何」。 */
+.uk-menu-nutrition {
+  flex: 1;
+}
+
+.uk-menu-nutrition > h2 {
+  display: flex;
+  align-items: center;
+  min-height: 26px;
+  white-space: nowrap;
+}
+
+.uk-menu-nutrition-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 0;
+}
+
+.uk-menu-section {
+  display: flex;
+  min-height: 0;
+  flex-direction: column;
+}
+
+.uk-menu-recipe-section {
+  flex: 0 0 208px;
+}
+
+.uk-menu-nutrition-section {
+  flex: 1;
+  min-height: 0;
+  padding-top: 10px;
+  border-top: 1px solid #14568f;
+}
+
+.uk-menu-section-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex: none;
+  gap: 12px;
+  margin-bottom: 8px;
+  color: #bfe4ff;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.uk-menu-section-heading em {
+  color: #7da8d1;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
 /* 「流程演示」标注：PRD:189 要求说明性动画必须标注为流程演示 */
 .uk-tag-demo {
   margin-left: 12px;
@@ -265,148 +485,67 @@ body {
   vertical-align: middle;
 }
 
-/* 左栏 */
-.uk-served {
-  flex: 0 0 330px;
+/* 保留旧版菜单板样式，当前总览使用下方统一的营养列表；模块页仍可复用这些基础样式。 */
+.uk-recipe {
+  flex: 0 0 220px;
 }
 
-.uk-served-heading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.uk-recipe-board {
+  display: grid;
+  flex: 1;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
+  min-height: 0;
+  overflow: hidden;
 }
 
-.uk-bignum {
-  font-size: 118px;
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: -3px;
-  color: #ffffff;
-  font-variant-numeric: tabular-nums;
-  text-shadow: 0 0 36px #10e4f266;
-}
-
-.uk-bignum em {
-  margin-left: 12px;
-  color: #7da8d1;
-  font-size: 28px;
-  font-style: normal;
-  font-weight: 500;
-}
-
-.uk-delta {
-  margin: 10px 0 0;
-  color: #8fb4d8;
-  font-size: 15px;
-}
-
-.uk-delta b {
-  color: #3bebb0;
-}
-
-/* 「待接入」用中性色，避免与已确认的增量数据混同（PRD:32） */
-.uk-delta b.is-pending {
-  color: #8fb4d8;
-  font-weight: 500;
-}
-
-.uk-serve-summary {
+.uk-recipe-col {
   display: flex;
-  align-items: baseline;
-  gap: 7px;
-  margin: 0;
-  color: #8fb4d8;
-  font-size: 11px;
-  letter-spacing: 0;
-  white-space: nowrap;
-}
-
-.uk-serve-summary b {
-  color: #dcecff;
-  font-size: 13px;
-  font-variant-numeric: tabular-nums;
-}
-
-.uk-serve-summary em {
-  color: #6f9ac2;
-  font-size: 12px;
-  font-style: normal;
-}
-
-.uk-serve-summary strong {
-  margin-left: auto;
-  color: #3bebb0;
-  font-size: 14px;
-  font-variant-numeric: tabular-nums;
-}
-
-/* 近 7 天柱状图。每列 = 柱顶数值标签 + 柱子。
-   标签走绝对定位吸在柱顶上方，**不占布局高度**——所以往这个已排满的面板里加数字
-   不会把它撑爆；代价是柱子最高只能到 70%（见 index.tsx 的 SPARK_MAX_H），要给标签让出约 13px。
-   列宽（flex:1 1 0 + gap 7px）与下方 .uk-spark-axis 的 grid 列宽完全一致，因此数值、柱子、日期三者对齐。 */
-.uk-spark {
-  display: flex;
-  align-items: stretch;
-  gap: 7px;
-  flex: none;
-  height: 48px;
-  margin-top: 8px;
-}
-
-.uk-spark-col {
-  position: relative;
-  flex: 1 1 0;
+  flex-direction: column;
+  /* 8px：午餐那列 4 道菜，是最高的一列。gap 11px 时整列会高出板子几像素，
+     最下面一道菜会被裁掉一条边（裁切量看不见，只能靠 scrollHeight 量）。 */
+  gap: 8px;
   min-width: 0;
 }
 
-/* 柱高由行内 --bar-h 提供（已按峰值归一化） */
-.uk-spark-col i {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: var(--bar-h);
-  border-radius: 2px;
-  background: linear-gradient(180deg, #10e4f2, #0a6ea8);
-  opacity: 0.85;
-}
-
-/* 数值标签：bottom 复用同一个 --bar-h，柱高不同则标签高度自动跟着走 */
-.uk-spark-val {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: calc(var(--bar-h) + 2px);
-  color: #cfeaff;
-  font-size: 11px;
-  line-height: 1;
-  text-align: center;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-
-/* X 轴日期刻度：列数与 gap 必须与 .uk-spark 完全一致，标签才会对准柱子。
-   近 7 天 = 7 列，每列约 48px，`09-17` 这一档日期（约 30px）放得下，因此 7 天全标。 */
-.uk-spark-axis {
-  display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 7px;
-  margin-top: 5px;
-  color: #6f9ac2;
+.uk-recipe-segment {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #14568f;
+  color: #10e4f2;
   font-size: 12px;
-  line-height: 1;
+  letter-spacing: 1px;
+}
+
+.uk-recipe-segment em {
+  color: #6f9ac2;
+  font-size: 10px;
+  font-style: normal;
+  letter-spacing: 0;
+}
+
+.uk-recipe-item {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* 菜名自带颜色（行内 style 下发同一道菜在「生产进度」「出餐记录」里的颜色）。
+   不再加色点：颜色本身已经是标识，再放一个点是把同一件事说两遍。
+   也不要在这里补设备名 —— 设备在「生产进度」每行第二列，随动线实时变，
+   菜谱里再写一份静态机台，两边一旦不同步就成了新的不一致来源。 */
+.uk-recipe-item b {
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 600;
   white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
-.uk-spark-axis span {
-  grid-row: 1;
-  text-align: center;
-}
-
-/* ⚠️ 当前未被使用：原「近 7 天出餐量 · 今日计划 3,640 份」那行已从 JSX 移除
-   （计划数改由标题行的「实际 / 计划」承接），样式先留着便于回退。
-   注意移除它之后「今日出餐」面板多出约 30px 余量，目前空置。 */
+/* 旧版大号出餐趋势样式不再单独占卡片；总览页使用上方的紧凑趋势样式。 */
 .uk-note {
   margin: 6px 0 0;
   color: #6f9ac2;
@@ -415,6 +554,166 @@ body {
 
 .uk-dishes {
   flex: 1;
+}
+
+.uk-dishes h2 {
+  display: flex;
+  min-height: 26px;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.uk-nutrition-unit {
+  flex: 0 0 auto;
+  margin-left: auto;
+  color: #8fb4d8;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+/* 今日菜品营养：5 列只读表（菜品 / 能量 / 蛋白质 / 脂肪 / 碳水）。
+   用 grid 而不是 <table>：这张表不排序、不合并单元格，grid 的列宽更容易固定。
+   列宽分配：菜品吃掉剩余空间，后 4 列给死值 —— 数值列必须等宽，
+   否则「1,380」和「540」宽度不同，竖着扫视会斜。
+   420px 的面板里塞 5 列，单位（kcal / g）放在表头并降到 9px 一档，
+   省下的宽度留给菜名。窄一点也别缩字号，量过：菜名 5 字 + 餐段刚好放得下。 */
+.uk-nutrition-table {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.uk-nutrition-head,
+.uk-nutrition-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 56px 44px 38px 42px;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  padding: 0 10px;
+}
+
+.uk-nutrition-head {
+  flex: none;
+  height: 26px;
+  color: #7fa9ce;
+  background: #0d3b72;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+}
+
+.uk-nutrition-head span:nth-child(n + 2),
+.uk-nutrition-row b {
+  text-align: right;
+}
+
+.uk-nutrition-head span em {
+  margin-left: 2px;
+  color: #8fb4d8;
+  font-size: 9px;
+  font-style: normal;
+  letter-spacing: 0;
+}
+
+/* 行高不写死：10 行按 grid-auto-rows 的隐式行平分剩余高度，
+   面板高度一变（比如菜谱再收几像素）不用回来调行高数字。 */
+.uk-nutrition-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.uk-menu-group {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 0;
+}
+
+.uk-menu-group-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 24px;
+  padding: 0 10px;
+  border-left: 3px solid #10e4f2;
+  border-bottom: 1px solid #14568f;
+  color: #10e4f2;
+  background: #0d3b7288;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.uk-menu-group-heading em {
+  color: #7da8d1;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.uk-menu-group .uk-nutrition-row {
+  flex: 1 1 0;
+  min-height: 34px;
+}
+
+.uk-nutrition-row {
+  background: #0b2b5c88;
+}
+
+/* 菜品列：色点 + 菜名 + 餐段。
+   色点是这一版原有的做法，兼作「同一道菜在各面板取色一致」的索引（颜色由行内 style 下发）。 */
+.uk-nutrition-name {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+  overflow: hidden;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.uk-nutrition-name i {
+  flex: 0 0 5px;
+  width: 5px;
+  height: 5px;
+  border-radius: 2px;
+  background: currentColor;
+  box-shadow: 0 0 7px currentColor;
+}
+
+.uk-nutrition-name small {
+  flex: 0 0 auto;
+  color: #6f9ac2;
+  font-size: 9px;
+}
+
+.uk-nutrition-row b {
+  overflow: hidden;
+  color: #eaf7ff;
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* 脚注写明口径：这里是估算值，不是检测数据（PRD:32 —— 未接入的数据不冒充实测） */
+.uk-nutrition-note {
+  flex: none;
+  margin: 8px 0 0;
+  color: #7da8d1;
+  font-size: 10px;
+  text-align: right;
 }
 
 .uk-dish-list {
@@ -462,7 +761,7 @@ body {
   font-size: 11px;
 }
 
-.uk-dish-head {
+.uk-dish-columns {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 84px 72px;
   align-items: center;
@@ -476,11 +775,11 @@ body {
   letter-spacing: 0.5px;
 }
 
-.uk-dish-head span:nth-child(n + 2) {
+.uk-dish-columns span:nth-child(n + 2) {
   text-align: right;
 }
 
-.uk-dish-head span:nth-child(2),
+.uk-dish-columns span:nth-child(2),
 .uk-dish b.uk-dish-feed {
   text-align: center;
 }
@@ -597,8 +896,24 @@ body {
 }
 
 /* 中栏 */
+/* 高度分配：给「智厨生产流程」**够用即止**的 435px，剩下的全给「生产进度」。
+   435 是算出来的，不是拍的：中栏面板内容宽实测 934px，流程图 viewBox 是 1040×400，
+   要让图铺满、上下不留空白带，舞台高度得是 934 × 400 / 1040 = 359px，
+   再加 h2(28) + h2 下边距(14) + 面板上下内边距(34) = 435。
+   给多了没用：之前给到 573px 时图只从 915×352 长到 934×359（+2%），
+   多出来的 110px 全变成图上下两条空带 —— 高度给多了不等于图变大了。
+   原来是流程写死 430 + 生产进度吃剩余，10 行只能挤成 2 列 5 行；
+   现在反过来：流程给足固定高度，生产进度吃剩余，一行一条。 */
 .uk-line {
-  flex: 0 0 430px;
+  flex: 0 0 var(--uk-top-row-height);
+  min-height: 0;
+}
+
+/* 只剩这一条要 .uk-main 前缀：面板吃中栏剩余高度。
+   表头 / 六列栅格 / 行高 / 状态胶囊三态色都写在 .uk-production-* 那一组里，不再分两处。 */
+.uk-main .uk-production-progress {
+  flex: 1 1 0;
+  min-height: 0;
 }
 
 .uk-line-stage {
@@ -661,6 +976,18 @@ body {
   fill: #6fb6e6;
   font-size: 15px;
   letter-spacing: 2px;
+}
+
+.uk-entry-lane {
+  fill: #061f48cc;
+  stroke: #1b548d;
+  stroke-width: 1;
+}
+
+.uk-zone > text.uk-entry-label {
+  fill: #9bc7e8;
+  font-size: 11px;
+  letter-spacing: 0.4px;
 }
 
 .uk-box {
@@ -772,6 +1099,12 @@ body {
   letter-spacing: 1px;
 }
 
+.uk-cooker-id {
+  fill: #8fb6dc;
+  font-size: 9px;
+  letter-spacing: 0.4px;
+}
+
 .uk-oven {
   fill: #123a6e;
   stroke: #3d8fc4;
@@ -809,8 +1142,14 @@ body {
   letter-spacing: 0.2px;
 }
 
+/* 出餐记录按条数定高（5 条 × 26px），不再跟着右栏拉伸 ——
+   它是「最近几条记录」，条数固定，撑高只会把空白摊进每行里；
+   让出高度的是它下面的「明厨亮灶」：监控画面是有内容的，越扁越看不清，
+   上一版就是在这里被压成一条缝（右栏 868px 要分给三块，谁弹性大谁吃亏，
+   所以这里改成内容定高、由画面那块吃剩余高度）。 */
 .uk-outflow {
-  flex: 1;
+  flex: 1 1 0;
+  min-height: 0;
 }
 
 .uk-outflow-heading {
@@ -849,8 +1188,9 @@ body {
   grid-template-columns: 62px minmax(0, 1fr) auto;
   align-items: center;
   gap: 10px;
-  flex: 1;
-  min-height: 0;
+  /* 与生产进度保持同高时，记录行均分剩余空间，避免列表只挤在面板顶部。 */
+  flex: 1 1 0;
+  min-height: 26px;
   padding: 0 8px;
   background: #0b2b5c88;
   transition: opacity 0.4s ease;
@@ -876,40 +1216,335 @@ body {
 }
 
 /* 右栏 */
-.uk-device {
-  flex: 0 0 160px;
+/* 原「设备数据」面板（.uk-device / .uk-device-grid / .uk-device-grid > div / b / span）
+   整块已删。整机台数与出口数在「设备管理」模块页有完整的一版，
+   总览页不再重复；这一栏腾出的高度留给了「后厨画面」和「出餐记录」。
+   注意：模块页用的 .uk-device-card / .uk-device-grid-dashboard 是另一套类名，不受影响。 */
+
+/* 原料品牌公示：名单由 DISHES[].ingredients 去重推导（见 INGREDIENT_BRANDS），
+   每行按原料名称、品牌、供应商三列展示。
+   18 种原料摊成单列有 446px，右栏放不下，所以列表限高滚动。
+   表头占 25px，列表限高 196px（8 行 × 21px + 7 × 4px 行距），
+   加上表头后面板总高度仍为原来的 221px，下面的「明厨亮灶」「出餐记录」不动；
+   滚动条样式沿用 .uk-detail-body 的 6px 深蓝细条， scrollbar-gutter:stable
+   保证滚动条出现与否不挤动供应商这一列的对齐。 */
+.uk-brand-notice {
+  flex: 0 0 auto;
 }
 
-.uk-device-grid {
+.uk-brand-notice-head,
+.uk-brand-notice-card {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 10px;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.9fr) minmax(0, 1.2fr);
+  gap: 6px;
 }
 
-.uk-device-grid > div {
-  display: flex;
-  flex-direction: column;
+.uk-brand-notice-head {
+  min-height: 25px;
   align-items: center;
-  gap: 5px;
-  padding: 12px 6px;
-  background: #0b2b5c88;
-  border: 1px solid #17518a;
-}
-
-.uk-device-grid b {
-  color: #10e4f2;
-  font-size: 30px;
-  font-weight: 700;
-  line-height: 1;
-}
-
-.uk-device-grid span {
+  padding: 0 8px 0 11px;
+  border-bottom: 1px solid #17518a;
   color: #7da8d1;
-  font-size: 13px;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.uk-brand-notice-head span:last-child {
+  text-align: right;
+}
+
+.uk-brand-notice-grid {
+  display: grid;
+  flex: none;
+  grid-template-columns: minmax(0, 1fr);
+  grid-auto-rows: 21px;
+  gap: 4px;
+  min-height: 0;
+  max-height: 196px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
+.uk-brand-notice-grid::-webkit-scrollbar{width:6px}
+.uk-brand-notice-grid::-webkit-scrollbar-track{background:#0a2752;border-radius:3px}
+.uk-brand-notice-grid::-webkit-scrollbar-thumb{background:#1d5f9c;border-radius:3px}
+.uk-brand-notice-grid::-webkit-scrollbar-thumb:hover{background:#2c6fa5}
+
+.uk-brand-notice-card {
+  min-width: 0;
+  align-items: center;
+  padding: 0 8px;
+  border-left: 3px solid #17518a;
+  background: #0b2b5c88;
+}
+
+.uk-brand-notice-card span {
+  overflow: hidden;
+  color: #c2d9ee;
+  font-size: 11px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* 品牌是这条公示的主角，用完成态的绿色；供货渠道退成辅助信息并右对齐 ——
+   右对齐之后 9 行的「合作社供应」自然排成一列，一眼能看出哪几行换了供应商。 */
+.uk-brand-notice-card b {
+  overflow: hidden;
+  color: #4ff0ad;
+  font-size: 12px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.uk-brand-notice-card em {
+  overflow: hidden;
+  color: #7da8d1;
+  font-size: 9px;
+  font-style: normal;
+  white-space: nowrap;
+  text-align: right;
+  text-overflow: ellipsis;
 }
 
 .uk-cooking {
-  flex: 0 0 330px;
+  flex: 0 0 auto;
+}
+
+.uk-production-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.uk-production-kpis > div {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 7px 3px;
+  border: 1px solid #17518a;
+  background: #0b2b5c88;
+}
+
+.uk-production-kpis b {
+  color: #10e4f2;
+  font-size: 22px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.uk-production-kpis b.is-done {
+  color: #4ff0ad;
+}
+
+.uk-production-kpis b.is-pending {
+  color: #ffcc3b;
+}
+
+.uk-production-kpis b.is-feeding {
+  color: #b58aff;
+}
+
+.uk-production-kpis span,
+.uk-production-kpis small {
+  color: #7da8d1;
+  font-size: 9px;
+  white-space: nowrap;
+}
+
+.uk-production-kpis small {
+  color: #b58aff;
+  font-size: 8px;
+}
+
+/* 生产进度：一行一条，六列 —— 菜品 / 状态 / 设备 / 生产重量 / 盆数 / 进度。
+   中栏收窄后同步压缩列宽，仍保持表头与行逐列对齐，最后一列保留可读的进度条。 */
+.uk-production-head,
+.uk-production-row {
+  display: grid;
+  grid-template-columns: 120px 218px 118px 96px 88px minmax(96px, 1fr);
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding: 0 12px;
+}
+
+/* 表头：行里只留值，列名集中到这里。左边距比行多 3px，补上行那条左边框，
+   否则表头和下面六列会整体错开 3px。 */
+.uk-production-head {
+  flex: none;
+  min-height: 25px;
+  margin-bottom: 8px;
+  padding-left: 15px;
+  border-bottom: 1px solid #17518a;
+  color: #7da8d1;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+/* 表头列名与行内容统一居中对齐：不再区分「文字列靠左、数值列靠右」。
+   等宽数字（tabular-nums）仍保留，让 12.8 / 9.6 这类数在居中对齐时位数也对得上。 */
+.uk-production-head span {
+  text-align: center;
+}
+
+.uk-production-list {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  gap: 7px;
+  min-height: 0;
+}
+
+/* 行高跟着面板长（最多 72px），余量在列表上下平分：
+   3 道菜和 4 道菜都不留死白，也不会把行拉成空荡荡的一条。 */
+.uk-production-row {
+  flex: 1 1 auto;
+  max-height: 72px;
+  border-left: 3px solid #17518a;
+  background: #0b2b5c88;
+}
+
+.uk-production-dish-name {
+  overflow: hidden;
+  justify-self: center;
+  color: #eaf7ff;
+  font-size: 15px;
+  font-weight: 600;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* 状态列容器：胶囊 + （烹饪中时）已烹饪时间/温度，横排。
+   容器本身在 grid 里居中，内部胶囊与小字左对齐排开 —— 这样状态列的视觉中心
+   仍和表头「状态」对齐，但内容不会因为加了小字而整体漂移。 */
+.uk-production-state {
+  display: flex;
+  align-items: center;
+  justify-self: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+/* 状态胶囊三态色：进行中 = 青色 / 已完成 = 绿色 / 等待 = 蓝色。
+   原来「烹饪中」和「已完成」是同一个绿色（都是 #4ff0ad + #0d3f2c），
+   一列扫下来分不出哪道还在做、哪道已经做完 —— 进行中改成页面主色青，
+   和「生产进度」标题、生产总数同色系，扫一眼就知道这行是活的。 */
+.uk-production-row > .uk-production-state > em {
+  flex: 0 0 auto;
+  padding: 4px 9px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-style: normal;
+  white-space: nowrap;
+}
+
+.uk-production-row > .uk-production-state > em.is-cooking {
+  border: 1px solid #1f7f9c;
+  background: #063a4a;
+  color: #25e0ee;
+}
+
+.uk-production-row > .uk-production-state > em.is-done {
+  border: 1px solid #2f9f6f;
+  background: #0d3f2c;
+  color: #4ff0ad;
+}
+
+.uk-production-row > .uk-production-state > em.is-waiting {
+  border: 1px solid #2c6fa5;
+  background: #0e3776;
+  color: #70b5ff;
+}
+
+/* 烹饪中的实时信息：已烹饪时间/总时长、设备温度。
+   两行小字纵向堆叠（时间一行、温度一行），字号压到 9px，颜色比状态胶囊淡一档，
+   让它当「补充说明」而不是抢状态胶囊的视觉权重。 */
+.uk-production-cook-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  line-height: 1.2;
+}
+
+.uk-production-cook-meta i {
+  display: flex;
+  align-items: baseline;
+  gap: 1px;
+  font-size: 9px;
+  font-style: normal;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: #8fd3f5;
+}
+
+.uk-production-cook-meta i b {
+  font-weight: 500;
+  font-size: 9px;
+  color: #c7edff;
+}
+
+/* 设备名：内容比列宽短（最长「炒菜机 CCJ1」），居中；万一将来换成更长的名字再省略号兜底 */
+.uk-production-device {
+  overflow: hidden;
+  min-width: 0;
+  justify-self: center;
+  color: #c2d9ee;
+  font-size: 12px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* 生产重量 = 称重加料区实测投料量（kg）。出餐端未接入称重，
+   所以只给投料量，不给成品重量与出成率（PRD:199/217）；未称重显示「—」，缺失不等于零（PRD:122）。
+   用白色：这一行里它是唯一的实测值，要比设备名亮一档。 */
+.uk-production-feed {
+  justify-self: center;
+  color: #ffffff;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* 盆数：已完成 / 计划，青色（同生产总数），等宽数字 */
+.uk-production-tray {
+  justify-self: center;
+  color: #6ff0fa;
+  font-size: 12px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* 进度条占最后一列：位置固定在最右，扫一列就能比较各道菜还剩多少 */
+.uk-production-dish-track {
+  height: 6px;
+  overflow: hidden;
+  border-radius: 3px;
+  background: #061b42;
+}
+
+.uk-production-dish-track i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+}
+
+.uk-production-cooking {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 5px;
+  padding-top: 6px;
+  border-top: 1px solid #14568f;
+  color: #f0c164;
+  font-size: 9px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
 .uk-cook-list {
@@ -964,27 +1599,443 @@ body {
 }
 
 .uk-realtime {
-  flex: 1;
+  flex: 0 0 var(--uk-top-row-height);
+  min-height: 0;
 }
 
 .uk-camera {
   position: relative;
+  display: flex;
   flex: 1;
+  flex-direction: column;
   min-height: 0;
   overflow: hidden;
   border: 1px solid #1b72b2;
   background: #061a38;
 }
 
-.uk-camera img {
+.uk-kitchen-video {
+  isolation: isolate;
+  position: relative;
+  padding: 16px 18px 14px;
+  background: radial-gradient(circle at 50% 40%, #103e73 0, #061a38 70%);
+}
+
+.uk-kitchen-grid {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.5;
+  background: linear-gradient(#2c6fa522 1px, transparent 1px), linear-gradient(90deg, #2c6fa522 1px, transparent 1px);
+  background-size: 36px 36px;
+  mask-image: linear-gradient(to bottom, #000 0, transparent 88%);
+}
+
+.uk-kitchen-video-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #e8fbff;
+  font-size: 12px;
+  letter-spacing: 1px;
+}
+
+.uk-kitchen-video-head span::before {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-right: 7px;
+  border-radius: 50%;
+  background: #4ff0ad;
+  box-shadow: 0 0 8px #4ff0ad;
+  content: '';
+  animation: uk-pulse 1.8s ease-in-out infinite;
+}
+
+.uk-kitchen-video-head small {
+  color: #7da8d1;
+  font-size: 10px;
+  letter-spacing: 0;
+}
+
+.uk-cctv-vignette,
+.uk-cctv-scanline {
+  position: absolute;
+  pointer-events: none;
+}
+
+.uk-cctv-vignette {
+  inset: 0;
+  z-index: 3;
+  border: 1px solid #7fb8d633;
+  box-shadow: inset 0 0 42px #020b1ecc;
+}
+
+.uk-cctv-scanline {
+  inset: 0;
+  z-index: 2;
+  opacity: 0.18;
+  background: repeating-linear-gradient(180deg, transparent 0, transparent 3px, #b7e8ff 4px, transparent 5px);
+  mix-blend-mode: screen;
+  animation: uk-cctv-scan 7s linear infinite;
+}
+
+@keyframes uk-cctv-scan {
+  0% { transform: translateY(-24%); }
+  100% { transform: translateY(24%); }
+}
+
+.uk-cctv-topline {
+  position: relative;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #9fc7df;
+  font-size: 9px;
+  letter-spacing: 0.7px;
+}
+
+.uk-cctv-topline time {
+  margin-left: auto;
+  color: #e4f6ff;
+  font-variant-numeric: tabular-nums;
+}
+
+.uk-cctv-rec {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #ffb6c4;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.uk-cctv-rec i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ff4d6d;
+  box-shadow: 0 0 8px #ff4d6d;
+  animation: uk-pulse 1.4s ease-in-out infinite;
+}
+
+.uk-kitchen-photo-frame {
+  position: relative;
+  /* 用 flex: 1 撑满，而不是 height: calc(100% - 66px)：
+     那个 66px 是给 CCTV 顶栏 / 流指示 / 上下留白写的死数，面板高度一变就对不上 ——
+     右栏从 331px 收到 305px 时画面还停在旧的 129px，底下凭空多出 23px 空白；
+     反过来面板变高，画面也不会跟着长。改成弹性撑满后，右栏多高画面就多高。 */
+  flex: 1;
+  min-height: 0;
+  margin: 12px 0 10px;
+  overflow: hidden;
+  border: 1px solid #4386a6;
+  border-radius: 5px;
+  background: #091a2c;
+  box-shadow: inset 0 0 20px #020b1e99, 0 8px 18px #020b1e66;
+}
+
+.uk-kitchen-photo {
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  filter: saturate(0.85) contrast(1.06) brightness(0.92);
+  object-fit: cover;
+  object-position: center;
+  filter: saturate(0.9) contrast(1.04) brightness(0.84);
 }
 
-/* 已移除原扫描线动效：扫描线暗示视频直播，而 PRD:131 明确不默认增加直播或录像回放。 */
+.uk-kitchen-photo-shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #061a381f 0%, transparent 45%, #031127aa 100%);
+  pointer-events: none;
+}
+
+.uk-kitchen-photo-label {
+  position: absolute;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 4px 7px;
+  border-left: 2px solid #25e0ee;
+  background: #061a38cc;
+  box-shadow: 0 3px 8px #020b1e66;
+  color: #e8fbff;
+  font-size: 9px;
+  line-height: 1.2;
+}
+
+.uk-kitchen-photo-label b {
+  font-weight: 600;
+}
+
+.uk-kitchen-photo-label em {
+  color: #4ff0ad;
+  font-size: 8px;
+  font-style: normal;
+}
+
+.uk-kitchen-photo-label.cooker-one { left: 8%; top: 23%; }
+.uk-kitchen-photo-label.cooker-two { left: 42%; top: 23%; }
+.uk-kitchen-photo-label.oven-one { right: 7%; top: 24%; border-left-color: #ffbd3e; }
+.uk-kitchen-photo-label.oven-one em { color: #ffcc3b; }
+
+.uk-kitchen-equipment {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: end;
+  gap: 12px;
+  height: calc(100% - 66px);
+  padding: 22px 2px 12px;
+}
+
+.uk-kitchen-machine {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  padding: 9px 9px 8px;
+  border: 1px solid #2c6fa5;
+  border-radius: 6px;
+  background: linear-gradient(180deg, #123f76dd, #071f45ee);
+  box-shadow: inset 0 0 16px #0c6b9433, 0 10px 18px #020d2244;
+  animation: uk-kitchen-machine-breathe 3.8s ease-in-out infinite;
+  animation-delay: var(--machine-delay);
+}
+
+.uk-kitchen-machine.oven {
+  border-color: #b8871f;
+  background: linear-gradient(180deg, #4a3919dd, #162641ee);
+}
+
+@keyframes uk-kitchen-machine-breathe {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+.uk-kitchen-machine-head,
+.uk-kitchen-machine-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  min-width: 0;
+}
+
+.uk-kitchen-machine-head span,
+.uk-kitchen-machine-foot span,
+.uk-kitchen-machine-foot b {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.uk-kitchen-machine-head span {
+  color: #dcecff;
+  font-size: 10px;
+}
+
+.uk-kitchen-machine-head b {
+  color: var(--machine-color);
+  font-size: 11px;
+}
+
+.uk-kitchen-machine-body {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 92px;
+  margin: 9px 0 8px;
+  border: 1px solid #2c6fa588;
+  border-radius: 4px;
+  background: linear-gradient(135deg, #061a38, #0b2e5b);
+  overflow: hidden;
+}
+
+.uk-kitchen-machine.oven .uk-kitchen-machine-body {
+  border-color: #b8871f88;
+  background: linear-gradient(135deg, #1b2537, #543516);
+}
+
+.uk-cook-vessel {
+  position: relative;
+  width: 72px;
+  height: 38px;
+  border: 2px solid #8aa7bd;
+  border-radius: 8px 8px 22px 22px;
+  background: linear-gradient(180deg, #b9c7cf, #536b7a);
+  box-shadow: inset 0 -8px 0 #263d4c, 0 0 14px #25e0ee55;
+  transform-origin: 50% 10%;
+  animation: uk-cook-stir 2.8s ease-in-out infinite;
+  animation-delay: var(--machine-delay);
+}
+
+@keyframes uk-cook-stir {
+  0%, 100% { transform: rotate(-2deg); }
+  50% { transform: rotate(3deg); }
+}
+
+.uk-cook-vessel i,
+.uk-cook-vessel span {
+  position: absolute;
+  display: block;
+  border-radius: 50%;
+}
+
+.uk-cook-vessel i {
+  top: 11px;
+  left: 19px;
+  width: 30px;
+  height: 13px;
+  background: #d99143;
+  box-shadow: 5px -3px 0 #9c5b32, -5px -2px 0 #e0ae56;
+  animation: uk-food-simmer 1.1s ease-in-out infinite;
+}
+
+.uk-cook-vessel span {
+  top: -19px;
+  left: 34px;
+  width: 4px;
+  height: 18px;
+  border-radius: 50% 50% 0 0;
+  background: #dcecff66;
+  filter: blur(2px);
+  animation: uk-steam 1.8s ease-in-out infinite;
+}
+
+@keyframes uk-food-simmer {
+  0%, 100% { transform: scale(0.92); opacity: 0.8; }
+  50% { transform: scale(1.08); opacity: 1; }
+}
+
+@keyframes uk-steam {
+  0% { opacity: 0; transform: translateY(8px) scale(0.8); }
+  45% { opacity: 0.8; }
+  100% { opacity: 0; transform: translateY(-13px) scale(1.2); }
+}
+
+.uk-oven-window {
+  position: relative;
+  width: 76px;
+  height: 58px;
+  padding: 11px 8px;
+  border: 2px solid #8b6a3c;
+  border-radius: 4px;
+  background: linear-gradient(180deg, #ffb13b88, #4a2114);
+  box-shadow: inset 0 0 16px #ff9e2d99, 0 0 14px #ff9e2d55;
+  overflow: hidden;
+}
+
+.uk-oven-window i {
+  display: block;
+  height: 5px;
+  margin-bottom: 7px;
+  border-radius: 2px;
+  background: #f6d18b;
+  box-shadow: 0 0 7px #fff1b0;
+  animation: uk-oven-heat 1.5s ease-in-out infinite;
+}
+
+.uk-oven-window i:nth-child(2) { animation-delay: 0.35s; }
+.uk-oven-window i:nth-child(3) { animation-delay: 0.7s; }
+
+@keyframes uk-oven-heat {
+  0%, 100% { opacity: 0.45; transform: scaleX(0.75); }
+  50% { opacity: 1; transform: scaleX(1); }
+}
+
+.uk-kitchen-signal {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--machine-color);
+  box-shadow: 0 0 8px var(--machine-color);
+  animation: uk-pulse 1.5s ease-in-out infinite;
+}
+
+.uk-kitchen-machine-foot span {
+  color: #7da8d1;
+  font-size: 9px;
+}
+
+.uk-kitchen-machine-foot b {
+  color: #4ff0ad;
+  font-size: 9px;
+  font-weight: 500;
+}
+
+.uk-kitchen-machine.oven .uk-kitchen-machine-foot b {
+  color: #ffcc3b;
+}
+
+.uk-kitchen-progress {
+  height: 4px;
+  margin-top: 7px;
+  border-radius: 4px;
+  background: #0a2752;
+  overflow: hidden;
+}
+
+.uk-kitchen-progress i {
+  display: block;
+  width: 62%;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--machine-color);
+  box-shadow: 0 0 8px var(--machine-color);
+  animation: uk-kitchen-progress 4.8s ease-in-out infinite;
+  animation-delay: var(--machine-delay);
+}
+
+@keyframes uk-kitchen-progress {
+  0%, 100% { width: 38%; }
+  50% { width: 88%; }
+}
+
+.uk-kitchen-dish {
+  display: block;
+  margin-top: 6px;
+  overflow: hidden;
+  color: #cfeaff;
+  font-size: 9px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.uk-kitchen-stream {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #8fb6dc;
+  font-size: 9px;
+}
+
+.uk-kitchen-stream i {
+  width: 8px;
+  height: 8px;
+  border: 1px solid #25e0ee;
+  border-radius: 50%;
+  background: #25e0ee;
+  box-shadow: 0 0 8px #25e0ee;
+  animation: uk-stream-dot 1.6s linear infinite;
+}
+
+.uk-kitchen-stream b {
+  margin-left: auto;
+  color: #6ff0fa;
+  font-size: 9px;
+  font-weight: 500;
+}
+
+@keyframes uk-stream-dot {
+  0% { transform: translateX(0); opacity: 0.45; }
+  100% { transform: translateX(36px); opacity: 1; }
+}
 
 .uk-camera-tag {
   position: absolute;
@@ -1009,7 +2060,7 @@ body {
   animation: uk-pulse 1.4s ease-in-out infinite;
 }
 
-/* 演示素材标识：去掉红色 LIVE 观感与闪烁（PRD:129、PRD:131） */
+/* 仿真视频标识：明确素材性质，避免被误认为真实摄像头数据。 */
 .uk-camera-tag.is-demo {
   border-left-color: #e0a629;
 }
@@ -1914,3 +2965,150 @@ body {
 @media(max-width:1000px){.uk-detail-rows{grid-template-columns:1fr}.uk-detail-grouphead{flex-wrap:wrap}}
 @media(max-width:1450px){.uk-dish-kpis{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:1000px){.uk-dish-head{align-items:flex-start;flex-direction:column}.uk-dish-head .uk-date-switch{width:100%;justify-content:flex-end}.uk-dish-main{grid-template-columns:1fr;flex-basis:auto}.uk-dish-segment-panel,.uk-dish-rule-panel{min-height:270px}.uk-dish-table-panel{min-height:420px}}
+
+/* 总览菜单拆出营养分析后，左侧只保留可快速浏览的今日菜单。 */
+.uk-menu-only-body{display:flex;flex:1;min-height:0;flex-direction:column;gap:10px;overflow:hidden}
+.uk-menu-only .uk-menu-group{gap:4px}
+.uk-menu-only-row{display:flex;flex:1 1 0;min-height:34px;align-items:center;justify-content:space-between;gap:10px;padding:0 10px;background:#0b2b5c88}
+.uk-menu-only-row .uk-nutrition-name{font-size:13px;font-weight:600}
+.uk-menu-only-row small{color:#7da8d1;font-size:10px;white-space:nowrap}
+
+/* 营养健康页：参考营养驾驶舱的「结构建议 + 单品分析 + 推荐餐品」信息层级。 */
+.uk-nutrition-page{height:calc(100% - 120px);margin-top:20px;display:flex;min-height:0;flex-direction:column;gap:14px;overflow:auto}
+.uk-nutrition-hero{display:flex;flex:0 0 88px;align-items:center;justify-content:space-between;gap:24px;padding:16px 20px;border:1px solid #1d5f9c;border-radius:7px;background:linear-gradient(105deg,#0e3976,#0b2a5c);box-shadow:inset 0 0 24px #0c438322}
+.uk-nutrition-hero h2{margin:7px 0 0;color:#10e4f2;font-size:26px;letter-spacing:1px}
+.uk-nutrition-hero p{margin:7px 0 0;color:#86acd1;font-size:12px}
+.uk-nutrition-hero-meta{display:flex;align-items:center;gap:18px;color:#a9c4e2;font-size:12px;white-space:nowrap}
+.uk-nutrition-hero-meta b{color:#6ff0fa;font-size:14px}
+/* 原 .uk-nutrition-kpis（四张 KPI 卡）样式已随卡片一起删除。 */
+.uk-nutrition-main{display:grid;grid-template-columns:minmax(330px,.82fr) minmax(0,1.18fr);gap:14px;flex:1;min-height:530px}
+.uk-nutrition-pyramid{display:flex;min-height:0;flex-direction:column}
+.uk-pyramid-wrap{display:flex;flex:1;min-height:0;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:18px 26px 8px}
+/* 立体膳食宝塔（实拍级位图塔身 + 矢量中文标注）：
+   前一版是 SVG 手绘梯形堆，渐变+高光+暗边拼到极限也只有「色块感」，
+   所以塔身换成 AI 生成的立体釉面食物宝塔位图（assets/diet-pagoda-3d.png，
+   已抠成透明底、紧裁剪），SVG 只负责摆位、发光和叠中文 —— 
+   中文用矢量文字而不是画进图里：生成模型画中文必缺笔画，且改克数就得重出图。
+   viewBox 669×753 = 本面板内容盒实测尺寸，SVG 坐标即屏幕像素。 */
+.uk-pagoda{display:block;flex:1;min-height:0;width:100%}
+/* 位图自带柔和落影，再叠一层 drop-shadow 会发灰，所以阴影只给「塔身轮廓」一点点。 */
+.uk-pagoda-photo{filter:drop-shadow(0 10px 22px #020c1e99)}
+/* 入场：塔身先淡入（略放大收拢），标注随后逐层浮现（animationDelay 由 JSX 给）。 */
+@keyframes uk-pagoda-rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes uk-pagoda-fade{from{opacity:0;transform:scale(.965)}to{opacity:1;transform:none}}
+.uk-pagoda-photo{transform-box:fill-box;transform-origin:center bottom;animation:uk-pagoda-fade .62s cubic-bezier(.22,.9,.3,1) both}
+.uk-pagoda-tier{animation:uk-pagoda-rise .5s cubic-bezier(.22,.9,.3,1) both}
+@media(prefers-reduced-motion:reduce){.uk-pagoda-tier,.uk-pagoda-photo{animation:none}}
+/* 层名：白色 + 深色描边底衬（paint-order 先把描边画在填充下），
+   深色面板上比纯白更立得住，也不会像 text-shadow 那样糊。 */
+.uk-pagoda-name{fill:#ffffff;font-size:13px;font-weight:600;letter-spacing:.4px;paint-order:stroke;stroke:#04122ecc;stroke-width:3px}
+/* 克数：淡蓝、等宽数字（tabular-nums），左对齐成一列好扫读 */
+.uk-pagoda-amount{fill:#a8cdf0;font-size:10.5px;font-variant-numeric:tabular-nums}
+/* 引线：细虚线，不要抢塔身。悬停整层时提亮成青色，方便讲解时指认。 */
+.uk-pagoda-lead{stroke:#9cc2e6;stroke-opacity:.55;stroke-width:1;stroke-dasharray:3 3}
+.uk-pagoda-tier:hover .uk-pagoda-lead{stroke-opacity:.9;stroke:#25e0ee}
+.uk-pagoda-tier:hover .uk-pagoda-name{fill:#bffaff}
+/* 图注压成一行（row + nowrap）：占两行会把宝塔挤矮约 6%。
+   顶部那道细线当分隔，宽度撑满面板内容区，和上面的宝塔对齐。 */
+.uk-pyramid-caption{display:flex;width:100%;align-items:center;gap:10px;padding-top:12px;border-top:1px solid #14568f;color:#7da8d1;font-size:11px;line-height:1.5;white-space:nowrap}
+.uk-pyramid-caption span{overflow:hidden;text-overflow:ellipsis}
+.uk-pyramid-caption strong{flex:0 0 auto;color:#eaf7ff;font-size:12.5px}
+.uk-nutrition-side{display:flex;min-height:0;flex-direction:column;gap:14px}
+/* ── 「营养分析」单品轮播卡 ──────────────────────────────────────────
+   取代原来的整表（10 道 × 4 项一次铺满）。改单品后一屏只有一个焦点：
+   左边这道菜的图，右边它的 6 项值，10 道菜自动轮一遍。
+   面板跟旧整表一样吃右栏剩余高度（flex:1 1 auto），下面「今日菜单」保持自然高度。 */
+.uk-nutrition-spotlight{display:flex;flex:1 1 auto;min-height:0;flex-direction:column}
+.uk-spotlight-tools{display:flex;align-items:center;gap:14px}
+.uk-spotlight-play{padding:4px 12px;border:1px solid #2c6fa5;border-radius:4px;background:#0e3776;color:#8fd3f5;font-size:11px;font-family:inherit;cursor:pointer;transition:border-color .18s ease,color .18s ease,background .18s ease}
+.uk-spotlight-play:hover{border-color:#25e0ee;background:#104a7f;color:#bffaff}
+/* body：左图右值，底部一行进度点横跨两列 */
+.uk-spotlight-body{display:grid;flex:1;min-height:0;grid-template-columns:minmax(0,.62fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto;gap:14px 20px;padding-top:14px}
+/* 图框做成**正方形**而不是填满左列 —— 菜品图源文件全是 512×512，
+   原来图框 475×328（横矩形）配 object-fit:cover，上下各裁掉 73px，
+   菜品的碗沿/盘边被切掉，看着就是「图显示不全」。
+   改成 aspect-ratio:1/1 + justify-self:center：
+   高度仍由行高撑满（格子有多高，图就有多大），宽度跟着高度走，永远是正方形；
+   再配 object-fit:contain 兜底（万一以后换成非 1:1 的图，也只是内部留边，不会裁）。
+   左列因此留出一点空白，所以列宽从 .86fr 收到 .72fr，让方图几乎顶满左列。 */
+.uk-spotlight-figure{position:relative;display:flex;min-width:0;min-height:0;aspect-ratio:1/1;justify-self:center;flex-direction:column;margin:0;overflow:hidden;border:1px solid #2c6fa5;border-radius:6px;background:#0b2b5c;box-shadow:inset 0 0 26px #ffffff1a}
+.uk-spotlight-figure img{display:block;width:100%;flex:1;min-height:0;object-fit:contain}
+.uk-spotlight-figure figcaption{position:absolute;right:0;bottom:0;left:0;display:flex;align-items:center;gap:10px;padding:22px 14px 12px;background:linear-gradient(180deg,#04142e00,#04142ef2 62%)}
+.uk-spotlight-figure figcaption strong{overflow:hidden;font-size:18px;letter-spacing:.5px;text-overflow:ellipsis;white-space:nowrap}
+.uk-spotlight-seg{flex:0 0 auto;padding:3px 8px;border-radius:3px;color:#04142e;font-size:10.5px;font-weight:700}
+.uk-spotlight-detail{display:flex;min-width:0;flex-direction:column;gap:12px;animation:uk-spotlight-up .45s cubic-bezier(.22,.9,.3,1) both}
+.uk-spotlight-head{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;color:#7da8d1;font-size:11px}
+.uk-spotlight-device{padding:2px 9px;border-radius:3px;background:#0e3776;color:#70b5ff}
+.uk-spotlight-progress{color:#8fd3f5;font-variant-numeric:tabular-nums}
+/* 3 列 × 2 行：第一行 能量/蛋白质/脂肪，第二行 膳食纤维/碳水化合物/胆固醇（顺序见 JSX 的 SPOTLIGHT_METRICS）。
+   flex:1 + grid-auto-rows:minmax(84px,1fr) —— 两行把右栏中间那段高度吃掉，
+   既不会留空档（格子缩在顶上的话，下面会空一大块），也不会把格子拉到空的发虚。 */
+.uk-spotlight-grid{display:grid;flex:1;min-height:0;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:minmax(84px,1fr);gap:10px}
+/* 标签数值同行（同参考图「能量：111kj」的排法）：青色标签 + 亮色数值 + 小一号单位。
+   用 grid + align-items:baseline 让大小字号坐同一条基线，align-content:center 再把这一行
+   在撑高的格子里垂直居中（纯 flex 做不到「基线对齐 + 垂直居中」同时成立）。 */
+.uk-spotlight-cell{display:grid;grid-template-columns:auto minmax(0,1fr);align-content:center;align-items:baseline;column-gap:6px;padding:16px 14px;border:1px solid #14568f;border-radius:5px;background:#061c4499}
+.uk-spotlight-cell span{color:#8fd3f5;font-size:11.5px}
+.uk-spotlight-cell span::after{content:'：'}
+.uk-spotlight-cell b{min-width:0;overflow:hidden;color:#eaf7ff;font-size:19px;font-variant-numeric:tabular-nums;text-overflow:ellipsis;white-space:nowrap}
+.uk-spotlight-cell b em{margin-left:2px;color:#6ff0fa;font-size:11px;font-style:normal;font-weight:400}
+/* 主料 / 调料：右栏收尾，把「6 个数字填不满的竖高」用已有配方数据补上 */
+.uk-spotlight-uses{display:flex;flex-direction:column;gap:7px;padding-top:12px;border-top:1px solid #14568f}
+.uk-spotlight-uses>div{display:flex;min-width:0;align-items:baseline;gap:10px;font-size:11px}
+.uk-spotlight-uses span{flex:0 0 26px;color:#8fd3f5}
+.uk-spotlight-uses b{min-width:0;overflow:hidden;color:#dcecff;font-weight:500;text-overflow:ellipsis;white-space:nowrap}
+/* 进度点：当前那道菜的点拉长成胶囊并染成该菜的语义色，和左下角菜单卡的颜色对得上 */
+.uk-spotlight-dots{display:flex;grid-column:1/-1;align-items:center;justify-content:center;gap:8px}
+.uk-spotlight-dot{width:9px;height:9px;padding:0;border:1px solid #2c6fa5;border-radius:50%;background:#0e3776;cursor:pointer;transition:width .25s ease,border-color .18s ease,background .18s ease}
+.uk-spotlight-dot:hover{border-color:#25e0ee;background:#104a7f}
+.uk-spotlight-dot.active{width:24px;border-radius:5px}
+/* 换菜时图与右栏一起重播入场（key 绑菜名 → 元素重新挂载，动画才会重放） */
+@keyframes uk-spotlight-in{from{opacity:0;transform:scale(1.035)}to{opacity:1;transform:none}}
+@keyframes uk-spotlight-up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.uk-spotlight-figure img{animation:uk-spotlight-in .55s cubic-bezier(.22,.9,.3,1) both}
+@media(prefers-reduced-motion:reduce){.uk-spotlight-figure img,.uk-spotlight-detail{animation:none}}
+.uk-recommended-panel{display:flex;flex:0 0 auto;min-height:0;flex-direction:column}.uk-module-panel-count{color:#6ff0fa;font-size:18px;font-variant-numeric:tabular-nums}
+.uk-recommended-grid{display:grid;flex:1;min-height:0;align-content:start;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding-top:14px;overflow:auto}
+.uk-recommended-card{display:flex;min-width:0;align-items:center;gap:10px;padding:10px;border:1px solid #14568f;border-radius:5px;background:#061c4499;color:inherit;text-align:left;cursor:pointer;transition:border-color .18s ease,background .18s ease,transform .18s ease}.uk-recommended-card:hover{border-color:#25e0ee;background:#0c3e6755;transform:translateY(-1px)}.uk-recommended-card.active{border-color:#25e0ee;box-shadow:0 0 0 1px #25e0ee55,inset 0 0 18px #0c6d8755}
+.uk-recommended-visual{display:block;width:74px;height:58px;flex:0 0 74px;overflow:hidden;border:1px solid #2c6fa5;border-radius:4px;background:#0b2b5c;box-shadow:inset 0 0 16px #ffffff22}.uk-recommended-visual img{display:block;width:100%;height:100%;object-fit:cover}
+.uk-recommended-copy{display:flex;min-width:0;flex-direction:column;gap:5px}
+/* 第一行：菜名 + 餐段 */
+.uk-recommended-title{display:flex;min-width:0;align-items:center;gap:6px}
+.uk-recommended-title strong{overflow:hidden;color:#eaf7ff;font-size:13px;text-overflow:ellipsis;white-space:nowrap}
+.uk-recommended-title em{flex:0 0 auto;padding:2px 5px;border-radius:3px;background:#0e3776;color:#70b5ff;font-size:10px;font-style:normal}
+/* 第二行：颜色建议 —— 色点 + 色名 + 建议食用频次（频次由颜色推导，见 FOOD_COLOR_ADVICE）。
+   这一行原来放的是「151 kcal · 蛋白质 5.5g」，已按要求删掉。 */
+.uk-recommended-color{display:flex;min-width:0;align-items:center;gap:5px;color:#8fd3f5;font-size:10px}
+.uk-recommended-color>span:last-child{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.uk-recommended-colorname{flex:0 0 auto;color:#eaf7ff;font-weight:600}
+/* 第三行：份数（人份数 = 盆数 × 140），压在颜色建议下方 */
+.uk-recommended-parts{color:#6ff0fa;font-size:11px;white-space:nowrap}
+.uk-recommended-parts b{color:#eaf7ff;font-size:13px;font-variant-numeric:tabular-nums}
+/* 五色圆点：色值由 JSX 内联给（FOOD_COLOR_TONE），这里只管形状和固定宽高，
+   防止 flex 压缩把它挤成椭圆。 */
+.uk-food-tone{display:inline-block;width:9px;height:9px;flex:0 0 9px;border-radius:50%}
+/* 营养分析曾是整表（.uk-nutrition-menu-table + .uk-nutrition-table*），
+   现已改为上面的单品轮播卡，下列规则当前**没有引用**，保留备查/回退用。 */
+.uk-nutrition-menu-table{display:flex;flex:1 1 auto;min-height:0;flex-direction:column}
+.uk-nutrition-menu-table .uk-nutrition-table-body{flex:1;min-height:0}
+.uk-nutrition-table-row.active{background:#0c3e67;box-shadow:inset 3px 0 0 #25e0ee}.uk-nutrition-table{padding-top:10px}.uk-nutrition-table-head,.uk-nutrition-table-row{display:grid;grid-template-columns:minmax(220px,1.8fr) repeat(4,minmax(100px,.7fr));align-items:center;gap:12px}.uk-nutrition-table-head{min-height:32px;padding:7px 12px;background:#10417f;color:#a9c8e4;font-size:11px}.uk-nutrition-table-body{overflow:auto}.uk-nutrition-table-group{margin-top:8px}.uk-nutrition-table-grouphead{display:flex;align-items:center;justify-content:space-between;min-height:28px;padding:5px 12px;border-left:3px solid #13dce8;background:#0b346e;color:#10e4f2;font-size:12px;font-weight:600}.uk-nutrition-table-grouphead em{color:#8fb6dc;font-size:10px;font-style:normal;font-weight:400}.uk-nutrition-table-row{min-height:38px;padding:5px 12px;border-bottom:1px solid #14568f;color:#dcecff;font-size:12px}.uk-nutrition-table-row>span{display:flex;align-items:center;min-width:0;gap:8px;overflow:hidden;color:#eaf7ff;font-weight:600;text-overflow:ellipsis;white-space:nowrap}.uk-nutrition-table-row>span i{width:7px;height:7px;flex:0 0 7px;border-radius:2px}.uk-nutrition-table-row>b{color:#dcecff;font-size:13px;font-variant-numeric:tabular-nums}
+@media(max-width:1000px){.uk-nutrition-main{grid-template-columns:1fr}.uk-nutrition-pyramid{min-height:480px}.uk-recommended-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.uk-spotlight-body{grid-template-columns:minmax(0,1fr)}}
+
+/* 总览左栏合并为「今日菜单」：上方是总产量与当前完成，下面用同一份菜单数据画餐品统计图。 */
+.uk-menu-dashboard{flex:1;min-height:0}
+.uk-menu-dashboard-summary{display:grid;grid-template-columns:78px minmax(0,1fr) minmax(0,1.35fr);align-items:center;gap:12px;padding:10px 12px;border:1px solid #1d5f9c;border-radius:5px;background:#061c4499}
+.uk-menu-dish-count{display:flex;flex-direction:row;align-items:flex-end;justify-content:center;padding-right:10px;border-right:1px solid #14568f}.uk-menu-dish-count b{color:#eaf7ff;font-size:34px;line-height:1}.uk-menu-dish-count span{color:#7da8d1;font-size:11px}
+.uk-menu-output-stat{display:flex;min-width:0;flex-direction:column;gap:3px}.uk-menu-output-stat span{color:#8fb6dc;font-size:11px}.uk-menu-output-stat strong{overflow:hidden;color:#6ff0fa;font-size:22px;font-variant-numeric:tabular-nums;text-overflow:ellipsis;white-space:nowrap}.uk-menu-output-stat:last-child strong{color:#4ff0ad}.uk-menu-output-stat em{margin-left:3px;color:#8fb6dc;font-size:10px;font-style:normal;font-weight:400}.uk-menu-output-stat small{overflow:hidden;color:#8fb6dc;font-size:10px;text-overflow:ellipsis;white-space:nowrap}.uk-menu-output-stat small b{color:#d9efff;font-size:11px;font-variant-numeric:tabular-nums;font-weight:600}
+/* 总完成率：百分比压在进度条里（贴填充条右端内侧），不再另起一行、也不另占一列。
+   条从 8px 加厚到 16px —— 11px 的字塞不进 8px 的条，硬压会上下溢出，
+   看起来就像字浮在条外面（就是最初形态的问题）。
+   轨道不设 overflow:hidden —— 会裁掉填充条那层 9px 的外发光。 */
+.uk-menu-overall-track{position:relative;margin:10px 2px 12px}
+.uk-menu-overall-bar{height:16px;border-radius:8px;background:#0a2752}
+.uk-menu-overall-track i{display:block;height:100%;border-radius:8px;background:linear-gradient(90deg,#13a4cc,#4ff0ad);box-shadow:0 0 9px #20dbe655}
+/* 默认（完成率低、填充条短）：数字退到轨道右端，浅色字压深蓝轨道 */
+.uk-menu-overall-track span{position:absolute;right:10px;top:50%;transform:translateY(-50%);color:#eafff6;font-size:11px;font-weight:600;font-variant-numeric:tabular-nums;text-shadow:0 1px 3px #041a32d9,0 0 2px #041a32b3;pointer-events:none}
+/* 数字落后在亮渐变填充条上（right 由 JSX 按完成率算，见 is-in-fill）：换深色字才读得清 */
+.uk-menu-overall-track.is-in-fill span{color:#04263f;font-weight:700;text-shadow:0 1px 0 #ffffff59}
+.uk-dish-stat-chart{display:flex;flex:1;min-height:0;flex-direction:column}.uk-dish-stat-head{display:flex;align-items:center;justify-content:space-between;padding:7px 10px;color:#8fb6dc;background:#10417f;font-size:11px}.uk-dish-stat-head span:last-child{color:#a9c8e4;font-size:10px}.uk-dish-stat-body{display:flex;flex:1;min-height:0;flex-direction:column;gap:8px;padding-top:8px;overflow:hidden}.uk-dish-stat-group{display:flex;flex:1 1 0;min-height:0;flex-direction:column;gap:4px}.uk-dish-stat-row{display:grid;flex:1 1 0;min-height:28px;grid-template-columns:92px minmax(0,1fr) 78px;align-items:center;gap:8px;padding:0 8px;background:#0b2b5c88}.uk-dish-stat-row .uk-nutrition-name{overflow:hidden;font-size:11px;font-weight:600;text-overflow:ellipsis;white-space:nowrap}.uk-dish-stat-track{height:7px;overflow:hidden;border-radius:7px;background:#061b46}.uk-dish-stat-track i{display:block;height:100%;min-width:4px;border-radius:7px;box-shadow:0 0 7px currentColor}.uk-dish-stat-row>b{color:#b9d7ee;font-size:10px;font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+@media(max-width:1000px){.uk-menu-dashboard-summary{grid-template-columns:70px 1fr 1fr}.uk-dish-stat-row{grid-template-columns:84px minmax(0,1fr) 72px}}

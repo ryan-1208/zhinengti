@@ -18,7 +18,7 @@ import modifyRulesFlowchartImagePath from './assets/modify-rules-flowchart.png';
 import voiceSchedulingConditionsImagePath from './assets/voice-scheduling-conditions.png';
 import { RequirementOverviewDrawer } from './components/RequirementOverviewDrawer';
 
-type Page = 'version' | 'flow' | 'semantic' | 'menu' | 'assistant-menu' | 'assistant-menu-dialog-example' | 'assistant-menu-no-meal' | 'assistant-menu-flow' | 'assistant-menu-insufficient' | 'assistant-menu-failure' | 'view-menu' | 'schedule' | 'schedule-v11-sync' | 'assistant-schedule' | 'assistant-schedule-no-menu' | 'purchase' | 'list' | 'confirm' | 'success' | 'failure' | 'blank-1' | 'work-order-detail' | 'blank-2' | 'blank-3' | 'blank-4' | 'blank-5' | 'meal-settings' | 'ai-menu-result-notice' | 'backup-ai-menu-result-notice' | 'backup-assistant-menu' | 'backup-assistant-menu-flow' | 'backup-assistant-schedule';
+type Page = 'version' | 'flow' | 'semantic' | 'menu' | 'assistant-menu' | 'assistant-menu-dialog-example' | 'assistant-menu-no-meal' | 'assistant-menu-flow' | 'assistant-menu-insufficient' | 'assistant-menu-failure' | 'view-menu' | 'schedule' | 'schedule-v11-sync' | 'assistant-schedule' | 'assistant-schedule-no-menu' | 'purchase' | 'list' | 'confirm' | 'success' | 'failure' | 'blank-1' | 'work-order-detail' | 'blank-2' | 'blank-3' | 'blank-4' | 'blank-5' | 'meal-settings' | 'ai-menu-result-notice' | 'backup-ai-menu-result-notice' | 'backup-assistant-menu' | 'backup-assistant-menu-flow' | 'backup-assistant-schedule' | 'oil-fryer-ai-menu' | 'oil-fryer-voice-menu';
 type PlanDayStatus = 'started' | 'generated' | 'existing';
 type MenuGenerationResult = { status: 'success'; totalCookingMinutes: number; cookingTimeLimit: number } | { status: 'empty'; filters: string[] } | { status: 'insufficient'; shortages: Partial<Record<'大荤' | '小荤' | '素菜', number>> };
 function getMenuGenerationResult(matchingDishes: number, required: Record<'大荤' | '小荤' | '素菜', number>, available: Record<'大荤' | '小荤' | '素菜', number>, filters: string[], cookingTimes: number[], cookingTimeLimit: number): MenuGenerationResult {
@@ -64,6 +64,8 @@ const pageRoute = defineHashPageRoute([
   { id: 'backup-assistant-menu-flow', title: '语音生成菜单流程中', group: '备用页' },
   { id: 'backup-assistant-schedule', title: '语音排产', group: '备用页' },
   { id: 'backup-ai-menu-result-notice', title: 'ai生成结果提示新增', group: '备用页' },
+  { id: 'oil-fryer-ai-menu', title: 'AI生成菜单原型', group: '新增油炸炉设备需要处理的页面' },
+  { id: 'oil-fryer-voice-menu', title: '语音生成菜单原型', group: '新增油炸炉设备需要处理的页面' },
 ], { defaultPageId: 'assistant-menu' });
 const weekData = [['本周', '07/13~07/19'], ['下周', '07/20~07/26'], ['第三周', '07/27~08/02'], ['第四周', '08/03~08/09']];
 const days = [['周一', '07/13'], ['周二', '07/14'], ['周三', '07/15'], ['周四', '07/16'], ['周五', '07/17'], ['周六', '07/18'], ['周日', '07/19']];
@@ -101,7 +103,7 @@ function ScheduleRequirementImageBridge({ page }: { page: Page }) {
 }
 
 function PrototypeSidebar({ page, go, collapsed, onToggle }: { page: Page; go: (page: Page) => void; collapsed: boolean; onToggle: () => void }) {
-  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({ 菜单: true, 排产: true, 采购: true, 需要增加批次字段的页面: true, 'v1.1.0 优化内容': true, 备用页: true });
+  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({ 菜单: true, 排产: true, 采购: true, 需要增加批次字段的页面: true, 'v1.1.0 优化内容': true, 备用页: true, 新增油炸炉设备需要处理的页面: true });
   const [blank1Expanded, setBlank1Expanded] = useState(true);
   const groups: Array<{ label: string; pages: Array<[string, Page]> }> = [
     { label: '菜单', pages: [['每周菜单', 'menu'], ['语音生成菜单', 'assistant-menu'], ['语音生成菜单-无餐段', 'assistant-menu-no-meal'], ['语音生成菜单-流程中', 'assistant-menu-flow'], ['语音生成菜单-菜单数量不足', 'assistant-menu-insufficient'], ['语音生成菜单-失败', 'assistant-menu-failure'], ['查看菜单', 'view-menu']] },
@@ -111,6 +113,7 @@ function PrototypeSidebar({ page, go, collapsed, onToggle }: { page: Page; go: (
     { label: '后台页面', pages: [['餐段设置', 'meal-settings']] },
     { label: 'v1.1.0 优化内容', pages: [['对话修改示例', 'assistant-menu-dialog-example'], ['ai生成结果提示新增', 'ai-menu-result-notice'], ['排产计划同步页面', 'schedule-v11-sync']] },
     { label: '备用页', pages: [['语音生成菜单', 'backup-assistant-menu'], ['语音生成菜单流程中', 'backup-assistant-menu-flow'], ['语音排产', 'backup-assistant-schedule'], ['ai生成结果提示新增', 'backup-ai-menu-result-notice']] },
+    { label: '新增油炸炉设备需要处理的页面', pages: [['AI生成菜单原型', 'oil-fryer-ai-menu'], ['语音生成菜单原型', 'oil-fryer-voice-menu']] },
   ];
   const topPages: Array<[string, Page]> = [['版本管理', 'version'], ['流程图', 'flow'], ['语义解析', 'semantic']];
   return <aside className="prototype-sidebar" aria-label="智能体页面导航"><button type="button" className="sidebar-toggle" onClick={onToggle} aria-label={collapsed ? '展开导航栏' : '收起导航栏'}>{collapsed ? '›' : '‹'}</button><div className="prototype-nav-inner"><div className="prototype-nav-top">{topPages.map(([label, target]) => <button key={target} className={page === target ? 'prototype-nav-link active' : 'prototype-nav-link'} onClick={() => go(target)}><i />{label}</button>)}</div><div className={isPlainPage(page) ? 'prototype-sidebar-title' : 'prototype-sidebar-title active'}>智能体</div>{groups.map((group) => <section className="prototype-nav-group" key={group.label}><button type="button" className="prototype-nav-group-title" onClick={() => setExpandedGroups((current) => ({ ...current, [group.label]: !current[group.label] }))}><span>{expandedGroups[group.label] ? '⌄' : '›'}</span>{group.label}</button>{expandedGroups[group.label] && group.pages.map(([label, target]) => target === 'blank-1' ? <React.Fragment key={target}><div className="prototype-nav-parent"><button className={page === target ? 'prototype-nav-link active' : 'prototype-nav-link'} onClick={() => go(target)}><i />{label}</button><button type="button" className="prototype-nav-child-toggle" aria-label={blank1Expanded ? '收起生产工单列表子页面' : '展开生产工单列表子页面'} onClick={() => setBlank1Expanded((value) => !value)}>{blank1Expanded ? '⌄' : '›'}</button></div>{blank1Expanded && <button className={page === 'work-order-detail' ? 'prototype-nav-link prototype-nav-child active' : 'prototype-nav-link prototype-nav-child'} onClick={() => go('work-order-detail')}><i />工单详情</button>}</React.Fragment> : target === 'work-order-detail' ? null : <button key={target} className={`${page === target ? 'prototype-nav-link active' : 'prototype-nav-link'}${target === 'schedule' ? ' schedule-nav-link' : ''}`} onClick={() => go(target)}><i />{label}</button>)}</section>)}</div></aside>;
@@ -118,13 +121,39 @@ function PrototypeSidebar({ page, go, collapsed, onToggle }: { page: Page; go: (
 
 function isPlainPage(page: Page) { return page === 'version' || page === 'flow' || page === 'semantic' || page === 'schedule-v11-sync'; }
 
+function getResponsivePageScale(designWidth: number, designHeight: number, sidebarCollapsed: boolean) {
+  if (typeof window === 'undefined') return 1;
+  const availableWidth = Math.max(window.innerWidth - (sidebarCollapsed ? 0 : 160), 320);
+  const availableHeight = Math.max(window.innerHeight, 480);
+  return Math.min(1, availableWidth / designWidth, availableHeight / designHeight);
+}
+
+function useResponsivePageScale(designWidth: number, designHeight: number, sidebarCollapsed: boolean, enabled: boolean) {
+  const [scale, setScale] = useState(() => enabled ? getResponsivePageScale(designWidth, designHeight, sidebarCollapsed) : 1);
+  useEffect(() => {
+    if (!enabled) {
+      setScale(1);
+      return undefined;
+    }
+    const updateScale = () => setScale(getResponsivePageScale(designWidth, designHeight, sidebarCollapsed));
+    updateScale();
+    window.addEventListener('resize', updateScale);
+    return () => window.removeEventListener('resize', updateScale);
+  }, [designHeight, designWidth, enabled, sidebarCollapsed]);
+  return scale;
+}
+
 function Shell({ page, go, children }: { page: Page; go: (page: Page) => void; children: React.ReactNode }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const responsiveSpecialPage = page === 'oil-fryer-ai-menu' || page === 'oil-fryer-voice-menu';
+  const responsiveScale = useResponsivePageScale(page === 'oil-fryer-voice-menu' ? 1920 : 2588, page === 'oil-fryer-voice-menu' ? 1080 : 1484, sidebarCollapsed, responsiveSpecialPage);
   const shellClass = `app-shell${isPlainPage(page) ? ' plain-app-shell' : ''}${sidebarCollapsed ? ' sidebar-collapsed' : ''}`;
   if (page === 'meal-settings') return children;
-  if (page === 'blank-2' || page === 'blank-3' || page === 'blank-4' || page === 'blank-5' || page === 'ai-menu-result-notice' || page === 'backup-ai-menu-result-notice') {
-    const contentClass = page === 'blank-2' ? 'weighing-app-shell' : page === 'blank-3' ? 'dashboard-app-shell' : page === 'blank-4' ? 'mobile-app-shell' : 'ai-menu-app-shell';
-    return <main className={`special-page-app-shell${sidebarCollapsed ? ' sidebar-collapsed' : ''}`}><PrototypeSidebar page={page} go={go} collapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed((value) => !value)} /><div className={contentClass}>{children}</div></main>;
+  if (page === 'blank-2' || page === 'blank-3' || page === 'blank-4' || page === 'blank-5' || page === 'ai-menu-result-notice' || page === 'backup-ai-menu-result-notice' || page === 'oil-fryer-ai-menu' || page === 'oil-fryer-voice-menu') {
+    const contentClass = page === 'blank-2' ? 'weighing-app-shell' : page === 'blank-3' ? 'dashboard-app-shell' : page === 'blank-4' ? 'mobile-app-shell' : page === 'oil-fryer-voice-menu' ? 'oil-fryer-voice-shell' : 'ai-menu-app-shell';
+    const specialShellClass = `special-page-app-shell${responsiveSpecialPage ? ' responsive-special-page-app-shell' : ''}${sidebarCollapsed ? ' sidebar-collapsed' : ''}`;
+    const contentStyle = responsiveSpecialPage ? { '--prototype-page-scale': responsiveScale } as React.CSSProperties : undefined;
+    return <main className={specialShellClass}><PrototypeSidebar page={page} go={go} collapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed((value) => !value)} /><div className={contentClass} style={contentStyle}>{children}</div></main>;
   }
   if (page === 'blank-1' || page === 'work-order-detail') return <main className={`orders-tree-app-shell${sidebarCollapsed ? ' sidebar-collapsed' : ''}`}><PrototypeSidebar page={page} go={go} collapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed((value) => !value)} /><div className="orders-app-shell">{children}</div></main>;
   if (page === 'assistant-schedule-no-menu') return <main className={shellClass}><PrototypeSidebar page={page} go={go} collapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed((value) => !value)} /><div className="canvas"><Header page={page} go={go} /><div className="screen-frame"><img src={schedulingFrame} alt="" /><div className="screen-content"><AssistantPage key="assistant-schedule-no-menu" type="schedule" noMenu go={go} /></div></div></div></main>;
@@ -595,18 +624,21 @@ function WorkOrderDetailPage({ go }: { go: (page: Page) => void }) {
   </div>;
 }
 
-function AiMenuPage() {
-  const [open, setOpen] = useState(false);
+function AiMenuPage({ oilFryerReplica = false }: { oilFryerReplica?: boolean }) {
+  const [open, setOpen] = useState(oilFryerReplica);
   const [showToasts, setShowToasts] = useState(false);
   const [weeks, setWeeks] = useState([true, true, false, false]);
-  const [equipment, setEquipment] = useState([true, true]);
+  const equipmentLabels = oilFryerReplica ? ['炒菜机', '烤箱', '油炸炉'] : ['烤箱', '炒菜机'];
+  const [equipment, setEquipment] = useState(oilFryerReplica ? [true, true, true] : [true, true]);
+  const selectedEquipment = equipmentLabels.filter((_, index) => equipment[index]);
+  const ratioEquipment = oilFryerReplica ? selectedEquipment : equipmentLabels;
   const [preferences, setPreferences] = useState([false, false]);
   const toggle = (setter: React.Dispatch<React.SetStateAction<boolean[]>>, index: number) => setter((items) => items.map((value, itemIndex) => itemIndex === index ? !value : value));
   const daysOfWeek = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
   const planDays = ['周一（08/10）', '周二（08/11）', '周三（08/12）', '周四（08/13）', '周五（08/14）', '周六（08/15）', '周日（08/16）'];
   const planMeals = ['早餐', '午餐', '晚餐'];
   const weekRanges = ['08/10~08/16', '08/17~08/23', '08/24~08/30', '08/31~09/06'];
-  return <div className="ai-menu-page">
+  return <div className={`ai-menu-page${oilFryerReplica ? ' oil-fryer-ai-menu-page' : ''}`}>
     <header className="ai-menu-topbar"><strong>熙香AI食堂 <i /> 智能管理后台</strong><button>test-验证食堂 <span>⌄</span></button><div><span>♟</span> CXY　⏻</div></header>
     <aside className="ai-menu-side"><section><button>♧　生产管理 <i>⌃</i></button><a>餐段设置</a><a className="active">每周菜单</a><a>排产计划</a><a>原料需订量</a><a>生产设置</a></section>{['食堂订货', '系统管理'].map((item) => <button key={item}>▣　{item}<i>⌄</i></button>)}</aside>
     <main className="ai-menu-content"><header><h1>单品生产计划</h1><div><button className="mint" onClick={() => { setShowToasts(false); setOpen(true); }}>AI生成菜单</button><button>导出</button><button>编辑</button><button className="blue">复制同周菜单</button></div></header><section className="ai-menu-plan"><nav>{['本周', '下周', '第三周', '第四周'].map((item, index) => <button className={index === 0 ? 'selected' : ''} key={item}>{item}<br /><b>{weekRanges[index]}</b></button>)}</nav><div className="ai-menu-days"><div className="ai-menu-grid-head">{planDays.map((day) => <strong key={day}>{day}</strong>)}</div><div className="ai-menu-grid-row ai-empty-row">{planDays.map((day) => <article key={day}><b>宵夜</b><span>◯<small>无此餐段</small></span></article>)}</div><div className="ai-menu-grid-row ai-empty-row">{planDays.map((day) => <article key={day}><b>其他</b><span>◯<small>无此餐段</small></span></article>)}</div>{planMeals.map((meal) => <div className="ai-menu-grid-row" key={meal}>{planDays.map((day, dayIndex) => <article key={day}>{meal === '早餐' || dayIndex < 4 ? <button className="ai-add-meal"><b>{meal}</b><small>点击添加菜单</small></button> : <div className={`ai-planned-status ${meal === '晚餐' && dayIndex > 4 ? 'orange' : meal === '午餐' && dayIndex > 4 ? 'red' : ''}`}><b>● {meal} ({meal === '晚餐' && dayIndex > 4 ? 8 : 10})</b><small>已有单品生产计划</small></div>}</article>)}</div>)}</div></section></main>
@@ -623,11 +655,37 @@ function AiMenuPage() {
       <div className="ai-menu-cycle" role="table" aria-label="菜单生成周期"><div className="ai-menu-cycle-row ai-menu-cycle-head" role="row"><span className="cycle-week" /><span className="cycle-meal" />{daysOfWeek.map((day) => <label key={day} role="columnheader"><input type="checkbox" defaultChecked />{day}</label>)}</div>{['本周', '下周'].flatMap((week) => ['午餐', '晚餐'].map((meal, index) => <div className="ai-menu-cycle-row" role="row" key={`${week}-${meal}`}>{index === 0 ? <span className="cycle-week" role="rowheader">{week}</span> : <span className="cycle-week continued" aria-hidden="true" />}<label className="cycle-meal"><input type="checkbox" defaultChecked />{meal}</label>{daysOfWeek.map((day, dayIndex) => <span role="cell" key={day} className={dayIndex > 4 && meal === '晚餐' ? 'disabled' : ''}>{dayIndex === 1 && week === '本周' && meal === '午餐' ? <b>已有菜单　✓</b> : dayIndex > 4 && meal === '晚餐' ? '无此餐段' : '✓'}</span>)}</div>))}</div>
       <div className="diner-count-row" data-annotation-id="annotation-41"><span>就餐人数</span><input placeholder="请输入" /></div>
       <div className="quantity-row"><span><em>*</em> 餐品数量</span>{['宵夜', '其他', '早餐', '午餐', '晚餐'].map((meal, index) => <label className={index < 2 ? 'disabled' : ''} key={meal}>{meal}<input placeholder="请输入" disabled={index < 2} /></label>)}</div>
-      <div className="choice-row"><span><em>*</em> 烹饪设备</span>{['烤箱', '炒菜机'].map((item, index) => <label key={item}><input type="checkbox" checked={equipment[index]} onChange={() => toggle(setEquipment, index)} /> {item}</label>)}</div>
+      <div className="choice-row"><span><em>*</em> 烹饪设备</span>{equipmentLabels.map((item, index) => <label key={item}><input type="checkbox" checked={equipment[index]} onChange={() => toggle(setEquipment, index)} /> {item}</label>)}</div>
       <div className="choice-row"><span><em>*</em> 菜单偏好</span>{['效率最高(生产时间短)', '口味最佳(餐品维度评分最高)'].map((item, index) => <label key={item}><input type="checkbox" checked={preferences[index]} onChange={() => toggle(setPreferences, index)} /> {item}</label>)}</div>
       <div className="setting-row" data-annotation-id="annotation-42"><span>烹饪时限 <i title="输入大于 0 的整数" aria-label="输入大于 0 的整数" data-tooltip="输入大于 0 的整数">?</i></span><label><input type="number" min="1" step="1" /> 分钟</label></div>
-      <div className="setting-row" data-annotation-id="annotation-39"><span>设备比例</span><div className="device-ratio-inputs"><input type="number" min="0" aria-label="烤箱比例" />：<input type="number" min="0" aria-label="炒菜机比例" /></div></div>
+      <div className="setting-row" data-annotation-id="annotation-39"><span>设备比例</span><div className="device-ratio-setting">{oilFryerReplica && selectedEquipment.length > 0 && <strong className="device-ratio-prefix">{selectedEquipment.join('：')}</strong>}<div className="device-ratio-inputs">{ratioEquipment.map((item, index) => <React.Fragment key={item}><input type="number" min="0" aria-label={`${item}比例`} />{index < ratioEquipment.length - 1 && '：'}</React.Fragment>)}</div></div></div>
     </div><footer><button className="cancel" onClick={() => setOpen(false)}>取消</button><button className="create" onClick={() => { setShowToasts(true); setOpen(false); }}>AI生成菜单</button></footer></section></div>}
+  </div>;
+}
+
+function VoiceMenuReplicaPage() {
+  return <div className="oil-fryer-voice-page" aria-label="语音生成菜单原型">
+    <header className="oil-fryer-voice-header">
+      <div className="oil-fryer-voice-header-dots"><i /><i /><i /></div>
+      <strong>备餐屏</strong>
+      <nav><button>备餐提醒</button><button>每周菜单</button><button className="active">排产计划</button><button>采购清单</button></nav>
+      <div className="oil-fryer-voice-clock"><small>2026年09月27日 星期日</small><b>◷ 14:43:05</b></div>
+      <span className="oil-fryer-power">⏻</span>
+    </header>
+    <main className="oil-fryer-voice-board">
+      <section className="oil-fryer-assistant-bubble oil-fryer-assistant-bubble--intro">
+        <img src={assistantChef} alt="语音助手" />
+        <div><small>语音助手</small><strong>我可以帮您生成排产计划，您有什么要求都可以跟我说</strong><span>提示：生成条件包括排产周期、餐段、批次、餐品数量、餐品名称</span></div>
+      </section>
+      <div className="oil-fryer-user-bubble">
+        <span>帮我生成下周的菜单，午餐二十个菜，就餐人数两百人，大工小工比例二比二比一，菜单偏好偏口味。</span>
+        <small>用户</small><i>◉</i>
+      </div>
+      <section className="oil-fryer-assistant-bubble oil-fryer-assistant-bubble--followup">
+        <img src={assistantChef} alt="语音助手" />
+        <div><small>语音助手</small><strong>还需要补充：菜系、口味、烹饪设备。如果没有，回复默认即可</strong><span>可选菜系：湘、鲁、晋、豫、川、本帮、家常、中系；可选口味：酸、甜、苦、辣、麻、咸鲜、酸甜、清淡；可选烹饪设备：炒菜机、烤箱、油炸炉；设备比例可按炒菜机、烤箱、油炸炉的顺序说明，例如一比一比一</span></div>
+      </section>
+    </main>
   </div>;
 }
 
@@ -734,7 +792,7 @@ function getPageAnnotationSource(page: Page): AnnotationSourceDocument {
   return source;
 }
 
-  export default function IntelligentScheduling() { const { page: routePage, setPage } = useHashPage(pageRoute); const page = (routePage as Page); const [deliveryDate, setDeliveryDate] = useState('2026-07-15T06:00:00'); const [zoomedImage, setZoomedImage] = useState<string | null>(null); const go = (next: Page) => setPage(next); useEffect(() => { window.scrollTo(0, 0); }, [page]); useEffect(() => { const imagePaths = [menuGenerationRulesImagePath, modifyRulesFlowchartImagePath, voiceSchedulingConditionsImagePath]; if (page !== 'assistant-menu' && page !== 'assistant-menu-dialog-example' && page !== 'assistant-schedule' && page !== 'assistant-schedule-no-menu' && page !== 'backup-assistant-schedule') { setZoomedImage(null); return undefined; } const handleImageClick = (event: MouseEvent) => { const image = event.composedPath().find((target): target is HTMLImageElement => target instanceof HTMLImageElement && imagePaths.some((imagePath) => target.src.includes(imagePath))); if (!image) return; event.preventDefault(); event.stopPropagation(); setZoomedImage(image.src); }; const handleKeyDown = (event: KeyboardEvent) => { if (event.key === 'Escape') setZoomedImage(null); }; document.addEventListener('click', handleImageClick, true); document.addEventListener('keydown', handleKeyDown); return () => { document.removeEventListener('click', handleImageClick, true); document.removeEventListener('keydown', handleKeyDown); }; }, [page]); const annotationSource = useMemo(() => getPageAnnotationSource(page), [page]); const content = useMemo(() => { if (page === 'meal-settings') return <MealSegmentPage />; if (page === 'version' || page === 'flow' || page === 'semantic') return <PlainPage page={page} />; if (page === 'blank-1' || page === 'work-order-detail' || page === 'blank-2' || page === 'blank-3' || page === 'blank-4' || page === 'blank-5' || page === 'ai-menu-result-notice' || page === 'backup-ai-menu-result-notice') return <BlankPage page={page} go={go} />; if (page === 'menu') return <MenuPage go={go} />; if (page === 'assistant-menu-dialog-example') return <AssistantPage key={page} type="menu" staticDisplay dialogExample go={go} />; if (page === 'assistant-menu-no-meal') return <AssistantPage type="menu" noMeal staticDisplay go={go} />; if (page === 'assistant-menu-flow' || page === 'backup-assistant-menu-flow') return <AssistantPage key={page} type="menu" flow={page === 'assistant-menu-flow'} staticDisplay={page === 'assistant-menu-flow'} go={go} />; if (page === 'assistant-menu' || page === 'assistant-menu-insufficient' || page === 'assistant-menu-failure' || page === 'backup-assistant-menu') return <AssistantPage key={page} type="menu" staticDisplay={page === 'assistant-menu-insufficient' || page === 'assistant-menu-failure'} reuseFallback={page === 'assistant-menu-insufficient'} failure={page === 'assistant-menu-failure'} go={go} />; if (page === 'view-menu') return <ViewMenu go={go} />; if (page === 'assistant-schedule' || page === 'backup-assistant-schedule') return <AssistantPage key={page} type="schedule" go={go} />; if (page === 'purchase') return <PurchasePage go={go} />; if (page === 'list') return <ListPage go={go} deliveryDate={deliveryDate} setDeliveryDate={setDeliveryDate} />; if (page === 'confirm') return <ConfirmPage go={go} deliveryDate={deliveryDate} />; if (page === 'success') return <SuccessPage go={go} />; if (page === 'failure') return <FailurePage go={go} />; return <SchedulePage go={go} />; }, [page, deliveryDate]); return <>
+  export default function IntelligentScheduling() { const { page: routePage, setPage } = useHashPage(pageRoute); const page = (routePage as Page); const [deliveryDate, setDeliveryDate] = useState('2026-07-15T06:00:00'); const [zoomedImage, setZoomedImage] = useState<string | null>(null); const go = (next: Page) => setPage(next); useEffect(() => { window.scrollTo(0, 0); }, [page]); useEffect(() => { const imagePaths = [menuGenerationRulesImagePath, modifyRulesFlowchartImagePath, voiceSchedulingConditionsImagePath]; if (page !== 'assistant-menu' && page !== 'assistant-menu-dialog-example' && page !== 'assistant-schedule' && page !== 'assistant-schedule-no-menu' && page !== 'backup-assistant-schedule') { setZoomedImage(null); return undefined; } const handleImageClick = (event: MouseEvent) => { const image = event.composedPath().find((target): target is HTMLImageElement => target instanceof HTMLImageElement && imagePaths.some((imagePath) => target.src.includes(imagePath))); if (!image) return; event.preventDefault(); event.stopPropagation(); setZoomedImage(image.src); }; const handleKeyDown = (event: KeyboardEvent) => { if (event.key === 'Escape') setZoomedImage(null); }; document.addEventListener('click', handleImageClick, true); document.addEventListener('keydown', handleKeyDown); return () => { document.removeEventListener('click', handleImageClick, true); document.removeEventListener('keydown', handleKeyDown); }; }, [page]); const annotationSource = useMemo(() => getPageAnnotationSource(page), [page]); const content = useMemo(() => { if (page === 'meal-settings') return <MealSegmentPage />; if (page === 'version' || page === 'flow' || page === 'semantic') return <PlainPage page={page} />; if (page === 'oil-fryer-ai-menu') return <AiMenuPage oilFryerReplica />; if (page === 'oil-fryer-voice-menu') return <VoiceMenuReplicaPage />; if (page === 'blank-1' || page === 'work-order-detail' || page === 'blank-2' || page === 'blank-3' || page === 'blank-4' || page === 'blank-5' || page === 'ai-menu-result-notice' || page === 'backup-ai-menu-result-notice') return <BlankPage page={page} go={go} />; if (page === 'menu') return <MenuPage go={go} />; if (page === 'assistant-menu-dialog-example') return <AssistantPage key={page} type="menu" staticDisplay dialogExample go={go} />; if (page === 'assistant-menu-no-meal') return <AssistantPage type="menu" noMeal staticDisplay go={go} />; if (page === 'assistant-menu-flow' || page === 'backup-assistant-menu-flow') return <AssistantPage key={page} type="menu" flow={page === 'assistant-menu-flow'} staticDisplay={page === 'assistant-menu-flow'} go={go} />; if (page === 'assistant-menu' || page === 'assistant-menu-insufficient' || page === 'assistant-menu-failure' || page === 'backup-assistant-menu') return <AssistantPage key={page} type="menu" staticDisplay={page === 'assistant-menu-insufficient' || page === 'assistant-menu-failure'} reuseFallback={page === 'assistant-menu-insufficient'} failure={page === 'assistant-menu-failure'} go={go} />; if (page === 'view-menu') return <ViewMenu go={go} />; if (page === 'assistant-schedule' || page === 'backup-assistant-schedule') return <AssistantPage key={page} type="schedule" go={go} />; if (page === 'purchase') return <PurchasePage go={go} />; if (page === 'list') return <ListPage go={go} deliveryDate={deliveryDate} setDeliveryDate={setDeliveryDate} />; if (page === 'confirm') return <ConfirmPage go={go} deliveryDate={deliveryDate} />; if (page === 'success') return <SuccessPage go={go} />; if (page === 'failure') return <FailurePage go={go} />; return <SchedulePage go={go} />; }, [page, deliveryDate]); return <>
   <ScheduleRequirementImageBridge page={page} />
   <Shell page={page} go={go}>{content}</Shell>
   <AnnotationViewer

@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>生产保障页 · 原型主规格</title>
+  <style>
+    :root{font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#222832;background:#f5f7fb;scrollbar-gutter:stable}
+    *{box-sizing:border-box}body{margin:0;padding:28px 20px 56px}.shell{width:min(1240px,100%);margin:0 auto}main{padding:34px;border:1px solid #dfe4ee;border-radius:10px;background:#fff;box-shadow:0 4px 18px #1e2d4b0f}
+    h1{margin:0;font-size:30px;line-height:1.3}h2{margin:36px 0 14px;padding-bottom:8px;border-bottom:1px solid #e7eaf0;font-size:20px}h3{margin:22px 0 8px;font-size:16px}p,li{font-size:14px;line-height:1.8}p{margin:12px 0}.hint{color:#6f7888}.definition{margin:14px 0 0;padding:12px 15px;border-left:3px solid #1674bd;color:#445166;background:#f2f7fc}
+    ul{margin:8px 0 16px;padding-left:22px}.layout-sketch{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}.layout-sketch>div{padding:12px 14px;border:1px solid #dfe4ee;border-radius:6px;background:#f8fafc}.layout-sketch b{display:block;margin-bottom:4px}.layout-sketch span{color:#586579;font-size:13px;line-height:1.65}
+    .design-preview{margin:16px 0 8px;padding:12px;border-radius:8px;background:#edf2f7}.mock{aspect-ratio:16/9;display:grid;grid-template-rows:8% 15% 31% minmax(0,1fr);gap:1.6%;padding:1.6%;overflow:hidden;border:1px solid #1875bd;border-radius:6px;color:#dcecff;background:radial-gradient(circle at 50% 42%,#103d78 0,#061b46 62%);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}
+    .mock-head{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #1875bd}.mock-title{display:flex;align-items:center;gap:10px;color:#10e4f2;font-size:clamp(12px,1.4vw,22px);font-weight:800;letter-spacing:1px}.mock-title i{width:5px;height:22px;background:#10e4f2;box-shadow:0 0 12px #10e4f2}.mock-meta{display:flex;align-items:center;gap:14px;color:#9fc3e4;font-size:clamp(8px,.75vw,12px)}.mock-meta b{padding:4px 9px;border:1px solid #b8871f;border-radius:20px;color:#ffcc3b;font-weight:500}
+    .mock-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1%}.mock-kpi,.mock-panel{min-width:0;padding:2.2%;border:1px solid #1d5f9c;border-radius:5px;background:linear-gradient(180deg,#0b2f6a,#08224f);box-shadow:inset 0 0 20px #0c438322}.mock-kpi small{display:block;color:#8fb6dc;font-size:clamp(8px,.7vw,11px)}.mock-kpi strong{display:block;margin:2% 0;color:#eaf7ff;font-size:clamp(15px,2vw,31px);line-height:1.1}.mock-kpi strong.warn{color:#ffcc3b}.mock-kpi em{color:#7da8d1;font-size:clamp(7px,.65vw,10px);font-style:normal}
+    .mock-mid{display:grid;grid-template-columns:1.18fr .82fr;gap:1%}.mock-panel h3{margin:0 0 3%;padding-bottom:2%;border-bottom:1px solid #14568f;color:#eaf7ff;font-size:clamp(9px,.95vw,15px)}.mock-panel h3 span{margin-left:7px;color:#7da8d1;font-size:.72em;font-weight:400}.wait-list{display:flex;flex-direction:column;gap:4%;padding-top:1%}.wait-row{display:grid;grid-template-columns:23% minmax(0,1fr) 17%;align-items:center;gap:2%;font-size:clamp(7px,.7vw,11px)}.wait-row label{color:#b9d7ee;white-space:nowrap}.wait-row b{color:#9fc3e4;font-weight:500;text-align:right;white-space:nowrap}.prep-list{display:grid;grid-template-columns:1fr 1fr;gap:5%;padding-top:1%}.prep-step{display:flex;align-items:center;justify-content:space-between;gap:5px;padding:5% 6%;border:1px solid #14568f;border-radius:4px;background:#061c4499;font-size:clamp(7px,.68vw,10px)}.prep-step span{color:#8fb6dc}.prep-step b{color:#eaf7ff;font-size:1.15em}.prep-step.done b{color:#4ff0ad}.prep-foot{margin-top:5%;color:#7da8d1;font-size:clamp(7px,.62vw,9px)}
+    .mock-table{display:flex;min-height:0;flex-direction:column;padding:1.1% 1.3%}.mock-table h3{margin-bottom:1.2%}.table-head,.table-row{display:grid;grid-template-columns:9% 17% 22% 19% 12% 21%;align-items:center;gap:5px}.table-head{padding:1% .8%;color:#8fb6dc;background:#10417f;font-size:clamp(7px,.65vw,10px)}.table-row{min-height:0;flex:1;padding:.7% .8%;border-bottom:1px solid #14568f;color:#c8dcef;font-size:clamp(7px,.72vw,11px)}.table-row b{color:#eaf7ff;font-weight:600}.pill{justify-self:start;padding:3px 7px;border:1px solid #b8871f;border-radius:3px;color:#ffcc3b;background:#3a2f10;white-space:nowrap}.pill.high{border-color:#a8425f;color:#f16a8d;background:#3a1726}.preview-caption{margin:8px 2px 0;color:#6f7888;font-size:12px}
+    .table-wrap{overflow:auto}table{width:100%;margin:12px 0;border-collapse:collapse}th,td{min-width:110px;padding:9px 11px;border:1px solid #dfe4ee;text-align:left;vertical-align:top;font-size:13px;line-height:1.6}th{background:#f6f8fb}
+    .wait-list{gap:2%;padding-top:1%}.wait-row{grid-template-columns:minmax(0,1fr) minmax(82px,.7fr) minmax(105px,.9fr);gap:10px;padding:4px 0}.wait-row label{min-width:0;white-space:normal;overflow-wrap:anywhere;line-height:1.35}.wait-plan{min-width:0;color:#8fb6dc;white-space:normal;overflow-wrap:anywhere}.wait-row b{min-width:0;text-align:right;white-space:normal;overflow-wrap:anywhere}
+    @media(max-width:700px){body{padding:12px}main{padding:20px}.layout-sketch{grid-template-columns:1fr}h1{font-size:24px}}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <main>
+      <h1>生产保障页 · 原型主规格</h1>
+      <p class="definition">本稿为新增大屏页面的评审稿。页面聚焦生产风险、工序等待和出餐影响；确认后再接入原型导航与页面实现。</p>
+
+      <section>
+        <h2>页面目标与边界</h2>
+        <ul>
+          <li>目标用户：查看后厨运行保障情况的领导和管理者。</li>
+          <li>核心问题：当前或下一餐段是否有生产风险；风险卡在哪个环节、影响哪些菜和出餐计划。</li>
+          <li>沿用已确认的大屏风格：深蓝青色、横屏 16:9、顶部页面切换；页面名暂定“生产保障”。</li>
+          <li>设备分配由既有算法给出最优解，本页不提供重新分配建议，也不展示独立的设备产能负荷图。</li>
+          <li>不增加食安内容；不虚构库存缺料、能耗或设备故障数据。未接入的数字在原型中标为演示数据。</li>
+          <li>过去的餐段只显示及时或延迟结果；“未完成”只允许出现在当前或即将到来的餐段。</li>
+          <li>关联总览页的演示产线口径：2 台炒菜机（CCJ1 为 600 型、CCJ2 为 800 型）、1 台烤箱、1 个出餐出口；上游统一为“投料区”，含 2 个入口。</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>页面设计稿预览</h2>
+        <div class="design-preview">
+          <div class="mock" role="img" aria-label="生产保障大屏布局草图">
+            <div class="mock-head">
+              <div class="mock-title"><i></i>生产保障</div>
+              <div class="mock-meta"><span>午餐 · 批次 B02</span><span>排产截止 12:30 · 更新于 12:18</span><b>演示数据</b></div>
+            </div>
+            <div class="mock-kpis">
+              <div class="mock-kpi"><small>排产节点落后工单</small><strong class="warn">03 单</strong><em>现场状态晚于倒排计划</em></div>
+              <div class="mock-kpi"><small>阶段等待超时</small><strong>02 单</strong><em>超过阈值，不等于延迟出餐</em></div>
+              <div class="mock-kpi"><small>称重加料待办</small><strong>04 单</strong><em>未完成称重加料的工单</em></div>
+              <div class="mock-kpi"><small>预计延误量</small><strong class="warn">02 盆</strong><em>预计完成晚于批次截止</em></div>
+            </div>
+            <div class="mock-mid">
+              <section class="mock-panel">
+                <h3>排产节点与现场进度 <span>倒排计划 × 当前状态</span></h3>
+                <div class="wait-list">
+                  <div class="wait-row"><label>预处理</label><span class="wait-plan">计划 11:42</span><b>现场状态未单列</b></div>
+                  <div class="wait-row"><label>称重加料 · 加料中</label><span class="wait-plan">计划 11:48</span><b>现场 11:50 · 晚 2 分</b></div>
+                  <div class="wait-row"><label>摆盆 · 摆盆中</label><span class="wait-plan">无独立计划点</span><b>现场进行中</b></div>
+                  <div class="wait-row"><label>烹饪 · 烹饪中</label><span class="wait-plan">计划 12:05</span><b>现场 12:06 · 晚 1 分</b></div>
+                  <div class="wait-row"><label>计划烹饪完成</label><span class="wait-plan">截止 12:30</span><b>现场待完成</b></div>
+                </div>
+              </section>
+              <section class="mock-panel">
+                <h3>称重加料准备度 <span>按状态表汇总工单</span></h3>
+                <div class="prep-list">
+                  <div class="prep-step"><span>待称重</span><b>2</b></div>
+                  <div class="prep-step"><span>称重中</span><b>1</b></div>
+                  <div class="prep-step"><span>待加料</span><b>1</b></div>
+                  <div class="prep-step"><span>加料中</span><b>0</b></div>
+                  <div class="prep-step done"><span>称重加料完成</span><b>12</b></div>
+                </div>
+                <div class="prep-foot">以工单状态统计；不推断库存是否缺料</div>
+              </section>
+            </div>
+            <section class="mock-panel mock-table">
+              <h3>需关注工单 <span>按批次截止与节点偏差排序</span></h3>
+              <div class="table-head"><span>级别</span><span>餐段 / 排产截止</span><span>菜品 / 工单</span><span>当前状态</span><span>计划偏差</span><span>出餐量</span></div>
+              <div class="table-row"><span class="pill high">高风险</span><span>午餐 · B02 / 12:30</span><b>青椒肉丝 · WO-032</b><span>烹饪中</span><span>预计晚 4 分</span><span>预计延误 2 盆</span></div>
+              <div class="table-row"><span class="pill">需关注</span><span>午餐 · B02 / 12:30</span><b>番茄炒蛋 · WO-044</b><span>摆盆中</span><span>无独立排产点</span><span>关联计划量 1 盆</span></div>
+            </section>
+          </div>
+          <p class="preview-caption">排产节点来自倒排计划，现场状态来自工单；只有预计完工晚于批次截止时才汇总预计延误量。示例数值仅用于表达层级。</p>
+        </div>
+      </section>
+
+      <section>
+        <h2>模块、数据与规则</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>模块</th><th>呈现内容</th><th>统计口径 / 数据来源</th><th>与现有页面的分工</th></tr></thead>
+            <tbody>
+              <tr><td>风险指标卡</td><td>排产节点落后工单、阶段等待超时工单、称重加料待办、预计延误量</td><td>工单按工单 ID 去重；预计延误量按未完成工单的计划盆数计，且仅在有可信预计完工时间时计算</td><td>展示计划执行偏差与真实出餐风险，不重复总出餐量和完成率</td></tr>
+              <tr><td>排产节点与现场进度</td><td>预处理、称重、烹饪、计划烹饪完成的时间点，与可对应的现场状态并排</td><td>同组菜品可能共用称重 / 烹饪时间区间；摆盆目前无独立排产点，出餐取餐状态单独显示</td><td>将算法计划和现场进度并排，避免把等待时长直接当成延迟</td></tr>
+              <tr><td>称重加料准备度</td><td>待称重、称重中、待加料、加料中、称重加料完成工单数</td><td>来自工单状态；不推断原料库存、缺料或齐套</td><td>汇总备料状态，不重复菜品原料重量明细</td></tr>
+              <tr><td>需关注工单</td><td>餐段 / 排产截止、菜品 / 工单、当前状态、计划偏差、预计延误盆数</td><td>主列表按工单展示；算法给多张工单分配同一计划时段时，注明“共用计划时段”；预计延误盆数按未完成工单 ID 去重汇总</td><td>使用业务人员熟悉的菜品和工单；不暴露算法内部组合名称或编号</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="layout-sketch">
+          <div><b>上方：一眼判断</b><span>页面标题与餐段 → 4 张风险指标卡，数字统一标明单位。</span></div>
+          <div><b>中部：对照执行</b><span>左侧查看排产节点与现场状态偏差；右侧按用户状态表汇总称重加料进度。</span></div>
+          <div><b>下方：看到影响</b><span>风险工单清单横跨页面，按菜品和工单展示状态、计划偏差与计划盆数。</span></div>
+          <div><b>设备展示边界</b><span>算法最优分配继续作为已知前提；只有设备异常实际影响工单时，才在风险原因中呈现。</span></div>
+        </div>
+      </section>
+
+      <section>
+        <h2>字段释义与统计口径</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>字段</th><th>含义</th><th>单位 / 计算方式</th><th>注意事项</th></tr></thead>
+            <tbody>
+              <tr><td>排产截止时间</td><td>排产算法分配给餐段或批次的目标时刻。</td><td>时:分；有批次时取 batchTime；未指定批次时取餐段 sectionStart。</td><td>当前算法将它作为烹饪层结束的上限，sectionEnd 不参与计算。若业务所说的截止是“实际出餐/取餐”，还需把烹饪后的搬运与出餐耗时纳入倒排，不能直接把算法 finish 当成出口时间。</td></tr>
+              <tr><td>算法内部组合</td><td>排产算法为了合并计算盆数、分配设备层次和生成共享时间区间而建立的临时计算集合。</td><td>开启合并时按 groupId 与截止时间分组；部分烤箱 / 油炸炉任务会按首个程序与截止时间组合。</td><td>这是算法实现概念，不是业务工单、菜品分类或现场流程。页面不展示组名、组号或组筛选；若多张工单共用计划时段，只作共享时段提示。</td></tr>
+              <tr><td>排产节点时间</td><td>排产算法从截止时间向前倒排得到的计划时间点。</td><td>预处理、称重、烹饪、计划烹饪完成；使用算法生成的 checkpoints。</td><td>这是计划基准，不是现场实绩或实时 ETA；finish 是组内最晚烹饪结束，不等同于出口实际出餐记录。当前算法对超过 12 层的组可能低估称重时长，且完整倒排只使用首道 SOP 工序；这些边界校验前不应作为可信 ETA。</td></tr>
+              <tr><td>工单计划节点偏差</td><td>工单现场进度相对适用的倒排计划节点的提前或滞后程度。</td><td>分；按工单 ID 去重，比较相同节点的计划时间与现场状态变更时间。</td><td>同一算法内部组合中的工单可能共用计划区间；缺少现场时间戳时显示“—”；摆盆目前没有独立倒排节点，不计算摆盆计划偏差。</td></tr>
+              <tr><td>预计完工时间</td><td>结合当前现场进度估算工单能否赶上排产截止的时间。</td><td>估算值 = 当前时间 + 当前工序剩余耗时 + 后续工序耗时 + 下游等待。</td><td>所附排产算法只生成静态计划时间线，不直接输出实时预计完工；需接入状态时间、工序剩余耗时和实际设备队列后才能展示。称重 / 预处理未建模共享人员或工位资源。</td></tr>
+              <tr><td>风险工单</td><td>当前或下一餐段中，需要管理者关注的生产工单。</td><td>单；按工单 ID 去重。同一工单同时满足多个风险条件时只计 1 单。</td><td>风险条件需由等待阈值或可信的预计完成时间判定，阈值尚待业务确认。</td></tr>
+              <tr><td>等待超时</td><td>处于某一生产阶段的时间已超过该阶段配置的等待上限。</td><td>单；停留时长 = 当前时间 − 最近一次进入当前状态的时间。</td><td>它表示过程等待，不等同于已经延迟出餐。缺少状态时间戳时显示“—”，不填 0。</td></tr>
+              <tr><td>称重加料待办</td><td>尚未完成称重加料阶段的工单。</td><td>单；统计“待称重、称重中、待加料、加料中”；“称重加料完成”不计入待办。</td><td>来自工单当前状态，不推断原料库存或缺料情况。</td></tr>
+              <tr><td>预计延误量</td><td>预计完工晚于批次截止的工单所关联的计划出餐量。</td><td>盆；汇总预计完工时间晚于截止时间的工单计划盆数，最小计量单位为 1 盆；按工单 ID 只计一次。</td><td>当前排产结果本身不足以计算此值；没有可信 ETA 时显示“—”，可另列“关联计划量”，不能把它说成确定延迟。</td></tr>
+              <tr><td>阶段工单数</td><td>当前处于某个工艺阶段的工单数量。</td><td>单；按工单最新状态映射到一个阶段，每单只归属一个阶段。</td><td>同一道菜拆成多个工单时分别计数；工单作废不计入在途阶段。</td></tr>
+              <tr><td>最长停留</td><td>当前阶段所有在途工单中，进入该阶段最早的一单已停留的时间。</td><td>分；取阶段内最大停留时长，不取平均值。</td><td>它是现场等待指标，与倒排计划偏差、预计延迟分开呈现；等待久不自动代表出餐晚。</td></tr>
+              <tr><td>餐段 / 批次截止</td><td>工单所属餐段、批次和算法要求该批次完成烹饪的目标时刻。</td><td>餐段 + 批次 + 时:分；截止来源见“批次截止时间”。</td><td>没有可靠截止时间时显示“—”。过去的餐段只标及时或延迟，不显示未完成。</td></tr>
+              <tr><td>菜品 / 工单</td><td>任务对应的菜品名称和唯一生产工单编号。</td><td>一行一张工单；同一道菜的多个工单分行显示。</td><td>列表按工单而非去重菜品汇总，避免把菜品种数和生产任务数混为一谈。</td></tr>
+              <tr><td>当前环节 / 状态</td><td>工单最新现场状态及其所属阶段。</td><td>显示用户状态表中的具体状态，不用“节点一”等泛称。</td><td>状态分组见下表；排产计划节点与现场状态是两类数据，应并列展示。</td></tr>
+              <tr><td>停留</td><td>工单处于当前状态的持续时间。</td><td>分；当前时间 − 当前状态开始时间。</td><td>与“阶段最长停留”不同：列表是单工单时长，图表是同阶段最大值。</td></tr>
+              <tr><td>出餐影响</td><td>风险工单关联的未完成计划量，或系统预测会延误的出餐量。</td><td>盆；按未完成工单计划量汇总，一张工单只计一次，最小单位 1 盆。</td><td>计划节点偏差只说明现场落后于计划；只有预计完工晚于截止时才显示“预计延误”，否则仅列“关联计划量”。</td></tr>
+              <tr><td>风险级别</td><td>工单相对出餐计划的紧急程度。</td><td>高风险 / 需关注 / 正常。</td><td>判断规则依赖阶段等待阈值和预计完成时间；规则未配置前，原型样例级别仅为演示。</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>工单状态到阶段的对应关系</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>阶段</th><th>包含的当前状态</th><th>阶段说明</th></tr></thead>
+            <tbody>
+              <tr><td>称重前</td><td>未开始</td><td>工单尚未开始称重。</td></tr>
+              <tr><td>称重加料</td><td>待称重、称重中、待加料、加料中、称重加料完成</td><td>按用户提供的状态表归组；准备度分布会再把每个具体状态分开展示。</td></tr>
+              <tr><td>摆盆</td><td>待摆盆、摆盆中、摆盆完成</td><td>容器进入摆盆流程，尚未开始烹饪的阶段；所附排产逻辑没有单独输出摆盆计划时间，因此目前只展示现场状态。</td></tr>
+              <tr><td>烹饪</td><td>待烹饪、预热中、烹饪中、烹饪完成</td><td>等待设备、预热及实际烹饪状态均归入此阶段；烹饪中对应设备内的实际烹饪状态。</td></tr>
+              <tr><td>出餐取餐</td><td>开始出餐、出餐完成、取餐中、取餐完成</td><td>烹饪结束后的出餐与人工取餐流程。</td></tr>
+              <tr><td>作废</td><td>已作废</td><td>不计入在途、待办、等待超时或计划受影响量。</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <h2>待确认后实施</h2>
+        <ul>
+          <li>现场系统是否提供工单状态变更时间、当前作业剩余耗时和设备实际队列；缺少这些数据时，本页只比较计划与现场，不宣称实时预计延误。</li>
+          <li>需确认排产截止时间代表烹饪完成还是实际出餐；当前算法的 finish 只到组合内最晚烹饪结束。</li>
+          <li>各阶段等待超时阈值由业务确认；等待超时与预计赶不上批次截止分开展示。</li>
+          <li>是否需要为摆盆增加独立排产节点；当前算法未输出该节点，原型不从称重或烹饪时间臆算。</li>
+          <li>生产保障页独立于总览、出餐统计和行为监控；总览页另按已确认的设备与入口配置展示。</li>
+        </ul>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

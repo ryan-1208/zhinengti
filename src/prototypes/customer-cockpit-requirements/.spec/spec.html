@@ -329,7 +329,7 @@
           </ul>
           <h3 data-page-node-id="R8xWIp0deDdH7NWCGlObGl">参考资料</h3>
           <ul data-page-node-id="YMVTyIoPeZFQhzZBwM9gHT">
-            <li data-page-node-id="HKD8GFRzu0HiU8iXPFQiA8"><code data-page-node-id="SxXh8K4TO3TlKLsJFCTJQC">/Users/xiaoyang/Documents/Obsidian Vault/客户驾驶舱需求PRD.md</code>：需求、业务规则、验收标准与开放问题的唯一来源。</li>
+            <li data-page-node-id="HKD8GFRzu0HiU8iXPFQiA8"><code data-page-node-id="SxXh8K4TO3TlKLsJFCTJQC">src/resources/prd/客户驾驶舱需求PRD.md</code>（V0.1，2026-09-22 需求评审稿）：需求、业务规则、验收标准与开放问题的唯一来源。原外部路径 <code>/Users/xiaoyang/Documents/Obsidian Vault/客户驾驶舱需求PRD.md</code> 已不存在，需求文档已于 2026-09-29 前导入项目 <code>src/resources/prd/</code>。</li>
             <li data-page-node-id="jPl2UUsRAdDOotXorxVqRz">行为监控参考截图结构：项目标识、异常分类统计、抓拍卡片网格（桌面两行四列）。</li>
             <li data-page-node-id="Dz3oSN88hamluwZrBaFd2N">原型内既有素材：<code data-page-node-id="VOyWqiqYhX36tJxNGtYG9e">assets/</code> 下的抓拍类图片，用于行为监控抓拍卡片。</li>
           </ul>
@@ -396,6 +396,11 @@
                   <td data-label="用户决策或变更">暂时下线「厨房总览、无人烹饪流程、核心设备与能力」三个页面</td>
                   <td data-label="对当前原型的影响">三个页面从路由、底部导航、iPad 控制页与页面切换器中移除，默认首页改为「运营驾驶舱」；页面文件保留在 <code>pages/</code> 下，取消注释即可恢复。</td>
                 </tr>
+                <tr>
+                  <td data-label="日期">2026-09-29</td>
+                  <td data-label="用户决策或变更">运营驾驶舱溢出问题选择「压缩到单屏」</td>
+                  <td data-label="对当前原型的影响">运营驾驶舱由滚动长看板改为 16:9 单屏：<code>.cc-body</code> 改为两列五行网格（<code>progress/hero</code> + <code>charts/materials</code>），两张图表由上下叠放改为并排，各面板改为内容高度；实测 1440×900、1920×1080、2560×1440 溢出均为 0，内容在更高视口下垂直居中。屏幕高度低于约 900px（如 1366×768）时仍为滚动降级，不裁切。</td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -421,7 +426,7 @@
                 <tr data-page-node-id="operations-page-row">
                   <td data-label="页面/视图">运营驾驶舱<br><code>#page=operations</code></td>
                   <td data-label="页面作用">面向客户领导说明无人智厨的运营管理能力。</td>
-                  <td data-label="主要模块与内容">生产进度、生产状态、投料区、烹饪区、出餐区、用料／出成；烹饪区放大展示无人厨房画面并标注炒菜机与烤箱；生产进度使用表格布局，增加生产趋势折线图和计划／投料／出成对比柱状图；所有指标显式标注演示或待接入。</td>
+                  <td data-label="主要模块与内容">单屏 16:9 布局，五行：页头 → 6 张指标卡 → 生产进度表｜生产状态 → 生产完成趋势＋计划与出成对比｜用料与出成 → 页脚。生产状态含投料区、烹饪区、出餐区三张区域卡，烹饪区放大展示无人厨房画面并标注炒菜机与烤箱；所有指标显式标注演示或待接入。</td>
                   <td data-label="示例数据或素材">结构演示数值；使用无人厨房生产烹饪区图片；称重、设备物联、能源计量、库存和维保数据待系统接入。</td>
                   <td data-label="与其他页面的关系">由 iPad 控制端或底部导航进入；不提供设备启停、任务下发等操作。</td>
                 </tr>
@@ -599,6 +604,7 @@
           <h2 data-page-node-id="CDmb3cyFq8lmPOxQKXARC4">验收关注点</h2>
           <ul data-page-node-id="vXcgebef2gAgfnqZcFu9Eh">
             <li data-page-node-id="xaNRjbGf6fnvTOwIbupEyE">运营驾驶舱与行为监控两个展示页面可到达，默认运营驾驶舱；厨房总览、无人烹饪流程、核心设备与能力暂时下线，不出现在页面列表、底部导航与 iPad 控制页中；无食安、营养健康等非本期页面入口。</li>
+            <li>运营驾驶舱在 16:9 大屏上单屏完整呈现：1440×900、1920×1080、2560×1440 三档实测溢出为 0，无裁切与重叠；屏幕高度低于约 900px 时允许滚动降级。</li>
             <li data-page-node-id="pnDBON4C8HI0jlHByqs0tP">iPad 切页后大屏实际变化，两端当前页一致；同浏览器模拟仅用于原型演示。</li>
             <li data-page-node-id="3fjUu4Wptv3INuWX2ArMwP">非触摸大屏无需触摸操作即可完成展示过程。</li>
             <li data-page-node-id="Oc1BYLxAHGRAsypQANeqDj">（随「厨房总览」暂时下线而挂起）厨房总览为设备协同示意，候选清单与已确认清单有明确区别；恢复该页后按此验收。</li>

@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 3,
+  "kind": "prototype-edit-comments",
+  "resource": {
+    "id": "customer-cockpit-requirements-2",
+    "targetPath": "prototypes/customer-cockpit-requirements-2",
+    "filePath": ".axhub/make/comments/be076c998c111df1ad6ca65f1a907e59eb474e596b15b4cd8e8acf76b00e1bfd.json"
+  },
+  "comments": [],
+  "images": [
+    {
+      "id": "eaf0be4f-ba6f-4bdc-8eab-912cd424fec6:target-screenshot",
+      "commentId": "eaf0be4f-ba6f-4bdc-8eab-912cd424fec6",
+      "name": "target-screenshot.png",
+      "mimeType": "image/png",
+      "size": 23800,
+      "createdAt": 1790675243056,
+      "source": "target-screenshot",
+      "pageScope": "prototypes/customer-cockpit-requirements-2::page::overview",
+      "assetPath": ".axhub/make/comment-assets/be076c998c111df1ad6ca65f1a907e59eb474e596b15b4cd8e8acf76b00e1bfd/eaf0be4f-ba6f-4bdc-8eab-912cd424fec6-target-screenshot.png"
+    }
+  ]
+}

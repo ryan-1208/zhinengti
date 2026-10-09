@@ -14,6 +14,7 @@
     "preview": "vite preview",
     "typecheck": "node scripts/sync-vendor-if-present.mjs && tsc --noEmit -p tsconfig.typecheck.json",
     "check-ready": "node scripts/check-app-ready.mjs",
+    "measure:overflow": "node scripts/measure-viewport-overflow.mjs",
     "capture:theme": "node scripts/capture-theme-homepage.mjs",
     "capture:theme-source": "node scripts/capture-theme-source.mjs"
   },

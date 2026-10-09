@@ -293,28 +293,70 @@
 .cc-cockpit-screen .cc-op-zone-card{border-radius:2px;border-color:#1a69a5;background:rgba(5,29,71,.82)}
 .cc-cockpit-screen .cc-op-zone-card h4{background:linear-gradient(90deg,#0a719b,#0b4b7c);color:#6cefff}
 .cc-cockpit-screen .cc-op-foot{border-top-color:#1b6fa7;color:#73a9d4}
-.cc-cockpit-screen .cc-op-main-grid{grid-template-columns:1fr}
-.cc-cockpit-screen .cc-op-zone-grid{grid-template-columns:.75fr 2.1fr 1fr}
-.cc-cockpit-screen .cc-op-cooking-zone{min-height:300px}
-.cc-cockpit-screen .cc-op-cooking-zone .cc-op-zone-image{height:230px}
-.cc-cockpit-screen .cc-op-cooking-zone .cc-op-zone-image img{object-position:center center;filter:brightness(.82) saturate(.92)}
-.cc-cockpit-screen .cc-op-cooking-zone .cc-op-zone-image span{padding:7px 10px;font-size:12px;box-shadow:0 0 12px rgba(255,184,0,.28)}
-.cc-cockpit-screen .cc-body{display:grid;grid-template-columns:minmax(0,1.28fr) minmax(360px,.72fr);grid-template-areas:"head head" "kpis kpis" "hero progress" "hero charts" "materials materials" "foot foot";align-content:start;gap:10px}
-.cc-cockpit-screen .cc-page-head{grid-area:head}
+/* 运营驾驶舱：压缩到 16:9 单屏（1440×900 与 1920×1080）。
+   原 grid-template-areas 让 hero（生产状态）跨两行，被右列「进度表 579px + 两张图表 499px」
+   撑到 1088px，连带三张区域卡被拉到 990px 的空高——行高由同行最高单元格决定，只改卡片没用。
+   改为两列五行、各区块按内容高度排布，两张图表由上下叠放改为并排。
+   列宽给右侧「生产状态」更多空间：出餐区卡片过窄会让文字折行，反而把整行撑高。 */
+/* 行高保持 auto，靠 align-content:center 在更高的视口里把整块内容居中，避免底部留一大片空白。
+   曾尝试用 fr 行让面板随视口长高，但面板内部的 flex:1 会把网格的 max-content 撑大，
+   而 fr 轨道在内在尺寸计算里按 max-content 计入父级 min-content，结果 1440×900 反而溢出 43px，
+   故放弃该方案。 */
+.cc-cockpit-screen .cc-body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.35fr);grid-template-areas:"head head" "kpis kpis" "progress hero" "charts materials" "foot foot";align-content:center;gap:7px}
+.cc-cockpit-screen .cc-page-head{grid-area:head;padding:6px 14px}
+.cc-cockpit-screen .cc-page-head h2{font-size:19px}
+.cc-cockpit-screen .cc-page-head p{margin:3px 0 0;font-size:12.5px}
 .cc-cockpit-screen .cc-op-kpis{grid-area:kpis}
-.cc-cockpit-screen .cc-op-production-panel{grid-area:hero;margin-top:0;min-width:0}
+.cc-cockpit-screen .cc-op-kpi{padding:5px 10px}
+.cc-cockpit-screen .cc-op-kpi b{font-size:21px}
+.cc-cockpit-screen .cc-op-kpi span{margin-top:2px;font-size:12px}
+.cc-cockpit-screen .cc-op-kpi em{margin-top:2px;font-size:9.5px}
 .cc-cockpit-screen .cc-op-main-grid{grid-area:progress;display:block;min-width:0}
-.cc-cockpit-screen .cc-op-visual-grid{grid-area:charts;display:grid;grid-template-columns:1fr;min-width:0}
-.cc-cockpit-screen .cc-op-lower-grid{grid-area:materials;min-width:0}
-.cc-cockpit-screen .cc-op-foot{grid-area:foot}
-.cc-cockpit-screen .cc-op-production-panel>.cc-op-panel-head{padding-bottom:12px}
-.cc-cockpit-screen .cc-op-production-panel>.cc-op-panel-head h3{font-size:20px;color:#71efff}
-.cc-cockpit-screen .cc-op-zone-grid{grid-template-columns:.72fr 1.85fr .88fr;height:calc(100% - 58px)}
-.cc-cockpit-screen .cc-op-zone-card{height:100%}
-.cc-cockpit-screen .cc-op-cooking-zone .cc-op-zone-image{height:260px}
-.cc-cockpit-screen .cc-op-cooking-zone .cc-op-zone-image span{font-size:13px}
-.cc-cockpit-screen .cc-op-progress-table-panel{height:100%}
-.cc-cockpit-screen .cc-op-visual-grid>.cc-op-panel{min-height:188px}
-.cc-cockpit-screen .cc-op-visual-grid .cc-op-line-chart svg{height:112px}
-.cc-cockpit-screen .cc-op-visual-grid .cc-op-bars{height:122px}
-@media(max-width:1250px){.cc-cockpit-screen .cc-body{grid-template-columns:minmax(0,1.15fr) minmax(330px,.85fr)}}
+.cc-cockpit-screen .cc-op-production-panel{grid-area:hero;margin-top:0;min-width:0}
+.cc-cockpit-screen .cc-op-visual-grid{grid-area:charts;display:grid;grid-template-columns:1fr 1fr;gap:8px;min-width:0}
+.cc-cockpit-screen .cc-op-lower-grid{grid-area:materials;display:block;min-width:0}
+.cc-cockpit-screen .cc-op-foot{grid-area:foot;padding-top:4px}
+
+/* 生产进度：隐藏重复的标题条（面板标题已表意），8 行明细全部保留但压缩行高 */
+.cc-cockpit-screen .cc-op-progress-table-panel{padding:7px 0}
+.cc-cockpit-screen .cc-op-progress-heading{display:none}
+.cc-cockpit-screen .cc-op-progress-banner{margin:0 12px 5px;padding:4px 10px;font-size:12.5px;gap:12px}
+.cc-cockpit-screen .cc-op-progress-table{width:calc(100% - 24px);margin:0 12px;font-size:13px}
+.cc-cockpit-screen .cc-op-progress-table th{padding:3px 8px}
+.cc-cockpit-screen .cc-op-progress-table td{padding:3px 8px}
+
+/* 生产状态：区域卡按内容高度，不再被同行撑高 */
+.cc-cockpit-screen .cc-op-production-panel{padding:10px 12px}
+.cc-cockpit-screen .cc-op-zone-grid{grid-template-columns:.72fr 1.5fr 1.1fr;height:auto;gap:8px;padding-top:5px}
+.cc-cockpit-screen .cc-op-zone-card{height:auto;padding:6px}
+.cc-cockpit-screen .cc-op-zone-card h4{margin:0 0 4px;padding:3px 8px;font-size:13px}
+.cc-cockpit-screen .cc-op-zone-card>small{margin-top:4px}
+.cc-cockpit-screen .cc-op-serving-columns{gap:6px}
+.cc-cockpit-screen .cc-op-serving-columns span{font-size:10.5px;line-height:1.45}
+.cc-cockpit-screen .cc-op-cooking-zone{min-height:0}
+.cc-cockpit-screen .cc-op-cooking-zone .cc-op-zone-image{height:92px}
+.cc-cockpit-screen .cc-op-cooking-zone .cc-op-zone-image img{object-position:center center;filter:brightness(.82) saturate(.92)}
+.cc-cockpit-screen .cc-op-cooking-zone .cc-op-zone-image span{padding:3px 7px;font-size:11px;box-shadow:0 0 12px rgba(255,184,0,.28)}
+.cc-cockpit-screen .cc-op-zone-devices{margin-top:4px}
+.cc-cockpit-screen .cc-op-station-row{padding:4px 4px}
+
+/* 两张图表并排，不再是上下叠放 */
+.cc-cockpit-screen .cc-op-visual-grid>.cc-op-panel{min-height:0;padding:8px 11px}
+.cc-cockpit-screen .cc-op-visual-grid .cc-op-line-chart{padding-top:5px}
+.cc-cockpit-screen .cc-op-visual-grid .cc-op-line-chart svg{height:74px}
+.cc-cockpit-screen .cc-op-visual-grid .cc-op-bars{height:82px;padding:12px 12px 0;gap:16px}
+.cc-cockpit-screen .cc-op-visual-grid .cc-op-chart-caption{margin-top:4px}
+.cc-cockpit-screen .cc-op-visual-grid .cc-op-chart-note{margin-top:4px}
+.cc-cockpit-screen .cc-op-panel-head{padding-bottom:5px}
+.cc-cockpit-screen .cc-op-panel-head h3{font-size:15px}
+.cc-cockpit-screen .cc-op-panel-head p{margin:2px 0 0}
+.cc-cockpit-screen .cc-op-production-panel>.cc-op-panel-head{padding-bottom:5px}
+.cc-cockpit-screen .cc-op-production-panel>.cc-op-panel-head h3{font-size:16px;color:#71efff}
+
+/* 用料与出成：4 项压成一行 */
+.cc-cockpit-screen .cc-op-materials{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;padding-top:6px}
+.cc-cockpit-screen .cc-op-material{padding:6px}
+.cc-cockpit-screen .cc-op-material b{margin-top:2px;font-size:16px}
+.cc-cockpit-screen .cc-op-material small{margin-top:2px;font-size:9.5px}
+
+@media(max-width:1250px){.cc-cockpit-screen .cc-body{grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr)}}
