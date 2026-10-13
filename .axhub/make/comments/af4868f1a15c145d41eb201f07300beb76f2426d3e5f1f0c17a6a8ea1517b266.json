@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 3,
+  "kind": "document-edit-comments",
+  "resource": {
+    "id": "af4868f1a15c145d41eb201f07300beb76f2426d3e5f1f0c17a6a8ea1517b266",
+    "targetPath": "src/prototypes/kitchen-cockpit-config/.spec/spec.html",
+    "filePath": ".axhub/make/comments/af4868f1a15c145d41eb201f07300beb76f2426d3e5f1f0c17a6a8ea1517b266.json"
+  },
+  "comments": [],
+  "images": [],
+  "documentPath": "src/prototypes/kitchen-cockpit-config/.spec/spec.html"
+}

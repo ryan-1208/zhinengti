@@ -1,0 +1,223 @@
+/* 后台配置按业务项收敛：早期的页面标识 / 布局选择 / 导航预览等控件不呈现。 */
+.uk-admin-field.is-required>span:first-child::before{position:static;margin-right:4px;color:#f05252;content:'*'}
+.uk-admin-field>.uk-admin-inline-control{display:inline-flex;align-items:center;gap:10px;text-align:left}
+.uk-admin-field>.uk-admin-inline-control b{font-weight:400}
+/* 这里原本还有 .uk-admin-logo-field / .uk-admin-logo-setting 两条（Logo 那一格的网格与内宽）：
+   2026-10-13 晚间那一格收掉之后就没有消费者了，一并删掉。
+   注意别把 .uk-admin-upload-button 一起写进来 —— 它早就没有任何地方在用了，不用管。 */
+.uk-admin-config-section .uk-admin-form{grid-template-columns:repeat(3,minmax(0,1fr));gap:18px 24px}
+/* ── 「页面配置」上下结构（2026-10-13 下午按需求改） ────────────────────
+   改版前是「左选右改」两栏：左边 260px 的页面列表里挤着三件事 ——
+   启用开关、页面名称、排序把手。现在这三件事各有归处：
+   开关 → 「基本信息 · 显示页面」多选；名称 → 详情区第一项「自定义页面名称」；
+   排序 → 按需求取消。左栏只剩「选哪一页」，为它常占 260px 横向空间就不划算了，
+   于是收成一排页签（复用 style.css 里已有的 .uk-admin-config-tabs）。
+   所以这里 page-layout / page-list / page-item / drag-handle / order-actions 整套都没了，
+   JSX 那边也一并删干净 —— 不留「看起来还在用」的死样式。 */
+.uk-admin-page-detail{min-width:0}
+/* 视频流名输入框的外观。这条原本是「模块名 + 视频流名」共用 —— 模块名那半截随
+   「模块名称」表单一起删了（2026-10-13 晚间，入口搬到示意图的图上编辑里），
+   剩下的视频流这一半仍然要这套高度/描边/内距，别跟着一起删。 */
+.uk-admin-stream-row>input{height:36px;min-width:0;padding:0 10px;border:1px solid #dfe3e9;border-radius:4px;background:#fff;color:#343a40;font:inherit}
+.uk-admin-subhead{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 14px;margin:0 0 11px;color:#48525e;font-size:13px}
+.uk-admin-subhead small{color:#929ca7;font-size:11px;font-weight:400}
+/* ── 「显示页面」是基本信息里的**一行字段**（左右结构） ──────────────────
+   左 150px 标签右对齐 + 右侧控件；网格与字号全部复用 .uk-admin-field，
+   所以 14px / #3a414a / 标签列宽 / 行间距自动和上面那些字段一致，不用手抄一遍。
+   第一版做成了上下结构（一行小标题压在一行标签上面），和上面字段的排法对不上，
+   用户当场指出 —— 这几条就是那一版的修正。
+   占满 3 列（is-full）而不是挤进 1/3 格：4 个标签并排要约 400px，格子只有约 358px，会折行。 */
+.uk-admin-field.is-full{grid-column:1/-1}
+.uk-admin-field-control{display:flex;min-width:0;flex-wrap:wrap;align-items:center;gap:6px 12px}
+.uk-admin-field-control>small{color:#9aa3ad;font-size:11px}
+/* 标签多选控件本来是按通栏设计的，这里让它贴着内容宽（fit-content）：
+   4 个标签约 400px，撑满整行会在右边留一大块空盒子。
+   max-width:100% 留给窄屏兜底，真超了就在上面的 flex-wrap 里换行。 */
+.uk-admin-field-control .uk-admin-page-select{width:fit-content;max-width:100%}
+/* ── 「显示页面」下拉多选 ─────────────────────────────────────────────
+   三个部件：值区（只放已选页面，每个带可点的 ✕）+ 箭头按钮 + 菜单。
+   值区是 div 不是 button：里面每个 ✕ 都得是真按钮，button 套 button 浏览器会把内层拆出去。
+   祖宗里 .uk-admin-editor-card 是 overflow:hidden —— 菜单向下展开仍在卡片内部
+   （这一行在卡片靠上位置，下方还有整块页面配置），所以不会被裁，不需要 portal。
+   宽度固定 460px（像 select 那样），不随已选项数变：只选 1 项时框也不能缩成一小条。 */
+.uk-admin-page-picker{position:relative;width:min(460px,100%)}
+.uk-admin-page-picker-value{display:flex;min-height:38px;flex-wrap:wrap;align-items:center;gap:5px;padding:4px 34px 4px 6px;border:1px solid #dfe3e9;border-radius:4px;background:#fff;cursor:pointer;transition:border-color .15s,box-shadow .15s}
+.uk-admin-page-picker-value:hover{border-color:#b8c4d2}
+.uk-admin-page-picker.is-open .uk-admin-page-picker-value{border-color:#5aa5ed;box-shadow:0 0 0 2px #398be51a}
+.uk-admin-page-picker-chip{display:inline-flex;align-items:center;gap:4px;height:26px;padding:0 3px 0 8px;border-radius:3px;background:#f2f3f5;color:#454b52;font-size:14px;white-space:nowrap}
+.uk-admin-page-picker-chip>button{display:grid;width:16px;height:16px;flex:0 0 auto;place-items:center;padding:0;border:0;border-radius:50%;background:#c8cdd3;color:#fff;font-size:11px;line-height:1;cursor:pointer}
+.uk-admin-page-picker-chip>button:hover{background:#a4adb7}
+.uk-admin-page-picker-empty{color:#b7bfc8;font-size:14px;font-style:normal}
+.uk-admin-page-picker-caret{position:absolute;top:50%;right:8px;display:grid;width:20px;height:20px;place-items:center;padding:0;border:0;background:transparent;color:#9aa3ad;cursor:pointer;transform:translateY(-50%)}
+.uk-admin-page-picker-caret:hover{color:#5f6b78}
+.uk-admin-caret{transition:transform .15s ease}
+.uk-admin-caret.is-open{transform:rotate(180deg)}
+.uk-admin-page-picker-menu{position:absolute;z-index:6;top:calc(100% + 4px);left:0;width:100%;max-height:216px;overflow:auto;padding:4px;border:1px solid #dfe3e9;border-radius:4px;background:#fff;box-shadow:0 8px 20px #1f293714}
+.uk-admin-page-picker-menu>button{display:flex;width:100%;height:32px;align-items:center;gap:8px;padding:0 8px;border:0;border-radius:3px;background:transparent;color:#4b5662;font:inherit;font-size:14px;text-align:left;cursor:pointer}
+.uk-admin-page-picker-menu>button:hover{background:#f4f7fb}
+.uk-admin-page-picker-menu>button.is-selected{color:#2878bd}
+/* 勾选方块：未选中是空框，选中填蓝底 + 白勾。用方块而不是原生 checkbox ——
+   原生控件的对勾由系统画，和这一排的圆角、尺寸都对不齐。 */
+.uk-admin-page-picker-tick{display:grid;width:14px;height:14px;flex:0 0 auto;place-items:center;border:1px solid #ccd3db;border-radius:3px;background:#fff;color:#fff}
+.uk-admin-page-picker-menu>button.is-selected .uk-admin-page-picker-tick{border-color:#398be5;background:#398be5}
+/* 页面详情里现在只剩「页面设置」一区：原来前面还有「自定义页面名称」「模块名称」两块，
+   2026-10-13 晚间按需求删掉（改名入口搬到示意图的「图上编辑」）。
+   因为它是页签下面第一块内容，所以**不加上边线** —— 上面那条 border-top 原本是给
+   "第二、第三块"跟上一块分界用的，现在顶上只有页签和一行指路牌，再加线像把内容割开。 */
+.uk-admin-page-behavior{padding:16px 0}
+.uk-admin-setting-inline{display:grid;width:min(480px,100%);grid-template-columns:160px minmax(0,1fr);align-items:center;gap:16px;color:#65707c;font-size:13px}
+/* 行内设置里的文本输入框（目前只有「自定义页面名称」一个）。外观与 .uk-admin-field>input 对齐：
+   38px 高、1px #dfe3e9 描边、聚焦蓝环。不另造类名 —— 行内设置共用一条规则，
+   以后再加同类字段就不会拼出第三种长相。 */
+.uk-admin-setting-inline>input{width:100%;height:38px;min-width:0;padding:0 12px;border:1px solid #dfe3e9;border-radius:4px;background:#fff;color:#343a40;font:inherit;outline:0;transition:border-color .15s,box-shadow .15s}
+.uk-admin-setting-inline>input:hover{border-color:#b8c4d2}
+.uk-admin-setting-inline>input:focus{border-color:#5aa5ed;box-shadow:0 0 0 2px #398be51a}
+.uk-admin-setting-inline>input::placeholder{color:#c3c8cf}
+.uk-admin-setting-inline.is-meal-select{width:min(620px,100%);grid-template-columns:160px minmax(0,1fr);gap:24px}
+.uk-admin-setting-inline.is-meal-select>select{width:100%;min-width:0;height:38px;padding:0 12px;border:1px solid #dfe3e9;border-radius:4px;background:#fff;color:#343a40;font:inherit;outline:0;transition:border-color .15s,box-shadow .15s}
+.uk-admin-setting-inline.is-meal-select>select:hover{border-color:#b8c4d2}
+.uk-admin-setting-inline.is-meal-select>select:focus{border-color:#5aa5ed;box-shadow:0 0 0 2px #398be51a}
+.uk-admin-setting-inline .uk-admin-number input{max-width:160px}
+.uk-admin-stream-config{padding:14px;border:1px solid #e6e9ed;border-radius:4px;background:#fafbfd}
+.uk-admin-stream-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;color:#4c5661;font-size:13px}
+.uk-admin-stream-head button,.uk-admin-stream-row>button{height:32px;padding:0 11px;border:1px solid #d8dfe7;border-radius:4px;background:#fff;color:#3987cf;cursor:pointer}
+.uk-admin-stream-row{display:grid;grid-template-columns:minmax(140px,.7fr) minmax(240px,1.6fr) 58px;gap:10px;margin-bottom:8px}
+.uk-admin-stream-row>button{color:#d15c5c}
+.uk-admin-stream-row>button:disabled{color:#b9bec5;cursor:not-allowed}
+/* ── 视频流「播放方式」分段按钮（2026-10-13 深夜新增）──
+   为什么不复用页签（.uk-admin-config-tabs）：页签是"换一块内容看"，而这两个按钮是同一个
+   设置的两个取值 —— 做成页签的样子，会让人以为点一下会把下面的表单整块换掉。
+   为什么不做成一个来回切的开关（像上面的「是否启用」那样）：开关只显示当前状态，
+   看不出另一个选项叫什么；而"平铺 / 轮播"这两个名字本身就是这一行要传达的信息。
+   ── 禁用态 ──
+   只有 1 路画面时整组禁用。禁用态刻意**不做成几乎看不见**（不用 #dfe3e9 这种描边）：
+   它是"暂时用不上"，不是"不存在"。选中项在禁用时保留蓝底但降饱和 ——
+   一眼能看出"当前是轮播，只是现在改不了"，而不是"啥都没选"。 */
+.uk-admin-stream-mode{display:flex;min-height:36px;flex-wrap:wrap;align-items:center;gap:10px;margin:0 0 12px}
+.uk-admin-stream-mode-label{flex:0 0 auto;color:#65707c;font-size:13px}
+.uk-admin-seg{display:inline-flex;overflow:hidden;border:1px solid #d8dfe7;border-radius:4px;background:#fff}
+.uk-admin-seg>button{height:34px;padding:0 14px;border:0;border-right:1px solid #d8dfe7;background:transparent;color:#4d5966;font:inherit;font-size:13px;cursor:pointer}
+.uk-admin-seg>button:last-child{border-right:0}
+.uk-admin-seg>button:hover:not(:disabled):not(.is-active){background:#f3f7fc;color:#2878bd}
+.uk-admin-seg>button.is-active{background:#398be5;color:#fff}
+.uk-admin-seg>button:disabled{cursor:not-allowed;color:#b9bec5}
+.uk-admin-seg>button.is-active:disabled{background:#a9bed3;color:#fff}
+.uk-admin-stream-interval{display:inline-flex;align-items:center;gap:8px;color:#65707c;font-size:13px}
+.uk-admin-stream-interval .uk-admin-number{display:inline-flex;align-items:center;gap:6px}
+/* 用两级选择器（.uk-admin-stream-interval .uk-admin-number input）压过 style.css 里
+   那条共享的 `.uk-admin-number input` —— 两者特异性同为 0,1,1 时，胜负取决于两个 CSS
+   文件的加载顺序，那是"改天换个 import 顺序就悄悄变样"的坑，不靠它。 */
+.uk-admin-stream-interval .uk-admin-number input{width:88px}
+.uk-admin-stream-interval .uk-admin-number input:disabled{border-color:#e6e9ed;background:#f4f6f8;color:#a9b1ba}
+.uk-admin-stream-interval b{color:#9aa3ad;font-weight:400}
+.uk-admin-stream-mode-hint{color:#9aa3ad;font-size:11px}
+.uk-admin-stream-config>small,.uk-admin-remote-config>p{display:block;margin:8px 0 0;color:#98a1ab;font-size:11px;line-height:1.7}
+.uk-admin-no-page-setting,.uk-admin-empty-state{padding:18px;border:1px dashed #dfe4eb;border-radius:4px;color:#8c96a2;font-size:13px}
+.uk-admin-remote-config{margin:0 0 10px;padding:16px;border:1px solid #e6e9ed;border-radius:4px;background:#fafbfd}
+.uk-admin-remote-reset{height:30px;flex:0 0 auto;margin-left:auto;padding:0 10px;border:1px solid #d8dfe7;border-radius:4px;background:#fff;color:#3987cf;font-size:12px;cursor:pointer}
+.uk-admin-remote-grid{display:flex;flex-direction:column;border:1px solid #e6e9ed;border-radius:4px;background:#fff}
+.uk-admin-remote-row{display:grid;grid-template-columns:minmax(200px,1fr) 90px 150px;align-items:center;gap:14px;padding:10px 12px;border-bottom:1px solid #edf0f3}
+.uk-admin-remote-row:last-child{border-bottom:0}
+.uk-admin-remote-row>div{display:flex;flex-direction:column;gap:3px;color:#4c5661;font-size:12px}
+.uk-admin-remote-row>div small{color:#9aa3ad;font-size:11px}
+.uk-admin-remote-row code{color:#2878bd;font-size:13px}
+.uk-admin-remote-row>button{min-height:32px;border:1px solid #d8dfe7;border-radius:4px;background:#fff;color:#3987cf;font-size:12px;cursor:pointer}
+/* 「配置示意图」跨两栏独占一行。右栏只有 800 多像素，1920 宽的页面等比缩进去正文只剩 5px，
+   等于只能看排版、读不了内容；跨栏后宽度≈卡片内容宽（1440 视口约 1100、1920 视口约 1500）。 */
+/* 「配置示意图」在页面详情下方独占一行。原来写的是 grid-column:1/-1「跨两栏」——
+   那是为上一版左右两栏布局服务的，现在整块已是一条竖直流，跨栏属性既没用也会误导。 */
+.uk-admin-preview-block{margin-top:16px;padding-top:16px;border-top:1px solid #edf0f3}
+.uk-admin-preview-block .uk-admin-image-config{margin-top:12px}
+/* 「图上编辑」开关。挨着示意图标题放（结构上的理由见 CockpitAdminView.tsx）。
+   ── 为什么是这个样子 ──
+   第一版是「白底 + #d8dfe7 浅边框 + 12px 浅蓝字」，贴在白页面上基本看不到，
+   用户反馈「感觉你啥都没改」。入口本身不可见，等于功能不存在。
+   现在：浅蓝底 + 实边框 + 加粗 13px + 一枚铅笔图标，是这一行里唯一有底色的东西；
+   开着时反白（实心蓝底白字）—— 编辑态是个"模式"，页面上必须有肉眼可见的状态。
+   图标用 SVG 不用 ✎ / ✏ 字符，理由与 Caret / CheckMark 一致（字形粗细随字体飘）。 */
+.uk-admin-image-edit{
+  display:inline-flex;align-items:center;gap:6px;
+  margin-left:auto;padding:7px 15px;
+  border:1px solid #2b6fa8;border-radius:4px;
+  background:#e8f3fd;color:#1b6fae;font-size:13px;font-weight:600;
+  box-shadow:0 1px 2px #2b6fa81a;cursor:pointer;
+}
+.uk-admin-image-edit:hover{border-color:#1b6fae;background:#d5e9fb;color:#14547f}
+.uk-admin-image-edit.is-on{border-color:#2b6fa8;background:#2b6fa8;color:#fff}
+.uk-admin-image-edit.is-on:hover{background:#245f91;color:#fff}
+/* 浅蓝左边线的小提示条。**有两处用**：
+   ① 页签下面那条「页面名称与模块名称改为在示意图上修改」的指路牌 ——
+      「自定义页面名称」「模块名称」两块表单删掉之后，这里是界面上唯一能告诉人
+      "改名入口搬到哪了"的地方；
+   ② 打开「图上编辑」后的操作说明，写清楚能改哪几处、改的是同一份草稿 ——
+      后者是为了让人敢改：知道动了表单会跟着变，就不担心"图上改完那边对不上"。
+   两处共用一条规则：同类提示长一个样，不拼出第二种长相。 */
+.uk-admin-edit-hint{margin:0 0 10px;padding:9px 12px;border-left:3px solid #7fb6e0;border-radius:0 4px 4px 0;background:#f2f8fd;color:#4b7fae;font-size:12px;line-height:1.7}
+.uk-admin-edit-hint>b{color:#2b6fa8;font-weight:600}
+/* 「配置示意图」的 iframe 版。iframe 固定 1920×1080，再用 transform 缩到框宽 ——
+   所以框本身只负责裁切与描边，**高度必须由 JS 按同一比例算**（内联 style），
+   这里千万不要写 aspect-ratio：那会引入第二个高度来源，跟 JS 算的打架。
+   min-height 只是防「JS 还没量到宽」那一帧塌成 0 高，正常宽度下不会生效。
+   ── 示意图默认是**静态**的 ──
+   iframe 一旦可点，里面的顶部导航、日期选择、餐段筛选、批次切换、轮播开关就全都是真控件，
+   点一下真的会切页；而示意图显示的是哪一页由左侧列表决定，两边立刻打架 ——
+   出现「示意图停在别的页、左边还高亮着生产烹饪」这种对不上的状态。
+   用 pointer-events:none 从最外层一次性摁死：**渲染结果一个像素都不变**，只是全部不再响应。
+   （iframe 默认 tabIndex=-1 不进 Tab 顺序，所以键盘也进不去；
+    下面那段线框兜底本来就有 pointer-events:none，两者行为一致。） */
+.uk-admin-live-frame{position:relative;min-height:200px;overflow:hidden;border:1px solid #0b3980;background:#04122e}
+.uk-admin-live-frame>iframe{position:absolute;left:0;top:0;border:0;display:block;transform-origin:top left;pointer-events:none;user-select:none}
+/* 图上编辑：只松开**这一层**，让事件能进到 iframe 的文档里。
+   进去之后到底能点到什么，由 style.css 的 body.uk-embed-edit 决定 —— 那边把整页关掉、
+   只放行 .uk-inline-edit。所以这里不算"把示意图解锁了"，两道是一对：
+   少了这一道，点不着输入框；少了那一道，整张图都变成可操作的。
+   编辑态下 tabIndex 由 JS 给到 0（非编辑态是 -1），键盘用户才能 Tab 进去。 */
+.uk-admin-live-frame.is-edit>iframe{pointer-events:auto}
+.uk-admin-static-preview{min-height:390px;overflow:hidden;border:1px solid #0b3980;background:radial-gradient(ellipse at 50% 0,#163e76 0,#0a2050 62%,#071735 100%);color:#e9f3ff;pointer-events:none;user-select:none}
+.uk-admin-static-header{display:flex;min-height:62px;align-items:center;gap:20px;padding:8px 18px;border-bottom:1px solid #1a4a7a}
+.uk-admin-static-brand{display:flex;min-width:190px;align-items:center;gap:9px;color:#13d8ef}
+.uk-admin-static-brand>img,.uk-admin-static-brand>b{display:grid;width:30px;height:30px;flex:0 0 auto;place-items:center;border:1px solid #14d7ee;border-radius:50%;background:#12345e;color:#19d7ed;object-fit:contain;font-size:14px}
+.uk-admin-static-brand>strong{overflow:hidden;font-size:clamp(12px,1.2vw,18px);font-weight:600;text-overflow:ellipsis;white-space:nowrap}
+.uk-admin-static-header>nav{display:flex;min-width:0;flex:1;align-self:stretch;align-items:stretch;justify-content:center;gap:clamp(8px,2vw,32px);overflow:hidden}
+.uk-admin-static-header>nav>span{display:flex;min-width:0;align-items:center;padding:0 5px;border-bottom:3px solid transparent;color:#2bd7e8;font-size:clamp(11px,1.1vw,16px);text-align:center;text-overflow:ellipsis;white-space:nowrap}
+.uk-admin-static-header>nav>span.is-active{border-bottom-color:#12d9f0;background:linear-gradient(0deg,#0bb4d122,transparent);color:#e9fbff}
+.uk-admin-static-header>small{flex:0 0 auto;color:#95bbda;font-size:12px}
+.uk-admin-static-modules{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:16px}
+.uk-admin-static-module{min-width:0;min-height:132px;overflow:hidden;padding:10px 12px;border:1px solid #087bba;border-radius:5px;background:linear-gradient(145deg,#102d61,#0b214b);box-shadow:inset 0 0 16px #0b91ce20}
+.uk-admin-static-module>h3{overflow:hidden;margin:0 0 9px;padding:5px 9px;background:linear-gradient(90deg,#087ca2aa,#087ca200);color:#19d9ee;font-size:clamp(11px,1vw,15px);font-weight:600;text-overflow:ellipsis;white-space:nowrap}
+.uk-admin-static-modules.is-nutrition{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);grid-template-rows:repeat(2,minmax(110px,1fr))}
+.uk-admin-static-modules.is-nutrition>.is-nutrition-pagoda{grid-row:span 2;min-height:240px}
+.uk-admin-static-modules.is-outmeal{grid-template-columns:repeat(3,minmax(0,1fr))}
+.uk-admin-static-modules.is-outmeal .uk-admin-static-module{min-height:220px}
+.uk-admin-static-pagoda{display:grid;height:calc(100% - 30px);min-height:195px;place-items:center;overflow:hidden}
+.uk-admin-static-pagoda>img{display:block;max-width:100%;height:100%;max-height:285px;object-fit:contain}
+.uk-admin-static-kitchen{position:relative;height:86px;overflow:hidden;border-radius:3px;background:#173b69}
+.uk-admin-static-kitchen>img{width:100%;height:100%;object-fit:cover;opacity:.78}
+.uk-admin-static-kitchen>span{position:absolute;right:8px;bottom:7px;padding:3px 7px;border-radius:3px;background:#101e39c9;color:#20ddec;font-size:10px}
+.uk-admin-static-nutrition-chart{display:flex;height:65px;align-items:center;gap:12px;color:#a5c7e1;font-size:11px}
+.uk-admin-static-nutrition-chart>i{width:52px;height:52px;flex:0 0 auto;border:9px solid #1bd5df;border-right-color:#2a9ed6;border-bottom-color:#efc84a;border-radius:50%;box-shadow:0 0 12px #11d9e455}
+.uk-admin-static-lines{display:flex;flex-direction:column;gap:7px;color:#a8c8e4;font-size:11px}
+.uk-admin-static-lines>i{display:block;width:88%;height:9px;border-radius:8px;background:linear-gradient(90deg,#0c9fc0,#154473)}
+.uk-admin-static-lines>i:nth-of-type(2){width:68%}.uk-admin-static-lines>i:nth-of-type(3){width:78%}
+.uk-admin-static-bars{display:flex;height:150px;flex-direction:column;justify-content:space-around;padding:5px 0}
+.uk-admin-static-bars>i{display:block;height:12px;border-radius:0 7px 7px 0;background:linear-gradient(90deg,#0b9ec4,#1cd5d7)}
+.uk-admin-static-behavior{display:grid;grid-template-columns:minmax(0,1fr) minmax(220px,1.7fr) minmax(120px,.7fr);align-items:center;gap:16px;padding:24px}
+.uk-admin-static-behavior>div:first-child{display:flex;flex-direction:column;gap:8px;color:#17d8eb}.uk-admin-static-behavior>div:first-child span{color:#a7c4df;font-size:12px}
+.uk-admin-static-camera{position:relative;display:grid;min-height:245px;place-items:center;overflow:hidden;border:1px solid #1689b0;border-radius:4px;background:repeating-linear-gradient(0deg,transparent 0 36px,#19c9e41a 37px),repeating-linear-gradient(90deg,transparent 0 48px,#19c9e41a 49px),linear-gradient(145deg,#163d68,#091a3a);color:#82b7d9;font-size:12px}
+.uk-admin-static-camera>i{position:absolute;width:30%;height:50%;border:1px solid #14d5ed;border-radius:45% 45% 8px 8px;box-shadow:0 0 18px #0bd8ef55}.uk-admin-static-camera>span{align-self:end;margin:0 0 12px}
+.uk-admin-static-status{display:flex;flex-direction:column;gap:12px;color:#aecce4;font-size:12px}.uk-admin-static-status>i{display:inline-block;width:8px;height:8px;margin-right:6px;border-radius:50%;background:#40d99a;box-shadow:0 0 8px #40d99a}
+@media(max-width:760px){.uk-admin-static-preview{min-height:350px}.uk-admin-static-header{gap:8px;padding:6px 10px}.uk-admin-static-brand{min-width:100px}.uk-admin-static-brand>strong{max-width:110px}.uk-admin-static-header>nav{gap:3px}.uk-admin-static-header>nav>span{padding:0 3px}.uk-admin-static-modules{gap:7px;padding:8px}.uk-admin-static-module{min-height:110px;padding:7px}.uk-admin-static-modules.is-outmeal{grid-template-columns:1fr}.uk-admin-static-modules.is-outmeal .uk-admin-static-module{min-height:90px}.uk-admin-static-behavior{grid-template-columns:1fr;padding:12px}.uk-admin-static-behavior>div:first-child,.uk-admin-static-status{display:none}.uk-admin-static-camera{min-height:230px}}
+/* ≤1100px：基本信息的三列表单折成两列。 */
+@media(max-width:1100px){.uk-admin-config-section .uk-admin-form{grid-template-columns:repeat(2,minmax(0,1fr))}.uk-admin-remote-row{grid-template-columns:minmax(160px,1fr) 76px 140px}}
+/* ≤760px：模块名两列会各压到 280px 以下，模块名开始横向滚动，退回一列。 */
+@media(max-width:760px){.uk-admin-config-section .uk-admin-form{grid-template-columns:1fr}.uk-admin-setting-inline{grid-template-columns:125px minmax(0,1fr);gap:10px}.uk-admin-setting-inline.is-meal-select{width:100%;grid-template-columns:125px minmax(0,1fr);gap:10px}.uk-admin-stream-row{grid-template-columns:1fr 50px}.uk-admin-stream-row>input:nth-child(2){grid-column:1/-1;grid-row:2}.uk-admin-stream-row>button{grid-column:2;grid-row:1}.uk-admin-remote-row{grid-template-columns:minmax(0,1fr) 64px;gap:8px}.uk-admin-remote-row>button{grid-column:1/-1}}
+
+/* 这里原本有整套「膳食宝塔图片」表单的样式（uk-admin-pagoda-setting / -control / -reset，
+   以及 ≤760px 的断点）：2026-10-13 晚间那块表单删掉、入口搬到示意图上，样式一并删干净。
+   注意其中那个「恢复默认」按钮**不是**被删掉的 —— 它先被搬成了图上的 .uk-img-edit-reset
+   （见 ReplaceableImage 的 canReset），确认能用之后才撤掉这边。
+   .uk-admin-upload-button 也已经没有消费者了（基本信息里的「上传 Logo」那一格随后也收掉了），
+   它的规则早就不在，留下的只是类名，看到它不必去"恢复"。 */
+/* 原来这里还有一整套手搓的「迷你控件」样式（uk-admin-live-* / uk-admin-mini-*）：
+   假进度条、假 KPI、假柱状图、行为监控假卡片。现在预览直接用真实页面的 iframe，
+   它们全部作废，整块删掉 —— 留着只会让人以为还有另一套预览实现。 */

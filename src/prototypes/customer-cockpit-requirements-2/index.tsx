@@ -15,9 +15,17 @@
  * 智厨生产驾驶舱通过 page=overview 进入；旧的 process / equipment 链接会兼容回落到这个合并页。
  * 行为监控视图的数据口径见 ./components/BehaviorView.tsx。
  */
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { AnnotationViewer, type AnnotationSourceDocument } from '@axhub/annotation';
 import { BehaviorView } from './components/BehaviorView';
+import { CockpitAdminView, type PreviewEditTarget } from './components/CockpitAdminView';
+import { ModuleExceptionState, type ExceptionState } from './components/ExceptionReferenceView';
+import { RequirementOverviewDrawer } from './components/RequirementOverviewDrawer';
+import { PrototypeDirectory } from './components/PrototypeDirectory';
+import { RequirementsDocumentView } from './components/RequirementsDocumentView';
+import { VersionManagementView } from './components/VersionManagementView';
 import './style.css';
+import annotationSourceDocument from './annotation-source.json';
 import kitchenImage from './assets/realtime-kitchen-generated.png';
 import dishMilletPumpkinPorridge from './assets/dish-millet-pumpkin-porridge.png';
 import dishSteamedEggCustard from './assets/dish-steamed-egg-custard.png';
@@ -265,13 +273,13 @@ const ACTIVE_ROUTE_PATHS = [
   // 三条路径长度接近（约 835），统一 14 秒节拍；在对应炒菜机或烤箱位置停留约 2.5 秒。
   // 停留点约束：keyPoints 中间值必须等于「该设备中心（CCJ1=458,162 / CCJ2=566,162 / KX1=510,318）
   // 在这条路径上的弧长比例」，否则托盘会在岔路口或半路停留（表现为「没进设备就出餐」）。
-  // 当前值：CCJ1=0.4972、CCJ2=0.6273、KX1=0.5585，均由设备中心在路径上的最近点反算得出。
-  // keyTimes 中间两帧 = 弧长比 × (14-2.5)/14、再 +2.5/14，保证托盘全程匀速且停留恒为 2.5 秒。
+  // 当前值：CCJ1=0.4972、CCJ2=0.6273；烤箱路线改用浏览器兼容的等速 path，避免蒸蛋羹卡在 SVG 原点。
+  // 两条炒菜机路线的 keyTimes 中间两帧 = 弧长比 × (14-2.5)/14、再 +2.5/14，保证托盘全程匀速且停留恒为 2.5 秒。
   // delay 让三段停留均匀错开：约 0s / 4.67s / 9.33s 各停 2.5 秒，任意时刻只有一台设备在烹饪。
   // trayStart/trayEnd = 托盘位于入口 2 通道（x 214~336）的时间区间，用来点亮入口 2 的等待卡片。
-  { id: 'route-ccj1-out1', dish: '青椒肉丝', port: '出口 1', increment: 75, path: 'M74 190 C150 190 260 232 350 240 C395 240 420 186 458 162 C520 120 680 130 760 216 C790 240 820 240 850 240', delay: '-1.05s', trayStart: 0.14, trayEnd: 0.2609, pauseStart: 0.4084, pauseEnd: 0.587, keyPoints: '0;0.4972;0.4972;1', keyTimes: '0;0.4084;0.587;1' },
-  { id: 'route-ccj2-out1', dish: '番茄炒蛋', port: '出口 1', increment: 75, path: 'M74 240 C160 240 265 240 350 240 C450 240 516 185 566 162 C640 150 710 180 760 220 C790 240 820 240 850 240', delay: '-7.21s', trayStart: 0.1423, trayEnd: 0.2652, pauseStart: 0.5152, pauseEnd: 0.6938, keyPoints: '0;0.6273;0.6273;1', keyTimes: '0;0.5152;0.6938;1' },
-  { id: 'route-kx1-out1', dish: '蒸蛋羹', port: '出口 1', increment: 50, path: 'M74 300 C160 320 262 265 350 240 C400 240 450 280 510 318 C600 360 705 320 760 255 C785 240 820 240 850 240', delay: '-11.09s', trayStart: 0.1402, trayEnd: 0.2663, pauseStart: 0.4588, pauseEnd: 0.6374, keyPoints: '0;0.5585;0.5585;1' },
+  { id: 'route-ccj1-out1', dish: '青椒肉丝', port: '出口 1', increment: 75, path: 'M74 190 C150 190 260 232 350 240 C395 240 420 186 458 162 C520 120 680 130 760 216 C790 240 820 240 850 240', delay: '0s', trayStart: 0.14, trayEnd: 0.2609, pauseStart: 0.4084, pauseEnd: 0.587, keyPoints: '0;0.4972;0.4972;1', keyTimes: '0;0.4084;0.587;1' },
+  { id: 'route-ccj2-out1', dish: '番茄炒蛋', port: '出口 1', increment: 75, path: 'M74 240 C160 240 265 240 350 240 C450 240 516 185 566 162 C640 150 710 180 760 220 C790 240 820 240 850 240', delay: '4.67s', trayStart: 0.1423, trayEnd: 0.2652, pauseStart: 0.5152, pauseEnd: 0.6938, keyPoints: '0;0.6273;0.6273;1', keyTimes: '0;0.5152;0.6938;1' },
+  { id: 'route-kx1-out1', dish: '蒸蛋羹', port: '出口 1', increment: 50, path: 'M74 300 C160 320 262 265 350 240 C400 240 450 280 510 318 C600 360 705 320 760 255 C785 240 820 240 850 240', delay: '9.33s', trayStart: 0.1402, trayEnd: 0.2663, pauseStart: 0.4588, pauseEnd: 0.6374, keyPoints: '0;0.5585;0.5585;1' },
 ].map((route) => ({
   ...route,
   color: DISHES.find((dish) => dish.name === route.dish)?.color ?? '#10e4f2',
@@ -281,7 +289,12 @@ const ACTIVE_ROUTE_PATHS = [
    也不在 PRD 的运营驾驶舱指标清单里（PRD:194）。移除理由与「日后要放回需先定什么」
    记在 style.css 的 .uk-kpi 注释处。 */
 
-type ViewId = 'cockpit' | 'behavior' | 'nutrition' | 'overview' | 'dish' | 'process' | 'equipment';
+type ViewId = 'cockpit' | 'behavior' | 'nutrition' | 'overview' | 'dish' | 'process' | 'equipment' | 'version' | 'requirements' | 'admin' | 'reference-no-data' | 'reference-load-failed';
+type ExceptionPageId = Extract<ViewId, 'reference-no-data' | 'reference-load-failed'>;
+
+function isExceptionPageId(id: string): id is ExceptionPageId {
+  return id === 'reference-no-data' || id === 'reference-load-failed';
+}
 
 function readViewFromLocation(): ViewId {
   if (typeof window === 'undefined') return 'cockpit';
@@ -289,6 +302,10 @@ function readViewFromLocation(): ViewId {
   if (page === 'behavior') return 'behavior';
   if (page === 'nutrition') return 'nutrition';
   if (page === 'dish') return 'dish';
+  if (page === 'version' || page === 'version-management') return 'version';
+  if (page === 'requirements' || page === 'prd') return 'requirements';
+  if (page === 'admin' || page === 'cockpit-admin') return 'admin';
+  if (page === 'reference-no-data' || page === 'reference-load-failed') return page;
   if (page === 'overview' || page === 'process' || page === 'equipment') return 'overview';
   return 'cockpit';
 }
@@ -297,6 +314,10 @@ function normalizeViewId(id: string): ViewId {
   if (id === 'behavior') return 'behavior';
   if (id === 'nutrition') return 'nutrition';
   if (id === 'dish') return 'dish';
+  if (id === 'version' || id === 'version-management') return 'version';
+  if (id === 'requirements' || id === 'prd') return 'requirements';
+  if (id === 'admin' || id === 'cockpit-admin') return 'admin';
+  if (id === 'reference-no-data' || id === 'reference-load-failed') return id;
   if (id === 'overview' || id === 'process' || id === 'equipment') return 'overview';
   return 'cockpit';
 }
@@ -310,35 +331,336 @@ const TOP_NAV_ITEMS: Array<{ id: ViewId; label: string }> = [
   { id: 'overview', label: '出餐统计' },
   { id: 'behavior', label: '行为监控' },
 ];
+const PAGE_CAROUSEL_MS = 20000;
 
-function PageTopNav({ current, onNavigate }: { current: ViewId; onNavigate: (id: string) => void }) {
+/* 后台「配置示意图」用 iframe 内嵌**真实页面**（?embed=1）来做到 1:1：
+   不渲染原型目录、不自动轮播，并接收父窗口 postMessage 过来的配置。
+   走 iframe 而不是把页面组件抽出来复用，是因为整块屏的 JSX 与主组件状态耦合很深，
+   抽出去要动几百行、回归面太大；iframe 里跑的就是同一个页面，天然 1:1，也不会走样。 */
+type EmbedPreviewConfig = {
+  name?: string;
+  logo?: string;
+  pages?: Array<{ id: string; name: string; enabled: boolean }>;
+  moduleLabels?: Record<string, string>;
+  nutritionPagodaImage?: string;
+};
+
+/* ── 图上编辑的写回契约（后台父页 ↔ 本页）────────────────────────────────
+   ↓ 父页下发：{ type:'cockpit-preview-config', config, editMode }
+   ↑ 本页回传：{ type:'cockpit-preview-edit',   target, value }
+   两个方向都走 postMessage，而不是"同源就直接改父页的对象"：
+   配置的唯一真源是父页那份草稿，本页只是它的一个投影 —— 投影自己去改正本，
+   就会出现「示意图上改了、旁边表单里没改」的两份状态。
+   target 说的是"改的是页面上哪一处"，不是"改数组第几项"（见 PreviewEditTarget）。 */
+type PreviewEditCommit = (target: PreviewEditTarget, value: string) => void;
+
+function readEmbedFromLocation(): boolean {
+  if (typeof window === 'undefined') return false;
+  return new URLSearchParams(window.location.search).get('embed') === '1';
+}
+
+/* 后台「配置示意图」= 一张不动的静帧。
+   这里用模块级常量而不是把 embed 一路透传，是因为要停的时钟散在子组件和 hook 里
+   （自动滚动、圆环轮播、营养轮播、出餐计数……），逐个加 prop 会把纯展示组件污染成
+   「知道自己正在被内嵌」的组件，而它们本不该关心这件事。
+   对一个 document 来说 URL 里的 embed 不会变，读一次就够。 */
+const STATIC_PREVIEW = readEmbedFromLocation();
+
+/* 静帧定格在「演示跑到第 49 秒」。
+   49s 是按 14s 的动线节拍算出来的，不是随手取的：代进去三个相位分别是
+   ccj1 0.500（停在炒菜机里 = 烹饪中）、ccj2 0.166（托盘在入口 2 通道 = 称重加料完成）、
+   kx1 0.834（已出锅 = 烹饪完成）—— 三台设备三种状态、托盘也都在图上，
+   一张静帧能讲的事都在这一帧里。
+   要改这个数，先用 (T - delay) % 14s 把三个相位算一遍，别落在状态窗口的边缘上。 */
+const PREVIEW_FREEZE_MS = 49_000;
+
+/* 动线到达出口的时刻、以及单条出餐记录的构造，都只写这一份：
+   实时累积和下面的静帧回填共用，免得「1 盆 / 2kg」这条口径被抄成两份、日后只改一处。 */
+const arrivalMsOf = (route: (typeof ACTIVE_ROUTE_PATHS)[number]) =>
+  Math.max(1000, LINE_CYCLE_MS + Number.parseFloat(route.delay) * 1000);
+const outItemOf = (route: (typeof ACTIVE_ROUTE_PATHS)[number]): OutItem => ({
+  port: route.port,
+  dish: route.dish,
+  qty: route.dish === '番茄炒蛋' || route.dish === '蒸蛋羹' ? '1 盆 / 2kg' : '1 盆 / 1kg',
+  color: route.color,
+});
+
+/* 静帧所用的出餐量与最近 3 条记录 —— 在首帧就一次算出来，不是在 effect 里补。
+   放在 useState 的初值里，是为了避免「先按空记录渲染一帧、再被补上」：
+   静帧本来就不该存在任何一帧与最终帧不一样。 */
+function frozenServedState(): { servedNow: number; servedBatches: OutItem[] } {
+  const arrivals: Array<{ at: number; route: (typeof ACTIVE_ROUTE_PATHS)[number] }> = [];
+  ACTIVE_ROUTE_PATHS.forEach((route) => {
+    for (let at = arrivalMsOf(route); at <= PREVIEW_FREEZE_MS; at += LINE_CYCLE_MS) {
+      arrivals.push({ at, route });
+    }
+  });
+  arrivals.sort((a, b) => a.at - b.at);
+  return {
+    servedNow: Math.min(TOTAL_PLAN, SERVED + arrivals.reduce((sum, { route }) => sum + route.increment, 0)),
+    servedBatches: arrivals.slice(-3).reverse().map(({ route }) => outItemOf(route)),
+  };
+}
+
+/* 全局时钟的格式只此一处：右上角、明厨亮灶的 REC 时间戳、按餐段判定用的分钟数都读它。
+   日期与时间之间是**两个空格** —— 页面上按 clock.split('  ')[1] 取时间部分、按 slice(-8,-3)
+   取 HH:MM，改成一个空格这两处会一起坏。
+   注意与下面的 `formatClock(分钟数) → "HH:MM"` 是两回事，那个是出餐明细行里的时刻。 */
+function clockStamp(now: Date): string {
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}  ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+}
+
+/* 后台页 id → 原型 ViewId：后台叫 production / outmeal，原型叫 cockpit / overview。 */
+const ADMIN_PAGE_TO_VIEW: Record<string, ViewId> = {
+  production: 'cockpit',
+  nutrition: 'nutrition',
+  outmeal: 'overview',
+  behavior: 'behavior',
+};
+
+/* 反向表，只给图上编辑用：顶部导航每一项要写回「自定义页面名称」，得先知道自己对应后台哪一页。
+   从上面那张表**反推**而不是再手写一张 —— 两张表各写一份，迟早改一处漏一处，
+   而漏掉的症状是「在图上改了导航名，改到别的页上去了」，很难一眼看出来。 */
+const VIEW_TO_ADMIN_PAGE: Partial<Record<ViewId, string>> = Object.fromEntries(
+  Object.entries(ADMIN_PAGE_TO_VIEW).map(([adminId, viewId]) => [viewId, adminId]),
+);
+
+/* 导航项的「默认名」= 原型内置的那份 TOP_NAV_ITEMS。
+   后台把「自定义页面名称」清空时（它自己写着"留空则用默认名称"），
+   大屏导航就回退到它 —— 那行提示得真的成立，不能清空之后导航上留个空位。 */
+const defaultNavLabelOf = (id: ViewId) => TOP_NAV_ITEMS.find((item) => item.id === id)?.label ?? id;
+
+const prototypeAnnotationSource = annotationSourceDocument as AnnotationSourceDocument;
+
+function PrototypeAnnotationViewer({ currentPageId, onNavigate }: { currentPageId: string; onNavigate: (id: string) => void }) {
   return (
-    <nav className="uk-switch uk-page-nav" aria-label="智厨页面切换">
-      {TOP_NAV_ITEMS.map((item) => (
-        <button
+    <>
+      <AnnotationViewer
+        source={prototypeAnnotationSource}
+        options={{
+          currentPageId,
+          toolbarEdge: 'right',
+          defaultMarkerIndexVisible: true,
+          showToolbar: true,
+          showThemeToggle: true,
+          showColorFilter: true,
+          emptyWhenNoData: true,
+          onDirectoryRoute: (node) => {
+            if (typeof node.route === 'string') onNavigate(node.route);
+          },
+        }}
+      />
+      <RequirementOverviewDrawer source={prototypeAnnotationSource} currentPageId={currentPageId} />
+    </>
+  );
+}
+
+type PageCarouselProps = {
+  pageAutoPlaying?: boolean;
+  onTogglePageAutoPlay?: () => void;
+};
+
+/* 图上编辑的两个参数（只有后台内嵌预览会传 true）。 */
+type PreviewEditProps = {
+  editEnabled?: boolean;
+  onEdit?: PreviewEditCommit;
+};
+
+/* 图上所见即所得：编辑态下标题变成一个**真的 input**，改完立刻回传后台写进草稿。
+   为什么不用更直觉的 contentEditable：
+   这些文字是 React 渲染出来的文本节点，contentEditable 一打字改的是 React 不知道的 DOM，
+   下一帧配置推回来触发重渲染，React 按它记着的旧值把 DOM 写回去 ——
+   用户会看到刚敲的字被吃掉、光标跳回开头。这是必现的，不是偶发竞态。
+   换成受控 input 就没这个冲突：React 只在 node.value !== props.value 时才写 DOM，两边一致就不动。
+   另外输入过程中**故意不跟外部值同步**（见下面的 effect）：
+   commit 要跨一趟 postMessage 到后台再推回来，中途拿一帧前的旧值覆盖，等于把刚敲的字删掉。 */
+function EditableText({ editEnabled, onEdit, target, value, fallback }: {
+  editEnabled?: boolean;
+  onEdit?: PreviewEditCommit;
+  target: PreviewEditTarget;
+  value?: string;
+  fallback: string;
+}) {
+  /* 空串按「没配」处理、回退到内置默认名。理由有两层：
+     ① 在图上把标题清空，面板顶上就一个字都不剩，用户只会以为页面坏了；
+     ② 后台表单里清空本来是同一个结果（原先的 `??` 只兜 null/undefined，兜不住空串）；
+     删掉表单之后「图上清空」成了唯一可能的入口，这个口径更要守住：**留空 = 用默认名**。 */
+  const shown = value || fallback;
+  const [draft, setDraft] = useState(shown);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  useEffect(() => {
+    if (document.activeElement !== inputRef.current) setDraft(shown);
+  }, [shown]);
+  if (!editEnabled) return <>{shown}</>;
+  return (
+    <input
+      ref={inputRef}
+      className="uk-inline-edit"
+      value={draft}
+      placeholder={fallback}
+      aria-label={`${fallback}：图上直接编辑`}
+      onChange={(event) => { setDraft(event.target.value); onEdit?.(target, event.target.value); }}
+      /* 回车 = 改完了，放开这个框。不在这里做撤销：配置是即时生效的，
+         想改回去就把内容清空（留空 = 用默认名）或者重新打一遍。
+         Esc 除了放开还要**退出编辑态**，所以得往父页发一条消息：
+         这个 keydown 发生在 iframe 里，不会冒泡到后台窗口，
+         后台自己挂的那个 Esc 监听根本收不到。 */
+      onKeyDown={(event) => {
+        if (event.key === 'Enter') event.currentTarget.blur();
+        if (event.key === 'Escape') {
+          event.currentTarget.blur();
+          window.parent?.postMessage({ type: 'cockpit-preview-exit' }, '*');
+        }
+      }}
+    />
+  );
+}
+
+function UploadIcon() {
+  return <svg width="13" height="13" viewBox="0 0 14 14" aria-hidden="true" focusable="false">
+    <path d="M7 9.4V1.8M3.7 5.1 7 1.8l3.3 3.3" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M1.7 9.6v1.5a1.4 1.4 0 0 0 1.4 1.4h7.8a1.4 1.4 0 0 0 1.4-1.4V9.6" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>;
+}
+
+/* 图上换图：编辑态下把「一张图 + 一片盖在它上面的按钮」包起来。
+   为什么用覆盖层，而不是把图本身做成按钮：
+   两个目标是完全不同的东西 —— logo 是一个 60px 的圆形 <div>，宝塔是 SVG 里的 <image>，
+   它们唯一的共同点是「都不是控件」。统一做法只能是盖一个绝对定位的按钮上去。
+   **非编辑态不渲染这一层包装**（直接 return children）：包一个 div 会不会改变 flex 布局
+   是需要实测的事，只读态干脆不引入这个变量 —— 这是「关掉编辑态，示意图一个像素都不变」那条老约定的延续。
+   点文件选择框由 iframe 自己弹、不委托给父页：用户激活（user activation）必须发生在同一份 document 里，
+   跨一层 postMessage 再让父页去 click() 有被判成"非用户手势"而**静默失败**的风险
+   （失败表现就是「点了没反应」，最难查的那一类）。
+   读出来的 data URL 与文字走同一条上行通道（就是 value 那个字符串），两端都不必再多一个分支。
+   canReset：换了图之后给一条回退到内置默认图的路。它是从后台表单那侧的「恢复默认」按钮搬过来的 ——
+   那块表单（.uk-admin-pagoda-setting）随这次改动一起删了，能力不能跟着一起消失，
+   否则又是一次"静默少功能"。只在**已经换过图**（canReset 为真）时才出现：没换过就没什么可恢复的。 */
+function ReplaceableImage({ editEnabled, onEdit, target, label, variant, canReset, children }: {
+  editEnabled?: boolean;
+  onEdit?: PreviewEditCommit;
+  target: PreviewEditTarget;
+  label: string;
+  variant: 'logo' | 'pagoda';
+  canReset?: boolean;
+  children: React.ReactNode;
+}) {
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  if (!editEnabled) return <>{children}</>;
+  const onFile = (file: File | undefined) => {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => { if (typeof reader.result === 'string') onEdit?.(target, reader.result); };
+    reader.readAsDataURL(file);
+  };
+  return (
+    <div className={`uk-img-edit is-${variant}`}>
+      {children}
+      {/* 两颗按钮放同一个定位容器里，让「恢复默认」永远排在「换图」左边：
+          换图是主操作，保持在角上不动（位置与只有一颗按钮时逐像素相同）。 */}
+      <div className="uk-img-edit-actions">
+        {canReset ? <button
           type="button"
-          key={item.id}
-          className={current === item.id ? 'active' : ''}
-          onClick={() => onNavigate(item.id)}
-        >
-          {item.label}
+          className="uk-img-edit-reset"
+          aria-label={`恢复默认${label}`}
+          title={`恢复默认${label}`}
+          onClick={() => onEdit?.(target, '')}
+        >恢复默认</button> : null}
+        <button type="button" className="uk-img-edit-btn" aria-label={`更换${label}`} title={`更换${label}`} onClick={() => inputRef.current?.click()}>
+          <UploadIcon /><span>{label}</span>
         </button>
-      ))}
+      </div>
+      <input
+        ref={inputRef}
+        className="uk-img-edit-input"
+        type="file"
+        accept="image/*"
+        tabIndex={-1}
+        onChange={(event) => { onFile(event.currentTarget.files?.[0]); event.currentTarget.value = ''; }}
+      />
+    </div>
+  );
+}
+
+/* inertNav：仅 embed（配置示意图）用。示意图是静态的，导航只画不响应 ——
+   用「不挂 onClick」而不是 disabled，因为 disabled 会带上浏览器自己的置灰样式，
+   示意图立刻就和真页面长得不一样了；pointer-events:none 那层只是影像，这里才是语义。 */
+function PageTopNav({ current, onNavigate, items, inertNav, editEnabled, onEdit }: { current: ViewId; onNavigate: (id: string) => void; items?: Array<{ id: ViewId; label: string }>; inertNav?: boolean } & PreviewEditProps) {
+  return (
+    <nav className="uk-switch uk-page-nav" aria-label="智厨页面切换" data-annotation-id="global-navigation">
+      {(items ?? TOP_NAV_ITEMS).map((item) => {
+        /* 图上编辑时，有后台配置的那几页换成 span + 行内输入框。
+           为什么不直接「在 button 里塞一个 input」：那是嵌套可交互内容，非法 HTML，
+           空格和回车会被 button 抢走（打字时打不出空格是最先暴露的症状）。
+           也不用 disabled 代替：disabled 会带上浏览器的置灰样式，
+           编辑态下整个导航看着像坏掉了。span 复用同一套 .uk-switch-item 样式，长得一样。
+           没有后台配置的项（需求文档 / 版本管理这类）没有"名字"可改，保持按钮只读。 */
+        const adminPageId = editEnabled ? VIEW_TO_ADMIN_PAGE[item.id] : undefined;
+        if (adminPageId) {
+          return (
+            <span className={`uk-switch-item${current === item.id ? ' active' : ''}`} key={item.id}>
+              <EditableText
+                editEnabled
+                onEdit={onEdit}
+                target={{ kind: 'page', id: adminPageId }}
+                value={item.label}
+                fallback={defaultNavLabelOf(item.id)}
+              />
+            </span>
+          );
+        }
+        return (
+          <button
+            type="button"
+            key={item.id}
+            className={current === item.id ? 'active' : ''}
+            tabIndex={inertNav ? -1 : undefined}
+            aria-disabled={inertNav || undefined}
+            onClick={inertNav ? undefined : () => onNavigate(item.id)}
+          >
+            {item.label}
+          </button>
+        );
+      })}
     </nav>
   );
 }
 
-function TopHeader({ current, clock, onNavigate }: { current: ViewId; clock: string; onNavigate: (id: string) => void }) {
+function TopHeader({ current, clock, onNavigate, pageAutoPlaying, onTogglePageAutoPlay, brandName, logo, navItems, inertNav, editEnabled, onEdit }: { current: ViewId; clock: string; onNavigate: (id: string) => void; brandName?: string; logo?: string; navItems?: Array<{ id: ViewId; label: string }>; inertNav?: boolean } & PageCarouselProps & PreviewEditProps) {
   return (
     <header className="uk-top">
       <div className="uk-brand">
-        <div className="uk-logo">智</div>
+        {/* Logo 也能在图上直接换。这层包装只在编辑态存在（见 ReplaceableImage 的注释），
+            所以关掉编辑态时这棵子树与改动前逐字相同。 */}
+        <ReplaceableImage editEnabled={editEnabled} onEdit={onEdit} target={{ kind: 'logo' }} label="Logo" variant="logo">
+          <div className="uk-logo">{logo ? <img src={logo} alt="" /> : '智'}</div>
+        </ReplaceableImage>
         <div>
-          <h1>智慧厨房驾驶舱</h1>
+          {/* 驾驶舱名称：走 draft.name（「基本信息」里那个输入框），和「自定义页面名称」无关。
+              编辑态下这里可以直接改；非编辑态渲染出来的字与原来逐字相同（value || fallback）。 */}
+          <h1><EditableText editEnabled={editEnabled} onEdit={onEdit} target={{ kind: 'brand' }} value={brandName} fallback="智慧厨房驾驶舱" /></h1>
         </div>
       </div>
-      <PageTopNav current={current} onNavigate={onNavigate} />
-      <div className="uk-meta">
+      <PageTopNav current={current} onNavigate={onNavigate} items={navItems} inertNav={inertNav} editEnabled={editEnabled} onEdit={onEdit} />
+      <div className="uk-meta" data-annotation-id="global-system-time">
+        {onTogglePageAutoPlay ? (
+          <button
+            type="button"
+            className="uk-page-carousel-toggle"
+            data-annotation-id="page-carousel-control"
+            aria-pressed={pageAutoPlaying}
+            aria-label={pageAutoPlaying ? '暂停页面轮播' : '开始页面轮播'}
+            onClick={onTogglePageAutoPlay}
+          >
+            {pageAutoPlaying ? '暂停页面' : '开始页面'}
+          </button>
+        ) : null}
+        {onTogglePageAutoPlay ? (
+          <span className="uk-page-carousel-status" data-annotation-id="page-carousel-status">
+            当前轮播状态：{pageAutoPlaying ? '轮播中' : '已暂停'}
+          </span>
+        ) : null}
         <span className="uk-clock">{clock}</span>
       </div>
     </header>
@@ -350,13 +672,26 @@ type CockpitModuleProps = {
   clock: string;
   onNavigate: (id: string) => void;
   children: React.ReactNode;
-};
+} & PageCarouselProps;
 
-function CockpitModuleShell({ current, clock, onNavigate, children }: CockpitModuleProps) {
+/* 内嵌预览（embed）时把标注工具收掉：预览框里只该有页面本身。 */
+type ShellPreviewProps = {
+  embed?: boolean;
+  hideAnnotations?: boolean;
+  brandName?: string;
+  logo?: string;
+  navItems?: Array<{ id: ViewId; label: string }>;
+} & PreviewEditProps;
+
+/* 模块页除了 shell 那几项，还要按配置覆盖面板标题。 */
+type PreviewProps = ShellPreviewProps & { moduleLabels?: Record<string, string>; nutritionPagodaImage?: string };
+
+function CockpitModuleShell({ current, clock, onNavigate, pageAutoPlaying, onTogglePageAutoPlay, children, embed, hideAnnotations, brandName, logo, navItems, editEnabled, onEdit }: CockpitModuleProps & ShellPreviewProps) {
   return (
     <div className="uk-module-page">
-      <TopHeader current={current} clock={clock} onNavigate={onNavigate} />
+      <TopHeader current={current} clock={clock} onNavigate={onNavigate} pageAutoPlaying={pageAutoPlaying} onTogglePageAutoPlay={onTogglePageAutoPlay} brandName={brandName} logo={logo} navItems={navItems} inertNav={embed} editEnabled={editEnabled} onEdit={onEdit} />
       {children}
+      {embed || hideAnnotations ? null : <PrototypeAnnotationViewer currentPageId={current} onNavigate={onNavigate} />}
     </div>
   );
 }
@@ -1181,9 +1516,9 @@ const MEAL_ACHIEVEMENTS: MealAchievement[] = [
   },
 ];
 
-/** 计划外的临时加菜：**不在任何批次内**，不参与任何判定，只作为事实统计。 */
+/** 计划外的临时加菜：**不在任何批次内**，不参与任何判定；出餐明细只展示菜名、数量和出餐时间。 */
 const OFF_PLAN_ADDS = [
-  { meal: '晚餐', name: '小炒杏鲍菇肉片', trays: 3, remindAt: '18:49', actualOut: '18:55', reason: '临时接待加菜' },
+  { meal: '晚餐', name: '小炒杏鲍菇肉片', trays: 3, actualOut: '18:55' },
 ];
 
 /* ══ 日期筛选：当天用上面那套写死的数据，其它日期用**确定性**演示数据 ══════════
@@ -1235,12 +1570,15 @@ const AUTO_SCROLL = {
   hoverLeave: 600,    // 鼠标移出面板之后多久恢复（ms）
 };
 
+const DONUT_SLIDE_MS = 4500;
+
 function useAutoScroll(ref: React.RefObject<HTMLDivElement | null>, resetKey: string) {
   useEffect(() => {
     const el = ref.current;
     if (!el) return undefined;
-    if (typeof window.matchMedia === 'function'
-      && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    /* 示意图里也不自动滚：面板内容在一张静帧里必须是停住的，滚动条位置也算内容的一部分。 */
+    if (STATIC_PREVIEW || (typeof window.matchMedia === 'function'
+      && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) {
       return undefined;
     }
 
@@ -1382,7 +1720,11 @@ const buildDemoDay = (dateISO: string): MealAchievement[] => {
   }));
 };
 
-function MealPlanModule({ clock, onNavigate }: { clock: string; onNavigate: (id: string) => void }) {
+function MealPlanModule({ clock, onNavigate, pageAutoPlaying, onTogglePageAutoPlay, embed, brandName, logo, navItems, moduleLabels, editEnabled, onEdit, exceptionState }: { clock: string; onNavigate: (id: string) => void; exceptionState?: ExceptionState } & PageCarouselProps & PreviewProps) {
+  /* 图上编辑：本页三处面板标题都走它。本地绑一次 editEnabled/onEdit，
+     调用点只写「写回哪个字段 + 当前值 + 默认名」，免得每个标题都重复两个与它无关的参数。 */
+  const editable = (target: PreviewEditTarget, value: string | undefined, fallback: string) =>
+    <EditableText editEnabled={editEnabled} onEdit={onEdit} target={target} value={value} fallback={fallback} />;
   const toMinutes = (value: string) => {
     const [hour, minute] = value.split(':').map(Number);
     return hour * 60 + minute;
@@ -1572,10 +1914,28 @@ function MealPlanModule({ clock, onNavigate }: { clock: string; onNavigate: (id:
         "KPI 说 92 盆、明细只有 34 盆"这种一眼可见的矛盾。单一来源最省心。 */
   const detailDishCount = detailGroups.reduce((total, group) => total + group.dishes.length, 0);
   const daySplit = sumSplits(detailGroups.flatMap((group) => group.dishes.map((dish) => dish.split)));
-  const ontimeRate = daySplit.plan ? (daySplit.ontime / daySplit.plan) * 100 : 0;
+  const donutSegments = [
+    { cls: 'ontime', label: '及时完成', value: daySplit.ontime },
+    { cls: 'late', label: '延迟', value: daySplit.late },
+    { cls: 'undone', label: '未完成', value: daySplit.undone },
+  ];
+  const [donutSlide, setDonutSlide] = useState(0);
+  useEffect(() => {
+    setDonutSlide(0);
+    if (!daySplit.plan || STATIC_PREVIEW || (typeof window.matchMedia === 'function'
+      && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) {
+      return undefined;
+    }
+    const timer = window.setInterval(() => {
+      setDonutSlide((index) => (index + 1) % donutSegments.length);
+    }, DONUT_SLIDE_MS);
+    return () => window.clearInterval(timer);
+  }, [statDate, mealScope, batchScope, daySplit.plan, donutSegments.length]);
+  const donutCenter = daySplit.plan
+    ? donutSegments[donutSlide % donutSegments.length]
+    : { cls: 'empty', label: '暂无数据', value: 0 };
 
-  /* 计划外的临时加菜：不进四状态、不进任何判定，也不进明细（用户明确要求不要）。
-     只作为事实留在 KPI 里。 */
+  /* 计划外的临时加菜：不进四状态、不进任何判定；在明细中单独展示菜名、数量和出餐时间。 */
   const offPlanTrays = OFF_PLAN_ADDS.reduce((sum, add) => sum + add.trays, 0);
 
   /* ══ 折线图：不换图表类型，换「把哪个维度摊到 x 轴上」═══════════════════
@@ -1632,9 +1992,9 @@ function MealPlanModule({ clock, onNavigate }: { clock: string; onNavigate: (id:
   );
 
   return (
-    <CockpitModuleShell current="overview" clock={clock} onNavigate={onNavigate}>
-      <main className="uk-plan-page">
-        <div className="uk-plan-kpi-row">
+    <CockpitModuleShell current="overview" clock={clock} onNavigate={onNavigate} pageAutoPlaying={pageAutoPlaying} onTogglePageAutoPlay={onTogglePageAutoPlay} embed={embed} brandName={brandName} logo={logo} navItems={navItems} editEnabled={editEnabled} onEdit={onEdit}>
+      <main className={`uk-plan-page${exceptionState ? ' uk-exception-page' : ''}`}>
+        <div className="uk-plan-kpi-row" data-annotation-id="output-stat-filters">
           {/* 页面级控件：统计日期 + 餐段范围 + 批次。它们共同决定"这一屏统计的是哪一段"，
               所以 KPI 行、环形图、折线图、明细全都跟着变。 */}
           <div className="uk-plan-controls">
@@ -1647,35 +2007,8 @@ function MealPlanModule({ clock, onNavigate }: { clock: string; onNavigate: (id:
                 onChange={(event) => setStatDate(event.target.value || todayISO)}
               />
             </label>
-            <label className="uk-date-switch">
-              <span>餐段范围</span>
-              <select
-                value={mealScope}
-                /* ⚠️ 切餐段要**顺便把批次重置回全部**：批次选项是按餐段联动生成的
-                   （早餐只有批次1），不重置会留下一个当前餐段里不存在的值，
-                   明细直接空掉、KPI 全是 0 —— 而控件看上去一切正常，最难查的那种 bug。 */
-                onChange={(event) => {
-                  setMealScope(event.target.value);
-                  setBatchScope('all');
-                }}
-              >
-                <option value="all">全部餐段</option>
-                {dayMeals.map((meal) => (
-                  <option key={meal.id} value={meal.id}>{meal.label}</option>
-                ))}
-              </select>
-            </label>
-            <label className="uk-date-switch">
-              <span>批次</span>
-              <select value={batchScope} onChange={(event) => setBatchScope(event.target.value)}>
-                <option value="all">全部批次</option>
-                {batchNos.map((no) => (
-                  <option key={no} value={String(no)}>批次{no}</option>
-                ))}
-              </select>
-            </label>
           </div>
-          <div className="uk-module-kpis uk-plan-kpis">
+          <div className={`uk-module-kpis uk-plan-kpis${exceptionState ? ' uk-exception-summary-host uk-has-exception-state' : ''}`} data-annotation-id="output-stat-summary">
             <ModuleKpi
               label="计划出餐"
               value={`${daySplit.plan} 盆`}
@@ -1690,21 +2023,19 @@ function MealPlanModule({ clock, onNavigate }: { clock: string; onNavigate: (id:
             <ModuleKpi label="已完成 · 延迟" value={`${daySplit.late} 盆`} sideValue={`${pct(daySplit.late).toFixed(1)}%`} tone="amber" />
             <ModuleKpi label="未完成" value={`${daySplit.undone} 盆`} sideValue={`${pct(daySplit.undone).toFixed(1)}%`} tone="red" />
             <ModuleKpi label="临时加菜" value={`${offPlanTrays} 盆`} tone="blue" />
+            <ModuleExceptionState state={exceptionState} />
           </div>
         </div>
 
-        <section className="uk-module-panel uk-detail-panel">
+        <section className={`uk-module-panel uk-detail-panel${exceptionState ? ' uk-has-exception-state' : ''}`} data-annotation-id="output-detail">
           <div className="uk-module-panel-head">
             <div>
-              <h2>出餐明细</h2>
+              <h2>{editable({ kind: 'module', key: 'outmeal-detail' }, moduleLabels?.['outmeal-detail'], '出餐明细')}</h2>
               {/* 副标题把「这一屏看的是哪一段的账」写一遍，顺带交代明细的规模
                   （几个批次、几道菜、多少盆）。 */}
-              <p>
-                {scopeLabel}{batchScope === 'all' ? '' : ` · 批次${batchScope}`}
-                {' · '}{detailGroups.length} 个批次 · {detailDishCount} 道菜 · 计划 {daySplit.plan} 盆
-              </p>
             </div>
           </div>
+          <ModuleExceptionState state={exceptionState} />
 
           <div className="uk-detail-legend">
             <span><i className="ontime" />已完成 · 及时</span>
@@ -1764,64 +2095,104 @@ function MealPlanModule({ clock, onNavigate }: { clock: string; onNavigate: (id:
                 </div>
               </div>
             ))}
+            {OFF_PLAN_ADDS.length > 0 ? (
+              <div className="uk-detail-group uk-detail-off-plan-group">
+                <div className="uk-detail-grouphead uk-detail-off-plan-head">
+                  <b>临时加菜</b>
+                </div>
+                <div className="uk-detail-off-plan-rows">
+                  {OFF_PLAN_ADDS.map((add) => (
+                    <div className="uk-detail-off-plan-row" key={add.name}>
+                      <div className="uk-detail-name">
+                        <b>{add.name}</b>
+                        <small>出餐 {add.actualOut}</small>
+                      </div>
+                      <div className="uk-detail-track">
+                        <i className="ontime" style={{ flexGrow: add.trays }}><b>{add.trays}</b></i>
+                      </div>
+                      <div className="uk-detail-tail">
+                        <b>{add.trays} / {add.trays}</b>
+                        <small>盆</small>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : null}
             {/* 空态给一句实话，不要留一片空白让读者以为是加载失败。 */}
-            {detailGroups.length === 0
+            {detailGroups.length === 0 && OFF_PLAN_ADDS.length === 0
               ? <p className="uk-detail-empty">这个范围里没有批次。</p>
               : null}
           </div>
         </section>
 
         <div className="uk-plan-bottom">
-          <section className="uk-module-panel uk-donut-card">
+          <section className={`uk-module-panel uk-donut-card${exceptionState ? ' uk-has-exception-state' : ''}`} data-annotation-id="output-donut">
             {/* 标题改用**和「出餐统计」逐字相同**的 `.uk-module-panel-head > h2` 结构。
                 不手写一套「18px + #eaf7ff + 下边线」的样式去"模仿"——那样等上面那张卡
                 调了字号/颜色/间距，这里不会跟着变，两张卡迟早长得不一样。 */}
             <div className="uk-module-panel-head">
-              <div><h2>出餐情况占比</h2></div>
+              <div><h2>{editable({ kind: 'module', key: 'outmeal-donut' }, moduleLabels?.['outmeal-donut'], '出餐情况占比')}</h2></div>
             </div>
+            <ModuleExceptionState state={exceptionState} />
             <div className="uk-donut-wrap">
               {(() => {
                 const radius = 44;
-                const circumference = 2 * Math.PI * radius;
-                const segments = [
-                  { cls: 'ontime', value: daySplit.ontime },
-                  { cls: 'late', value: daySplit.late },
-                  { cls: 'undone', value: daySplit.undone },
+                const segmentGap = 0.035;
+                let angleCursor = 0;
+                const segmentGeometries = donutSegments.map((segment) => {
+                  const fraction = daySplit.plan ? segment.value / daySplit.plan : 0;
+                  const segmentAngle = 2 * Math.PI * fraction;
+                  const start = angleCursor + (segmentAngle ? segmentGap / 2 : 0);
+                  const end = angleCursor + segmentAngle - (segmentAngle ? segmentGap / 2 : 0);
+                  angleCursor += segmentAngle;
+                  return { segment, start, end };
+                });
+                const orderedSegments = [...segmentGeometries].sort((a, b) =>
+                  Number(a.segment.cls === donutCenter.cls) - Number(b.segment.cls === donutCenter.cls));
+                const pointAt = (ringRadius: number, angle: number) => [
+                  50 + ringRadius * Math.sin(angle),
+                  50 - ringRadius * Math.cos(angle),
                 ];
-                let cursor = 0;
+                const sectorPath = (start: number, end: number, outer: number, inner: number) => {
+                  const outerStart = pointAt(outer, start);
+                  const outerEnd = pointAt(outer, end);
+                  const innerEnd = pointAt(inner, end);
+                  const innerStart = pointAt(inner, start);
+                  const largeArc = end - start > Math.PI ? 1 : 0;
+                  return [
+                    `M ${outerStart[0].toFixed(2)} ${outerStart[1].toFixed(2)}`,
+                    `A ${outer} ${outer} 0 ${largeArc} 1 ${outerEnd[0].toFixed(2)} ${outerEnd[1].toFixed(2)}`,
+                    `L ${innerEnd[0].toFixed(2)} ${innerEnd[1].toFixed(2)}`,
+                    `A ${inner} ${inner} 0 ${largeArc} 0 ${innerStart[0].toFixed(2)} ${innerStart[1].toFixed(2)}`,
+                    'Z',
+                  ].join(' ');
+                };
                 return (
                   <div className="uk-cht-donut">
                     <svg viewBox="0 0 100 100">
                       <circle cx="50" cy="50" r={radius} fill="none" stroke="#123c5e" strokeWidth="12" />
-                      {segments.map((segment) => {
-                        const fraction = daySplit.plan ? segment.value / daySplit.plan : 0;
-                        const dash = `${(circumference * fraction).toFixed(1)} ${(circumference * (1 - fraction)).toFixed(1)}`;
-                        const offset = (-circumference * cursor).toFixed(1);
-                        cursor += fraction;
+                      {orderedSegments.map(({ segment, start, end }) => {
+                        const isActive = segment.cls === donutCenter.cls;
+                        if (end <= start) return null;
                         return (
-                          <circle
+                          <path
                             key={segment.cls}
-                            className={`uk-donut-seg ${segment.cls}`}
-                            cx="50" cy="50" r={radius} fill="none" strokeWidth="12"
-                            strokeDasharray={dash} strokeDashoffset={offset}
-                            transform="rotate(-90 50 50)"
+                            className={`uk-donut-seg ${segment.cls}${isActive ? ' active' : ''}`}
+                            d={sectorPath(start, end, 50, isActive ? 36 : 38)}
                           />
                         );
                       })}
                     </svg>
-                    <div className="uk-cht-donut-c">
-                      <b>{ontimeRate.toFixed(1)}%</b>
-                      <small>按时完成</small>
+                    <div className="uk-cht-donut-c" aria-live="polite">
+                      <b>{pct(donutCenter.value).toFixed(1)}%</b>
+                      <small>{donutCenter.label}</small>
                     </div>
                   </div>
                 );
               })()}
               <div className="uk-donut-legend">
-                {[
-                  { cls: 'ontime', label: '及时', value: daySplit.ontime },
-                  { cls: 'late', label: '延迟', value: daySplit.late },
-                  { cls: 'undone', label: '未完成', value: daySplit.undone },
-                ].map((item) => (
+                {donutSegments.map((item) => (
                   <div className={`uk-donut-item ${item.cls}`} key={item.cls}>
                     <i />
                     <b>{item.value} 盆</b>
@@ -1832,15 +2203,16 @@ function MealPlanModule({ clock, onNavigate }: { clock: string; onNavigate: (id:
             </div>
           </section>
 
-          <section className="uk-module-panel uk-line-card">
+          <section className={`uk-module-panel uk-line-card${exceptionState ? ' uk-has-exception-state' : ''}`} data-annotation-id="output-deviation-line">
             <div className="uk-module-panel-head">
               <div>
                 {/* ⚠️ 标题和图例**一起跟着 `lineMode` 换文案**，不能只换一半：
                     x 轴换成「菜」之后，图例还写「本批计划」的话，读者会拿两条不同的
                     基准去读同一张图。标题说"哪根轴"、图例说"基准是谁"，两个都得对。 */}
-                <h2>{lineMode === 'batch' ? '各批次出餐偏差（分钟）' : '各道菜出餐偏差（分钟）'}</h2>
+                <h2>{editable({ kind: 'module', key: 'outmeal-deviation' }, moduleLabels?.['outmeal-deviation'], lineMode === 'batch' ? '各批次出餐偏差（分钟）' : '各道菜出餐偏差（分钟）')}</h2>
               </div>
             </div>
+            <ModuleExceptionState state={exceptionState} />
             {/* 图例从标题里**搬出来单独一行**，放在标题下面。
                 原因：标题升到 18px 之后，`<em>` 再挂在同一行会跟标题抢视觉权重，
                 而且标题变长时图例会先被挤到换行、把标题和图的间距搞乱。
@@ -1859,6 +2231,7 @@ function MealPlanModule({ clock, onNavigate }: { clock: string; onNavigate: (id:
                   <span><i className="ok" />提前 · 早于本菜备餐提醒</span>
                 </>
               )}
+              <span><i className="ontime" />准时 · 与计划一致</span>
             </div>
             <svg className="uk-cht-line" viewBox="0 0 1200 240">
               {(() => {
@@ -1967,6 +2340,7 @@ function MealPlanModule({ clock, onNavigate }: { clock: string; onNavigate: (id:
                     {linePoints.map((point, index) => {
                       const cy = py(point.over);
                       const offScale = point.over < minOver || point.over > maxOver;
+                      const pointState = point.over > 0 ? 'bad' : point.over < 0 ? 'ok' : 'ontime';
                       return (
                         <g key={point.key}>
                           {/* 原生 tooltip：图上只有一个偏差数字，读者想核对「这几分钟是从哪个时刻
@@ -1974,12 +2348,12 @@ function MealPlanModule({ clock, onNavigate }: { clock: string; onNavigate: (id:
                           <title>{`${point.label} ｜ ${dueWord} ${point.dueAt} ｜ 实际出餐 ${point.finish} ｜ ${point.over > 0 ? `超 ${point.over} 分` : point.over < 0 ? `提前 ${-point.over} 分` : '准点'}`}</title>
                           <circle
                             cx={px(index).toFixed(1)} cy={cy.toFixed(1)} r="5.5"
-                            className={`${point.over > 0 ? 'bad' : 'ok'}${offScale ? ' clamped' : ''}`}
+                            className={`${pointState}${offScale ? ' clamped' : ''}`}
                           />
                           <text
                             x={px(index).toFixed(1)}
                             y={(cy - 13).toFixed(1)}
-                            className={point.over > 0 ? 'uk-cht-pt bad' : 'uk-cht-pt ok'}
+                            className={`uk-cht-pt ${pointState}`}
                             textAnchor="middle"
                           >
                             {point.over > 0 ? `+${point.over}` : point.over}
@@ -2190,7 +2564,7 @@ const PAGODA_ANCHORS = [68, 195, 300, 415, 520, 650];
 const PAGODA_LEAD_X = [560, 645, 705, 750, 825, 876];
 
 /** 立体膳食宝塔：位图塔身 + 右侧矢量中文层名/克数 + 虚线引线。 */
-function DietPagoda({ tiers }: { tiers: Array<{ label: string; tone: string; amounts: string[] }> }) {
+function DietPagoda({ tiers, imageSrc }: { tiers: Array<{ label: string; tone: string; amounts: string[] }>; imageSrc?: string }) {
   return (
     <svg
       className="uk-pagoda"
@@ -2216,7 +2590,7 @@ function DietPagoda({ tiers }: { tiers: Array<{ label: string; tone: string; amo
       />
       <image
         className="uk-pagoda-photo"
-        href={dietPagoda3d}
+        href={imageSrc || dietPagoda3d}
         x={PAGODA.imgX}
         y={PAGODA.imgY}
         width={PAGODA.imgW}
@@ -2275,7 +2649,10 @@ const FOOD_COLOR_ADVICE: Record<FoodColor, string> = {
   绿: '建议每餐食用', 黄: '建议每天食用', 红: '建议每周食用 2-3 次',
 };
 
-function NutritionHealthModule({ clock, onNavigate }: { clock: string; onNavigate: (id: string) => void }) {
+function NutritionHealthModule({ clock, onNavigate, pageAutoPlaying, onTogglePageAutoPlay, embed, brandName, logo, navItems, moduleLabels, nutritionPagodaImage, editEnabled, onEdit, exceptionState }: { clock: string; onNavigate: (id: string) => void; exceptionState?: ExceptionState } & PageCarouselProps & PreviewProps) {
+  /* 图上编辑：本页三处面板标题都走它（与 MealPlanModule 同一写法）。 */
+  const editable = (target: PreviewEditTarget, value: string | undefined, fallback: string) =>
+    <EditableText editEnabled={editEnabled} onEdit={onEdit} target={target} value={value} fallback={fallback} />;
   /* 营养分析改成「一次只讲一道菜」的轮播卡：10 道菜 × 6 项指标铺成整表时，
      一屏 60 个数字全在抢注意力，观众一个也记不住；改成单品卡后
      「这道菜的图 + 它自己的 6 个值」是唯一焦点，10 道菜自动过一遍，讲解时不用手点。 */
@@ -2294,10 +2671,10 @@ function NutritionHealthModule({ clock, onNavigate }: { clock: string; onNavigat
   /* tick 出现在依赖里但函数体没用到 —— 这是故意的：点「今日菜单」选菜后要让计时重来，
      否则刚点完 0.1 秒就被自动翻页抢走。改 tick 让 effect 重建定时器即可。 */
   useEffect(() => {
-    if (!autoPlaying || hovering) return undefined;
+    if (!autoPlaying || hovering || STATIC_PREVIEW || exceptionState) return undefined;
     const timer = window.setInterval(() => setSlide((i) => (i + 1) % DISHES.length), NUTRITION_SLIDE_MS);
     return () => window.clearInterval(timer);
-  }, [autoPlaying, hovering, tick]);
+  }, [autoPlaying, hovering, tick, exceptionState]);
 
   const pickDish = (index: number) => {
     setSlide(index);
@@ -2316,22 +2693,24 @@ function NutritionHealthModule({ clock, onNavigate }: { clock: string; onNavigat
   ];
 
   return (
-    <CockpitModuleShell current="nutrition" clock={clock} onNavigate={onNavigate}>
+    <CockpitModuleShell current="nutrition" clock={clock} onNavigate={onNavigate} pageAutoPlaying={pageAutoPlaying} onTogglePageAutoPlay={onTogglePageAutoPlay} embed={embed} brandName={brandName} logo={logo} navItems={navItems} editEnabled={editEnabled} onEdit={onEdit}>
       <main className="uk-nutrition-page">
         {/* 原「今日餐品 / 平均能量 / 早餐·午餐·晚餐 / 当前分析」四个 KPI 卡已删：
             营养健康页的信息主体是「结构 + 每道菜的营养值」，这四张卡全是重复口径
             （道数 hero 上有、平均能量没人用、餐段覆盖在出餐统计页、当前分析由选中高亮承担），
             删掉后页面少一层横向分段，宝塔和营养分析的版面能直接顶上去。 */}
         <div className="uk-nutrition-main">
-          <section className="uk-module-panel uk-nutrition-pyramid">
-            <div className="uk-module-panel-head"><div><h2>膳食结构建议</h2><p>参考《中国居民膳食指南》膳食宝塔的每日推荐结构</p></div></div>
+          <section className={`uk-module-panel uk-nutrition-pyramid${exceptionState ? ' uk-has-exception-state' : ''}`} data-annotation-id="nutrition-pyramid">
+            <div className="uk-module-panel-head"><div><h2>{editable({ kind: 'module', key: 'nutrition-pagoda' }, moduleLabels?.['nutrition-pagoda'], '中国居民平衡膳食宝塔（2022）')}</h2><p>每日推荐摄入量</p></div></div>
+            <ModuleExceptionState state={exceptionState} />
             <div className="uk-pyramid-wrap">
-              <DietPagoda tiers={pyramidTiers} />
+              <ReplaceableImage editEnabled={editEnabled} onEdit={onEdit} target={{ kind: 'pagoda' }} label="宝塔图片" variant="pagoda" canReset={Boolean(nutritionPagodaImage)}>
+                <DietPagoda tiers={pyramidTiers} imageSrc={nutritionPagodaImage} />
+              </ReplaceableImage>
               {/* 图注：把「这张图在说什么」写清楚 —— 宝塔画的是每日推荐摄入量，
                   不是今日菜单的实测营养（实测在右边「营养分析」表里）。
                   压成一行：两行会把宝塔挤矮 6%，且这句本来也不用占两行。 */}
               <div className="uk-pyramid-caption">
-                <strong>每日推荐摄入量</strong>
               </div>
             </div>
           </section>
@@ -2341,14 +2720,15 @@ function NutritionHealthModule({ clock, onNavigate }: { clock: string; onNavigat
                 旧规则保留在 style.css 里，回退时可直接复用；对应 JSX 已删）。
                 点击联动：点下方「今日菜单」任一卡 → 跳到那道菜并重置自动播放计时。 */}
             <section
-              className="uk-module-panel uk-nutrition-spotlight"
+              className={`uk-module-panel uk-nutrition-spotlight${exceptionState ? ' uk-has-exception-state' : ''}`}
+              data-annotation-id="nutrition-spotlight"
               onMouseEnter={() => setHovering(true)}
               onMouseLeave={() => setHovering(false)}
               onFocusCapture={() => setHovering(true)}
               onBlurCapture={() => setHovering(false)}
             >
               <div className="uk-module-panel-head">
-                <div><h2>营养分析</h2><p>每 100g 熟制成品 · 演示估算值</p></div>
+                <div><h2>{editable({ kind: 'module', key: 'nutrition-analysis' }, moduleLabels?.['nutrition-analysis'], '营养分析')}</h2><p>每 100g 熟制成品 ·</p></div>
                 <div className="uk-spotlight-tools">
                   <span className="uk-module-panel-count">{slide + 1} / {DISHES.length}</span>
                   <button
@@ -2362,6 +2742,7 @@ function NutritionHealthModule({ clock, onNavigate }: { clock: string; onNavigat
                   </button>
                 </div>
               </div>
+              <ModuleExceptionState state={exceptionState} />
               <div className="uk-spotlight-body">
                 <figure className="uk-spotlight-figure">
                   {/* key 绑菜名：换菜时 img 重新挂载，CSS 入场动画才会重播 */}
@@ -2386,7 +2767,7 @@ function NutritionHealthModule({ clock, onNavigate }: { clock: string; onNavigat
                     ))}
                   </div>
                   <div className="uk-spotlight-uses">
-                    <div><span>主料</span><b>{selectedDish.ingredients.join(' · ')}</b></div>
+                    <div><span>食材</span><b>{selectedDish.ingredients.join(' · ')}</b></div>
                     <div><span>调料</span><b>{selectedDish.seasonings.join(' · ')}</b></div>
                   </div>
                 </div>
@@ -2407,8 +2788,9 @@ function NutritionHealthModule({ clock, onNavigate }: { clock: string; onNavigat
               </div>
             </section>
 
-            <section className="uk-module-panel uk-recommended-panel">
-              <div className="uk-module-panel-head"><div><h2>今日菜单</h2></div><span className="uk-module-panel-count">{recommendations.length} 道</span></div>
+            <section className={`uk-module-panel uk-recommended-panel${exceptionState ? ' uk-has-exception-state' : ''}`} data-annotation-id="nutrition-menu">
+              <div className="uk-module-panel-head"><div><h2>{editable({ kind: 'module', key: 'nutrition-menu' }, moduleLabels?.['nutrition-menu'], '今日菜单')}</h2></div><span className="uk-module-panel-count">{recommendations.length} 道</span></div>
+              <ModuleExceptionState state={exceptionState} />
               <div className="uk-recommended-grid">
                 {recommendations.map((dish, index) => <button type="button" className={`uk-recommended-card${selectedDish.name === dish.name ? ' active' : ''}`} key={dish.name} onClick={() => pickDish(index)}>
                   <span className="uk-recommended-visual"><img src={DISH_IMAGES[dish.name]} alt={`${dish.name}餐品图片`} loading="lazy" /></span>
@@ -2460,56 +2842,188 @@ function TaskDispatchModule({ data, clock, onNavigate }: { data: ModuleSharedDat
 
 export default function UnmannedKitchenCockpit() {
   const [scale, setScale] = useState(1);
-  const [clock, setClock] = useState('');
+  /* 时钟初值就取真实时间：留空的话首帧会先渲染一次 '--:--:--'（明厨亮灶的 REC 时间戳
+     还带这个兜底），示意图里那一下就是「一闪而过的不一样」。 */
+  const [clock, setClock] = useState(() => clockStamp(new Date()));
   /* 当天第几分钟。跟 clock 同一个 tick 更新 —— 「生产进度」要按它推当前餐段。
      初值直接取真实时间，避免首帧先按 00:00 渲染成早餐再跳一下。 */
   const [clockMinutes, setClockMinutes] = useState(() => {
     const now = new Date();
     return now.getHours() * 60 + now.getMinutes();
   });
-  const [servedNow, setServedNow] = useState(SERVED);
-  const [servedBatches, setServedBatches] = useState<OutItem[]>([]);
+  /* 示意图：出餐量与记录取「定格那一帧」的值（首帧即最终值）。
+     真页面：从 SERVED 起、出餐记录从空列表起，等动线到达出口再逐条累加（见下方 effect）。 */
+  const [staticServed] = useState(() => (STATIC_PREVIEW ? frozenServedState() : null));
+  const [servedNow, setServedNow] = useState(staticServed ? staticServed.servedNow : SERVED);
+  const [servedBatches, setServedBatches] = useState<OutItem[]>(staticServed ? staticServed.servedBatches : []);
   const [flowNow, setFlowNow] = useState(() => Date.now());
-  const [flowStartedAt] = useState(() => Date.now());
+  /* 产线时钟的「起点」。示意图里把起点往前挪 PREVIEW_FREEZE_MS，于是首帧渲染出来
+     就已经是「演示跑了 49 秒」的状态：routePhase / 烹饪进度 / 温度全部按这一帧算。 */
+  const [flowStartedAt] = useState(() => (STATIC_PREVIEW ? Date.now() - PREVIEW_FREEZE_MS : Date.now()));
   const [view, setView] = useState<ViewId>(readViewFromLocation);
-  const navigate = (id: string) => {
+  const [exceptionPage, setExceptionPage] = useState<ExceptionPageId | null>(() => {
+    const initial = readViewFromLocation();
+    return isExceptionPageId(initial) ? initial : null;
+  });
+  const [exceptionModuleView, setExceptionModuleView] = useState<ViewId>(() => {
+    const initial = readViewFromLocation();
+    return isExceptionPageId(initial) ? 'cockpit' : initial;
+  });
+  const displayView = exceptionPage ? exceptionModuleView : view;
+  const exceptionState: ExceptionState | undefined = exceptionPage === 'reference-no-data'
+    ? 'no-data'
+    : exceptionPage === 'reference-load-failed' ? 'load-failed' : undefined;
+  const [embed] = useState(readEmbedFromLocation);
+  const [previewConfig, setPreviewConfig] = useState<EmbedPreviewConfig | null>(null);
+  /* 图上编辑的开关由后台（父窗口）给：示意图自己不知道该不该进入编辑态 ——
+     它是"被配置的对象"，不是"配置的工具"。默认关，打开就是回到只读的静态图。 */
+  const [previewEdit, setPreviewEdit] = useState(false);
+  /* 图上改完的字回传给后台，由后台写进草稿。本页**不留副本**：
+     配置的唯一真源是后台那份 draft，这里只负责"显示它 + 把改动发回去"。 */
+  const commitPreviewEdit = useCallback<PreviewEditCommit>((target, value) => {
+    window.parent?.postMessage({ type: 'cockpit-preview-edit', target, value }, '*');
+  }, []);
+  const [pageAutoPlaying, setPageAutoPlaying] = useState(() => {
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return true;
+    return !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  });
+  const navigate = useCallback((id: string) => {
     const next = normalizeViewId(id);
+    if (isExceptionPageId(next)) {
+      if (!isExceptionPageId(view)) {
+        setExceptionModuleView(TOP_NAV_ITEMS.some((item) => item.id === view) ? view : 'cockpit');
+      }
+      setExceptionPage(next);
+    } else {
+      setExceptionPage(null);
+    }
     setView(next);
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       params.set('page', next === 'cockpit' ? 'operations' : next);
       window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
     }
-  };
+  }, [view]);
+
+  const navigateVisiblePage = useCallback((id: string) => {
+    const next = normalizeViewId(id);
+    if (exceptionPage && TOP_NAV_ITEMS.some((item) => item.id === next)) {
+      setExceptionModuleView(next);
+      return;
+    }
+    navigate(id);
+  }, [exceptionPage, navigate]);
 
   useEffect(() => {
-    const onPopState = () => setView(readViewFromLocation());
+    const onPopState = () => {
+      const next = readViewFromLocation();
+      setView(next);
+      setExceptionPage(isExceptionPageId(next) ? next : null);
+      if (isExceptionPageId(next)) setExceptionModuleView('cockpit');
+    };
     window.addEventListener('popstate', onPopState);
     return () => window.removeEventListener('popstate', onPopState);
   }, []);
 
+  /* embed 模式：body 挂标记（隐藏原型目录），并与父窗口握手收配置。 */
   useEffect(() => {
+    if (!embed) return undefined;
+    document.body.classList.add('uk-embed');
+    return () => document.body.classList.remove('uk-embed');
+  }, [embed]);
+
+  /* 压住 SVG SMIL。
+     生产流程里的托盘位置是 <animateMotion> 在走的，它有两处绕过了前面那两道防线：
+     不是 CSS 动画（所以 .uk-embed 里的 animation:none 管不到），也不进 document.getAnimations()
+     （所以只查动画列表会得出「已经静了」的假结论，实际画面上托盘还在跑）。
+     停 SMIL 只有一条路：暂停这条 SVG 自己的时间轴，并把时间拨到定格那一刻。
+     拨的值必须与 flowStartedAt 用的是同一个 PREVIEW_FREEZE_MS —— 两套时钟一旦错开，
+     就会出现「JS 说这台在烹饪、托盘却停在别处」这种自相矛盾的帧。 */
+  useEffect(() => {
+    if (!embed) return undefined;
+    const freeze = () => {
+      document.querySelectorAll('svg').forEach((svg) => {
+        try {
+          svg.pauseAnimations();
+          svg.setCurrentTime(PREVIEW_FREEZE_MS / 1000);
+        } catch {
+          /* 文档还没到 beforeload 时 setCurrentTime 会抛，忽略即可。 */
+        }
+      });
+    };
+    freeze();
+    /* 切页或配置变更时 React 会重建 SVG 节点，暂停标记跟着节点一起没了，
+       所以用观察器在节点变动后再补一刀，而不是只跑一次。 */
+    const observer = new MutationObserver(freeze);
+    observer.observe(document.body, { childList: true, subtree: true });
+    return () => observer.disconnect();
+  }, [embed]);
+
+  useEffect(() => {
+    if (!embed) return undefined;
+    const onMessage = (event: MessageEvent) => {
+      const data = event.data as { type?: string; config?: EmbedPreviewConfig; editMode?: boolean } | null;
+      if (!data || data.type !== 'cockpit-preview-config') return;
+      setPreviewConfig(data.config ?? null);
+      setPreviewEdit(Boolean(data.editMode));
+    };
+    window.addEventListener('message', onMessage);
+    /* 父窗口可能在 iframe 还没挂上监听时就发过一次配置，这里主动握一次手让它补发。 */
+    window.parent?.postMessage({ type: 'cockpit-preview-ready' }, '*');
+    return () => window.removeEventListener('message', onMessage);
+  }, [embed]);
+
+  /* 图上编辑时给 body 挂标记，把整页的命中测试关掉、只放行标题输入框
+     （规则在 style.css 的 body.uk-embed-edit 里）。
+     目的是让「能点的东西」精确等于「能改的东西」——不然编辑态下点到轮播开关、
+     餐段筛选、批次切换这些真按钮，示意图当场就动了或切页了，
+     而用户完全不知道是自己点出来的，只会觉得"这图坏了"。
+     注意这只是两道防线里的**里面**那道：外面那道（.uk-admin-live-frame.is-edit>iframe）
+     只是松开了 iframe 这个整体，单靠它等于把整张示意图都解锁了。 */
+  useEffect(() => {
+    document.body.classList.toggle('uk-embed-edit', embed && previewEdit);
+    return () => document.body.classList.remove('uk-embed-edit');
+  }, [embed, previewEdit]);
+
+  useEffect(() => {
+    if (embed || !pageAutoPlaying || view === 'version' || view === 'requirements' || view === 'admin' || view === 'reference-no-data' || view === 'reference-load-failed') return undefined;
+    const timer = window.setInterval(() => {
+      setView((current) => {
+        const currentIndex = TOP_NAV_ITEMS.findIndex((item) => item.id === current);
+        const next = TOP_NAV_ITEMS[(currentIndex + 1 + TOP_NAV_ITEMS.length) % TOP_NAV_ITEMS.length].id;
+        if (typeof window !== 'undefined') {
+          const params = new URLSearchParams(window.location.search);
+          params.set('page', next === 'cockpit' ? 'operations' : next);
+          window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
+        }
+        return next;
+      });
+    }, PAGE_CAROUSEL_MS);
+    return () => window.clearInterval(timer);
+  }, [embed, pageAutoPlaying, view]);
+
+  useEffect(() => {
+    /* 产线时钟。示意图里这一个定时器必须停 —— 动线相位、设备状态、烹饪计时、温度
+       全部从 flowNow 派生，80ms 一跳就意味着画面每 80ms 变一次，这正是「说好静态却还在动」的主因。 */
+    if (STATIC_PREVIEW) return undefined;
     const timer = window.setInterval(() => setFlowNow(Date.now()), 80);
     return () => window.clearInterval(timer);
   }, []);
 
   useEffect(() => {
+    /* 示意图里的出餐量/记录已经在 useState 初值里定格好了，这里不排任何定时器。 */
+    if (STATIC_PREVIEW) return undefined;
     const timeoutIds: number[] = [];
     const intervalIds: number[] = [];
     ACTIVE_ROUTE_PATHS.forEach((route) => {
-      const routeDelayMs = Number.parseFloat(route.delay) * 1000;
-      const firstArrivalMs = Math.max(1000, LINE_CYCLE_MS + routeDelayMs);
       const addServedBatch = () => {
         setServedNow((current) => Math.min(TOTAL_PLAN, current + route.increment));
-        setServedBatches((current) => [
-          { port: route.port, dish: route.dish, qty: route.dish === '番茄炒蛋' || route.dish === '蒸蛋羹' ? '1 盆 / 2kg' : '1 盆 / 1kg', color: route.color },
-          ...current,
-        ].slice(0, 3));
+        setServedBatches((current) => [outItemOf(route), ...current].slice(0, 3));
       };
       const timeoutId = window.setTimeout(() => {
         addServedBatch();
         intervalIds.push(window.setInterval(addServedBatch, LINE_CYCLE_MS));
-      }, firstArrivalMs);
+      }, arrivalMsOf(route));
       timeoutIds.push(timeoutId);
     });
     return () => {
@@ -2528,11 +3042,13 @@ export default function UnmannedKitchenCockpit() {
   useEffect(() => {
     const tickClock = () => {
       const now = new Date();
-      const pad = (n: number) => String(n).padStart(2, '0');
-      setClock(`${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}  ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`);
+      setClock(clockStamp(now));
       setClockMinutes(now.getHours() * 60 + now.getMinutes());
     };
     tickClock();
+    /* 示意图：时钟停在「打开预览那一刻」，不再跳秒。右上角那个秒针和明厨亮灶的
+       REC 时间戳都读它，一处停、两处都停。 */
+    if (STATIC_PREVIEW) return undefined;
     const timer = window.setInterval(tickClock, 1000);
     return () => window.clearInterval(timer);
   }, []);
@@ -2541,7 +3057,8 @@ export default function UnmannedKitchenCockpit() {
   const routePhase = (route: (typeof ACTIVE_ROUTE_PATHS)[number]) => {
     const delayMs = Number.parseFloat(route.delay) * 1000;
     const elapsed = flowNow - flowStartedAt - delayMs;
-    return ((elapsed % LINE_CYCLE_MS) + LINE_CYCLE_MS) % LINE_CYCLE_MS / LINE_CYCLE_MS;
+    if (elapsed < 0) return 0;
+    return (elapsed % LINE_CYCLE_MS) / LINE_CYCLE_MS;
   };
   const routeForDish = (dishName: string) => ACTIVE_ROUTE_PATHS.find((route) => route.dish === dishName);
   /* 烹饪进度相位（0~1）：按真实秒数推进，用来算「已烹饪时间 / 状态」。
@@ -2576,6 +3093,7 @@ export default function UnmannedKitchenCockpit() {
     const phase = routePhase(route);
     return phase >= route.trayStart && phase < route.trayEnd;
   };
+  const isWeighWaiting = (route: (typeof ACTIVE_ROUTE_PATHS)[number]) => routePhase(route) < route.trayStart;
   /* 原 feedingRoutes（正走在入口通道的动线集合）已删：它只被「投料区」KPI 引用，
      而那个 KPI 已改成按烹饪进度推导（见 segmentFeedingTrays）—— 演示动线只有 3 条、
      只覆盖早餐/午餐，晚餐段用它算出来永远是 0。入口通道的托盘高亮仍由 isTrayWaiting 驱动。 */
@@ -2656,6 +3174,8 @@ export default function UnmannedKitchenCockpit() {
   ));
   const sparkPeak = Math.max(...sparkTrend.map((point) => point.v), 1);
   const productionCompletionRate = COMPLETED_PRODUCTION_TRAYS / Math.max(TOTAL_PRODUCTION_TRAYS, 1);
+  const menuDishStatBodyRef = useRef<HTMLDivElement | null>(null);
+  useAutoScroll(menuDishStatBodyRef, `${displayView}|${DISHES.length}`);
 
   const sharedData: ModuleSharedData = {
     servedNow,
@@ -2668,42 +3188,106 @@ export default function UnmannedKitchenCockpit() {
     dishState,
     workOrderStatus,
   };
-  if (view === 'nutrition') return (
-    <div className="uk-viewport">
-      <div className="uk-screen uk-module-screen" style={{ transform: `translate(-50%, -50%) scale(${scale})` }}>
-        <NutritionHealthModule clock={clock} onNavigate={navigate} />
+  /* 预览联动：配置里的启用页面与名称驱动顶部导航；模块名驱动对应面板的标题。 */
+  const previewNavItems = useMemo(() => {
+    const pages = previewConfig?.pages;
+    if (!pages) return undefined;
+    const mapped = pages
+      .filter((page) => page.enabled)
+      .map((page) => ({ id: ADMIN_PAGE_TO_VIEW[page.id], label: page.name }))
+      .filter((item): item is { id: ViewId; label: string } => Boolean(item.id));
+    return mapped.length ? mapped : undefined;
+  }, [previewConfig]);
+  const moduleLabels = previewConfig?.moduleLabels ?? {};
+  /* 生产烹饪页有 5 处面板标题，写法与 MealPlanModule / NutritionHealthModule 里的同名 helper 一致。
+     三处各绑一份而不是抽成全局组件：那两页是独立组件，拿不到这里的 state，
+     硬要共用一个就得把 editEnabled/onEdit 再透传一层，反而更绕。 */
+  const editable = (target: PreviewEditTarget, value: string | undefined, fallback: string) =>
+    <EditableText editEnabled={previewEdit} onEdit={commitPreviewEdit} target={target} value={value} fallback={fallback} />;
+  const shellPreview: ShellPreviewProps = {
+    embed,
+    hideAnnotations: Boolean(exceptionPage),
+    editEnabled: previewEdit,
+    onEdit: commitPreviewEdit,
+    brandName: previewConfig?.name,
+    logo: previewConfig?.logo,
+    navItems: previewNavItems,
+  };
+  const previewProps: PreviewProps = { ...shellPreview, moduleLabels, nutritionPagodaImage: previewConfig?.nutritionPagodaImage };
+  const prototypeDirectory = embed ? null : <PrototypeDirectory currentPageId={exceptionPage ?? view} onNavigate={navigate} />;
+  if (view === 'admin') return <>{prototypeDirectory}<CockpitAdminView onNavigate={navigate} /></>;
+  if (view === 'requirements') return (
+    <>
+      {prototypeDirectory}
+      <div className="uk-viewport">
+        <div key={view} className="uk-screen uk-module-screen" style={{ transform: `translate(-50%, -50%) scale(${scale})` }}>
+          <CockpitModuleShell current="requirements" clock={clock} onNavigate={navigate} {...shellPreview}>
+            <RequirementsDocumentView />
+          </CockpitModuleShell>
+        </div>
       </div>
-    </div>
+    </>
   );
-  if (view === 'dish') return (
-    <div className="uk-viewport">
-      <div className="uk-screen uk-module-screen" style={{ transform: `translate(-50%, -50%) scale(${scale})` }}>
-        <DishStatsModule clock={clock} onNavigate={navigate} />
+  if (view === 'version') return (
+    <>
+      {prototypeDirectory}
+      <div className="uk-viewport">
+        <div key={view} className="uk-screen uk-module-screen" style={{ transform: `translate(-50%, -50%) scale(${scale})` }}>
+          <CockpitModuleShell current="version" clock={clock} onNavigate={navigate} {...shellPreview}>
+            <VersionManagementView />
+          </CockpitModuleShell>
+        </div>
       </div>
-    </div>
+    </>
   );
-  if (view === 'overview' || view === 'process' || view === 'equipment') return (
-    <div className="uk-viewport">
-      <div className="uk-screen uk-module-screen" style={{ transform: `translate(-50%, -50%) scale(${scale})` }}>
-        <MealPlanModule clock={clock} onNavigate={navigate} />
+  if (displayView === 'nutrition') return (
+    <>
+      {prototypeDirectory}
+      <div className="uk-viewport">
+        <div key={displayView} className={`uk-screen uk-module-screen${exceptionPage ? ' uk-exception-screen' : ''}`} style={{ transform: `translate(-50%, -50%) scale(${scale})` }}>
+          <NutritionHealthModule clock={clock} onNavigate={navigateVisiblePage} pageAutoPlaying={exceptionPage ? undefined : pageAutoPlaying} onTogglePageAutoPlay={exceptionPage ? undefined : () => setPageAutoPlaying((playing) => !playing)} exceptionState={exceptionState} {...previewProps} />
+        </div>
       </div>
-    </div>
+    </>
+  );
+  if (displayView === 'dish') return (
+    <>
+      {prototypeDirectory}
+      <div className="uk-viewport">
+        <div key={displayView} className={`uk-screen uk-module-screen${exceptionPage ? ' uk-exception-screen' : ''}`} style={{ transform: `translate(-50%, -50%) scale(${scale})` }}>
+          <DishStatsModule clock={clock} onNavigate={navigate} />
+        </div>
+      </div>
+    </>
+  );
+  if (displayView === 'overview' || displayView === 'process' || displayView === 'equipment') return (
+    <>
+      {prototypeDirectory}
+      <div className="uk-viewport">
+        <div key={displayView} className={`uk-screen uk-module-screen${exceptionPage ? ' uk-exception-screen' : ''}`} style={{ transform: `translate(-50%, -50%) scale(${scale})` }}>
+          <MealPlanModule clock={clock} onNavigate={navigateVisiblePage} pageAutoPlaying={exceptionPage ? undefined : pageAutoPlaying} onTogglePageAutoPlay={exceptionPage ? undefined : () => setPageAutoPlaying((playing) => !playing)} exceptionState={exceptionState} {...previewProps} />
+        </div>
+      </div>
+    </>
   );
 
   return (
-    <div className="uk-viewport">
-      <div className="uk-screen" style={{ transform: `translate(-50%, -50%) scale(${scale})` }}>
-        <TopHeader current={view} clock={clock} onNavigate={navigate} />
+    <>
+      {prototypeDirectory}
+      <div className="uk-viewport">
+        <div key={displayView} className={`uk-screen${exceptionPage ? ' uk-exception-screen' : ''}`} style={{ transform: `translate(-50%, -50%) scale(${scale})` }}>
+          <TopHeader current={displayView} clock={clock} onNavigate={navigateVisiblePage} pageAutoPlaying={exceptionPage ? undefined : pageAutoPlaying} onTogglePageAutoPlay={exceptionPage ? undefined : () => setPageAutoPlaying((playing) => !playing)} brandName={shellPreview.brandName} logo={shellPreview.logo} navItems={shellPreview.navItems} inertNav={embed} editEnabled={shellPreview.editEnabled} onEdit={shellPreview.onEdit} />
 
-        {view === 'behavior' && <BehaviorView />}
+          {displayView === 'behavior' && <BehaviorView exceptionState={exceptionState} />}
 
-        <main className="uk-body" hidden={view !== 'cockpit'}>
+          <main className="uk-body" hidden={displayView !== 'cockpit'}>
           <aside className="uk-col">
-            <section className="uk-panel uk-menu-dashboard">
+            <section className={`uk-panel uk-menu-dashboard${exceptionState ? ' uk-has-exception-state' : ''}`} data-annotation-id="production-menu">
               <h2>
-                今日菜单
+                {editable({ kind: 'module', key: 'production-menu' }, moduleLabels['production-menu'], '今日菜单')}
                 <em className="uk-h2-count">{DISHES.length} 道</em>
               </h2>
+              <ModuleExceptionState state={exceptionState} />
               <div className="uk-menu-dashboard-summary">
                 <div className="uk-menu-dish-count"><b>{DISHES.length}</b><span>道</span></div>
                 <div className="uk-menu-output-stat"><span>总产量</span><strong>{TOTAL_PRODUCTION_TRAYS}<em>盆</em></strong><small><b>{formatKg(TOTAL_FEED_KG)}</b></small></div>
@@ -2736,7 +3320,7 @@ export default function UnmannedKitchenCockpit() {
               })()}
               <div className="uk-dish-stat-chart">
                 <div className="uk-dish-stat-head"><span>餐品统计</span><span>已完成重量 / 总重量</span></div>
-                <div className="uk-dish-stat-body">
+                <div className="uk-dish-stat-body" ref={menuDishStatBodyRef}>
                   {DISH_GROUPS.map((group) => (
                     <section className="uk-dish-stat-group" key={group.segment}>
                       <div className="uk-menu-group-heading"><span>{group.segment}</span><em>{group.dishes.length} 道</em></div>
@@ -2753,10 +3337,11 @@ export default function UnmannedKitchenCockpit() {
           </aside>
 
           <section className="uk-col uk-main">
-            <section className="uk-panel uk-line">
+            <section className={`uk-panel uk-line${exceptionState ? ' uk-has-exception-state' : ''}`} data-annotation-id="production-flow">
               <h2>
-                智厨生产流程<span className="uk-tag-demo">流程演示</span>
+                {editable({ kind: 'module', key: 'production-flow' }, moduleLabels['production-flow'], '智厨生产流程')}
               </h2>
+              <ModuleExceptionState state={exceptionState} />
               <div className="uk-line-stage">
                 <svg viewBox="0 0 1040 400" preserveAspectRatio="xMidYMid meet">
                   {/* 左侧统一为投料区，保留两个入口；三类设备路线最终汇入单一出口。 */}
@@ -2778,9 +3363,9 @@ export default function UnmannedKitchenCockpit() {
                     <rect className="uk-entry-lane" x="214" y="100" width="122" height="258" rx="7" />
                     <text className="uk-entry-label" x="135" y="123" textAnchor="middle">入口 1</text>
                     <text className="uk-entry-label" x="275" y="123" textAnchor="middle">入口 2</text>
-                    {/* 入口 1：预处理队列；进入称重加料流程后卡片淡出。 */}
+                    {/* 同一道菜只显示在当前入口：入口 1 称重完成后，切换到入口 2 等待。 */}
                     {ACTIVE_ROUTE_PATHS.map((route, index) => (
-                      <g className="uk-flow-queue-card uk-weigh-queue" key={`weigh-queue-${route.id}`} style={{ animationDelay: route.delay }}>
+                      <g className="uk-flow-queue-card uk-weigh-queue" key={`weigh-queue-${route.id}`} style={{ opacity: isWeighWaiting(route) ? 1 : 0 }}>
                         <rect x="82" y={148 + index * 58} width="106" height="30" rx="5" style={{ stroke: route.color }} />
                         <circle cx="94" cy={163 + index * 58} r="4" style={{ fill: route.color }} />
                         <text className="uk-flow-queue-label" x="104" y={167 + index * 58}>{route.dish}</text>
@@ -2844,44 +3429,46 @@ export default function UnmannedKitchenCockpit() {
                       现场接入后可替换成当前工单的菜品简称。
                       菜名带回底色芯片（72×20 圆角矩形，fill/stroke/发光均取菜品色，
                       白字），在深色动线图上保证可读 —— 2026-10-08 按需求还原。 */}
-                  {ACTIVE_ROUTE_PATHS.map((route, index) => {
+                  {/* 烤箱路线不传 keyPoints；该曲线在 Chromium 中会把蒸蛋羹卡片留在 SVG 原点。 */}
+                  {ACTIVE_ROUTE_PATHS.map((route) => {
                     /* 不用负数 begin：部分浏览器在 SVG 动画初始化时会把节点留在 (0,0)，
                        也就是流程卡片左上角。正向错峰启动，初始化前保持透明。 */
-                    const animationBegin = `${(index * LINE_CYCLE_MS) / ACTIVE_ROUTE_PATHS.length / 1000}s`;
+                    const animationBegin = route.delay;
+                    const ovenPaused = route.id === 'route-kx1-out1' && isMachineCooking('烤箱 KX1');
+                    const routeTokenVisible = routePhase(route) >= route.trayEnd && !ovenPaused;
                     return (
-                      <g className="uk-route-token" key={route.id} opacity="0">
-                        <rect x="-36" y="-10" width="72" height="20" rx="4" style={{ fill: route.color, stroke: route.color, filter: `drop-shadow(0 0 4px ${route.color})` }} />
-                        <text x="0" y="4" textAnchor="middle" style={{ fill: '#ffffff' }}>{route.dish}</text>
-                        <animate
-                          attributeName="opacity"
-                          values="0;1;1;0"
-                          keyTimes="0;0.08;0.88;1"
-                          dur={`${LINE_CYCLE_MS / 1000}s`}
-                          begin={animationBegin}
-                          repeatCount="indefinite"
-                        />
-                        <animateMotion
-                          dur={`${LINE_CYCLE_MS / 1000}s`}
-                          begin={animationBegin}
-                          repeatCount="indefinite"
-                          rotate="0"
-                          calcMode="linear"
-                          keyPoints={route.keyPoints}
-                          keyTimes={route.keyTimes}
-                        >
-                          <mpath href={`#active-route-${route.id}`} />
-                        </animateMotion>
-                      </g>
+                      <React.Fragment key={route.id}>
+                        <g className="uk-route-token" style={{ animationDelay: animationBegin, display: routeTokenVisible ? 'block' : 'none' }}>
+                          <rect x="-36" y="-10" width="72" height="20" rx="4" style={{ fill: route.color, stroke: route.color, filter: `drop-shadow(0 0 4px ${route.color})` }} />
+                          <text x="0" y="4" textAnchor="middle" style={{ fill: '#ffffff' }}>{route.dish}</text>
+                          <animateMotion
+                            path={route.path}
+                            dur={`${LINE_CYCLE_MS / 1000}s`}
+                            begin={animationBegin}
+                            repeatCount="indefinite"
+                            rotate="0"
+                            calcMode="linear"
+                            {...(route.id === 'route-kx1-out1' ? {} : { keyPoints: route.keyPoints, keyTimes: route.keyTimes })}
+                          />
+                        </g>
+                        {route.id === 'route-kx1-out1' && (
+                          <g className="uk-route-token uk-oven-route-token" style={{ opacity: ovenPaused ? 1 : 0, display: ovenPaused ? 'block' : 'none' }} transform="translate(510 318)">
+                            <rect x="-36" y="-10" width="72" height="20" rx="4" style={{ fill: route.color, stroke: route.color, filter: `drop-shadow(0 0 4px ${route.color})` }} />
+                            <text x="0" y="4" textAnchor="middle" style={{ fill: '#ffffff' }}>{route.dish}</text>
+                          </g>
+                        )}
+                      </React.Fragment>
                     );
                   })}
                 </svg>
               </div>
             </section>
 
-            <section className="uk-panel uk-cooking uk-production-progress">
+            <section className={`uk-panel uk-cooking uk-production-progress${exceptionState ? ' uk-has-exception-state' : ''}`} data-annotation-id="production-progress">
               <h2>
-                生产进度
+                {editable({ kind: 'module', key: 'production-progress' }, moduleLabels['production-progress'], '生产进度')}
               </h2>
+              <ModuleExceptionState state={exceptionState} />
               {/* 只统计当前餐段：四个格子的数字都能在下面 3–4 行里逐条加出来，
                   不会被问「为什么 4 行菜加不出 33 盆」。全天口径在「出餐统计」页。 */}
               <div className="uk-production-kpis">
@@ -2945,8 +3532,9 @@ export default function UnmannedKitchenCockpit() {
           </section>
 
           <aside className="uk-col">
-            <section className="uk-panel uk-realtime">
-              <h2>明厨亮灶</h2>
+            <section className={`uk-panel uk-realtime${exceptionState ? ' uk-has-exception-state' : ''}`} data-annotation-id="kitchen-camera">
+              <h2>{editable({ kind: 'module', key: 'production-kitchen' }, moduleLabels['production-kitchen'], '明厨亮灶')}</h2>
+              <ModuleExceptionState state={exceptionState} />
               <div className="uk-camera uk-kitchen-video" aria-label="仿真后厨视频，2台自动炒菜机和1台烤箱工作中">
                 <div className="uk-kitchen-grid" />
                 <div className="uk-cctv-vignette" />
@@ -2961,11 +3549,12 @@ export default function UnmannedKitchenCockpit() {
               </div>
             </section>
 
-            <section className="uk-panel uk-outflow">
+            <section className={`uk-panel uk-outflow${exceptionState ? ' uk-has-exception-state' : ''}`} data-annotation-id="production-output-records">
               <h2 className="uk-outflow-heading">
-                <span>出餐记录</span>
+                <span>{editable({ kind: 'module', key: 'production-outflow' }, moduleLabels['production-outflow'], '出餐记录')}</span>
                 {/* 「平均出餐时长」胶囊已移除（写死的演示值、无计算逻辑、不在 PRD 指标清单内） */}
               </h2>
+              <ModuleExceptionState state={exceptionState} />
               <div className="uk-flow">
                 {visibleFlow.map((item, index) => (
                   <div className="uk-flow-row" key={`${item.port}-${item.dish}-${index}`}>
@@ -2977,20 +3566,24 @@ export default function UnmannedKitchenCockpit() {
               </div>
             </section>
           </aside>
-        </main>
+          </main>
 
-        <footer className="uk-bottom" hidden={view !== 'cockpit'}>
-          <div className="uk-ticker">
-            <div className="uk-ticker-track">
-              {[...DISHES, ...DISHES].map((dish, index) => (
-                <span key={`${dish.name}-${index}`}>
-                  <i style={{ background: dish.color }} />{dish.name}
-                </span>
-              ))}
+          <footer className="uk-bottom" hidden={displayView !== 'cockpit' || Boolean(exceptionPage)}>
+            <div className="uk-ticker">
+              <div className="uk-ticker-track">
+                {[...DISHES, ...DISHES].map((dish, index) => (
+                  <span key={`${dish.name}-${index}`}>
+                    <i style={{ background: dish.color }} />{dish.name}
+                  </span>
+                ))}
+              </div>
             </div>
-          </div>
-        </footer>
+          </footer>
+        </div>
       </div>
-    </div>
+      {/* 需求一览是评审用的原型附属物，不是产品页面的一部分；
+          后台「配置示意图」要的是 1:1 还原真实页面，所以内嵌模式下整块收掉。 */}
+      {embed || exceptionPage ? null : <PrototypeAnnotationViewer currentPageId={view} onNavigate={navigate} />}
+    </>
   );
 }
