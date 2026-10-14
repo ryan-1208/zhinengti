@@ -228,7 +228,7 @@ html.requirement-overview-open #__axhub_annotation_host__ {
   position: fixed;
   inset: 0 auto 0 0;
   z-index: 2147483645;
-  width: 204px;
+  width: clamp(220px, 18vw, 300px);
   padding: 22px 12px;
   border-right: 1px solid #1e5a8c;
   color: #b8d8f2;
@@ -267,6 +267,12 @@ html.requirement-overview-open #__axhub_annotation_host__ {
   font-size: 11px;
 }
 
+.uk-prototype-directory-top-level {
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(86, 176, 229, .16);
+}
+
 .uk-prototype-directory-group {
   margin-top: 14px;
 }
@@ -287,9 +293,61 @@ html.requirement-overview-open #__axhub_annotation_host__ {
   font-size: 13px;
 }
 
+.uk-prototype-directory-group-toggle {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.uk-prototype-directory-subgroup {
+  margin: 0;
+}
+
+.uk-prototype-directory-subgroup-title {
+  display: flex;
+  align-items: flex-start;
+  min-height: 34px;
+  gap: 9px;
+  padding: 6px 10px;
+  border: 0;
+  color: #a8c9e4;
+  background: transparent;
+  font: inherit;
+  font-size: 13px;
+  line-height: 1.4;
+  text-align: left;
+  cursor: pointer;
+}
+
+.uk-prototype-directory-subgroup-title i {
+  width: 5px;
+  height: 5px;
+  margin-top: 7px;
+  border-radius: 50%;
+  background: #4e88b4;
+}
+
+.uk-prototype-directory-subgroup-title b {
+  margin-left: auto;
+  color: #46d6e7;
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.uk-prototype-directory-subgroup-items {
+  margin-left: 14px;
+  border-left: 1px solid rgba(86, 176, 229, .22);
+}
+
 .uk-prototype-directory-link {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   width: 100%;
   min-height: 34px;
   gap: 9px;
@@ -301,8 +359,14 @@ html.requirement-overview-open #__axhub_annotation_host__ {
   font: inherit;
   font-size: 13px;
   text-align: left;
-  white-space: nowrap;
   cursor: pointer;
+}
+
+.uk-prototype-directory-link span {
+  min-width: 0;
+  line-height: 1.4;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .uk-prototype-directory-link i {
@@ -364,7 +428,7 @@ html.requirement-overview-open #__axhub_annotation_host__ {
 @media (max-width: 900px) {
   .requirement-overview-trigger { top: 16px; right: 48px; }
   .requirement-overview-drawer { width: min(560px, 100vw); }
-  .uk-prototype-directory { width: 176px; padding: 18px 9px; }
+  .uk-prototype-directory { width: calc(100vw - 18px); max-width: 300px; padding: 18px 9px; }
 }
 
 .uk-module-screen {
@@ -406,6 +470,23 @@ html.requirement-overview-open #__axhub_annotation_host__ {
   color: #173e79;
   font-size: 26px;
   font-weight: 800;
+}
+
+/* Logo 的「①底图 + ③图片层」：白圆 + 那颗「智」是底图，永远是它；
+   自定义 Logo 是盖在同一格（grid-area:1/1）上的一张 100% 的图。
+   两件事必须一起写：`> *` 把两个子元素压进同一格（不写它们会各占一行，
+   60px 高的圆里放不下、直接溢出去），mark 的 line-height 归 1 让居中只由 grid 决定
+   （`place-items:center` 居中的是盒子，盒高变了会让字位上下漂 —— line-height:1 把这件事钉死）。 */
+.uk-logo > * { grid-area: 1 / 1; }
+
+.uk-logo-mark { line-height: 1; }
+
+.uk-logo-cover {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #ffffff;
 }
 
 .uk-brand h1 {
@@ -1278,9 +1359,30 @@ html.requirement-overview-open #__axhub_annotation_host__ {
 }
 
 .uk-line-stage {
+  position: relative;
   flex: 1;
   min-height: 0;
 }
+
+.uk-flow-panel-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.uk-flow-density-trigger{flex:0 0 auto;padding:5px 10px;border:1px solid #1b7bb3;border-radius:4px;background:#0c3566;color:#8fefff;font:inherit;font-size:11px;letter-spacing:0;cursor:pointer}
+.uk-flow-density-trigger:hover{border-color:#29c7e5;background:#104478;color:#e7fbff}
+.uk-flow-density-overlay{position:absolute;inset:8px;z-index:8;display:flex;flex-direction:column;justify-content:center;gap:16px;padding:22px;border:1px solid #1a8bc6;border-radius:6px;background:linear-gradient(145deg,#071a38f5,#0b2e5af5);box-shadow:0 14px 40px #020b1ecc,inset 0 0 24px #0c8bc022}
+.uk-flow-density-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.uk-flow-density-head>div{display:flex;flex-direction:column;gap:5px}
+.uk-flow-density-head b{color:#e9f8ff;font-size:15px}
+.uk-flow-density-head span,.uk-flow-density-note{color:#8fb6dc;font-size:11px;line-height:1.6}
+.uk-flow-density-head>button{width:26px;height:26px;flex:0 0 auto;border:1px solid #3476a2;border-radius:4px;background:#0c315a;color:#bfe6ff;font-size:19px;line-height:1;cursor:pointer}
+.uk-flow-density-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.uk-flow-density-cards article{min-width:0;padding:13px;border:1px solid #18558a;border-radius:5px;background:linear-gradient(160deg,#103867,#0a254b)}
+.uk-flow-density-cards article>div{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.uk-flow-density-cards article>div>b{color:#cceaff;font-size:12px}
+.uk-flow-density-cards article strong{color:#35e0ed;font-size:22px;font-variant-numeric:tabular-nums}
+.uk-flow-density-cards article strong small{color:#8fb6dc;font-size:10px;font-weight:400}
+.uk-flow-density-cards article p{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0;color:#95d6bb;font-size:10px}
+.uk-flow-density-cards article p i{padding:3px 6px;border:1px solid #23694c;border-radius:3px;background:#0d3d2a;font-style:normal}
+.uk-flow-density-cards article>small{color:#8fb6dc;font-size:10px}
+.uk-flow-density-note{padding-top:10px;border-top:1px solid #1a4c76}
 
 .uk-line-stage svg {
   display: block;
@@ -1347,6 +1449,17 @@ html.requirement-overview-open #__axhub_annotation_host__ {
 
 .uk-zone > text.uk-entry-label {
   fill: #9bc7e8;
+  font-size: 11px;
+  letter-spacing: 0.4px;
+}
+
+/* 烹饪区盒内顶部的「类型 ×台数」摘要行（2026-10-14，方案 B 的第二行）。
+   主行走上面那条 .uk-zone > text（15px），这行是补充信息，降一级：
+   11px / 0.4px 字距、降饱和的 #8fb6dc —— 和节点上设备码那档字一致，
+   让"摘要行"和"节点码"在视觉上归为同一层（都是标识类小字）。
+   两行以上靠 tspan 的 x+dy 折行（见 index.tsx 烹饪区标题处的注释）。 */
+.uk-zone > text.uk-zone-summary {
+  fill: #8fb6dc;
   font-size: 11px;
   letter-spacing: 0.4px;
 }
@@ -1455,10 +1568,15 @@ html.requirement-overview-open #__axhub_annotation_host__ {
   letter-spacing: 1px;
 }
 
-.uk-cooker-id {
-  fill: #8fb6dc;
-  font-size: 9px;
-  letter-spacing: 0.4px;
+/* 炒菜机节点上的「设备码-口径」标签（CCJ1-600 / CCJ2-800，2026-10-14 改）。
+   原来「600 型 / CCJ1」两行，大字 13px；合成一行后 8 个字符，13px + 1px 字距
+   会超出 62px 的节点盒（约 66px）。12px 仍差一点：实测 CCJ2-800 在 0.4px 字距下
+   每边超出 0.2px（亚像素，但贴着描边不舒服），字距收到 0.2px 后两边各留 ~0.4px 余量。
+   别把它并回上面那条共享规则，宽度会重新爆掉。 */
+.uk-cooker-tag {
+  fill: #bfe4ff;
+  font-size: 12px;
+  letter-spacing: 0.2px;
 }
 
 .uk-oven {
@@ -2072,6 +2190,8 @@ html.requirement-overview-open #__axhub_annotation_host__ {
   font-variant-numeric: tabular-nums;
 }
 
+.uk-cctv-stream-name{min-width:0;overflow:hidden;color:#d2efff;text-overflow:ellipsis;white-space:nowrap}
+
 .uk-cctv-rec {
   display: inline-flex;
   align-items: center;
@@ -2384,6 +2504,8 @@ html.requirement-overview-open #__axhub_annotation_host__ {
   color: #8fb6dc;
   font-size: 9px;
 }
+
+.uk-kitchen-stream span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 .uk-kitchen-stream i {
   width: 8px;
@@ -2810,7 +2932,7 @@ html.requirement-overview-open #__axhub_annotation_host__ {
 .uk-plan-chart-panel .uk-workorder-filters{margin:12px 0 0;padding:0;border:0;border-radius:0;background:none;box-shadow:none}.uk-multi-filter{display:flex;align-items:center;gap:8px;color:#b9d7ee;font-size:12px;white-space:nowrap}.uk-multi-filter details{position:relative;min-width:148px}.uk-multi-filter summary{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:7px 10px;border:1px solid #2c6fa5;border-radius:4px;background:#0a2752;color:#eaf7ff;cursor:pointer;list-style:none}.uk-multi-filter summary::-webkit-details-marker{display:none}.uk-multi-filter summary b{color:#9fc3e4;font-size:15px;font-weight:400;line-height:1;transform:translateY(-2px)}.uk-multi-filter details[open] summary{border-color:#25e0ee;box-shadow:0 0 0 2px #25e0ee33}.uk-multi-filter-menu{position:absolute;z-index:20;top:calc(100% + 6px);left:0;min-width:230px;max-height:310px;overflow:auto;padding:8px;border:1px solid #2c6fa5;border-radius:5px;background:#092657;box-shadow:0 10px 24px #020d22aa}.uk-multi-filter-menu>label,.uk-multi-filter-menu fieldset label{display:flex;align-items:center;gap:8px;padding:6px 7px;color:#dcecff;font-size:11px;cursor:pointer}.uk-multi-filter-menu>label:hover,.uk-multi-filter-menu fieldset label:hover{background:#10417f}.uk-multi-filter-menu input{width:14px;height:14px;accent-color:#25e0ee}.uk-multi-filter-menu fieldset{margin:6px 0 0;padding:5px 0 0;border:0;border-top:1px solid #14568f}.uk-multi-filter-menu legend{padding:0 7px;color:#7da8d1;font-size:10px}.uk-filter-note{margin-left:auto;color:#7da8d1;font-size:11px;white-space:nowrap}.uk-filter-empty{display:flex;align-items:center;justify-content:center;min-height:215px;color:#7da8d1;font-size:12px;border:1px dashed #1d5f9c;border-radius:5px;background:#061c4433}
 .uk-module-grid{display:grid;gap:14px}.uk-module-grid-main{grid-template-columns:1.35fr .9fr}.uk-overview-main{grid-template-columns:1.45fr 1fr}.uk-module-grid-bottom{grid-template-columns:1fr 1fr;margin-top:14px}
 .uk-module-panel{min-width:0;padding:15px 16px;border:1px solid #1d5f9c;border-radius:7px;background:linear-gradient(180deg,#0b2f6a,#08224f);box-shadow:inset 0 0 24px #0c438322}
-.uk-module-panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding-bottom:11px;border-bottom:1px solid #14568f}.uk-module-panel-head h2{margin:0;color:#eaf7ff;font-size:18px}.uk-module-panel-head p{margin:5px 0 0;color:#7da8d1;font-size:11px}.uk-module-panel-head strong{color:#6ff0fa;font-size:25px}/* ⚠️ 当前未被使用 —— 面板右上角那批元信息标签（柱状图 / 横向条形图 / 静态分布 /
+.uk-module-panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding-bottom:11px;border-bottom:1px solid #14568f}.uk-module-panel-head h2{margin:0;color:#eaf7ff;font-size:18px}/* `.uk-module-panel-head p`（面板标题下方小字副标题，margin:5px 0 0;color:#7da8d1;font-size:11px）已随副标题一并删除：2026-10-14 按用户要求「所有页面的这个都删除」，JSX 里 17 处 `</h2><p>` 全部移除，此规则已无命中对象。要恢复副标题时连同 JSX 一起加回。 */.uk-module-panel-head strong{color:#6ff0fa;font-size:25px}/* ⚠️ 当前未被使用 —— 面板右上角那批元信息标签（柱状图 / 横向条形图 / 静态分布 /
    演示趋势 / 状态演示 / 演示数据）已全部从页面移除，样式先留着便于恢复。
    移除原因：它们描述的是「用什么图表画的」「数据是不是演示的」，属于实现视角的注记，
    对看板的读者没有信息量 —— 客户看不出区别，反而在每块面板右上角制造一排相同的小方块。
@@ -2934,6 +3056,8 @@ html.requirement-overview-open #__axhub_annotation_host__ {
       现在 0 + 38(控件行) + 96 = 134px。多出来的高度不会报错，只会静默把主面板压矮
       （`.uk-plan-page` 是 overflow:auto），到时候三栏的行高从 40px 掉到 32px 才知道。 */
 .uk-plan-kpi-row{padding-top:0}
+.uk-plan-heading{display:block;height:auto}
+.uk-plan-heading .uk-module-panel-head{align-items:center}
 .uk-plan-controls{display:flex;align-items:center;justify-content:flex-end;gap:10px;height:38px}
 .uk-plan-kpis{grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin:0;flex:0 0 96px}.uk-plan-kpis .uk-module-kpi{min-height:92px}
 .uk-plan-main{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(300px,.85fr);gap:14px;flex:1;min-height:340px}.uk-plan-table-panel,.uk-plan-judgement,.uk-plan-stage-panel{min-height:0;overflow:hidden}.uk-plan-note{flex:0 0 auto;padding:5px 9px;border:1px solid #1b548d;border-radius:3px;background:#0e3776;color:#8eb5d6;font-size:11px}
@@ -3272,6 +3396,8 @@ html.requirement-overview-open #__axhub_annotation_host__ {
 .uk-detail-grouphead.bad b{color:#ffe6a8}
 .uk-detail-grouphead.bad span{color:#dfc98e}
 .uk-detail-grouphead.bad em{background:#5c4410;color:#ffd25e}
+.uk-detail-example-head{border-color:#2c6fa5;background:#0e2f55}.uk-detail-example-head b{color:#c5e4ff}.uk-detail-example-head span{color:#8fb6dc}.uk-detail-example-head em{background:#153f67;color:#8fd3ff}
+.uk-detail-example-note{align-self:flex-start;padding-left:8px;color:#6f9ac2;font-size:10px}
 
 .uk-detail-off-plan-head{border-color:#2c6fa5;background:#0e3776}
 .uk-detail-off-plan-head b{color:#eaf7ff}
@@ -3396,6 +3522,11 @@ html.requirement-overview-open #__axhub_annotation_host__ {
 .uk-pagoda{display:block;flex:1;min-height:0;width:100%}
 /* 位图自带柔和落影，再叠一层 drop-shadow 会发灰，所以阴影只给「塔身轮廓」一点点。 */
 .uk-pagoda-photo{filter:drop-shadow(0 10px 22px #020c1e99)}
+/* 图片层那张图不自己再投一次影：它盖在底图那张上、轮廓基本重合，
+   两张各投一次会得到一圈更重更硬的边。落影由底图那张负责，视觉上完全一样。
+   色块是 slice 没生效退回 meet 时的兜底（露出色块而不是底图那张塔）。 */
+.uk-pagoda-photo-cover{filter:none}
+.uk-pagoda-photo-cover-bg{fill:#08224f}
 /* 入场：塔身先淡入（略放大收拢），标注随后逐层浮现（animationDelay 由 JSX 给）。 */
 @keyframes uk-pagoda-rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 @keyframes uk-pagoda-fade{from{opacity:0;transform:scale(.965)}to{opacity:1;transform:none}}
@@ -3440,7 +3571,7 @@ html.requirement-overview-open #__axhub_annotation_host__ {
 .uk-spotlight-figure figcaption strong{overflow:hidden;font-size:18px;letter-spacing:.5px;text-overflow:ellipsis;white-space:nowrap}
 .uk-spotlight-seg{flex:0 0 auto;padding:3px 8px;border-radius:3px;color:#04142e;font-size:10.5px;font-weight:700}
 .uk-spotlight-detail{display:flex;min-width:0;flex-direction:column;gap:12px;animation:uk-spotlight-up .45s cubic-bezier(.22,.9,.3,1) both}
-.uk-spotlight-head{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;color:#7da8d1;font-size:11px}
+.uk-spotlight-head{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;color:#7da8d1;font-size:11px}.uk-spotlight-head>b{color:#eaf7ff;font-size:13px}.uk-spotlight-head>span{padding:2px 7px;border-radius:3px;background:#0e3776;color:#70b5ff}.uk-spotlight-head>small{color:#8fb6dc}
 .uk-spotlight-device{padding:2px 9px;border-radius:3px;background:#0e3776;color:#70b5ff}
 .uk-spotlight-progress{color:#8fd3f5;font-variant-numeric:tabular-nums}
 /* 3 列 × 2 行：第一行 能量/蛋白质/脂肪，第二行 膳食纤维/碳水化合物/胆固醇（顺序见 JSX 的 SPOTLIGHT_METRICS）。
@@ -3458,7 +3589,7 @@ html.requirement-overview-open #__axhub_annotation_host__ {
 /* 主料 / 调料：右栏收尾，把「6 个数字填不满的竖高」用已有配方数据补上 */
 .uk-spotlight-uses{display:flex;flex-direction:column;gap:7px;padding-top:12px;border-top:1px solid #14568f}
 .uk-spotlight-uses>div{display:flex;min-width:0;align-items:baseline;gap:10px;font-size:11px}
-.uk-spotlight-uses span{flex:0 0 26px;color:#8fd3f5}
+.uk-spotlight-uses span{flex:0 0 auto;min-width:26px;color:#8fd3f5}
 .uk-spotlight-uses b{min-width:0;overflow:hidden;color:#dcecff;font-weight:500;text-overflow:ellipsis;white-space:nowrap}
 /* 进度点：当前那道菜的点拉长成胶囊并染成该菜的语义色，和左下角菜单卡的颜色对得上 */
 .uk-spotlight-dots{display:flex;grid-column:1/-1;align-items:center;justify-content:center;gap:8px}
@@ -3472,13 +3603,14 @@ html.requirement-overview-open #__axhub_annotation_host__ {
 @media(prefers-reduced-motion:reduce){.uk-spotlight-figure img,.uk-spotlight-detail{animation:none}}
 .uk-recommended-panel{display:flex;flex:0 0 auto;min-height:0;flex-direction:column}.uk-module-panel-count{color:#6ff0fa;font-size:18px;font-variant-numeric:tabular-nums}
 .uk-recommended-grid{display:grid;flex:1;min-height:0;align-content:start;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding-top:14px;overflow:auto}
-.uk-recommended-card{display:flex;min-width:0;align-items:center;gap:10px;padding:10px;border:1px solid #14568f;border-radius:5px;background:#061c4499;color:inherit;text-align:left;cursor:pointer;transition:border-color .18s ease,background .18s ease,transform .18s ease}.uk-recommended-card:hover{border-color:#25e0ee;background:#0c3e6755;transform:translateY(-1px)}.uk-recommended-card.active{border-color:#25e0ee;box-shadow:0 0 0 1px #25e0ee55,inset 0 0 18px #0c6d8755}
+.uk-recommended-card{display:flex;min-width:0;align-items:center;gap:10px;padding:10px;border:1px solid #14568f;border-radius:5px;background:#061c4499;color:inherit;text-align:left}
 .uk-recommended-visual{display:block;width:74px;height:58px;flex:0 0 74px;overflow:hidden;border:1px solid #2c6fa5;border-radius:4px;background:#0b2b5c;box-shadow:inset 0 0 16px #ffffff22}.uk-recommended-visual img{display:block;width:100%;height:100%;object-fit:cover}
 .uk-recommended-copy{display:flex;min-width:0;flex-direction:column;gap:5px}
 /* 第一行：菜名 + 餐段 */
 .uk-recommended-title{display:flex;min-width:0;align-items:center;gap:6px}
 .uk-recommended-title strong{overflow:hidden;color:#eaf7ff;font-size:13px;text-overflow:ellipsis;white-space:nowrap}
 .uk-recommended-title em{flex:0 0 auto;padding:2px 5px;border-radius:3px;background:#0e3776;color:#70b5ff;font-size:10px;font-style:normal}
+.uk-recommended-title .uk-sop-badge{flex:0 0 auto;padding:2px 5px;border:1px solid #8d75d6;border-radius:3px;color:#c9bbff;font-size:9px;font-style:normal;white-space:nowrap}
 /* 第二行：颜色建议 —— 色点 + 色名 + 建议食用频次（频次由颜色推导，见 FOOD_COLOR_ADVICE）。
    这一行原来放的是「151 kcal · 蛋白质 5.5g」，已按要求删掉。 */
 .uk-recommended-color{display:flex;min-width:0;align-items:center;gap:5px;color:#8fd3f5;font-size:10px}
@@ -3570,83 +3702,122 @@ body.uk-embed ~ #__axhub_annotation_host__,
    烤箱料箱的显隐另由内联 display 控制，不受这条影响。 */
 .uk-embed .uk-route-token{opacity:1 !important}
 
-/* ── 图上编辑（后台点「图上编辑」时才有） ───────────────────────────────
-   两道防线一起松，缺一不可：
+/* ── 配置示意图直接编辑 ─────────────────────────────────────────────────
+   示意图分成三层，下面这一整块都在为「①底图不许动」服务：
+     ① 底图层  页面原本的样子（默认文字 + 内置两张图），永不因配置变化；
+     ② 文字层  改过的标题/页面名/驾驶舱名，盖在①上面；
+     ③ 图片层  换过的 Logo / 宝塔塔身，盖在①那一格上。
+   DOM 结构与不变量见 index.tsx 的 EditableText；这里只有样式与命中测试。
+
+   命中测试两道防线一起松，缺一不可：
    ① 外面那道在 CockpitAdminView.css 里（.uk-admin-live-frame.is-edit>iframe 放开 pointer-events）
       —— iframe 这个整体不解锁的话，点进去的事件根本到不了文档里；
-   ② 里面这道就是下面第一条：把整页的命中测试关掉，**只放行标题输入框**。
+   ② 里面这道就是下面第一条：把整页的命中测试关掉，只放行文字输入和图片替换位置。
    只要第①道、不要第②道的话，等于把整张示意图都解锁了：顶部导航、餐段筛选、
-   批次切换、轮播开关全都是真按钮，点一下就真的切页/动起来，
+   批次切换、轮播开关全都是真控件，点一下就真的切页/动起来，
    而用户完全不知道是自己点出来的 —— 只会认为"说好是配置示意图，怎么点一下就变了"。
    于是这里的取舍是：让**能点的东西精确等于能改的东西**。
    ⚠️ 下面那两组选择器是**唯一**的白名单：图上每加一种可点的控件，都必须在这里补一条，
    否则症状是"按钮画出来了、点它没反应"——而且不报任何错。 */
 body.uk-embed-edit *{pointer-events:none !important}
 body.uk-embed-edit .uk-inline-edit,
-body.uk-embed-edit .uk-img-edit-btn,
-body.uk-embed-edit .uk-img-edit-reset{pointer-events:auto !important}
+body.uk-embed-edit .uk-img-edit{pointer-events:auto !important}
 
-/* 图上编辑用的行内输入框。
+/* ── ② 文字层 ─────────────────────────────────────────────────────────
+   结构：.uk-text-layer（定位容器）
+           ├─ .uk-text-layer-base   底图文字，visibility:hidden 占位
+           └─ .uk-text-layer-cover  覆盖层，绝对定位落在底图文字正上方
+
+   三个取值各有各的用处，别顺手改：
+   · .uk-text-layer 用 inline-block 而不是 inline ——
+     inline 元素做绝对定位子元素的包含块时，浏览器是按"首/末行内框的并集"算的，
+     行高带半点行距时垂直方向会有偏差；inline-block 的包含块就是它自己的 padding box，
+     覆盖层 top:0 与底图文字的首行盒严格对齐。
+     宽度上它与 inline 完全等价（短标题都不换行），所以底图版式不受影响。
+   · base 用 visibility 而不是 display —— display:none 会把占位也收走，
+     覆盖层就没有定位基准了（整块跑回左上角）。
+   · cover 用 position:absolute + nowrap —— **这两条是"底图不动"的全部机制**：
+     绝对定位让它不参与布局，nowrap 让它不把行盒撑高。
+     后果要认：自定义名比默认名长时会向右溢出（面板标题那侧有留白，
+     导航胶囊那侧会盖出胶囊外）。这是死图上贴字的必然代价，不是 bug。
+     想改成"让胶囊跟着变长"就等于放弃底图不动，得先想清楚再动这两条。 */
+.uk-text-layer{position:relative;display:inline-block;line-height:inherit}
+.uk-text-layer-base{visibility:hidden}
+/* top:0/bottom:0 让覆盖层的高度**就等于** .uk-text-layer 的行盒高度（行高），
+   这是"框里的字与底图那行字同一基线"的前提：两边都是"同一字体的单行、居中在同样高的盒里"，
+   字形位置必然相同。不用 height:1lh 是因为它是 Chrome 111+ 的单位，老浏览器上会失效。 */
+.uk-text-layer-cover{
+  position:absolute;left:0;top:0;bottom:0;
+  display:inline-grid;align-items:center;white-space:nowrap;
+  color:inherit;font:inherit;letter-spacing:inherit;
+  /* z-index:0 不是可有可无：它让本元素成为独立 stacking context，
+     下面 ::before 的 z-index:-1 才会落在"本层内容之下、底图之上"，
+     而不是被面板背景整个盖住（面板是 position:relative，画在负 z-index 之后）。 */
+  z-index:0;
+}
+/* ★ 用户要的「文字上面的色块」：
+   盖在底图原文字上的一块贴片，把那行字盖住，色块上显示新文字。
+   画在 ::before 上而不是给覆盖层自己加 background/border，是为了两件事互不牵连：
+   · 覆盖层盒子的几何保持"与底图文字逐像素对齐"的那组取值（上面几行），
+     色块再怎么外扩也不改变文字的位置 —— 实测墨迹偏移 0px；
+   · 色块向外扩 5~7px（inset 负值），比字大一圈，才看得出是"一块"而不是给字加了底色。
+   颜色：底 #0a2f6b 比面板底色(#08224f)略亮 + 浅青边 #1b7bd0（同大屏主色系），
+   一眼能找到、又不扎眼。 */
+.uk-text-layer-cover::before{
+  content:"";position:absolute;inset:-5px -7px;
+  background:#0a2f6b;border:1px solid #1b7bd0;border-radius:4px;
+  z-index:-1;
+}
+/* 量字器与输入框叠在同一格：列宽 = 两者固有宽度的较大值 = 实际文字宽度。 */
+.uk-text-layer-cover>*{grid-area:1/1}
+.uk-inline-edit-sizer{visibility:hidden;white-space:pre}
+
+/* 文字层的行内输入框（编辑态专用）。
    font:inherit 和 letter-spacing:inherit 是必须的：字号/字重/字距都在父元素上
    （h1 / h2 / 导航按钮各是一套），复制一套数值过来迟早对不上；
    继承是"编辑态和非编辑态长得一模一样"的唯一保证，也是"改的时候看到的就是改完的样子"的前提。
-   field-sizing:content 让框随字数伸缩，这样标题变长变短时不会突然多出一大截空白。 */
+   宽度取 100%（= 上面那一格的宽度），所以那条虚线永远恰好贴着文字的长度。
+   height:1lh + padding-top:1px + content-box 是一组**配套**的取值，别只改一个：
+   输入框的外框高 = 行高 + 2px（上 1px 补白 + 下 1px 虚线），居中在被撑满的覆盖层里之后，
+   内容盒恰好落回 [顶, 顶+行高]，框内文字基线与底图那行字重合。
+   换成 border-box 或去掉那 1px 补白，整行字会上下偏半像素。 */
 .uk-inline-edit{
-  min-width:3em;margin:0;padding:0;
-  border:0;border-bottom:1px dashed #5fd4ff;border-radius:0;
+  width:100%;min-width:0;margin:0;padding:1px 0 0;
+  border:0;border-radius:0;
   background:transparent;color:inherit;
   font:inherit;letter-spacing:inherit;text-align:inherit;
-  field-sizing:content;user-select:text;outline:0;
+  box-sizing:content-box;height:1lh;line-height:inherit;
+  user-select:text;outline:0;
 }
 .uk-inline-edit::placeholder{color:inherit;opacity:.45}
-/* 聚焦时把虚线变实线、加一层淡底：编辑态本来就是个临时状态，
-   但截图/录屏里得让人一眼看出"现在这几个框是可以打字的"。 */
-.uk-inline-edit:focus{border-bottom-style:solid;background:#5fd4ff24;box-shadow:0 0 0 3px #5fd4ff1f}
+/* 聚焦时：文字本身提亮、色块描边加亮一圈，标出"现在正在编辑这一处"。
+   不再用虚线 —— 色块已经承担了"可编辑"的提示，虚线会跟色块边打架。 */
+.uk-inline-edit:focus{color:#fff;background:#0d3b7a;box-shadow:0 0 0 2px #2fb8e0}
 
-/* ── 图上换图（编辑态才有） ──────────────────────────────────────────────
-   包装层只在编辑态渲染（见 ReplaceableImage），所以这里怎么写都不会影响只读态的版面；
-   但编辑态里它要**顶替**原来那个元素在 flex 里的位置，所以两个变体各写一条，
+/* ── ③ 图片层 ─────────────────────────────────────────────────────────
+   换图 = 在底图那一格上盖一张新图，底图那张仍然在 DOM 里、位置尺寸也不改。
+   图片层本体（.uk-logo-cover / .uk-pagoda-photo-cover）跟着各自的底图走：
+   · Logo：.uk-logo 是 60×60 的 grid，两个子元素用 grid-area:1/1 叠在同一格，
+     新图 100% 铺满那一格 —— 底图那颗「智」还在，只是被盖住了。
+   · 宝塔：新图是 SVG 内第二个 <image>，几何与底图那张逐字相同（见 DietPagoda）。 */
+
+/* ── 图片层的命中层：直接点击图片替换（仅配置示意图可点） ───────────────
+   包装层只在嵌入配置示意图里渲染（见 ReplaceableImage），业务页只读态的版面不变；
+   它要**顶替**原来那个元素在 flex 里的位置，所以两个变体各写一条，
    把原元素的 flex 属性原样搬过来：
      is-logo   对应 .uk-brand（row flex）里那个 60×60 的圆；
      is-pagoda 对应 .uk-pyramid-wrap（column flex）里 flex:1 的 svg ——
                包装层自己当那个 flex item，里面的 svg 仍然靠 align-items:stretch 撑满高度。
    搬错了画面上就是「一进编辑态版面就跳」，所以这两条的取值是从上面两条原规则抄的，改了记得一起改。 */
-.uk-img-edit{position:relative}
+.uk-img-edit{position:relative;cursor:pointer}
 .uk-img-edit.is-logo{display:flex;flex:0 0 auto}
 .uk-img-edit.is-pagoda{display:flex;flex:1;min-height:0;width:100%}
-/* 圈一圈虚线：和标题输入框底下那条虚线是同一套语言 —— "这块可以改"。 */
-.uk-img-edit::after{content:"";position:absolute;inset:-7px;border:1px dashed #5fd4ff;border-radius:12px;pointer-events:none}
+/* 图片层的「色块」提示：一圈半透明浅青边，跟文字层同一个视觉语言，
+   表示"这一块可以点击换图"。hover 时底色微亮。 */
+.uk-img-edit::after{content:"";position:absolute;inset:-7px;border:1px solid #1b7bd0;border-radius:12px;background:#0a2f6b66;pointer-events:none}
 .uk-img-edit.is-logo::after{inset:-4px;border-radius:50%}
-/* 换图按钮钉在目标外沿的角上，不盖在中间：盖中间会把图挡住，
-   而"改之前先得看得见自己改的是哪张图"。
-   按钮本身不再自己定位，改由 .uk-img-edit-actions 这个行容器定位 ——
-   「恢复默认」和「换图」要排成一行，各自 absolute 就会互相盖住。
-   容器右对齐，所以**最后一颗按钮（换图）的右沿永远贴着角**，
-   加不加「恢复默认」都不会让主按钮挪位置。 */
-.uk-img-edit-actions{--uk-img-pill-h:25px;position:absolute;right:-8px;bottom:-8px;z-index:3;display:flex;align-items:center;gap:6px}
-/* 两颗药丸共用同一个高度变量：带图标的那颗内容盒是 13px(图标)、不带图标的只有 12px(字)，
-   靠 padding 对齐会差 1px —— 并排两颗差 1px 很显眼，所以高度显式定死，两处都别再写数字。 */
-.uk-img-edit-btn{
-  display:inline-flex;height:var(--uk-img-pill-h);align-items:center;gap:5px;
-  padding:0 11px;border:0;border-radius:14px;
-  background:#1b6fae;color:#fff;font-family:inherit;font-size:12px;font-weight:600;line-height:1;
-  box-shadow:0 3px 10px #001428aa;cursor:pointer;
-}
-.uk-img-edit-btn:hover{background:#12558a}
-/* 恢复默认：次级操作，做成描边药丸 —— 和实底的主按钮一眼分得出主次。
-   描边用 box-shadow 而不是 border：border 会多占 2px 高度，把上面那个共用的高度变量又搅乱。 */
-.uk-img-edit-reset{
-  height:var(--uk-img-pill-h);padding:0 11px;border:0;border-radius:14px;
-  background:#0d2b45;color:#cfe6fb;font-family:inherit;font-size:12px;font-weight:600;line-height:1;
-  box-shadow:0 0 0 1px #2b6fa8, 0 3px 10px #001428aa;cursor:pointer;
-}
-.uk-img-edit-reset:hover{background:#12406a;color:#fff}
-/* logo 只有 60px，带字的药丸会横插到标题上 —— 收到一个圆形图标角标，
-   压在圆的右下沿（外沿 4px，靠进图片里一点点，看起来像"挂在图上"而不是"飘在旁边"）。
-   logo 不给「恢复默认」：它没有"默认图"（默认是「智」这个字牌），
-   后台的「驾驶舱品牌 Logo」那里本来也只有上传、没有恢复，所以这次没有能力被删掉。 */
-.uk-img-edit.is-logo .uk-img-edit-actions{right:-6px;bottom:-6px}
-.uk-img-edit.is-logo .uk-img-edit-btn{width:26px;height:26px;padding:0;border-radius:50%;justify-content:center;box-shadow:0 2px 8px #001428cc}
-.uk-img-edit.is-logo .uk-img-edit-btn span{display:none}
-/* 文件选择框本体不出现，只由上面的按钮 click() 触发（display:none 的 input 仍可被程序点击）。 */
+.uk-img-edit:hover::after{border-color:#2fb8e0;background:#0d3b7a88}
+.uk-img-edit:focus-visible{outline:2px solid #2fb8e0;outline-offset:4px}
+/* 文件选择框本体不出现；点击图片或键盘聚焦后 Enter/空格即可打开选择器。 */
 .uk-img-edit-input{display:none}
+.uk-spotlight-unit-note{display:block;margin-top:4px;color:#7da8d1;font-size:11px;font-weight:400}

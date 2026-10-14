@@ -9,10 +9,18 @@ const BUSINESS_PAGES: DirectoryItem[] = [
   { id: 'behavior', label: '行为监控' },
 ];
 
-const MANAGEMENT_PAGES: DirectoryItem[] = [
-  { id: 'admin', label: '驾驶舱配置后台' },
+const TOP_LEVEL_PAGES: DirectoryItem[] = [
   { id: 'version', label: '版本管理' },
   { id: 'requirements', label: '需求文档' },
+];
+
+const BACKEND_PAGES: DirectoryItem[] = [
+  { id: 'admin', label: '驾驶舱配置后台' },
+  { id: 'production-process-view', label: '基础后台-生产工艺查看' },
+  { id: 'production-process-edit', label: '基础后台-编辑生产工艺' },
+  { id: 'production-process-edit-ai-timeout', label: '基础后台-编辑生产工艺-生成超时' },
+  { id: 'production-process-edit-no-ingredients', label: '基础后台-编辑生产工艺-无原料' },
+  { id: 'meal-menu', label: '商户后台-食堂餐品' },
 ];
 
 const REFERENCE_PAGES: DirectoryItem[] = [
@@ -22,6 +30,11 @@ const REFERENCE_PAGES: DirectoryItem[] = [
 
 export function PrototypeDirectory({ currentPageId, onNavigate }: { currentPageId: string; onNavigate: (id: string) => void }) {
   const [collapsed, setCollapsed] = useState(false);
+  const [collapsedGroups, setCollapsedGroups] = useState<Record<string, boolean>>({});
+
+  const toggleGroup = (groupId: string) => {
+    setCollapsedGroups((groups) => ({ ...groups, [groupId]: !groups[groupId] }));
+  };
 
   const renderItems = (items: DirectoryItem[]) => items.map((item) => (
     <button
@@ -51,17 +64,26 @@ export function PrototypeDirectory({ currentPageId, onNavigate }: { currentPageI
           <span>原型目录</span>
           <small>智慧厨房驾驶舱</small>
         </div>
+        <div className="uk-prototype-directory-top-level">
+          {renderItems(TOP_LEVEL_PAGES)}
+        </div>
         <section className="uk-prototype-directory-group">
-          <h2><b>⌄</b>原型管理</h2>
-          {renderItems(MANAGEMENT_PAGES)}
+          <button type="button" className="uk-prototype-directory-group-toggle" onClick={() => toggleGroup('backend')} aria-expanded={!collapsedGroups.backend}>
+            <h2><b>{collapsedGroups.backend ? '›' : '⌄'}</b>后台页面</h2>
+          </button>
+          {!collapsedGroups.backend ? renderItems(BACKEND_PAGES) : null}
         </section>
         <section className="uk-prototype-directory-group">
-          <h2><b>⌄</b>开发参考 · 异常状态</h2>
-          {renderItems(REFERENCE_PAGES)}
-        </section>
-        <section className="uk-prototype-directory-group">
-          <h2><b>⌄</b>业务页面</h2>
-          {renderItems(BUSINESS_PAGES)}
+          <button type="button" className="uk-prototype-directory-group-toggle" onClick={() => toggleGroup('cockpit')} aria-expanded={!collapsedGroups.cockpit}>
+            <h2><b>{collapsedGroups.cockpit ? '›' : '⌄'}</b>驾驶舱</h2>
+          </button>
+          {!collapsedGroups.cockpit ? <>
+            {renderItems(BUSINESS_PAGES)}
+            <div className="uk-prototype-directory-subgroup">
+              <button type="button" className="uk-prototype-directory-subgroup-title" onClick={() => toggleGroup('exceptions')} aria-expanded={!collapsedGroups.exceptions}><i /><span>异常状态</span><b>{collapsedGroups.exceptions ? '›' : '⌄'}</b></button>
+              {!collapsedGroups.exceptions ? <div className="uk-prototype-directory-subgroup-items">{renderItems(REFERENCE_PAGES)}</div> : null}
+            </div>
+          </> : null}
         </section>
       </div>
     </aside>

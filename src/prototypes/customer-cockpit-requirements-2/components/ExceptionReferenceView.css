@@ -16,8 +16,9 @@
   visibility: hidden !important;
 }
 
+/* 第二条里的 `p`（面板标题下方副标题）已删除：副标题于 2026-10-14 从所有页面全局移除，这里不再有命中对象。
+   保留 count 与 spotlight-tools：它们仍在部分面板标题行右侧实际渲染。 */
 .uk-has-exception-state > h2 .uk-h2-count,
-.uk-has-exception-state > .uk-module-panel-head p,
 .uk-has-exception-state > .uk-module-panel-head .uk-module-panel-count,
 .uk-has-exception-state > .uk-module-panel-head .uk-spotlight-tools {
   visibility: hidden !important;

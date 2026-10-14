@@ -37,7 +37,7 @@ export function BehaviorView({ exceptionState }: { exceptionState?: ExceptionSta
 
   return (
     <main className="uk-monitor">
-      <div className="uk-mon-head" data-annotation-id="behavior-summary">
+      <div className="uk-mon-head">
         <div>
           <h2>行为监控 · 异常抓拍</h2>
         </div>
@@ -67,7 +67,7 @@ export function BehaviorView({ exceptionState }: { exceptionState?: ExceptionSta
         <ModuleExceptionState state={exceptionState} />
       </div>
 
-      <div className={`uk-mon-grid${exceptionState ? ' uk-has-exception-state' : ''}`} data-annotation-id="behavior-events">
+      <div className={`uk-mon-grid${exceptionState ? ' uk-has-exception-state' : ''}`}>
         <ModuleExceptionState state={exceptionState} />
         {data.events.map((event) => (
           <article className="uk-mon-card" key={event.id}>

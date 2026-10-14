@@ -1,6 +1,15 @@
 import React from 'react';
 import prdText from '../../../resources/prd/智慧厨房驾驶舱PRD.md?raw';
 
+const PRD_META = (() => {
+  const match = /^版本：([^｜]+)｜日期：([^｜]+)｜状态：(.+)$/m.exec(prdText);
+  return {
+    version: match?.[1] ?? 'V1.0',
+    date: match?.[2] ?? '—',
+    status: match?.[3] ?? '开发需求稿',
+  };
+})();
+
 type MarkdownBlock =
   | { type: 'heading'; level: number; text: string }
   | { type: 'paragraph'; text: string }
@@ -97,9 +106,9 @@ export function RequirementsDocumentView() {
           <p>当前原型的产品范围、页面需求、字段字典和验收口径。</p>
         </div>
         <div className="uk-prd-meta">
-          <b>V1.0</b>
-          <span>开发需求稿</span>
-          <span>2026-10-10</span>
+          <b>{PRD_META.version}</b>
+          <span>{PRD_META.status}</span>
+          <span>{PRD_META.date}</span>
         </div>
       </header>
 

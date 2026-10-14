@@ -23,13 +23,13 @@
           "fingerprint": "nav|data-annotation-id=global-navigation",
           "path": []
         },
-        "aiPrompt": "说明四个固定系统页面、后台显示页面多选与自定义大屏页面名称、已选页面导航顺序、可配置的轮播开关/间隔和遥控器业务动作键盘码映射；原型管理页面独立于业务页面轮播。",
+        "aiPrompt": "说明四个固定系统页面、后台显示页面多选与自定义大屏页面名称、已选页面导航顺序、可配置的轮播开关/间隔和遥控器业务动作键盘码映射（ok、左、右）；原型管理页面独立于业务页面轮播。",
         "annotationText": "",
         "hasMarkdown": true,
-        "color": "#06B6D4",
+        "color": "#3B82F6",
         "images": [],
         "createdAt": 1791768649000,
-        "updatedAt": 1791882503000
+        "updatedAt": 1791947292181
       },
       {
         "id": "global-system-time",
@@ -51,7 +51,7 @@
         "aiPrompt": "说明系统时间、数据更新时间和统一时间基准的区别。",
         "annotationText": "",
         "hasMarkdown": true,
-        "color": "#06B6D4",
+        "color": "#3B82F6",
         "images": [],
         "createdAt": 1791768649000,
         "updatedAt": 1791776477473
@@ -76,7 +76,7 @@
         "aiPrompt": "说明页面轮播按钮与后台配置开关/间隔、可配置遥控器轮播动作的同步关系，以及暂停时手动切页行为；页面轮播只遍历后台已选页面。",
         "annotationText": "",
         "hasMarkdown": true,
-        "color": "#8B5CF6",
+        "color": "#3B82F6",
         "images": [],
         "createdAt": 1791768649000,
         "updatedAt": 1791882503000
@@ -96,7 +96,7 @@
         "aiPrompt": "说明今日菜单、总产量、当前已完成、重量、完成率和餐品统计行字段。",
         "annotationText": "",
         "hasMarkdown": true,
-        "color": "#F59E0B",
+        "color": "#3B82F6",
         "images": [],
         "createdAt": 1791768649000,
         "updatedAt": 1791768649000
@@ -113,10 +113,10 @@
           "fingerprint": "section|data-annotation-id=production-flow",
           "path": []
         },
-        "aiPrompt": "说明投料区、烹饪区、出餐区、入口、设备、出口和流程卡片的绑定关系。",
+        "aiPrompt": "说明投料区、烹饪区、出餐区、入口、设备、出口和流程卡片的绑定关系；同一道菜不能同时出现在不同入口，炒菜机和烤箱都要有设备停留效果。",
         "annotationText": "",
         "hasMarkdown": true,
-        "color": "#F59E0B",
+        "color": "#3B82F6",
         "images": [],
         "createdAt": 1791768649000,
         "updatedAt": 1791776532041
@@ -136,7 +136,7 @@
         "aiPrompt": "说明菜品、状态、设备、生产重量、盆数、进度，以及烹饪中追加的时间和温度字段。",
         "annotationText": "",
         "hasMarkdown": true,
-        "color": "#F59E0B",
+        "color": "#3B82F6",
         "images": [],
         "createdAt": 1791768649000,
         "updatedAt": 1791776609514
@@ -156,10 +156,10 @@
         "aiPrompt": "说明明厨亮灶画面的来源、后台可配置的多条视频流名称和地址、模块名称联动，以及真实视频尚未接入时的表现。",
         "annotationText": "",
         "hasMarkdown": true,
-        "color": "#64748B",
+        "color": "#3B82F6",
         "images": [],
         "createdAt": 1791768649000,
-        "updatedAt": 1791882503000
+        "updatedAt": 1791947229768
       },
       {
         "id": "production-output-records",
@@ -173,10 +173,10 @@
           "fingerprint": "section|data-annotation-id=production-output-records",
           "path": []
         },
-        "aiPrompt": "说明出口、菜品、数量、重量和与菜单、流程、生产进度联动的规则。",
+        "aiPrompt": "说明出口、菜品、数量、重量和与菜单、流程、生产进度联动的规则；新增出餐记录按倒序置顶，并展示最新 5 秒。",
         "annotationText": "",
         "hasMarkdown": true,
-        "color": "#F59E0B",
+        "color": "#3B82F6",
         "images": [],
         "createdAt": 1791768649000,
         "updatedAt": 1791768649000
@@ -193,10 +193,10 @@
           "fingerprint": "section|data-annotation-id=nutrition-pyramid",
           "path": []
         },
-        "aiPrompt": "说明膳食宝塔层级、推荐摄入量口径，以及后台可上传更换的示意图片如何同步到配置预览。",
+        "aiPrompt": "说明膳食宝塔、每日推荐摄入量口径，以及后台可上传更换的示意图片如何同步到配置预览。",
         "annotationText": "",
         "hasMarkdown": true,
-        "color": "#10B981",
+        "color": "#3B82F6",
         "images": [],
         "createdAt": 1791768649000,
         "updatedAt": 1791882503000
@@ -216,7 +216,7 @@
         "aiPrompt": "说明当前选中餐品、每100g营养字段、主料调料和营养分析轮播；轮播间隔在营养健康页配置，标题随模块自定义名称联动，且独立于顶层轮播。",
         "annotationText": "",
         "hasMarkdown": true,
-        "color": "#10B981",
+        "color": "#3B82F6",
         "images": [],
         "createdAt": 1791768649000,
         "updatedAt": 1791882503000
@@ -236,7 +236,7 @@
         "aiPrompt": "说明今日菜单图片卡、餐段、颜色建议、份数及点击同步规则。",
         "annotationText": "",
         "hasMarkdown": true,
-        "color": "#10B981",
+        "color": "#3B82F6",
         "images": [],
         "createdAt": 1791768649000,
         "updatedAt": 1791768649000
@@ -342,46 +342,6 @@
         "updatedAt": 1791768649000
       },
       {
-        "id": "behavior-summary",
-        "index": 17,
-        "title": "行为监控统计字段",
-        "pageId": "behavior",
-        "locator": {
-          "selectors": [
-            "[data-annotation-id=\"behavior-summary\"]"
-          ],
-          "fingerprint": "div|data-annotation-id=behavior-summary",
-          "path": []
-        },
-        "aiPrompt": "说明统计周期、全部异常和各行为分类数量。",
-        "annotationText": "",
-        "hasMarkdown": true,
-        "color": "#EC4899",
-        "images": [],
-        "createdAt": 1791768649000,
-        "updatedAt": 1791768649000
-      },
-      {
-        "id": "behavior-events",
-        "index": 18,
-        "title": "行为事件字段",
-        "pageId": "behavior",
-        "locator": {
-          "selectors": [
-            "[data-annotation-id=\"behavior-events\"]"
-          ],
-          "fingerprint": "div|data-annotation-id=behavior-events",
-          "path": []
-        },
-        "aiPrompt": "说明事件分类、发生时间、区域、摄像头、图片和图片失败状态。",
-        "annotationText": "",
-        "hasMarkdown": true,
-        "color": "#EC4899",
-        "images": [],
-        "createdAt": 1791768649000,
-        "updatedAt": 1791768649000
-      },
-      {
         "id": "prd-document",
         "index": 19,
         "title": "智慧厨房驾驶舱需求文档",
@@ -393,65 +353,297 @@
           "fingerprint": "article|data-annotation-id=prd-document",
           "path": []
         },
-        "aiPrompt": "说明当前 PRD 的产品范围、四个页面的配置方式、字段字典、状态口径和验收标准。",
+        "aiPrompt": "说明当前 V1.1 PRD 的产品范围、四个页面的配置方式、配置示意图的锁定背景层与可直接编辑的文字层/图片层、字段字典、状态口径和验收标准。",
         "annotationText": "",
         "hasMarkdown": true,
-        "color": "#8B5CF6",
+        "color": "#3B82F6",
         "images": [],
         "createdAt": 1791768649000,
         "updatedAt": 1791882503000
+      },
+      {
+        "id": "admin-basic-info",
+        "index": 20,
+        "title": "驾驶舱基本信息与显示控制",
+        "pageId": "admin",
+        "locator": {
+          "selectors": [
+            "[data-annotation-id=\"admin-basic-info\"]"
+          ],
+          "fingerprint": "section|data-annotation-id=admin-basic-info",
+          "path": []
+        },
+        "aiPrompt": "说明驾驶舱名称、编号、描述、屏幕版本、启用状态、页面自动轮播、逻辑遥控器（ok、左、右）和显示页面多选的配置规则，以及固定页面顺序和最少保留一个页面的约束。",
+        "annotationText": "",
+        "hasMarkdown": true,
+        "color": "#3B82F6",
+        "images": [],
+        "createdAt": 1791944368000,
+        "updatedAt": 1791944368000
+      },
+      {
+        "id": "admin-page-config",
+        "index": 21,
+        "title": "页面配置与展示名称",
+        "pageId": "admin",
+        "locator": {
+          "selectors": [
+            "[data-annotation-id=\"admin-page-config\"]"
+          ],
+          "fingerprint": "section|data-annotation-id=admin-page-config",
+          "path": []
+        },
+        "aiPrompt": "说明页面配置页签、页面实际显示名称、模块展示名称及不提供模块启停/删除/排序/字段勾选的边界；补充行为监控和出餐统计页面的特殊规则。",
+        "annotationText": "",
+        "hasMarkdown": true,
+        "color": "#3B82F6",
+        "images": [],
+        "createdAt": 1791944368000,
+        "updatedAt": 1791944368000
+      },
+      {
+        "id": "admin-page-settings",
+        "index": 22,
+        "title": "页面专属设置",
+        "pageId": "admin",
+        "locator": {
+          "selectors": [
+            "[data-annotation-id=\"admin-page-settings\"]"
+          ],
+          "fingerprint": "section|data-annotation-id=admin-page-settings",
+          "path": []
+        },
+        "aiPrompt": "说明营养健康页的营养分析轮播间隔与膳食宝塔图片、生产烹饪页多条明厨亮灶视频流及播放方式配置；视频地址不代表真实播放接入。",
+        "annotationText": "",
+        "hasMarkdown": true,
+        "color": "#3B82F6",
+        "images": [],
+        "createdAt": 1791944368000,
+        "updatedAt": 1791944368000
+      },
+      {
+        "id": "admin-preview",
+        "index": 23,
+        "title": "配置示意图与直接编辑",
+        "pageId": "admin",
+        "locator": {
+          "selectors": [
+            "[data-annotation-id=\"admin-preview\"]"
+          ],
+          "fingerprint": "section|data-annotation-id=admin-preview",
+          "path": []
+        },
+        "aiPrompt": "说明配置示意图的固定背景、可直接编辑的文字层和图片层、不可操作的其他页面控件，以及页面名称、模块名称和图片改动如何实时同步到同一份配置草稿和预览；可修改文字包括驾驶舱名称、页面名称和模块名称，可修改图片包括 Logo 和膳食宝塔图片。",
+        "annotationText": "",
+        "hasMarkdown": true,
+        "color": "#3B82F6",
+        "images": [],
+        "createdAt": 1791944368000,
+        "updatedAt": 1791944368000
+      },
+      {
+        "id": "admin-save-actions",
+        "index": 24,
+        "title": "配置保存与发布",
+        "pageId": "admin",
+        "locator": {
+          "selectors": [
+            "[data-annotation-id=\"admin-save-actions\"]"
+          ],
+          "fingerprint": "footer|data-annotation-id=admin-save-actions",
+          "path": []
+        },
+        "aiPrompt": "说明保存草稿和发布配置的规则；当前原型使用浏览器本地状态模拟保存，不代表已接入正式后台服务。",
+        "annotationText": "",
+        "hasMarkdown": true,
+        "color": "#3B82F6",
+        "images": [],
+        "createdAt": 1791944368000,
+        "updatedAt": 1791944368000
+      },
+      {
+        "id": "meal-menu-download",
+        "index": 25,
+        "title": "餐品下载同步 SOP 营养素数据",
+        "pageId": "meal-menu",
+        "locator": {
+          "selectors": [
+            "[data-annotation-id=\"meal-menu-download\"]"
+          ],
+          "fingerprint": "button|data-annotation-id=meal-menu-download",
+          "path": []
+        },
+        "aiPrompt": "补充餐品下载功能需求：从云餐品库下载餐品时，需要将 SOP 中的营养素数据一并下载。",
+        "annotationText": "",
+        "hasMarkdown": true,
+        "color": "#3B82F6",
+        "images": [],
+        "createdAt": 1791955410932,
+        "updatedAt": 1791955410932
+      },
+      {
+        "id": "production-process-nutrition-tab",
+        "index": 26,
+        "title": "营养素页签",
+        "pageId": [
+          "production-process-view",
+          "production-process-edit",
+          "production-process-edit-ai-timeout",
+          "production-process-edit-no-ingredients"
+        ],
+        "locator": {
+          "selectors": [
+            "[data-annotation-id=\"production-process-nutrition-tab\"]"
+          ],
+          "fingerprint": "button|data-annotation-id=production-process-nutrition-tab",
+          "path": []
+        },
+        "aiPrompt": "说明生产工艺页面新增营养素页签的展示范围、营养数据口径，以及编辑页通过 AI 生成营养素的入口和结果提示。",
+        "annotationText": "",
+        "hasMarkdown": true,
+        "color": "#3B82F6",
+        "images": [],
+        "createdAt": 1791955410932,
+        "updatedAt": 1791955410932
+      },
+      {
+        "id": "production-process-ai-nutrition",
+        "index": 27,
+        "title": "AI 生成营养素计算与校验",
+        "pageId": [
+          "production-process-edit",
+          "production-process-edit-ai-timeout",
+          "production-process-edit-no-ingredients"
+        ],
+        "locator": {
+          "selectors": [
+            "[data-annotation-id=\"production-process-ai-nutrition\"]"
+          ],
+          "fingerprint": "button|data-annotation-id=production-process-ai-nutrition",
+          "path": []
+        },
+        "aiPrompt": "说明 AI 生成营养素的计算链路：关联当天烹饪中选择的原料和调料，将配方数据喂给多个模型分别计算每 100g 成品营养素，再使用 GPT 对多模型结果进行校验并返回最终结果。",
+        "annotationText": "",
+        "hasMarkdown": true,
+        "color": "#3B82F6",
+        "images": [],
+        "createdAt": 1791955410932,
+        "updatedAt": 1791955410932
+      },
+      {
+        "id": "dish-color-legend",
+        "index": 28,
+        "title": "滚动条菜品颜色图例",
+        "pageId": "cockpit",
+        "locator": {
+          "selectors": [
+            "[data-annotation-id=\"dish-color-legend\"]"
+          ],
+          "fingerprint": "div|data-annotation-id=dish-color-legend",
+          "path": []
+        },
+        "aiPrompt": "说明滚动条展示菜品颜色图例，以及同一个页面内同一道菜始终使用同一颜色；菜品颜色随机生成，但不能与背景色相同。",
+        "annotationText": "",
+        "hasMarkdown": true,
+        "color": "#EF4444",
+        "images": [],
+        "createdAt": 1791970705000,
+        "updatedAt": 1791970705000
       }
     ],
-    "updatedAt": 1791882503000
+    "updatedAt": 1791970705000
   },
   "markdownMap": {
-    "global-navigation": "## 全局导航与页面轮播\n\n依据 PRD §7.1、§7.10、§8.1：\n\n- 系统提供生产烹饪、营养健康、出餐统计、行为监控四个固定页面；后台“显示页面”多选决定大屏实际显示项，顺序保持系统默认顺序。\n- 页面标题及各页面的大屏导航显示名来自后台配置；页面自定义名称不改变配置页中的系统标准页签名。当前项高亮，导航、地址和内容同步。\n- 顶层轮播可在后台开启/关闭并配置间隔，默认开启、默认 20 秒；开启后仅在已选页面间循环。\n- 后台按业务动作维护键盘 code 映射。默认 Enter 控制轮播，ArrowLeft / ArrowRight 切换上一页 / 下一页；遥控器实体键由安卓系统转换为标准键盘码，映射支持恢复默认。\n- 手动切页后重置轮播倒计时；暂停时仍可手动切页且保持暂停。连续 300 毫秒内重复触发同一个逻辑按键时忽略重复输入。\n- 原型管理下的版本管理、需求文档和驾驶舱配置后台不参与大屏业务页面轮播。\n\n本标注覆盖导航规则，不拆成四个重复字段标记。",
-    "global-system-time": "## 系统时间与统一时间基准\n\n依据 PRD §8.1：\n\n- 右上角显示年、月、日、时、分、秒，用于判断当前餐段和烹饪计时。\n- 数据更新时间表示数据源最后更新时间，和系统时间不是同一个概念；没有数据时显示“—”。\n- 页面时钟、已烹饪时间和当前餐段使用同一计时节奏，页面每秒最多推进 1 秒。\n",
-    "page-carousel-control": "## 页面轮播开关\n\n依据 PRD §7.1、§7.10：\n\n- 顶层页面轮播开关和间隔由后台配置，默认开启、默认 20 秒；只在后台选中的页面间循环。\n- 大屏右上角按钮与遥控器映射的“播放 / 暂停轮播”动作共用状态。暂停后保留当前页面，按钮文案变为“开始页面”；恢复后从当前页面重新计时，文案变为“暂停页面”。\n- 暂停时仍可通过遥控器映射的上一页/下一页动作或顶部导航手动切页，并保持暂停。遥控器默认键盘 code 为 Enter、ArrowLeft、ArrowRight，后台可调整并恢复默认。\n- 营养健康页内餐品营养轮播单独配置和控制，不受顶层轮播按键控制；原型管理入口不参与页面轮播。",
-    "production-menu": "## 今日菜单与产量字段\n\n依据 PRD §8.2、§7.3：\n\n- 菜品名称使用排产去重后的标准名称，并按餐段分组。\n- 今日菜品总数按排产菜品与临时加菜分别去重后合并统计，同一道菜不能因来源重复计数。\n- 计划盆数与已完成盆数表达计划和当前完成情况；临时加菜的数量和重量纳入生产总量。\n- 计划重量与已完成重量保留 1 位小数。\n- 完成率为已完成盆数除以计划盆数，显示在总进度条。\n- 每道菜的统计行显示已完成重量 / 总重量，和汇总数字使用同一份菜品任务数据。\n- 缺失重量显示“—”，不把未知重量当成 0。",
-    "production-flow": "## 生产流程字段与路线约束\n\n依据 PRD §8.3、§7.2：\n\n- 投料区、烹饪区、出餐区分别表示生产的三个区域。\n- 入口、实际设备和出口标识一条生产路线。\n- 流程卡片沿同一条绑定路线移动，起点、设备停留和出口不能错位。\n- 流程卡片颜色与对应菜品颜色保持一致。",
-    "production-progress": "## 生产进度字段\n\n依据 PRD §8.3、§7.4：\n\n- 每行显示菜品名称、工单状态、设备、生产重量、完成盆数 / 计划盆数和进度。\n- 生产总数、已完成任务数、未完成任务数、投料区任务数采用当前餐段任务行口径，不和全天盆数或设备数混用。\n- 当状态为“烹饪中”时追加已烹饪时间、总烹饪时长和设备温度。\n- 已烹饪时间等于当前时间减烹饪开始时间，和右上角时间同速；设备温度根据实际情况展示\n- 字段缺失显示“—”，完成量大于计划量时保护进度不越界。",
-    "kitchen-camera": "## 明厨亮灶\n\n依据 PRD §7.6、§7.10：\n\n- 配置后台可维护多条视频流的画面名称和地址；“明厨亮灶视频流”标题随模块自定义名称联动。\n- 接入真实视频服务后展示后厨摄像头画面；配置地址本身不代表已经接入或可播放。\n- 未接入时保留模块结构并标记待接入或演示状态，不显示无依据的“设备运行中”。",
-    "production-output-records": "## 出餐记录字段\n\n依据 PRD §8.3、§7.5：\n\n- 每条记录展示出口、菜品、数量和重量。\n- 临时加菜也进入出餐明细，但只展示菜品、出餐数量和出餐时间，不展示餐段、批次或准时比较。\n- 今日出餐汇总使用今日已出餐、今日计划出餐、今日出餐完成率和趋势点。\n- 趋势最后一个点必须等于当前今日已出餐数量。\n- 出餐记录、今日菜单、生产流程和生产进度必须来自同一份菜品/工单数据，不能各自维护不相等的数字。",
-    "nutrition-pyramid": "## 膳食宝塔与推荐摄入量\n\n依据 PRD §8.4、§7.7、§7.10：\n\n- 宝塔展示谷薯、蔬菜水果、动物性食物、奶豆坚果、油盐水等膳食结构层级。\n- 每日推荐摄入量表达健康建议，不是今日菜单的实测摄入量。\n- 推荐量按来源保留单位和精度，不能用菜单中的单品营养值替换宝塔推荐值。\n- 后台支持上传/更换宝塔图片，配置示意随图片变化自动更新。",
-    "nutrition-spotlight": "## 当前餐品营养分析\n\n依据 PRD §8.4、§7.7、§7.10：\n\n- 当前选中餐品变化后，图片、餐段、营养卡和高亮同步更新。\n- 营养值统一按熟制成品每 100g 估算。\n- 主要字段包括能量、蛋白质、脂肪、碳水化合物；当前原型还展示有数据时的膳食纤维、胆固醇、主料和调料。\n- 营养分析卡支持自动轮播和暂停，轮播间隔在营养健康页配置；设置标题随营养分析模块自定义名称联动，且不受顶层页面轮播控制。",
+    "global-navigation": "## 全局导航与页面轮播\n\n依据 PRD §7.1、§7.10、§8.1：\n\n- 系统提供生产烹饪、营养健康、出餐统计、行为监控四个固定页面；后台“显示页面”多选决定大屏实际显示项，顺序保持系统默认顺序。\n- 页面标题及各页面的大屏导航显示名来自后台配置；页面自定义名称不改变配置页中的系统标准页签名。当前项高亮，导航、地址和内容同步。\n- 顶层轮播可在后台开启/关闭并配置间隔，默认开启、默认 20 秒；开启后仅在已选页面间循环。\n- 后台按业务动作维护逻辑映射。默认 ok 控制轮播，左 / 右切换上一页 / 下一页；映射支持恢复默认。\n- 手动切页后重置轮播倒计时；暂停时仍可手动切页且保持暂停。连续 300 毫秒内重复触发同一个逻辑按键时忽略重复输入。",
+    "global-system-time": "## 系统时间与统一时间基准\n\n依据 PRD §7.1、§8.1：\n\n- 右上角显示 `YYYY-MM-DD HH:mm:ss`，作为烹饪计时和当前餐段判断的统一时间基准。\n- 数据更新时间表示数据源最后更新时间，和系统时间不是同一个概念；没有数据时显示“—”。\n- 页面时钟、已烹饪时间和当前餐段使用同一计时节奏，页面每秒最多推进 1 秒。\n- 主画布按窗口尺寸保持 16:9 缩放，不裁切核心内容。\n- 页面或模块状态覆盖默认、加载中、成功、空状态和加载失败。\n",
+    "page-carousel-control": "## 页面轮播开关\n\n依据 PRD §7.1、§7.10：\n\n- 顶层页面轮播开关和间隔由后台配置，默认开启、默认 20 秒；只在后台选中的页面间循环。\n- 大屏右上角按钮与遥控器映射的“播放 / 暂停轮播”动作共用状态。暂停后保留当前页面，按钮文案变为“开始页面”；恢复后从当前页面重新计时，文案变为“暂停页面”。\n- 暂停时仍可通过遥控器映射的上一页/下一页动作或顶部导航手动切页，并保持暂停。遥控器默认逻辑映射为 ok、左、右，后台可调整并恢复默认。\n- 营养健康页内餐品营养轮播单独配置和控制，不受顶层轮播按键控制；原型管理入口不参与页面轮播。",
+    "production-menu": "## 今日菜单与产量字段\n\n依据 PRD §7.3、§8.2：\n\n- 今日菜单按餐段展示已排产的去重菜品名称；今日菜品总数为排产菜品与临时加菜的去重菜品数之和。\n- 汇总展示总产量、当前已完成、总产量重量、已完成重量和总进度条；临时加菜的数量与重量纳入生产总量。\n- 总产量盆数、总产量重量、当前已完成盆数和当前已完成重量均按排产数据与临时加菜数据分别求和后合并。\n- 单个菜品的总重量与已完成重量由对应排产和临时加菜明细求和，统计行显示已完成重量 / 总重量。\n- 重量结果保留 1 位小数；缺失重量显示“—”，不把未知重量当成 0。\n",
+    "production-flow": "## 生产流程字段与路线约束\n\n依据 PRD §7.2、§8.3：\n\n- 展示投料区、烹饪区、出餐区、入口、设备和出口；入口、设备类型、设备名称、设备数量和出口按食堂实际配置同步。\n- 设备编号按食堂配置同步，炒菜机需拼接接口口径；缺失时显示“—”。\n- 流程卡片沿对应路线移动，路径起点、终点、当前节点、设备和出口必须绑定同一条路线；同一道菜不能同时出现在不同入口。\n- 炒菜机与烤箱都要在设备节点产生停留效果，再继续移动到出口。\n- 卡片停留状态与节点状态、任务完成量、出餐记录或设备字段联动，颜色与菜品颜色保持一致。\n",
+    "production-progress": "## 生产进度字段\n\n依据 PRD §7.4、§8.3：\n\n- 每行显示菜品名称、工单状态、设备、生产重量、完成盆数 / 计划盆数和进度。\n- 生产总数为工单总数减已作废数量；已完成任务数为出餐完成、取餐中、取餐完成状态的数量；未完成任务数为生产总数减已完成任务数。\n- 投料区任务数为待摆盆、摆盆中、摆盆完成状态的任务数。\n- 烹饪中任务追加已烹饪时间、总烹饪时长和设备温度；已烹饪时间等于当前时间减烹饪开始时间，与页面时钟同一 tick。\n- 设备温度真实接入时取设备遥测，演示时仅表达目标温度附近波动；缺失字段显示“—”，进度不越界。",
+    "kitchen-camera": "## 明厨亮灶\n\n依据 PRD §7.6、§7.10：\n\n- 配置后台可维护多条视频流的画面名称和地址；“明厨亮灶视频流”标题随模块自定义名称联动。\n- 接入真实视频服务后展示后厨摄像头画面",
+    "production-output-records": "## 出餐记录字段\n\n依据 PRD §7.5、§8.3：\n\n- 每条出餐记录展示出口、菜品、数量和重量；出餐数量与统计页同源，缺失重量显示“—”。\n- 出餐记录需要和今日菜单统计、生产流程、生产进度保持联动一致，不能各自维护不相等的数字。\n- 新增的出餐记录按时间倒序显示在最上方，并展示最新 5 秒内的记录。\n",
+    "nutrition-pyramid": "## 膳食宝塔与推荐摄入量\n\n依据 PRD §7.7、§8.4、§8.6：\n\n- 左侧展示《中国居民平衡膳食宝塔（2022）》及每日推荐摄入量。\n- 每日推荐摄入量表达健康建议，不代表当前菜品的实际摄入量；按来源保留单位和精度。\n- 后台支持上传或更换膳食宝塔图片，配置示意图随图片变化同步更新。\n",
+    "nutrition-spotlight": "## 当前餐品营养分析\n\n依据 PRD §7.7、§8.4、§8.6：\n\n- 当前选中餐品变化后，餐品名、餐段、图片、营养卡和列表高亮同步更新。\n- 营养分析标题下明确标注“每 100g 成品”，所有营养值统一按熟制成品每 100g 估算，字段包括能量、蛋白质、脂肪、碳水化合物；有数据时展示膳食纤维、胆固醇、食材和调料。\n- 计算规则为：原料熟重 = 原料生重 × 出成率；成品总重量 = 所有原料熟重之和；菜品总营养素 = 所有原料营养素总量之和；成品每 100g 营养素 = 菜品总营养素 ÷ 成品总重量 × 100。单个原料优先取中国食物成分表，没有时由 AI 检索。\n- 营养分析卡支持自动轮播和暂停，间隔在营养健康页配置，默认 8 秒、范围 3–120 秒；设置名称随模块名称联动且不受顶层页面轮播控制。\n",
     "nutrition-menu": "## 营养健康今日菜单\n\n依据 PRD §8.4、§7.7：\n\n- 菜单来自生产烹饪的同一份菜品数据，每道菜有对应餐品图片。\n- 卡片显示餐段、颜色建议、建议频次和份数。\n- 点击卡片时，当前选中餐品、营养分析卡和列表高亮同步更新。\n- 图片加载失败时保留菜品名称和其他文字字段，显示图片失败占位。",
     "output-stat-filters": "## 出餐统计筛选字段\n\n依据 PRD §8.5、§7.8：\n\n- 支持选择统计日期、餐段范围和批次。\n- 切换餐段时批次重置为全部批次。\n- 三个筛选共同决定汇总、明细、圆环和偏差折线，不能只刷新明细而不刷新汇总。",
-    "output-stat-summary": "## 出餐统计汇总字段\n\n依据 PRD §8.5、§7.8：\n\n- 计划出餐盆数表示当前筛选范围内的计划量。\n- 及时完成盆数表示不晚于菜品备餐提醒且足额完成的数量。\n- 延迟完成盆数表示晚于菜品备餐提醒但已完成的数量。\n- 未完成盆数表示计划量减实际出餐量的数量缺口。\n- 临时加菜盆数单独统计，不进入及时、延迟、未完成三种状态。\n- 计划量 = 及时完成 + 延迟完成 + 未完成；五个卡片和明细使用同一来源。",
-    "output-detail": "## 出餐明细字段\n\n依据 PRD §8.5、§7.8：\n\n- 计划内明细按餐段和批次分组，展示计划时间、实际完成时间和差异。\n- 菜品行展示菜品名称、备餐提醒时间、实际出餐时间、出餐偏差和完成分解。\n- 每道计划内菜品的及时、延迟、未完成三段之和必须等于该菜计划量。\n- 临时加菜作为独立明细区块展示，不归入餐段或批次；行布局与正常菜品一致，按“菜品与实际出餐时间 / 绿色数量条 / 数量尾列”对齐。\n- 临时加菜仅展示菜品、出餐数量和实际出餐时间，不展示备餐提醒时间或加菜原因。\n- 临时加菜不参与准时、延迟或未完成判断，也不进入三色状态分解。\n- 颜色图例：绿色=已完成且按时，黄色=已完成但延迟，粉色=未完成。\n- 明细是汇总数字的解释来源，范围变化时支持内部自动滚动。",
+    "output-stat-summary": "## 出餐统计汇总字段\n\n依据 PRD §7.8、§8.5：\n\n- 计划出餐盆数表示当前日期、餐段和批次范围内的计划量。\n- 已完成及时为实际出餐不晚于菜品备餐提醒且数量足额的盆数；已完成延迟为晚于备餐提醒但已完成的盆数。\n- 未完成为计划出餐盆数减实际出餐盆数的数量缺口。\n- 临时加菜盆数单独统计，不计入及时、延迟、未完成三种状态。\n- 计划量 = 已完成及时 + 已完成延迟 + 未完成；卡片、趋势和明细使用同一筛选结果。",
+    "output-detail": "## 出餐明细字段\n\n依据 PRD §7.8、§8.5：\n\n- 明细表作为汇总数字的解释来源，按餐段 + 批次分组，展示批次时间、实际出餐时间和与计划的差异。\n- 菜品细项展示备餐提醒时间、实际出餐时间、准时判断和完成情况；及时、延迟、未完成三段之和必须等于该菜计划量。\n- 临时加菜作为独立明细区块展示，不归入餐段或批次；按“菜品与实际出餐时间 / 绿色数量条 / 数量尾列”与正常行对齐。\n- 临时加菜仅展示菜品、出餐数量和实际出餐时间，不展示备餐提醒时间或加菜原因，也不参与准时、延迟或未完成判断。\n- 图例为绿色=已完成且按时、黄色=已完成但延迟、粉色=未完成；筛选变化时明细与卡片、趋势同步刷新。\n",
     "output-donut": "## 出餐情况占比圆环\n\n依据 PRD §8.5、§7.8：\n\n- 圆环仅包含及时、延迟、未完成三种状态。\n- 三种颜色对应三种互斥数据段，段与段不重叠；每段数值均来自当前筛选范围。\n- 圆环中心按状态轮播展示对应百分比和状态名称，其他颜色保持各自原始占比和颜色。\n- 计划量为 0 时显示暂无数据，不用 0% 伪造统计结论。",
-    "output-deviation-line": "## 出餐偏差折线\n\n依据 PRD §8.5、§7.8：\n\n- 批次视图使用实际出齐时间减批次计划出餐时间。\n- 菜品视图使用实际出餐时间减菜品备餐提醒时间。\n- 偏差大于 0 为超时，小于 0 为提前，等于 0 为准时；图例和标题要随维度同步。\n- 折线使用当前筛选范围的数据，不能与汇总或明细脱节。",
-    "behavior-summary": "## 行为监控统计字段\n\n依据 PRD §7.9：\n\n- 展示当前统计周期。\n- 事件数量按行为分类统计，全部异常为分类合计。\n- 分类包括未佩戴口罩、未佩戴帽子、发现老鼠、发现抽烟和发现人员。\n- 没有事件时清空旧列表，显示明确空状态。",
-    "behavior-events": "## 行为事件字段\n\n依据 PRD §7.9：\n\n- 每条事件展示行为分类、发生时间、区域、摄像头、抓拍图片和事件编号。\n- 时间可同时展示相对时间与绝对时间；最近更新只表示数据更新时间，不替代事件发生时间。\n- 图片加载失败时保留事件类型、时间、区域和摄像头等文字信息，显示图片不可用状态。\n- 列表按分类和时间排序。",
-    "prd-document": "## 智慧厨房驾驶舱需求文档\n\n- 本页面展示当前版本 PRD 的产品定义、业务页面、驾驶舱配置后台、字段字典、交互规则和验收标准。\n- 后台可配置页面选择与名称、模块显示名称、轮播与遥控器映射、页面专属设置及示意图内容；不再将这些项目作为固定值要求。\n- 文档页面与原型目录中的“需求文档”入口同步；原型标注用于补充字段、边界、状态和数据口径。"
+    "output-deviation-line": "## 出餐偏差折线\n\n依据 PRD §7.8、§8.5：\n\n- 批次视图对本食堂所有批次进行比较，使用实际出齐时间减批次计划出餐时间；菜品视图使用实际出餐时间减备餐提醒时间。\n- 偏差大于 0 为超时，小于 0 为提前，等于 0 为准时；图例和标题随维度同步。\n- 折线使用当前日期、餐段和批次筛选范围的数据，并与汇总和明细保持一致。\n",
+    "prd-document": "## 智慧厨房驾驶舱需求文档\n\n- 本页面展示 V1.2 PRD 的产品定义、业务页面、驾驶舱配置后台、生产工艺营养素字段、状态与验收标准。\n- 最新需求覆盖四个业务页面、统一菜品/工单/批次数据、营养计算规则、出餐统计筛选与偏差口径，以及驾驶舱后台的显示页面、模块名称、视频流和示意图配置。\n- 生产工艺查看和编辑页面默认进入营养素页签，使用同一张营养素表支持手动输入和 AI 生成覆盖，并补充生成成功、超时和无原料等异常状态。\n- 配置示意图背景图层锁定；直接点击文字层原位修改，点击图片层选择替换并覆盖，其他页面控件不可操作，改动实时同步到草稿与预览。\n- 文档页面直接渲染当前需求文档源文件；本标注用于补充字段、边界、状态和数据口径。",
+    "admin-basic-info": "## 驾驶舱基本信息与显示控制\n\n依据 PRD §7.10、§8.6、§12.1：\n\n- 基本信息维护驾驶舱名称、编号、描述、屏幕版本和启用状态；页面自动轮播与逻辑遥控器在这里配置。\n- “显示页面”从生产烹饪、营养健康、出餐统计、行为监控四个固定系统页面中多选，至少保留一个页面；大屏导航和自动轮播只包含已选页面，系统顺序固定，不提供页面排序。\n- 页面自动轮播默认开启、默认 20 秒，可调整间隔；逻辑遥控器可启用/关闭，并维护播放/暂停、上一页、下一页的逻辑映射（ok、左、右）。\n- Logo 不单设外观配置页，改动通过配置示意图的图片层完成。\n\n本标注说明后台基础配置与大屏导航/轮播的联动，不拆成单字段标记。",
+    "admin-page-config": "## 页面配置与展示名称\n\n依据 PRD §7.10、§8.6、§12.1：\n\n- 页面配置使用四个系统页面的标准页签；实际大屏导航只包含“显示页面”中已选页面，系统顺序固定。\n- 每页可修改大屏实际显示名称；清空时回退为默认名称。名称修改只影响大屏导航显示，不改变系统页面标识。\n- 可修改页面模块在大屏上的展示名称，不提供模块启停、删除、排序、页面标识、布局面板或字段/表格列勾选。\n- 行为监控沿用现有页面展示，不新增行为监控配置项。",
+    "admin-page-settings": "## 页面专属设置\n\n依据 PRD §7.6、§7.7、§7.10、§8.4、§8.6：\n\n- 营养健康页可配置营养分析轮播间隔，默认 8 秒，范围 3–120 秒；设置文案随营养分析模块自定义名称联动。膳食宝塔图片在配置示意图中直接替换，示意图随配置更新。\n- 生产烹饪页可维护多条明厨亮灶视频流，每条配置画面名称与地址；标题随明厨亮灶模块名称联动。多个画面按网格平铺或轮播展示，地址录入不代表真实视频已经接入或可播放。\n- 行为监控沿用现有页面展示，不新增页面专属配置。",
+    "admin-preview": "## 配置示意图与直接编辑\n\n依据 PRD §7.10、§8.6、§12.1：\n\n- 配置示意图使用真实大屏页面作为固定背景，背景图层不可修改，不提供独立的“图上编辑”按钮。\n- 进入配置页即可直接点击文字层原位修改驾驶舱名称、页面名称和模块名称；点击 Logo 或膳食宝塔图片等图片层选择新图并覆盖。\n- 示意图里的导航、筛选、轮播等其他页面控件不可操作，避免把配置预览误当成业务页面。\n- 文字或图片改动实时写入同一份配置草稿，并同步当前示意图和对应大屏展示。",
+    "admin-save-actions": "## 配置保存与发布\n\n依据 PRD §7.10、§8.6、§12.1：\n\n- 支持保存草稿、发布配置。\n- 保存与发布操作作用于当前整份驾驶舱配置；发布前校验驾驶舱名称和编号不能为空。\n- 当前原型使用浏览器本地状态模拟保存和发布，不代表已接入正式后台服务。",
+    "meal-menu-download": "## 餐品下载同步 SOP 营养素数据\n\n- 从云餐品库下载餐品时，需要将 SOP 中的营养素数据一并下载。",
+    "production-process-nutrition-tab": "## 营养素页签\n\n- 生产工艺查看和编辑页面新增“营养素”页签。\n- 页签展示当前餐品每 100g 成品的营养素数据。\n- 编辑页保留“AI 生成营养素”入口，并在生成成功后展示成功提示。",
+    "production-process-ai-nutrition": "## AI 生成营养素计算与校验\n\n- 关联当天烹饪中选择的原料和调料。\n- 将原料、调料及其配方数据喂给多个模型，分别计算成品每 100g 的营养素。\n- 汇总多个模型的计算结果，再使用 GPT 进行交叉校验。\n- 返回校验后的每 100g 营养素结果，并保留生成成功或异常状态提示。",
+    "dish-color-legend": "## 滚动条菜品颜色图例\n\n- 滚动条展示菜品颜色图例。\n- 同一个页面内，同一道菜始终使用同一颜色，并与流程、菜单、营养分析等页面元素保持一致。\n- 菜品颜色随机生成，但必须避开页面背景色，保证文字和色块可读。"
   },
   "assetMap": {},
   "directory": {
     "nodes": [
       {
+        "type": "route",
+        "id": "route-version-management",
+        "title": "版本管理",
+        "route": "version"
+      },
+      {
+        "type": "route",
+        "id": "route-requirements-document",
+        "title": "需求文档",
+        "route": "requirements"
+      },
+      {
         "type": "folder",
         "id": "prototype-management",
-        "title": "原型管理",
+        "title": "后台页面",
         "defaultExpanded": true,
         "children": [
           {
             "type": "route",
-            "id": "route-version-management",
-            "title": "版本管理",
-            "route": "version"
+            "id": "route-cockpit-admin",
+            "title": "驾驶舱配置后台",
+            "route": "admin"
           },
           {
             "type": "route",
-            "id": "route-requirements-document",
-            "title": "需求文档",
-            "route": "requirements"
+            "id": "route-production-process-view",
+            "title": "基础后台-生产工艺查看",
+            "route": "production-process-view"
+          },
+          {
+            "type": "route",
+            "id": "route-production-process-edit",
+            "title": "基础后台-编辑生产工艺",
+            "route": "production-process-edit"
+          },
+          {
+            "type": "route",
+            "id": "route-production-process-edit-ai-timeout",
+            "title": "基础后台-编辑生产工艺-生成超时",
+            "route": "production-process-edit-ai-timeout"
+          },
+          {
+            "type": "route",
+            "id": "route-production-process-edit-no-ingredients",
+            "title": "基础后台-编辑生产工艺-无原料",
+            "route": "production-process-edit-no-ingredients"
+          },
+          {
+            "type": "route",
+            "id": "route-meal-menu",
+            "title": "商户后台-食堂餐品",
+            "route": "meal-menu"
           }
         ]
       },
       {
         "type": "folder",
         "id": "business-pages",
-        "title": "业务页面",
+        "title": "驾驶舱",
         "defaultExpanded": true,
         "children": [
           {
@@ -477,26 +669,26 @@
             "id": "route-behavior",
             "title": "行为监控",
             "route": "behavior"
-          }
-        ]
-      },
-      {
-        "type": "folder",
-        "id": "developer-exception-reference",
-        "title": "开发参考 · 异常状态",
-        "defaultExpanded": true,
-        "children": [
-          {
-            "type": "route",
-            "id": "route-reference-no-data",
-            "title": "驾驶舱-无数据",
-            "route": "reference-no-data"
           },
           {
-            "type": "route",
-            "id": "route-reference-load-failed",
-            "title": "驾驶舱-加载失败",
-            "route": "reference-load-failed"
+            "type": "folder",
+            "id": "developer-exception-reference",
+            "title": "异常状态",
+            "defaultExpanded": true,
+            "children": [
+              {
+                "type": "route",
+                "id": "route-reference-no-data",
+                "title": "驾驶舱-无数据",
+                "route": "reference-no-data"
+              },
+              {
+                "type": "route",
+                "id": "route-reference-load-failed",
+                "title": "驾驶舱-加载失败",
+                "route": "reference-load-failed"
+              }
+            ]
           }
         ]
       }

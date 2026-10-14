@@ -16,7 +16,7 @@
    JSX 那边也一并删干净 —— 不留「看起来还在用」的死样式。 */
 .uk-admin-page-detail{min-width:0}
 /* 视频流名输入框的外观。这条原本是「模块名 + 视频流名」共用 —— 模块名那半截随
-   「模块名称」表单一起删了（2026-10-13 晚间，入口搬到示意图的图上编辑里），
+   「模块名称」表单一起删了（2026-10-13 晚间，入口改为示意图内直接编辑），
    剩下的视频流这一半仍然要这套高度/描边/内距，别跟着一起删。 */
 .uk-admin-stream-row>input{height:36px;min-width:0;padding:0 10px;border:1px solid #dfe3e9;border-radius:4px;background:#fff;color:#343a40;font:inherit}
 .uk-admin-subhead{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 14px;margin:0 0 11px;color:#48525e;font-size:13px}
@@ -61,10 +61,10 @@
 .uk-admin-page-picker-tick{display:grid;width:14px;height:14px;flex:0 0 auto;place-items:center;border:1px solid #ccd3db;border-radius:3px;background:#fff;color:#fff}
 .uk-admin-page-picker-menu>button.is-selected .uk-admin-page-picker-tick{border-color:#398be5;background:#398be5}
 /* 页面详情里现在只剩「页面设置」一区：原来前面还有「自定义页面名称」「模块名称」两块，
-   2026-10-13 晚间按需求删掉（改名入口搬到示意图的「图上编辑」）。
+   2026-10-13 晚间按需求删掉（改名入口搬到示意图内直接编辑）。
    因为它是页签下面第一块内容，所以**不加上边线** —— 上面那条 border-top 原本是给
    "第二、第三块"跟上一块分界用的，现在顶上只有页签和一行指路牌，再加线像把内容割开。 */
-.uk-admin-page-behavior{padding:16px 0}
+.uk-admin-page-behavior{padding:0 0 16px}
 .uk-admin-setting-inline{display:grid;width:min(480px,100%);grid-template-columns:160px minmax(0,1fr);align-items:center;gap:16px;color:#65707c;font-size:13px}
 /* 行内设置里的文本输入框（目前只有「自定义页面名称」一个）。外观与 .uk-admin-field>input 对齐：
    38px 高、1px #dfe3e9 描边、聚焦蓝环。不另造类名 —— 行内设置共用一条规则，
@@ -84,24 +84,16 @@
 .uk-admin-stream-row{display:grid;grid-template-columns:minmax(140px,.7fr) minmax(240px,1.6fr) 58px;gap:10px;margin-bottom:8px}
 .uk-admin-stream-row>button{color:#d15c5c}
 .uk-admin-stream-row>button:disabled{color:#b9bec5;cursor:not-allowed}
-/* ── 视频流「播放方式」分段按钮（2026-10-13 深夜新增）──
-   为什么不复用页签（.uk-admin-config-tabs）：页签是"换一块内容看"，而这两个按钮是同一个
-   设置的两个取值 —— 做成页签的样子，会让人以为点一下会把下面的表单整块换掉。
-   为什么不做成一个来回切的开关（像上面的「是否启用」那样）：开关只显示当前状态，
-   看不出另一个选项叫什么；而"平铺 / 轮播"这两个名字本身就是这一行要传达的信息。
-   ── 禁用态 ──
-   只有 1 路画面时整组禁用。禁用态刻意**不做成几乎看不见**（不用 #dfe3e9 这种描边）：
-   它是"暂时用不上"，不是"不存在"。选中项在禁用时保留蓝底但降饱和 ——
-   一眼能看出"当前是轮播，只是现在改不了"，而不是"啥都没选"。 */
 .uk-admin-stream-mode{display:flex;min-height:36px;flex-wrap:wrap;align-items:center;gap:10px;margin:0 0 12px}
 .uk-admin-stream-mode-label{flex:0 0 auto;color:#65707c;font-size:13px}
-.uk-admin-seg{display:inline-flex;overflow:hidden;border:1px solid #d8dfe7;border-radius:4px;background:#fff}
-.uk-admin-seg>button{height:34px;padding:0 14px;border:0;border-right:1px solid #d8dfe7;background:transparent;color:#4d5966;font:inherit;font-size:13px;cursor:pointer}
-.uk-admin-seg>button:last-child{border-right:0}
-.uk-admin-seg>button:hover:not(:disabled):not(.is-active){background:#f3f7fc;color:#2878bd}
-.uk-admin-seg>button.is-active{background:#398be5;color:#fff}
-.uk-admin-seg>button:disabled{cursor:not-allowed;color:#b9bec5}
-.uk-admin-seg>button.is-active:disabled{background:#a9bed3;color:#fff}
+.uk-admin-stream-toggle{display:inline-flex;min-width:88px;height:32px;align-items:center;justify-content:center;gap:7px;padding:0 10px;border:1px solid #d8dfe7;border-radius:16px;background:#fff;color:#65707c;font:inherit;font-size:12px;cursor:pointer}
+.uk-admin-stream-toggle i{position:relative;width:24px;height:14px;border-radius:8px;background:#c8cdd3;transition:background .18s ease}
+.uk-admin-stream-toggle i::after{position:absolute;top:2px;left:2px;width:10px;height:10px;border-radius:50%;background:#fff;content:'';transition:transform .18s ease}
+.uk-admin-stream-toggle.is-on{border-color:#b7dfc6;color:#26834d}
+.uk-admin-stream-toggle.is-on i{background:#35b66a}
+.uk-admin-stream-toggle.is-on i::after{transform:translateX(10px)}
+.uk-admin-stream-count{color:#9aa3ad;font-size:11px;font-weight:400}
+.uk-admin-stream-head button:disabled{border-color:#e6e9ed;background:#f4f6f8;color:#a9b1ba;cursor:not-allowed}
 .uk-admin-stream-interval{display:inline-flex;align-items:center;gap:8px;color:#65707c;font-size:13px}
 .uk-admin-stream-interval .uk-admin-number{display:inline-flex;align-items:center;gap:6px}
 /* 用两级选择器（.uk-admin-stream-interval .uk-admin-number input）压过 style.css 里
@@ -128,50 +120,19 @@
    那是为上一版左右两栏布局服务的，现在整块已是一条竖直流，跨栏属性既没用也会误导。 */
 .uk-admin-preview-block{margin-top:16px;padding-top:16px;border-top:1px solid #edf0f3}
 .uk-admin-preview-block .uk-admin-image-config{margin-top:12px}
-/* 「图上编辑」开关。挨着示意图标题放（结构上的理由见 CockpitAdminView.tsx）。
-   ── 为什么是这个样子 ──
-   第一版是「白底 + #d8dfe7 浅边框 + 12px 浅蓝字」，贴在白页面上基本看不到，
-   用户反馈「感觉你啥都没改」。入口本身不可见，等于功能不存在。
-   现在：浅蓝底 + 实边框 + 加粗 13px + 一枚铅笔图标，是这一行里唯一有底色的东西；
-   开着时反白（实心蓝底白字）—— 编辑态是个"模式"，页面上必须有肉眼可见的状态。
-   图标用 SVG 不用 ✎ / ✏ 字符，理由与 Caret / CheckMark 一致（字形粗细随字体飘）。 */
-.uk-admin-image-edit{
-  display:inline-flex;align-items:center;gap:6px;
-  margin-left:auto;padding:7px 15px;
-  border:1px solid #2b6fa8;border-radius:4px;
-  background:#e8f3fd;color:#1b6fae;font-size:13px;font-weight:600;
-  box-shadow:0 1px 2px #2b6fa81a;cursor:pointer;
-}
-.uk-admin-image-edit:hover{border-color:#1b6fae;background:#d5e9fb;color:#14547f}
-.uk-admin-image-edit.is-on{border-color:#2b6fa8;background:#2b6fa8;color:#fff}
-.uk-admin-image-edit.is-on:hover{background:#245f91;color:#fff}
-/* 浅蓝左边线的小提示条。**有两处用**：
-   ① 页签下面那条「页面名称与模块名称改为在示意图上修改」的指路牌 ——
-      「自定义页面名称」「模块名称」两块表单删掉之后，这里是界面上唯一能告诉人
-      "改名入口搬到哪了"的地方；
-   ② 打开「图上编辑」后的操作说明，写清楚能改哪几处、改的是同一份草稿 ——
-      后者是为了让人敢改：知道动了表单会跟着变，就不担心"图上改完那边对不上"。
-   两处共用一条规则：同类提示长一个样，不拼出第二种长相。 */
+/* 浅蓝左边线的小提示条，说明页面名称和模块名称在配置示意图中直接编辑。 */
 .uk-admin-edit-hint{margin:0 0 10px;padding:9px 12px;border-left:3px solid #7fb6e0;border-radius:0 4px 4px 0;background:#f2f8fd;color:#4b7fae;font-size:12px;line-height:1.7}
 .uk-admin-edit-hint>b{color:#2b6fa8;font-weight:600}
 /* 「配置示意图」的 iframe 版。iframe 固定 1920×1080，再用 transform 缩到框宽 ——
    所以框本身只负责裁切与描边，**高度必须由 JS 按同一比例算**（内联 style），
    这里千万不要写 aspect-ratio：那会引入第二个高度来源，跟 JS 算的打架。
    min-height 只是防「JS 还没量到宽」那一帧塌成 0 高，正常宽度下不会生效。
-   ── 示意图默认是**静态**的 ──
-   iframe 一旦可点，里面的顶部导航、日期选择、餐段筛选、批次切换、轮播开关就全都是真控件，
-   点一下真的会切页；而示意图显示的是哪一页由左侧列表决定，两边立刻打架 ——
-   出现「示意图停在别的页、左边还高亮着生产烹饪」这种对不上的状态。
-   用 pointer-events:none 从最外层一次性摁死：**渲染结果一个像素都不变**，只是全部不再响应。
-   （iframe 默认 tabIndex=-1 不进 Tab 顺序，所以键盘也进不去；
-    下面那段线框兜底本来就有 pointer-events:none，两者行为一致。） */
+   ── 背景示意图固定，只有图中文字和图片可编辑 ──
+   iframe 允许点击后，里面的真实页面控件也会响应；由页面侧 body.uk-embed-edit 将这些控件全部设为
+   pointer-events:none，只开放文字输入和图片替换区域，避免切页、筛选、轮播等状态改变。 */
 .uk-admin-live-frame{position:relative;min-height:200px;overflow:hidden;border:1px solid #0b3980;background:#04122e}
 .uk-admin-live-frame>iframe{position:absolute;left:0;top:0;border:0;display:block;transform-origin:top left;pointer-events:none;user-select:none}
-/* 图上编辑：只松开**这一层**，让事件能进到 iframe 的文档里。
-   进去之后到底能点到什么，由 style.css 的 body.uk-embed-edit 决定 —— 那边把整页关掉、
-   只放行 .uk-inline-edit。所以这里不算"把示意图解锁了"，两道是一对：
-   少了这一道，点不着输入框；少了那一道，整张图都变成可操作的。
-   编辑态下 tabIndex 由 JS 给到 0（非编辑态是 -1），键盘用户才能 Tab 进去。 */
+/* 允许点击进入嵌入页面；具体可编辑范围仍由 style.css 的 body.uk-embed-edit 白名单约束。 */
 .uk-admin-live-frame.is-edit>iframe{pointer-events:auto}
 .uk-admin-static-preview{min-height:390px;overflow:hidden;border:1px solid #0b3980;background:radial-gradient(ellipse at 50% 0,#163e76 0,#0a2050 62%,#071735 100%);color:#e9f3ff;pointer-events:none;user-select:none}
 .uk-admin-static-header{display:flex;min-height:62px;align-items:center;gap:20px;padding:8px 18px;border-bottom:1px solid #1a4a7a}
@@ -213,9 +174,7 @@
 @media(max-width:760px){.uk-admin-config-section .uk-admin-form{grid-template-columns:1fr}.uk-admin-setting-inline{grid-template-columns:125px minmax(0,1fr);gap:10px}.uk-admin-setting-inline.is-meal-select{width:100%;grid-template-columns:125px minmax(0,1fr);gap:10px}.uk-admin-stream-row{grid-template-columns:1fr 50px}.uk-admin-stream-row>input:nth-child(2){grid-column:1/-1;grid-row:2}.uk-admin-stream-row>button{grid-column:2;grid-row:1}.uk-admin-remote-row{grid-template-columns:minmax(0,1fr) 64px;gap:8px}.uk-admin-remote-row>button{grid-column:1/-1}}
 
 /* 这里原本有整套「膳食宝塔图片」表单的样式（uk-admin-pagoda-setting / -control / -reset，
-   以及 ≤760px 的断点）：2026-10-13 晚间那块表单删掉、入口搬到示意图上，样式一并删干净。
-   注意其中那个「恢复默认」按钮**不是**被删掉的 —— 它先被搬成了图上的 .uk-img-edit-reset
-   （见 ReplaceableImage 的 canReset），确认能用之后才撤掉这边。
+   以及 ≤760px 的断点）：入口改为在示意图中直接点击图片覆盖替换，不再显示换图或恢复按钮。
    .uk-admin-upload-button 也已经没有消费者了（基本信息里的「上传 Logo」那一格随后也收掉了），
    它的规则早就不在，留下的只是类名，看到它不必去"恢复"。 */
 /* 原来这里还有一整套手搓的「迷你控件」样式（uk-admin-live-* / uk-admin-mini-*）：

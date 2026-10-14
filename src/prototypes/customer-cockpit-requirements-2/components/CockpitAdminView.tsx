@@ -14,6 +14,7 @@ type ModuleDef = { key: string; label: string };
 type PageSetting = { id: PageId; name: string; enabled: boolean; modules: ModuleDef[] };
 type RemoteKeyId = 'toggle' | 'previous' | 'next';
 type RemoteKeys = Record<RemoteKeyId, string>;
+const MAX_KITCHEN_STREAMS = 8;
 type CockpitConfig = {
   name: string;
   code: string;
@@ -28,15 +29,7 @@ type CockpitConfig = {
   nutritionCarouselSeconds: number;
   nutritionPagodaImage: string;
   kitchenStreams: Array<{ id: number; name: string; url: string }>;
-  /* 明厨亮灶视频流的**播放方式**（2026-10-13 深夜新增，用户要求）：
-     · 'grid'     网格平铺 —— 几路画面同屏并列
-     · 'carousel' 轮播     —— 同屏只显示一路，按 streamCarouselSeconds 轮换
-     只有 1 路画面时这两项都没有意义（就一个画面，铺和轮都是它自己），
-     表单里会把整组控件禁用并写明原因。
-     ── 为什么单路时"禁用"而不是"隐藏" ──
-     这一行本身也是"这页能配什么"的信息。藏起来，用户就以为视频流没有播放方式可设；
-     禁用了还留着，他一眼能看见"有这个功能，只是现在用不上"。 */
-  streamLayout: 'grid' | 'carousel';
+  streamCarouselEnabled: boolean;
   streamCarouselSeconds: number;
 };
 
@@ -52,7 +45,7 @@ const INITIAL_CONFIG: CockpitConfig = {
   pageCarouselEnabled: true,
   pageCarouselSeconds: 20,
   remoteEnabled: false,
-  remoteKeys: { toggle: 'Enter', previous: 'ArrowLeft', next: 'ArrowRight' },
+  remoteKeys: { toggle: 'ok', previous: '左', next: '右' },
   /* 各页模块 = 该页真实面板，顺序与页面上「从上到下、从左到右」一致。
      改 label 预览里的面板标题就跟着变；key 必须与原型里 moduleLabels 的取值一致。 */
   pages: [
@@ -78,11 +71,14 @@ const INITIAL_CONFIG: CockpitConfig = {
   ],
   nutritionCarouselSeconds: 8,
   nutritionPagodaImage: '',
-  kitchenStreams: [{ id: 1, name: '后厨主画面', url: '' }],
-  /* 默认「网格平铺」而不是「轮播」：轮播是"自动换台"，会让人在没主动开启的情况下
-     突然发现画面变了。默认给不动的那个，想轮播的人自己切。 */
-  streamLayout: 'grid',
-  streamCarouselSeconds: 10,
+  kitchenStreams: [
+    { id: 1, name: '后厨总览', url: '' },
+    { id: 2, name: '烹饪区', url: '' },
+    { id: 3, name: '备餐区', url: '' },
+    { id: 4, name: '出餐口', url: '' },
+  ],
+  streamCarouselEnabled: true,
+  streamCarouselSeconds: 20,
 };
 
 /* 页面的**固定名**。配置界面里凡是「用来看/选哪一页」的文字都用它，不跟页面展示名联动 ——
@@ -113,10 +109,19 @@ function readConfig(key: string): CockpitConfig | null {
     const raw = localStorage.getItem(key);
     if (!raw) return null;
     const saved = JSON.parse(raw) as Partial<CockpitConfig>;
-    const oldDefaultKeys = saved.remoteKeys?.toggle === 'F13' && saved.remoteKeys?.previous === 'F14' && saved.remoteKeys?.next === 'F15';
+    const oldDefaultKeys = (
+      saved.remoteKeys?.toggle === 'F13' && saved.remoteKeys?.previous === 'F14' && saved.remoteKeys?.next === 'F15'
+    ) || (
+      saved.remoteKeys?.toggle === 'Enter' && saved.remoteKeys?.previous === 'ArrowLeft' && saved.remoteKeys?.next === 'ArrowRight'
+    );
     return {
       ...INITIAL_CONFIG,
       ...saved,
+      kitchenStreams: Array.isArray(saved.kitchenStreams)
+        ? saved.kitchenStreams.slice(0, MAX_KITCHEN_STREAMS)
+        : INITIAL_CONFIG.kitchenStreams,
+      streamCarouselEnabled: typeof saved.streamCarouselEnabled === 'boolean' ? saved.streamCarouselEnabled : true,
+      streamCarouselSeconds: Math.max(3, Math.min(120, Number(saved.streamCarouselSeconds) || INITIAL_CONFIG.streamCarouselSeconds)),
       remoteKeys: oldDefaultKeys ? INITIAL_CONFIG.remoteKeys : { ...INITIAL_CONFIG.remoteKeys, ...saved.remoteKeys },
     };
   } catch {
@@ -141,22 +146,6 @@ function CheckMark() {
     <path d="M1 4 3.6 6.6 9 1.2" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
   </svg>;
 }
-/* 「图上编辑」的图标。同样用 SVG 而不是 ✎ / ✏ 这类字符 —— 理由与上面 Caret 一样，
-   而且这里的图标要承担"这是一枚可点的控件"的信号：第一版只写了一行 12px 的字、
-   白底浅边框贴在白页面上，用户直接扫过去了，反馈是「啥都没改」。
-   小图标 + 有底色的按钮，是这次能一眼看见的关键（不是把字写大写粗就够）。 */
-function PencilIcon() {
-  return <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true" focusable="false">
-    <path d="M1 11l.6-2.9L8.1.6a1 1 0 0 1 1.4 0l1.9 1.9a1 1 0 0 1 0 1.4L4.9 10.4 1 11z" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round" />
-    <path d="M7.4 1.6 10.4 4.6" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-  </svg>;
-}
-function ExitIcon() {
-  return <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true" focusable="false">
-    <path d="M2.2 6.2 4.8 8.8 9.8 3.4" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>;
-}
-
 /* 静态线框版与 iframe 版吃**同一份**配置，所以字段取并集：
    iframe 侧只读 pages 里的 id / name / enabled（多出来的 modules 会被忽略），
    静态侧要完整的 pages 与 nutritionPagodaImage。合成一份的好处是两者能一键互切。 */
@@ -166,6 +155,9 @@ type PreviewConfig = {
   pages: PageSetting[];
   moduleLabels: Record<string, string>;
   nutritionPagodaImage: string;
+  kitchenStreams: Array<{ id: number; name: string; url: string }>;
+  streamCarouselEnabled: boolean;
+  streamCarouselSeconds: number;
 };
 
 /* 图上编辑的**目标**：说的是「改的是页面上哪一处」，不是「改数组里第几项」。
@@ -197,17 +189,13 @@ const ADMIN_PAGE_VIEW: Record<PageId, string> = {
   behavior: 'behavior',
 };
 
-/* editMode / onEdit / onExit 是「图上编辑」这条链路：
-   editMode 下行，让 iframe 里的标题变成可输入的；
-   onEdit 收上行写回（iframe → 草稿），onExit 收「在里面按了 Esc」。
-   注意 Esc 必须走消息传上来：输入框在 iframe 里，那里的 keydown 不会冒泡到本窗口，
-   本窗口自己挂的 Esc 监听取不到。 */
-function LivePreviewFrame({ pageId, config, editMode, onEdit, onExit }: {
+/* 配置后台里的示意图始终可直接编辑：
+   iframe 背景示意图始终锁定，只开放文字和图片所在位置的直接编辑；
+   onEdit 收上行写回（iframe → 草稿）。 */
+function LivePreviewFrame({ pageId, config, onEdit }: {
   pageId: PageId;
   config: PreviewConfig;
-  editMode: boolean;
   onEdit: (target: PreviewEditTarget, value: string) => void;
-  onExit: () => void;
 }) {
   const boxRef = useRef<HTMLDivElement | null>(null);
   const frameRef = useRef<HTMLIFrameElement | null>(null);
@@ -223,10 +211,9 @@ function LivePreviewFrame({ pageId, config, editMode, onEdit, onExit }: {
     return () => observer.disconnect();
   }, []);
   const push = useCallback(() => {
-    frameRef.current?.contentWindow?.postMessage({ type: 'cockpit-preview-config', config, editMode }, '*');
-  }, [config, editMode]);
-  /* 配置一变就推一次：改名、换图、停用页面都要立刻反映到示意图上。
-     editMode 变了也走这里 —— 开关一按就要在下一帧生效，不能再等一次无关的配置变化。 */
+    frameRef.current?.contentWindow?.postMessage({ type: 'cockpit-preview-config', config }, '*');
+  }, [config]);
+  /* 配置一变就推一次：改名、换图、停用页面都要立刻反映到示意图上。 */
   useEffect(() => { push(); }, [push]);
   /* 再补一道 ready 握手。父页可能在 iframe 还没挂上监听时就发了第一条，那条会丢，
      所以 iframe 挂好后主动回一条 ready，父页收到再补推一次。两道都留着才不漏。 */
@@ -244,20 +231,17 @@ function LivePreviewFrame({ pageId, config, editMode, onEdit, onExit }: {
     const onMessage = (event: MessageEvent) => {
       if (event.source !== frameRef.current?.contentWindow) return;
       const data = event.data as { type?: string; target?: PreviewEditTarget; value?: string } | null;
-      if (data?.type === 'cockpit-preview-exit') { onExit(); return; }
       if (data?.type !== 'cockpit-preview-edit' || !data.target || typeof data.value !== 'string') return;
       onEdit(data.target, data.value);
     };
     window.addEventListener('message', onMessage);
     return () => window.removeEventListener('message', onMessage);
-  }, [onEdit, onExit]);
+  }, [onEdit]);
   /* 取 window.location.pathname 而不是写死路径：后台本身就跑在这个原型页面里，
      这样无论从 localhost:51720 还是从 Make 外壳进来，iframe 都能指向同一个原型。 */
   const src = `${window.location.pathname}?page=${ADMIN_PAGE_VIEW[pageId]}&embed=1`;
-  return <div className={`uk-admin-live-frame${editMode ? ' is-edit' : ''}`} ref={boxRef} style={{ height: boxWidth ? Math.round(boxWidth * PREVIEW_H / PREVIEW_W) : undefined }}>
-    {/* tabIndex 编辑态才给 0：非编辑态这张图是纯影像，不该进 Tab 顺序；
-        进了编辑态，键盘用户得能 Tab 进 iframe、再在几个标题之间走。 */}
-    <iframe ref={frameRef} title="配置示意图" src={src} width={PREVIEW_W} height={PREVIEW_H} tabIndex={editMode ? 0 : -1} onLoad={push} style={{ transform: `scale(${boxWidth ? boxWidth / PREVIEW_W : 0})` }} />
+  return <div className="uk-admin-live-frame is-edit" ref={boxRef} style={{ height: boxWidth ? Math.round(boxWidth * PREVIEW_H / PREVIEW_W) : undefined }}>
+    <iframe ref={frameRef} title="配置示意图" src={src} width={PREVIEW_W} height={PREVIEW_H} tabIndex={0} onLoad={push} style={{ transform: `scale(${boxWidth ? boxWidth / PREVIEW_W : 0})` }} />
   </div>;
 }
 
@@ -316,9 +300,6 @@ export function CockpitAdminView({ onNavigate }: { onNavigate: (id: string) => v
   const [activePageId, setActivePageId] = useState<PageId>('production');
   const [listeningKeyId, setListeningKeyId] = useState<RemoteKeyId | null>(null);
   const [pagePickerOpen, setPagePickerOpen] = useState(false);
-  /* 「图上编辑」开关。关着的时候示意图就是一张静态图（pointer-events:none 那张），
-     开着的时候才松手 —— 两种状态的差别只在这一个布尔值上，所以它必须只有一个来源。 */
-  const [previewEdit, setPreviewEdit] = useState(false);
   /* 侧栏一级菜单「设备管理」的展开状态。默认展开：进来就该看到当前页在哪一级下面。 */
   const [deviceMenuOpen, setDeviceMenuOpen] = useState(true);
   const sidebarNavRef = useRef<HTMLElement | null>(null);
@@ -342,12 +323,15 @@ export function CockpitAdminView({ onNavigate }: { onNavigate: (id: string) => v
     pages: draft.pages,
     /* 模块名拍平成 key → 标题的字典推给 iframe：页面侧按 key 取，
        所以图上面板标题改一个字，这个字典跟着变、预览里别的面板不受影响。
-       （改名的入口现在**只**在图上的「图上编辑」里，见下方 applyPreviewEdit。） */
+       （改名直接在下方配置示意图的文字层中完成，见 applyPreviewEdit。） */
     moduleLabels: draft.pages.reduce<Record<string, string>>((labels, page) => {
       page.modules.forEach((module) => { labels[module.key] = module.label; });
       return labels;
     }, {}),
     nutritionPagodaImage: draft.nutritionPagodaImage,
+    kitchenStreams: draft.kitchenStreams,
+    streamCarouselEnabled: draft.streamCarouselEnabled,
+    streamCarouselSeconds: draft.streamCarouselSeconds,
   }), [draft]);
   /* 图上编辑的写回：把 iframe 传来的「改哪一处 + 新值」落到 draft 上。
      走 setDraft 的函数式更新而不是读当前 draft 再拼：打字是连续的，
@@ -373,10 +357,6 @@ export function CockpitAdminView({ onNavigate }: { onNavigate: (id: string) => v
       };
     });
   }, []);
-  /* 单独包一层 useCallback 而不是在 JSX 里写 () => setPreviewEdit(false)：
-     那个写法每次渲染都是新函数，会让 iframe 侧的消息订阅每渲染一次就重订一次，
-     而打字是连续渲染的 —— 没必要每敲一个字就解绑再绑一次监听。 */
-  const exitPreviewEdit = useCallback(() => setPreviewEdit(false), []);
   /* 先在**启用页**里找，找不到才退回第一个启用页。页签只列启用页，
      所以 activePageId 若短暂指向一个刚被取消勾选的页面，这里也能立刻落到一个「有页签」的页上 ——
      不这么写就会出现某一帧「4 个页签全不高亮」。 */
@@ -402,13 +382,14 @@ export function CockpitAdminView({ onNavigate }: { onNavigate: (id: string) => v
         setListeningKeyId(null);
         return;
       }
-      const duplicate = Object.entries(draft.remoteKeys).some(([id, code]) => id !== listeningKeyId && code === event.code);
+      const displayCode = event.code === 'Enter' ? 'ok' : event.code === 'ArrowLeft' ? '左' : event.code === 'ArrowRight' ? '右' : event.code;
+      const duplicate = Object.entries(draft.remoteKeys).some(([id, code]) => id !== listeningKeyId && code === displayCode);
       if (duplicate) {
         setToast('该按键已分配给其他功能');
         window.setTimeout(() => setToast(''), 2200);
         return;
       }
-      setDraft((current) => ({ ...current, remoteKeys: { ...current.remoteKeys, [listeningKeyId]: event.code } }));
+      setDraft((current) => ({ ...current, remoteKeys: { ...current.remoteKeys, [listeningKeyId]: displayCode } }));
       setListeningKeyId(null);
     };
     window.addEventListener('keydown', onKeyDown, true);
@@ -435,19 +416,6 @@ export function CockpitAdminView({ onNavigate }: { onNavigate: (id: string) => v
       document.removeEventListener('keydown', onKeyDown, true);
     };
   }, [pagePickerOpen]);
-
-  /* 图上编辑时按 Esc 退出（在示意图里按的那次走 iframe 消息，见 LivePreviewFrame）。
-     两个前置判断都是为了不和本页已存在的两个 Esc 抢：监听遥控按键那个会 preventDefault，
-     下拉多选那个开着时 Esc 归它收 —— 不判就会出现「按一下 Esc 关了两样东西」。 */
-  useEffect(() => {
-    if (!previewEdit) return undefined;
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.defaultPrevented || pagePickerOpen) return;
-      if (event.key === 'Escape') setPreviewEdit(false);
-    };
-    window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
-  }, [pagePickerOpen, previewEdit]);
 
   const updateDraft = (patch: Partial<CockpitConfig>) => setDraft((current) => ({ ...current, ...patch }));
   const updatePage = (id: PageId, patch: Partial<PageSetting>) => setDraft((current) => ({
@@ -494,16 +462,19 @@ export function CockpitAdminView({ onNavigate }: { onNavigate: (id: string) => v
     reader.onload = () => typeof reader.result === 'string' && onRead(reader.result);
     reader.readAsDataURL(file);
   };
-  const addStream = () => updateDraft({
-    kitchenStreams: [...draft.kitchenStreams, { id: Date.now(), name: `后厨画面 ${draft.kitchenStreams.length + 1}`, url: '' }],
-  });
+  const addStream = () => {
+    if (draft.kitchenStreams.length >= MAX_KITCHEN_STREAMS) {
+      flash(`最多配置 ${MAX_KITCHEN_STREAMS} 路视频流`);
+      return;
+    }
+    updateDraft({
+      kitchenStreams: [...draft.kitchenStreams, { id: Date.now(), name: `后厨画面 ${draft.kitchenStreams.length + 1}`, url: '' }],
+    });
+  };
   const setStream = (id: number, patch: Partial<{ name: string; url: string }>) => updateDraft({
     kitchenStreams: draft.kitchenStreams.map((stream) => stream.id === id ? { ...stream, ...patch } : stream),
   });
-  /* 只有 1 路画面时，播放方式与轮播间隔都没有可配的余地 —— 就一个画面，铺和轮都是它自己。
-     表单据此禁用整组控件并写明原因。这个判定只在这里算一次，别在 JSX 各处再算一遍：
-     两处各写一遍，以后改"几路算单路"就会只改到一半。 */
-  const singleStream = draft.kitchenStreams.length <= 1;
+  const streamLimitReached = draft.kitchenStreams.length >= MAX_KITCHEN_STREAMS;
 
   return <div className="uk-admin-shell">
     <aside className="uk-admin-sidebar">
@@ -543,7 +514,7 @@ export function CockpitAdminView({ onNavigate }: { onNavigate: (id: string) => v
         <section className="uk-admin-editor-card">
           <div className="uk-admin-editor-card-head"><h1>编辑智厨驾驶舱</h1><span>配置页面、展示模块与大屏内容</span></div>
           <div className="uk-admin-editor-content">
-            <section className="uk-admin-config-section">
+            <section className="uk-admin-config-section" data-annotation-id="admin-basic-info">
               <h2>基本信息</h2>
               <div className="uk-admin-form">
                 <label className="uk-admin-field is-required"><span>智厨驾驶舱名称：</span><input value={draft.name} onChange={(event) => updateDraft({ name: event.target.value })} /></label>
@@ -552,8 +523,8 @@ export function CockpitAdminView({ onNavigate }: { onNavigate: (id: string) => v
                 <label className="uk-admin-field"><span>屏幕版本：</span><select defaultValue="单门店标准版"><option>单门店标准版</option><option>集团版</option></select></label>
                 {/* 「驾驶舱品牌 Logo」这一格已删（2026-10-13 晚间，配合排版收敛）：
                     它当时只剩一个没有任何标签的空 div —— 标签文字和「上传 Logo」按钮已被移除、
-                    readImage helper 也一并删了（Logo 的入口统一到图上：开「图上编辑」点左上角
-                    那颗圆形角标就能换）。空 div 在三列网格里占着第 2 行中间那一格，
+                    readImage helper 也一并删了（Logo 直接点击示意图中的图片替换）。
+                    空 div 在三列网格里占着第 2 行中间那一格，
                     排出来就是一个空洞，后面所有字段都被顶得错位 —— 收掉它，网格自然左对齐补齐。
                     注意 draft.logo 这个数据**没动**：previewConfig.logo 照旧推给示意图，
                     applyPreviewEdit 里 kind:'logo' 那条写回也照旧。 */}
@@ -634,11 +605,11 @@ export function CockpitAdminView({ onNavigate }: { onNavigate: (id: string) => v
                 <div className="uk-admin-remote-grid">{REMOTE_LABELS.map(({ id, label, hint }) => <div className="uk-admin-remote-row" key={id}>
                   <div><b>{label}</b><small>{hint}</small></div><code>{draft.remoteKeys[id] || '未设置'}</code>
                 </div>)}</div>
-                <p>默认映射：Enter 控制播放 / 暂停，ArrowLeft 切换上一页面，ArrowRight 切换下一页面；</p>
+                <p>默认映射：ok 控制播放 / 暂停，左切换上一页面，右切换下一页面；</p>
               </div>}
             </section>
 
-            <section className="uk-admin-config-section">
+            <section className="uk-admin-config-section" data-annotation-id="admin-page-config">
               <h2>页面配置</h2>
               {/* 上下结构（2026-10-13 下午按需求改）。改版前是「左选右改」两栏：
                   左栏 260px 里挤着开关 + 名称框 + 排序把手三件事。
@@ -666,23 +637,18 @@ export function CockpitAdminView({ onNavigate }: { onNavigate: (id: string) => v
                     改名的线索 —— 一个想改名的用户会在这里找不到入口，而"入口看不见"
                     正是上一轮「怎么感觉你啥都没改啊」的真实成因。所以删表单的同时补这一句，
                     位置贴着页签：他找的入口原本就在这块。 */}
-                <p className="uk-admin-edit-hint">
-                  页面名称、模块名称、Logo、膳食宝塔图片都改为在示意图上直接修改：点下方「配置示意图」右上角的
-                  <b>「图上编辑」</b>，再点图上的标题或图片角标即可改；按 Esc 退出。
-                </p>
                 <div className="uk-admin-page-detail">
                 {/* ── 这三块表单已删（2026-10-13 晚间，用户逐次圈出来要求）──
                     ① 「自定义页面名称」 ② 「模块名称」（这两块写 page.name / module.label）
                     ③ 「膳食宝塔图片」（写 nutritionPagodaImage）
-                    它们的编辑入口都搬到了下方「配置示意图」：开「图上编辑」后，直接点大屏顶部导航的
-                    页面名、面板标题、宝塔图右下角的「宝塔图片」角标就能改，
+                    它们的编辑入口都搬到了下方「配置示意图」：直接点大屏顶部导航的
+                    页面名和面板标题可直接点文字编辑，Logo 与宝塔图片可直接点击覆盖，
                     写回的还是同一份草稿，数据层与预览链路一个字没动。
                     删之前确认过两件事，别再当"顺手清理"复删或复建：
                     · 4 个页面（生产烹饪/营养健康/出餐统计/行为监控）都在 ADMIN_PAGE_TO_VIEW 里，
                       也就是每页的页面名都能在大屏导航上改到、模块名都能在对应面板标题上改到 ——
                       不存在"删掉唯一入口"的情况。停用的页面不出现在导航上，也就没有展示名可改。
-                    · 宝塔那块里唯一的「恢复默认」按钮已经**先搬到图上**了
-                      （ReplaceableImage 的 canReset），确认它在图上能用之后才删的表单。
+                    · 宝塔图片可在配置示意图中直接点击并覆盖替换，不需要另设图片表单。
                     ①② 在当天 14:47 被外部改动整段删过一次，当时**还没有**图上编辑，
                     删完「改模块名 → 示意图标题跟着变」就没有入口了（且不报任何错）——
                     典型的静默少功能。现在入口在图上，所以这次是"真的不要了"。
@@ -698,52 +664,39 @@ export function CockpitAdminView({ onNavigate }: { onNavigate: (id: string) => v
                     注意数据层（类型字段、INITIAL_CONFIG 初值、addStream/setStream）**一直没被删**，
                     所以症状是"值还在、就是没有地方改"—— 这正是最难自查的一类丢失：
                     TypeScript 不会报错（字段有人定义、没人读，合法），界面也不报错，只是少几行。
-                    ⚠️ 还原时**故意没有**恢复其中的「膳食宝塔图片」那一块：
-                    那块的能力（含「恢复默认」）已经按用户要求搬到示意图上了（见下方 ReplaceableImage 的
-                    canReset），恢复它等于把同一件事搞出两个入口。
+                    ⚠️ 还原时**故意没有**恢复「膳食宝塔图片」表单：
+                    它在示意图图片层直接点击替换，避免同一内容出现两个编辑入口。
                     「默认餐段」曾在此处配置，现按用户要求从出餐统计页面设置中移除。 */}
-                {activePage.id !== 'behavior' && <section className="uk-admin-page-behavior"><div className="uk-admin-subhead"><b>页面设置</b></div>
+                {activePage.id !== 'behavior' && <section className="uk-admin-page-behavior" data-annotation-id="admin-page-settings">
                     {activePage.id === 'nutrition' && <>
                       {/* 宝塔图片那块（.uk-admin-pagoda-setting）**不要**在这里复建：能力已在图上。
                           只保留轮播间隔 —— 它在图上没有任何对应物，是纯后台参数。 */}
                       <label className="uk-admin-setting-inline"><span>{activePage.modules.find((module) => module.key === 'nutrition-analysis')?.label || '营养分析'} 轮播间隔</span><span className="uk-admin-number"><input type="number" min="3" max="120" value={draft.nutritionCarouselSeconds} onChange={(event) => updateDraft({ nutritionCarouselSeconds: Number(event.target.value) })} /><b>秒</b></span></label>
                     </>}
-                    {activePage.id === 'production' && <div className="uk-admin-stream-config"><div className="uk-admin-stream-head"><b>{activePage.modules.find((module) => module.key === 'production-kitchen')?.label || '明厨亮灶'}视频流</b><button type="button" onClick={addStream}>＋ 添加视频流</button></div>
-                      {/* ── 播放方式（2026-10-13 深夜新增，用户要求）──
-                          多画面时可切「网格平铺 / 轮播」；选轮播才出现「轮播间隔」；
-                          只有 1 路画面时整组禁用，并在旁边写明为什么（singleStream 的判定在上方算）。
-                          两个刻意的设计取舍：
-                          · 用两个按钮（aria-pressed）而不是一个来回切的开关 —— 选项共两个、
-                            且要能一眼看出"现在选的是哪个"，分段按钮比开关更不容易看错。
-                          · 轮播间隔**只在选轮播时出现**，不是"出现但灰着"：它是轮播的从属参数，
-                            选平铺时它没有意义，灰着只会让人去猜"为什么点不动"。
-                            这和单路禁用不一样 —— 那是"暂时用不上"，这是"当前根本无关"。 */}
+                    {activePage.id === 'production' && <div className="uk-admin-stream-config"><div className="uk-admin-stream-head"><b>{activePage.modules.find((module) => module.key === 'production-kitchen')?.label || '明厨亮灶'}视频流 <small className="uk-admin-stream-count">{draft.kitchenStreams.length}/{MAX_KITCHEN_STREAMS} 路</small></b><button type="button" disabled={streamLimitReached} onClick={addStream}>＋ 添加视频流</button></div>
                       <div className="uk-admin-stream-mode">
-                        <span className="uk-admin-stream-mode-label">播放方式</span>
-                        <div className="uk-admin-seg" role="group" aria-label="视频流播放方式">
-                          {([['grid', '网格平铺'], ['carousel', '轮播']] as const).map(([value, label]) => <button
-                            key={value}
-                            type="button"
-                            disabled={singleStream}
-                            className={draft.streamLayout === value ? 'is-active' : ''}
-                            aria-pressed={draft.streamLayout === value}
-                            onClick={() => updateDraft({ streamLayout: value })}
-                          >{label}</button>)}
-                        </div>
-                        {draft.streamLayout === 'carousel' && <span className="uk-admin-stream-interval">
+                        <span className="uk-admin-stream-mode-label">自动轮播</span>
+                        <button
+                          type="button"
+                          className={`uk-admin-stream-toggle${draft.streamCarouselEnabled ? ' is-on' : ''}`}
+                          aria-pressed={draft.streamCarouselEnabled}
+                          onClick={() => updateDraft({ streamCarouselEnabled: !draft.streamCarouselEnabled })}
+                        ><i />{draft.streamCarouselEnabled ? '已开启' : '已关闭'}</button>
+                        <span className="uk-admin-stream-interval">
                           <span>轮播间隔</span>
                           <span className="uk-admin-number">
                             <input
-                              type="number" min="3" max="120" disabled={singleStream}
+                              type="number" min="3" max="120" disabled={!draft.streamCarouselEnabled}
                               aria-label="视频流轮播间隔（秒）"
                               value={draft.streamCarouselSeconds}
                               onChange={(event) => updateDraft({ streamCarouselSeconds: Number(event.target.value) })}
                             /><b>秒</b>
                           </span>
-                        </span>}
-                        {singleStream && <small className="uk-admin-stream-mode-hint">当前只有 1 路画面，无需设置</small>}
+                        </span>
+                        {streamLimitReached && <small className="uk-admin-stream-mode-hint">已达到 8 路上限</small>}
                       </div>
                       {draft.kitchenStreams.map((stream) => <div className="uk-admin-stream-row" key={stream.id}><input aria-label="视频流名称" placeholder="画面名称" value={stream.name} onChange={(event) => setStream(stream.id, { name: event.target.value })} /><input aria-label="视频流地址" placeholder="请输入视频流地址（如 RTSP）" value={stream.url} onChange={(event) => setStream(stream.id, { url: event.target.value })} /><button type="button" aria-label="删除视频流" disabled={draft.kitchenStreams.length <= 1} onClick={() => updateDraft({ kitchenStreams: draft.kitchenStreams.filter((item) => item.id !== stream.id) })}>删除</button></div>)}
+                      <small>示例按后厨总览、烹饪区、备餐区和出餐口分区命名；配置地址后可在小窗中逐路轮播。</small>
                     </div>}
                   </section>}
                 </div>
@@ -755,40 +708,22 @@ export function CockpitAdminView({ onNavigate }: { onNavigate: (id: string) => v
                     这个页面名同样用**固定名**（2026-10-13 用户确认，与「显示页面」「页签」同一条规则）：
                     它和下面那行「驾驶舱名 / 页面名」都是"现在预览的是哪一页"的标识，不是大屏上的展示名。
                     大屏展示名只看 iframe 里的顶部导航 —— 那才是页面上改名后生效的地方。 */}
-                <section className="uk-admin-preview-block">
+                <section className="uk-admin-preview-block" data-annotation-id="admin-preview">
                   <div className="uk-admin-subhead">
                     <b>{PAGE_LABELS[activePage.id]} · 配置示意图</b>
-                    {/* 「图上编辑」开关放在示意图自己的标题行里，而不是另起一块：
-                        它作用的对象就是这个框，放一起才不用先想「这个开关管的是哪儿」。
-                        按钮做成了**有底色 + 图标**的样子（第一版是白底浅边框 12px 小字，
-                        用户扫过去没看见，反馈"啥都没改"）—— 入口能不能被看见，是这版的重点。 */}
-                    <button
-                      type="button"
-                      className={`uk-admin-image-edit${previewEdit ? ' is-on' : ''}`}
-                      aria-pressed={previewEdit}
-                      onClick={() => setPreviewEdit((on) => !on)}
-                    >
-                      {previewEdit ? <ExitIcon /> : <PencilIcon />}
-                      {previewEdit ? '退出图上编辑' : '图上编辑'}
-                    </button>
                   </div>
-                  {previewEdit && <p className="uk-admin-edit-hint">
-                    直接点示意图上的标题改字：面板标题、顶部导航的页面名、左上角驾驶舱名称；
-                    点 Logo 右下角的圆形角标可以换 Logo，营养健康页的宝塔图同理。
-                    改的就是同一份草稿，预览里立刻生效；按 Esc 退出。
-                  </p>}
                   <div className="uk-admin-image-config">
                     {/* 前半个是驾驶舱名（基本信息里那个输入框），跟页面展示名无关，照旧走 draft.name；
                         后半个是页面名，用固定名 —— 理由同上。
                         两个名字都只在图上改：驾驶舱名点左上角那行字，页面名点顶部导航那一项。 */}
                     <div className="uk-admin-image-head"><span>{draft.name || '智厨驾驶舱'} / {PAGE_LABELS[activePage.id]}</span></div>
-                    <LivePreviewFrame pageId={activePage.id} config={previewConfig} editMode={previewEdit} onEdit={applyPreviewEdit} onExit={exitPreviewEdit} />
+                    <LivePreviewFrame pageId={activePage.id} config={previewConfig} onEdit={applyPreviewEdit} />
                   </div>
                 </section>
               </>}
             </section>
           </div>
-          <footer className="uk-admin-editor-foot"><button type="button" onClick={saveDraft}>保存草稿</button><button className="is-primary" type="button" onClick={publish}>发布配置</button></footer>
+          <footer className="uk-admin-editor-foot" data-annotation-id="admin-save-actions"><button type="button" onClick={saveDraft}>保存草稿</button><button className="is-primary" type="button" onClick={publish}>发布配置</button></footer>
         </section>
       </div>
     </main>

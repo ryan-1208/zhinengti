@@ -20,8 +20,10 @@ import { AnnotationViewer, type AnnotationSourceDocument } from '@axhub/annotati
 import { BehaviorView } from './components/BehaviorView';
 import { CockpitAdminView, type PreviewEditTarget } from './components/CockpitAdminView';
 import { ModuleExceptionState, type ExceptionState } from './components/ExceptionReferenceView';
+import { MealMenuListView } from './components/MealMenuListView';
 import { RequirementOverviewDrawer } from './components/RequirementOverviewDrawer';
 import { PrototypeDirectory } from './components/PrototypeDirectory';
+import { ProductionProcessView } from './components/ProductionProcessView';
 import { RequirementsDocumentView } from './components/RequirementsDocumentView';
 import { VersionManagementView } from './components/VersionManagementView';
 import './style.css';
@@ -102,6 +104,47 @@ const DISHES: Dish[] = [
   { segment: '晚餐', name: '蚝油牛柳', device: '炒菜机 CCJ2', done: 1, total: 3, onTimeDone: 1, color: '#56a66f', feedKg: 3.1, ingredients: ['牛柳', '青椒'], seasonings: ['蚝油', '生抽', '黑胡椒'], foodColor: '红', nutrition: { energy: 131, protein: 12.0, fat: 7.0, carbs: 5.0, fiber: 0.5, cholesterol: 52 } },
 ];
 
+type NutritionCardEntry = {
+  id: string;
+  dish: Dish;
+  sopName: string;
+  sopVersion: string;
+  nutrition: Dish['nutrition'];
+  ingredients: string[];
+  seasonings: string[];
+  ingredientRatio?: string;
+};
+
+/* 示例：同一餐品使用两个配方版本，营养素按实际 SOP 分开轮播。 */
+const MULTI_SOP_EXAMPLES: Record<string, Array<Omit<NutritionCardEntry, 'id' | 'dish'>>> = {
+  番茄炒蛋: [
+    {
+      sopName: '标准配方', sopVersion: 'SOP V1.0',
+      nutrition: { energy: 105, protein: 5.5, fat: 7.3, carbs: 4.4, fiber: 0.7, cholesterol: 152 },
+      ingredients: ['番茄', '鸡蛋'], seasonings: ['食用油', '盐', '糖'], ingredientRatio: '番茄 60g · 鸡蛋 40g',
+    },
+    {
+      sopName: '少油配方', sopVersion: 'SOP V2.0',
+      nutrition: { energy: 92, protein: 5.6, fat: 5.4, carbs: 5.2, fiber: 0.8, cholesterol: 150 },
+      ingredients: ['番茄', '鸡蛋'], seasonings: ['菜籽油', '盐'], ingredientRatio: '番茄 70g · 鸡蛋 30g',
+    },
+  ],
+};
+
+const NUTRITION_CARDS: NutritionCardEntry[] = DISHES.flatMap((dish) => {
+  const variants = MULTI_SOP_EXAMPLES[dish.name];
+  if (variants) return variants.map((variant) => ({ id: `${dish.name}-${variant.sopVersion}`, dish, ...variant }));
+  return [{
+    id: `${dish.name}-V1.0`, dish, sopName: '标准配方', sopVersion: 'SOP V1.0',
+    nutrition: dish.nutrition, ingredients: dish.ingredients, seasonings: dish.seasonings,
+  }];
+});
+
+const SOP_COUNT_BY_DISH = NUTRITION_CARDS.reduce<Record<string, number>>((counts, card) => {
+  counts[card.dish.name] = (counts[card.dish.name] ?? 0) + 1;
+  return counts;
+}, {});
+
 /** 每盆约 140 份。内部进度仍以份计，界面按此比例向上取整为整盆。 */
 const PORTIONS_PER_TRAY = 140;
 const portionsToTrays = (portions: number) => Math.max(0, Math.ceil(portions / PORTIONS_PER_TRAY));
@@ -162,6 +205,17 @@ const COCKPIT_MACHINES: Machine[] = [
   { id: '炒菜机 CCJ2', model: '800', dish: '番茄炒蛋', state: '烹饪中', color: '#42a885' },
   { id: '烤箱 KX1', dish: '蒸蛋羹', state: '待出餐', color: '#079f96' },
 ];
+
+/* 设备在示意图节点上的标识 = 「设备码-口径」（2026-10-14 用户要求），如 CCJ1-600 / CCJ2-800。
+   原来节点上是两行「600 型 / CCJ1」—— 口径在前、码在后，读的人要先在脑子里交换一次顺序；
+   合成一行「码-口径」后，主键在前、规格在后，跟设备台账的写法一致。
+   码从 id 里取（'炒菜机 CCJ1' → 'CCJ1'），口径仍来自 model —— 数据只有一份，
+   别在节点上再写死一份 '600'，否则以后改型号要改两处。
+   没有口径的设备（烤箱 KX1）就只显示码，不硬拼一个 '-' 出来。 */
+const machineTag = (machine: Machine) => {
+  const code = machine.id.split(' ')[1] ?? machine.id;
+  return machine.model ? `${code}-${machine.model}` : code;
+};
 
 const OUTFLOW: OutItem[] = [
   { port: '出口 1', dish: '香菇青菜', qty: '1 盆 / 1kg', color: '#e85d75' },
@@ -283,13 +337,19 @@ const ACTIVE_ROUTE_PATHS = [
 ].map((route) => ({
   ...route,
   color: DISHES.find((dish) => dish.name === route.dish)?.color ?? '#10e4f2',
-}));
+})).filter((route, index, routes) => routes.findIndex((item) => item.dish === route.dish) === index);
+
+const ROUTE_PAUSE_TARGETS: Record<string, { machineId: string; x: number; y: number }> = {
+  'route-ccj1-out1': { machineId: '炒菜机 CCJ1', x: 458, y: 162 },
+  'route-ccj2-out1': { machineId: '炒菜机 CCJ2', x: 566, y: 162 },
+  'route-kx1-out1': { machineId: '烤箱 KX1', x: 510, y: 318 },
+};
 
 /* 原「平均出餐时长」常量已移除。它是写死的演示值、没有任何计算逻辑，
    也不在 PRD 的运营驾驶舱指标清单里（PRD:194）。移除理由与「日后要放回需先定什么」
    记在 style.css 的 .uk-kpi 注释处。 */
 
-type ViewId = 'cockpit' | 'behavior' | 'nutrition' | 'overview' | 'dish' | 'process' | 'equipment' | 'version' | 'requirements' | 'admin' | 'reference-no-data' | 'reference-load-failed';
+type ViewId = 'cockpit' | 'behavior' | 'nutrition' | 'overview' | 'dish' | 'process' | 'equipment' | 'production-process-view' | 'production-process-edit' | 'production-process-edit-ai-timeout' | 'production-process-edit-no-ingredients' | 'meal-menu' | 'version' | 'requirements' | 'admin' | 'reference-no-data' | 'reference-load-failed';
 type ExceptionPageId = Extract<ViewId, 'reference-no-data' | 'reference-load-failed'>;
 
 function isExceptionPageId(id: string): id is ExceptionPageId {
@@ -305,6 +365,11 @@ function readViewFromLocation(): ViewId {
   if (page === 'version' || page === 'version-management') return 'version';
   if (page === 'requirements' || page === 'prd') return 'requirements';
   if (page === 'admin' || page === 'cockpit-admin') return 'admin';
+  if (page === 'production-process-view') return 'production-process-view';
+  if (page === 'production-process-edit') return 'production-process-edit';
+  if (page === 'production-process-edit-ai-timeout') return 'production-process-edit-ai-timeout';
+  if (page === 'production-process-edit-no-ingredients') return 'production-process-edit-no-ingredients';
+  if (page === 'meal-menu') return 'meal-menu';
   if (page === 'reference-no-data' || page === 'reference-load-failed') return page;
   if (page === 'overview' || page === 'process' || page === 'equipment') return 'overview';
   return 'cockpit';
@@ -317,6 +382,11 @@ function normalizeViewId(id: string): ViewId {
   if (id === 'version' || id === 'version-management') return 'version';
   if (id === 'requirements' || id === 'prd') return 'requirements';
   if (id === 'admin' || id === 'cockpit-admin') return 'admin';
+  if (id === 'production-process-view') return 'production-process-view';
+  if (id === 'production-process-edit') return 'production-process-edit';
+  if (id === 'production-process-edit-ai-timeout') return 'production-process-edit-ai-timeout';
+  if (id === 'production-process-edit-no-ingredients') return 'production-process-edit-no-ingredients';
+  if (id === 'meal-menu') return 'meal-menu';
   if (id === 'reference-no-data' || id === 'reference-load-failed') return id;
   if (id === 'overview' || id === 'process' || id === 'equipment') return 'overview';
   return 'cockpit';
@@ -332,6 +402,12 @@ const TOP_NAV_ITEMS: Array<{ id: ViewId; label: string }> = [
   { id: 'behavior', label: '行为监控' },
 ];
 const PAGE_CAROUSEL_MS = 20000;
+const DEMO_KITCHEN_STREAMS = [
+  { id: 1, name: '后厨总览', url: '' },
+  { id: 2, name: '烹饪区', url: '' },
+  { id: 3, name: '备餐区', url: '' },
+  { id: 4, name: '出餐口', url: '' },
+];
 
 /* 后台「配置示意图」用 iframe 内嵌**真实页面**（?embed=1）来做到 1:1：
    不渲染原型目录、不自动轮播，并接收父窗口 postMessage 过来的配置。
@@ -343,10 +419,13 @@ type EmbedPreviewConfig = {
   pages?: Array<{ id: string; name: string; enabled: boolean }>;
   moduleLabels?: Record<string, string>;
   nutritionPagodaImage?: string;
+  kitchenStreams?: Array<{ id: number; name: string; url: string }>;
+  streamCarouselEnabled?: boolean;
+  streamCarouselSeconds?: number;
 };
 
 /* ── 图上编辑的写回契约（后台父页 ↔ 本页）────────────────────────────────
-   ↓ 父页下发：{ type:'cockpit-preview-config', config, editMode }
+   ↓ 父页下发：{ type:'cockpit-preview-config', config }
    ↑ 本页回传：{ type:'cockpit-preview-edit',   target, value }
    两个方向都走 postMessage，而不是"同源就直接改父页的对象"：
    配置的唯一真源是父页那份草稿，本页只是它的一个投影 —— 投影自己去改正本，
@@ -461,20 +540,31 @@ type PageCarouselProps = {
   onTogglePageAutoPlay?: () => void;
 };
 
-/* 图上编辑的两个参数（只有后台内嵌预览会传 true）。 */
+/* 内嵌配置示意图里的可编辑状态由 embed 路由决定；普通业务页面保持只读。 */
 type PreviewEditProps = {
   editEnabled?: boolean;
   onEdit?: PreviewEditCommit;
 };
 
-/* 图上所见即所得：编辑态下标题变成一个**真的 input**，改完立刻回传后台写进草稿。
-   为什么不用更直觉的 contentEditable：
-   这些文字是 React 渲染出来的文本节点，contentEditable 一打字改的是 React 不知道的 DOM，
-   下一帧配置推回来触发重渲染，React 按它记着的旧值把 DOM 写回去 ——
-   用户会看到刚敲的字被吃掉、光标跳回开头。这是必现的，不是偶发竞态。
-   换成受控 input 就没这个冲突：React 只在 node.value !== props.value 时才写 DOM，两边一致就不动。
-   另外输入过程中**故意不跟外部值同步**（见下面的 effect）：
-   commit 要跨一趟 postMessage 到后台再推回来，中途拿一帧前的旧值覆盖，等于把刚敲的字删掉。 */
+/* ── 配置示意图的分层 ────────────────────────────────────────────────────
+   示意图 = 三层（这一条是整个「图上编辑」的地基，改之前先读完）：
+
+     ① 底图层：页面原本的样子 —— 每个可改的文字位**永远渲染它自己的默认文字**，
+        每张可换的图**永远是内置那张**。底图完全不认识后台配置，也不参与编辑。
+     ② 文字层：改过的标题/页面名/驾驶舱名。做法是盖在①上面的一层，
+        ① 上那一处被 `visibility:hidden` 置空，② 用同色背景直接落在原来的位置上。
+     ③ 图片层：换过的 Logo / 宝塔塔身，同样是盖在①那一格上。
+
+   **为什么必须是"覆盖"而不是"把值渲染进底图"**：底图是死图。
+   只要让新值参与底图的布局，就会连锁 —— 标题多一个字，那个 flex 行的宽度、下方面板的
+   起点、相邻卡片的间距全跟着动，用户改一个词、整张示意图换了个样子，
+   而他以为自己在"配置一张已经定稿的示意图"。覆盖层的定位基准是**默认文字**的盒子，
+   与配置里写了什么完全无关，所以改多长都只影响它自己那一块。
+
+   ⚠️ 因此覆盖层里**没有**任何能撑开底图的东西：
+     它是 position:absolute（不参与布局）+ white-space:nowrap（不换行）。
+     代价写在 .uk-text-layer-cover 的注释里（自定义名比默认名长时会向右溢出），
+     这是"底图不动"的必然结果，不是 bug。 */
 function EditableText({ editEnabled, onEdit, target, value, fallback }: {
   editEnabled?: boolean;
   onEdit?: PreviewEditCommit;
@@ -487,63 +577,76 @@ function EditableText({ editEnabled, onEdit, target, value, fallback }: {
      ② 后台表单里清空本来是同一个结果（原先的 `??` 只兜 null/undefined，兜不住空串）；
      删掉表单之后「图上清空」成了唯一可能的入口，这个口径更要守住：**留空 = 用默认名**。 */
   const shown = value || fallback;
+  const customized = shown !== fallback;
   const [draft, setDraft] = useState(shown);
   const inputRef = useRef<HTMLInputElement | null>(null);
   useEffect(() => {
     if (document.activeElement !== inputRef.current) setDraft(shown);
   }, [shown]);
-  if (!editEnabled) return <>{shown}</>;
+  /* 只读 + 没被改过：与改动前**逐字相同**的一支，不加任何包装层。
+     必须留着它另一半的理由：真实大屏（非 embed）永远走这里，
+     而它占了全部渲染次数的绝大多数，不该为了配置页背上两层 DOM。 */
+  if (!editEnabled && !customized) return <>{shown}</>;
   return (
-    <input
-      ref={inputRef}
-      className="uk-inline-edit"
-      value={draft}
-      placeholder={fallback}
-      aria-label={`${fallback}：图上直接编辑`}
-      onChange={(event) => { setDraft(event.target.value); onEdit?.(target, event.target.value); }}
-      /* 回车 = 改完了，放开这个框。不在这里做撤销：配置是即时生效的，
-         想改回去就把内容清空（留空 = 用默认名）或者重新打一遍。
-         Esc 除了放开还要**退出编辑态**，所以得往父页发一条消息：
-         这个 keydown 发生在 iframe 里，不会冒泡到后台窗口，
-         后台自己挂的那个 Esc 监听根本收不到。 */
-      onKeyDown={(event) => {
-        if (event.key === 'Enter') event.currentTarget.blur();
-        if (event.key === 'Escape') {
-          event.currentTarget.blur();
-          window.parent?.postMessage({ type: 'cockpit-preview-exit' }, '*');
-        }
-      }}
-    />
+    <span className="uk-text-layer">
+      {/* ① 底图层。渲染的是 fallback（内置默认名），**不是** shown ——
+          它唯一的职责是撑出"这一处原本占多大、在哪"，所以配置里改成什么都不影响它。
+          视觉上它被置空（visibility:hidden 而不是 display:none：后者会把位置也交出去，
+          覆盖层就失去定位基准了）。 */}
+      <span className="uk-text-layer-base" aria-hidden="true">{fallback}</span>
+      {/* ② 文字层。绝对定位在①的正上方，颜色块（透明的那块 = 直接露出底图自身的背景，
+          所以永远和周围同色）已经由底图的置空"挖"出来了，文字落在上面。
+          编辑态下这里换成受控 input —— 为什么不用更直觉的 contentEditable：
+          这些文字是 React 渲染出来的文本节点，contentEditable 一打字改的是 React 不知道的 DOM，
+          下一帧配置推回来触发重渲染，React 按它记着的旧值把 DOM 写回去 ——
+          用户会看到刚敲的字被吃掉、光标跳回开头。这是必现的，不是偶发竞态。
+          受控 input 没这个冲突：React 只在 node.value !== props.value 时才写 DOM。
+          另外输入过程中**故意不跟外部值同步**（见上面的 effect）：
+          commit 要跨一趟 postMessage 到后台再推回来，中途拿一帧前的旧值覆盖，等于把刚敲的字删掉。 */}
+      <span className="uk-text-layer-cover">
+        {editEnabled
+          ? (
+            <>
+              {/* 量字器：真的量一遍当前这几个字有多宽，好让输入框（那条虚线）
+                  恰好贴着文字，而不是默认的 20 字符宽（input 的默认 size）。
+                  为什么不用 field-sizing:content：它要 Chrome 123+，
+                  老一点的浏览器上会静默失灵 —— 症状就是"改了两个字，
+                  虚线突然拉出老长一截"。这一段不依赖任何新特性。
+                  内容是 draft || fallback：草稿清空时框里显示的是 placeholder，
+                  量字器得跟着量 placeholder 那串字，否则会缩成 1 个字符宽。 */}
+              <span className="uk-inline-edit-sizer" aria-hidden="true">{draft || fallback}</span>
+              <input
+                ref={inputRef}
+                className="uk-inline-edit"
+                /* size=1 只为把输入框自己的"固有宽度"压到 1 个字：
+                   它和量字器同占一个网格单元，列的宽度取两者的最大值。 */
+                size={1}
+                value={draft}
+                placeholder={fallback}
+                aria-label={`${fallback}：直接编辑文字`}
+                onChange={(event) => { setDraft(event.target.value); onEdit?.(target, event.target.value); }}
+                /* 回车或 Esc 放开当前输入框；修改已即时写回草稿。 */
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' || event.key === 'Escape') event.currentTarget.blur();
+                }}
+              />
+            </>
+          )
+          : shown}
+      </span>
+    </span>
   );
 }
 
-function UploadIcon() {
-  return <svg width="13" height="13" viewBox="0 0 14 14" aria-hidden="true" focusable="false">
-    <path d="M7 9.4V1.8M3.7 5.1 7 1.8l3.3 3.3" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-    <path d="M1.7 9.6v1.5a1.4 1.4 0 0 0 1.4 1.4h7.8a1.4 1.4 0 0 0 1.4-1.4V9.6" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>;
-}
-
-/* 图上换图：编辑态下把「一张图 + 一片盖在它上面的按钮」包起来。
-   为什么用覆盖层，而不是把图本身做成按钮：
-   两个目标是完全不同的东西 —— logo 是一个 60px 的圆形 <div>，宝塔是 SVG 里的 <image>，
-   它们唯一的共同点是「都不是控件」。统一做法只能是盖一个绝对定位的按钮上去。
-   **非编辑态不渲染这一层包装**（直接 return children）：包一个 div 会不会改变 flex 布局
-   是需要实测的事，只读态干脆不引入这个变量 —— 这是「关掉编辑态，示意图一个像素都不变」那条老约定的延续。
-   点文件选择框由 iframe 自己弹、不委托给父页：用户激活（user activation）必须发生在同一份 document 里，
-   跨一层 postMessage 再让父页去 click() 有被判成"非用户手势"而**静默失败**的风险
-   （失败表现就是「点了没反应」，最难查的那一类）。
-   读出来的 data URL 与文字走同一条上行通道（就是 value 那个字符串），两端都不必再多一个分支。
-   canReset：换了图之后给一条回退到内置默认图的路。它是从后台表单那侧的「恢复默认」按钮搬过来的 ——
-   那块表单（.uk-admin-pagoda-setting）随这次改动一起删了，能力不能跟着一起消失，
-   否则又是一次"静默少功能"。只在**已经换过图**（canReset 为真）时才出现：没换过就没什么可恢复的。 */
-function ReplaceableImage({ editEnabled, onEdit, target, label, variant, canReset, children }: {
+/* 图片层直接覆盖在固定的背景示意图上：编辑态中点击图片本身选择替换图片，不再显示上传/恢复按钮。
+   文件选择框留在 iframe 所在 document，确保点击图片触发的用户手势可以正常打开选择器。
+   读出的图片 data URL 仍走图上编辑的同一条写回通道，父页配置草稿是唯一数据源。 */
+function ReplaceableImage({ editEnabled, onEdit, target, label, variant, children }: {
   editEnabled?: boolean;
   onEdit?: PreviewEditCommit;
   target: PreviewEditTarget;
   label: string;
   variant: 'logo' | 'pagoda';
-  canReset?: boolean;
   children: React.ReactNode;
 }) {
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -554,23 +657,22 @@ function ReplaceableImage({ editEnabled, onEdit, target, label, variant, canRese
     reader.onload = () => { if (typeof reader.result === 'string') onEdit?.(target, reader.result); };
     reader.readAsDataURL(file);
   };
+  const openPicker = () => inputRef.current?.click();
   return (
-    <div className={`uk-img-edit is-${variant}`}>
+    <div
+      className={`uk-img-edit is-${variant}`}
+      role="button"
+      tabIndex={0}
+      aria-label={`点击更换${label}`}
+      onClick={openPicker}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          openPicker();
+        }
+      }}
+    >
       {children}
-      {/* 两颗按钮放同一个定位容器里，让「恢复默认」永远排在「换图」左边：
-          换图是主操作，保持在角上不动（位置与只有一颗按钮时逐像素相同）。 */}
-      <div className="uk-img-edit-actions">
-        {canReset ? <button
-          type="button"
-          className="uk-img-edit-reset"
-          aria-label={`恢复默认${label}`}
-          title={`恢复默认${label}`}
-          onClick={() => onEdit?.(target, '')}
-        >恢复默认</button> : null}
-        <button type="button" className="uk-img-edit-btn" aria-label={`更换${label}`} title={`更换${label}`} onClick={() => inputRef.current?.click()}>
-          <UploadIcon /><span>{label}</span>
-        </button>
-      </div>
       <input
         ref={inputRef}
         className="uk-img-edit-input"
@@ -634,7 +736,14 @@ function TopHeader({ current, clock, onNavigate, pageAutoPlaying, onTogglePageAu
         {/* Logo 也能在图上直接换。这层包装只在编辑态存在（见 ReplaceableImage 的注释），
             所以关掉编辑态时这棵子树与改动前逐字相同。 */}
         <ReplaceableImage editEnabled={editEnabled} onEdit={onEdit} target={{ kind: 'logo' }} label="Logo" variant="logo">
-          <div className="uk-logo">{logo ? <img src={logo} alt="" /> : '智'}</div>
+          {/* 这里就是「①底图 + ③图片层」：默认那颗「智」永远渲染、不随配置变，
+              自定义 Logo 是盖在它上面的一张 100% 的图（同格 grid-area 叠放）。
+              原先是 `{logo ? <img/> : '智'}` —— 那是拿新图**顶掉**底图，
+              底图随配置变，也就谈不上"底图不动"了。 */}
+          <div className="uk-logo">
+            <span className="uk-logo-mark" aria-hidden={logo ? 'true' : undefined}>智</span>
+            {logo ? <img className="uk-logo-cover" src={logo} alt="" /> : null}
+          </div>
         </ReplaceableImage>
         <div>
           {/* 驾驶舱名称：走 draft.name（「基本信息」里那个输入框），和「自定义页面名称」无关。
@@ -1126,7 +1235,7 @@ function ProductionOverviewModule({ data, clock, onNavigate }: { data: ModuleSha
       </div>
 
       <div className="uk-module-grid uk-module-grid-main uk-overview-main">
-        <section className="uk-module-panel uk-plan-chart-panel"><div className="uk-module-panel-head"><div><h2>餐段计划 / 完成对比</h2><p>按餐段看计划工单与已完成工单</p></div></div>
+        <section className="uk-module-panel uk-plan-chart-panel"><div className="uk-module-panel-head"><div><h2>餐段计划 / 完成对比</h2></div></div>
           {/* 筛选条从页面级（KPI 与图表之间那条独立带）搬进本面板内部：
               它只筛工单维度，影响的是这一屏的全部图表，放在图表旁比单独占一条带更贴近对象。 */}
           <div className="uk-workorder-filters" aria-label="工单筛选">
@@ -1145,7 +1254,6 @@ function ProductionOverviewModule({ data, clock, onNavigate }: { data: ModuleSha
           <div className="uk-module-panel-head">
             <div>
               <h2>计划完成率趋势</h2>
-              <p>{trendMeta.note}统计的计划工单完成率</p>
             </div>
           </div>
 
@@ -1256,7 +1364,6 @@ function MealAssuranceModule({ data, clock, onNavigate }: { data: ModuleSharedDa
           <div>
             <span className="uk-assurance-kicker">当前餐段 · 结构演示</span>
             <h2>{currentMeal.segment} · {currentState}</h2>
-            <p>先判断当前餐段能否按计划完成，再定位需要关注的菜品和环节。</p>
           </div>
           <div className={`uk-assurance-badge ${currentTone}`}><i />{currentState}</div>
         </section>
@@ -1272,7 +1379,7 @@ function MealAssuranceModule({ data, clock, onNavigate }: { data: ModuleSharedDa
         <div className="uk-assurance-main">
           <section className="uk-module-panel uk-assurance-panel">
             <div className="uk-module-panel-head">
-              <div><h2>餐段完成情况</h2><p>先看哪个餐段需要关注</p></div>
+              <div><h2>餐段完成情况</h2></div>
             </div>
             <div className="uk-assurance-meals">
               {mealSummaries.map((meal) => {
@@ -1291,7 +1398,7 @@ function MealAssuranceModule({ data, clock, onNavigate }: { data: ModuleSharedDa
 
           <section className="uk-module-panel uk-assurance-panel">
             <div className="uk-module-panel-head">
-              <div><h2>当前保障判断</h2><p>基于计划与完成进度的结构演示</p></div>
+              <div><h2>当前保障判断</h2></div>
             </div>
             <div className={`uk-assurance-judgement ${currentTone}`}>
               <strong>{currentMeal.segment}餐段{currentState}</strong>
@@ -1308,7 +1415,7 @@ function MealAssuranceModule({ data, clock, onNavigate }: { data: ModuleSharedDa
         <div className="uk-assurance-bottom">
           <section className="uk-module-panel uk-assurance-panel">
             <div className="uk-module-panel-head">
-              <div><h2>生产链路</h2><p>从计划到出餐的关键节点</p></div>
+              <div><h2>生产链路</h2></div>
             </div>
             <div className="uk-assurance-flow">
               {flowStages.map((stage, index) => (
@@ -1327,7 +1434,7 @@ function MealAssuranceModule({ data, clock, onNavigate }: { data: ModuleSharedDa
 
           <section className="uk-module-panel uk-assurance-panel">
             <div className="uk-module-panel-head">
-              <div><h2>重点关注</h2><p>当前餐段仍未完成的菜品</p></div>
+              <div><h2>重点关注</h2></div>
             </div>
             <div className="uk-assurance-attention">
               {currentPendingDishes.length ? currentPendingDishes.map((dish) => (
@@ -1981,6 +2088,7 @@ function MealPlanModule({ clock, onNavigate, pageAutoPlaying, onTogglePageAutoPl
     }));
 
   const pct = (value: number) => (daySplit.plan ? (value / daySplit.plan) * 100 : 0);
+  const initializingActualOut = '';
 
   /** 一根 100% 堆叠横条。三段用 flexGrow 分配宽度，和为 0 的段自然宽 0。 */
   const SplitBar = ({ split, bad }: { split: TraySplit; bad?: boolean }) => (
@@ -1997,16 +2105,41 @@ function MealPlanModule({ clock, onNavigate, pageAutoPlaying, onTogglePageAutoPl
         <div className="uk-plan-kpi-row" data-annotation-id="output-stat-filters">
           {/* 页面级控件：统计日期 + 餐段范围 + 批次。它们共同决定"这一屏统计的是哪一段"，
               所以 KPI 行、环形图、折线图、明细全都跟着变。 */}
-          <div className="uk-plan-controls">
-            <label className="uk-date-switch">
-              <span>统计日期</span>
-              <input
-                type="date"
-                value={statDate}
-                max={todayISO}
-                onChange={(event) => setStatDate(event.target.value || todayISO)}
-              />
-            </label>
+          <div className="uk-plan-heading uk-module-panel">
+            <div className="uk-module-panel-head">
+              <div><h2>出餐统计</h2></div>
+              <div className="uk-plan-controls">
+                <label className="uk-date-switch">
+                  <span>餐段</span>
+                  <select
+                    value={mealScope}
+                    onChange={(event) => {
+                      setMealScope(event.target.value);
+                      setBatchScope('all');
+                    }}
+                  >
+                    <option value="all">全部餐段</option>
+                    {dayMeals.map((meal) => <option key={meal.id} value={meal.id}>{meal.label}</option>)}
+                  </select>
+                </label>
+                <label className="uk-date-switch">
+                  <span>批次</span>
+                  <select value={batchScope} onChange={(event) => setBatchScope(event.target.value)}>
+                    <option value="all">全部批次</option>
+                    {batchNos.map((batchNo) => <option key={batchNo} value={String(batchNo)}>批次{batchNo}</option>)}
+                  </select>
+                </label>
+                <label className="uk-date-switch">
+                  <span>统计日期</span>
+                  <input
+                    type="date"
+                    value={statDate}
+                    max={todayISO}
+                    onChange={(event) => setStatDate(event.target.value || todayISO)}
+                  />
+                </label>
+              </div>
+            </div>
           </div>
           <div className={`uk-module-kpis uk-plan-kpis${exceptionState ? ' uk-exception-summary-host uk-has-exception-state' : ''}`} data-annotation-id="output-stat-summary">
             <ModuleKpi
@@ -2095,6 +2228,26 @@ function MealPlanModule({ clock, onNavigate, pageAutoPlaying, onTogglePageAutoPl
                 </div>
               </div>
             ))}
+            <div className="uk-detail-group uk-detail-example-group">
+              <div className="uk-detail-grouphead uk-detail-example-head">
+                <b>初始化状态示例</b>
+                <span>计划 09:30 · 实际 {initializingActualOut || '—'}</span>
+                <em>待出餐</em>
+              </div>
+              <div className="uk-detail-rows">
+                <div className="uk-detail-row">
+                  <div className="uk-detail-name">
+                    <b>香菇鸡肉粥</b>
+                    <small>提醒 09:12 → 出餐 {initializingActualOut || '—'} · 待出餐</small>
+                  </div>
+                  <div className="uk-detail-track">
+                    <i className="undone" style={{ flexGrow: 3 }}><b>3</b></i>
+                  </div>
+                  <div className="uk-detail-tail"><b>0 / 3</b><small>盆</small></div>
+                </div>
+              </div>
+              <small className="uk-detail-example-note">示例状态，不计入上方统计</small>
+            </div>
             {OFF_PLAN_ADDS.length > 0 ? (
               <div className="uk-detail-group uk-detail-off-plan-group">
                 <div className="uk-detail-grouphead uk-detail-off-plan-head">
@@ -2483,7 +2636,7 @@ function DishStatsModule({ clock, onNavigate }: { clock: string; onNavigate: (id
         <div className="uk-dish-main">
           <section className="uk-module-panel uk-dish-segment-panel">
             <div className="uk-module-panel-head">
-              <div><h2>餐段菜品完成度</h2><p>每道菜只计一次，工单拆分不会放大菜品总数</p></div>
+              <div><h2>餐段菜品完成度</h2></div>
             </div>
             <div className="uk-dish-legend"><span><i className="done" />已完成</span><span><i className="partial" />部分完成</span><span><i className="pending" />未完成</span></div>
             <div className="uk-dish-segment-list">
@@ -2502,7 +2655,7 @@ function DishStatsModule({ clock, onNavigate }: { clock: string; onNavigate: (id
           </section>
 
           <section className="uk-module-panel uk-dish-rule-panel">
-            <div className="uk-module-panel-head"><div><h2>统计口径</h2><p>避免把菜品数和生产次数混成一个数字</p></div></div>
+            <div className="uk-module-panel-head"><div><h2>统计口径</h2></div></div>
             <div className="uk-dish-rules">
               <div><b>菜品数</b><span>按菜品去重。同一道菜拆成多个工单，仍只算 1 道。</span></div>
               <div><b>生产工单</b><span>按工单实例统计。同一道菜拆成 3 个工单，就显示 3 个。</span></div>
@@ -2513,7 +2666,7 @@ function DishStatsModule({ clock, onNavigate }: { clock: string; onNavigate: (id
         </div>
 
         <section className="uk-module-panel uk-dish-table-panel">
-          <div className="uk-module-panel-head"><div><h2>菜品任务明细</h2><p>状态按该菜的全部工单汇总，延迟单独标注</p></div><strong>{dishRows.length} 道</strong></div>
+          <div className="uk-module-panel-head"><div><h2>菜品任务明细</h2></div><strong>{dishRows.length} 道</strong></div>
           <div className="uk-dish-table">
             <div className="uk-dish-table-head"><span>菜品</span><span>状态</span><span>工单</span><span>批次</span><span>计划盆</span><span>完成盆</span><span>延迟工单</span></div>
             <div className="uk-dish-table-body">
@@ -2563,8 +2716,15 @@ const PAGODA_ANCHORS = [68, 195, 300, 415, 520, 650];
    顶层要让开盐罐（盐罐右沿 ≈ x549），否则虚线会横穿盐罐。 */
 const PAGODA_LEAD_X = [560, 645, 705, 750, 825, 876];
 
-/** 立体膳食宝塔：位图塔身 + 右侧矢量中文层名/克数 + 虚线引线。 */
-function DietPagoda({ tiers, imageSrc }: { tiers: Array<{ label: string; tone: string; amounts: string[] }>; imageSrc?: string }) {
+/** 立体膳食宝塔：位图塔身 + 右侧矢量中文层名/克数 + 虚线引线。
+ *
+ *  `coverSrc` 是**图片层**（配置里换掉的那张塔身），`dietPagoda3d` 是**底图层**。
+ *  两者分得很清：底图的 `href` 写死成内置那张，自定义图只作为上一层盖在同一个 box 里。
+ *  这么做的收益不只是"架构好看"：一块 900×731 的图换成另一块长宽比不同的图时，
+ *  底图那格仍然按原来的 `meet` 摆着，右边层名/引线的坐标（PAGODA_/PAGODA_ANCHORS）
+ *  一个都不用重算 —— 以前是拿新图顶掉底图，一旦新图比例不同，塔身那格的可视高度会变，
+ *  引线就会跟托盘错开。 */
+function DietPagoda({ tiers, coverSrc }: { tiers: Array<{ label: string; tone: string; amounts: string[] }>; coverSrc?: string }) {
   return (
     <svg
       className="uk-pagoda"
@@ -2580,6 +2740,11 @@ function DietPagoda({ tiers, imageSrc }: { tiers: Array<{ label: string; tone: s
           <stop offset="0.55" stopColor="#1b7ad0" stopOpacity="0.07" />
           <stop offset="1" stopColor="#020c1e" stopOpacity="0" />
         </radialGradient>
+        {/* 塔身那格的裁切框：图片层盖上来时用它把覆盖图锁在同一个 box 里，
+            否则一张长宽比不同的图会按 slice 铺出去、压到右侧的层名和引线上。 */}
+        <clipPath id="pagoda-photo-clip">
+          <rect x={PAGODA.imgX} y={PAGODA.imgY} width={PAGODA.imgW} height={PAGODA.imgH} />
+        </clipPath>
       </defs>
       <ellipse
         cx={PAGODA.imgX + PAGODA.imgW * 0.49}
@@ -2588,15 +2753,35 @@ function DietPagoda({ tiers, imageSrc }: { tiers: Array<{ label: string; tone: s
         ry={PAGODA.imgH * 0.66}
         fill="url(#pagoda-halo)"
       />
+      {/* ① 底图层：内置那张 3D 宝塔。注意 href 是**写死**的，
+          配置里换过图也只走下面那层，这一层永远是这张。 */}
       <image
         className="uk-pagoda-photo"
-        href={imageSrc || dietPagoda3d}
+        href={dietPagoda3d}
         x={PAGODA.imgX}
         y={PAGODA.imgY}
         width={PAGODA.imgW}
         height={PAGODA.imgH}
         preserveAspectRatio="xMidYMid meet"
       />
+      {/* ③ 图片层：换过的塔身。先在同一个 box 里铺一块面板底色的色块，
+          再按 slice 盖上自定义图 —— 色块是为比例不一致时兜底的：
+          万一 slice 没生效退回 meet，露出来的是色块而不是底图那张塔，
+          不会出现"两张塔叠在一起"的画面。 */}
+      {coverSrc ? (
+        <g clipPath="url(#pagoda-photo-clip)">
+          <rect className="uk-pagoda-photo-cover-bg" x={PAGODA.imgX} y={PAGODA.imgY} width={PAGODA.imgW} height={PAGODA.imgH} />
+          <image
+            className="uk-pagoda-photo uk-pagoda-photo-cover"
+            href={coverSrc}
+            x={PAGODA.imgX}
+            y={PAGODA.imgY}
+            width={PAGODA.imgW}
+            height={PAGODA.imgH}
+            preserveAspectRatio="xMidYMid slice"
+          />
+        </g>
+      ) : null}
       {tiers.map((tier, i) => {
         const y = PAGODA.imgY + (PAGODA_ANCHORS[i] / PAGODA_SRC_H) * PAGODA.imgH;
         const n = tier.amounts.length;
@@ -2665,18 +2850,19 @@ function NutritionHealthModule({ clock, onNavigate, pageAutoPlaying, onTogglePag
     if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return true;
     return !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   });
-  const selectedDish = DISHES[slide % DISHES.length];
+  const selectedCard = NUTRITION_CARDS[slide % NUTRITION_CARDS.length];
+  const selectedDish = selectedCard.dish;
   const recommendations = DISHES;
 
   /* tick 出现在依赖里但函数体没用到 —— 这是故意的：点「今日菜单」选菜后要让计时重来，
      否则刚点完 0.1 秒就被自动翻页抢走。改 tick 让 effect 重建定时器即可。 */
   useEffect(() => {
     if (!autoPlaying || hovering || STATIC_PREVIEW || exceptionState) return undefined;
-    const timer = window.setInterval(() => setSlide((i) => (i + 1) % DISHES.length), NUTRITION_SLIDE_MS);
+    const timer = window.setInterval(() => setSlide((i) => (i + 1) % NUTRITION_CARDS.length), NUTRITION_SLIDE_MS);
     return () => window.clearInterval(timer);
   }, [autoPlaying, hovering, tick, exceptionState]);
 
-  const pickDish = (index: number) => {
+  const pickNutritionCard = (index: number) => {
     setSlide(index);
     setTick((n) => n + 1);
   };
@@ -2701,11 +2887,11 @@ function NutritionHealthModule({ clock, onNavigate, pageAutoPlaying, onTogglePag
             删掉后页面少一层横向分段，宝塔和营养分析的版面能直接顶上去。 */}
         <div className="uk-nutrition-main">
           <section className={`uk-module-panel uk-nutrition-pyramid${exceptionState ? ' uk-has-exception-state' : ''}`} data-annotation-id="nutrition-pyramid">
-            <div className="uk-module-panel-head"><div><h2>{editable({ kind: 'module', key: 'nutrition-pagoda' }, moduleLabels?.['nutrition-pagoda'], '中国居民平衡膳食宝塔（2022）')}</h2><p>每日推荐摄入量</p></div></div>
+            <div className="uk-module-panel-head"><div><h2>{editable({ kind: 'module', key: 'nutrition-pagoda' }, moduleLabels?.['nutrition-pagoda'], '中国居民平衡膳食宝塔（2022）')}</h2></div></div>
             <ModuleExceptionState state={exceptionState} />
             <div className="uk-pyramid-wrap">
-              <ReplaceableImage editEnabled={editEnabled} onEdit={onEdit} target={{ kind: 'pagoda' }} label="宝塔图片" variant="pagoda" canReset={Boolean(nutritionPagodaImage)}>
-                <DietPagoda tiers={pyramidTiers} imageSrc={nutritionPagodaImage} />
+              <ReplaceableImage editEnabled={editEnabled} onEdit={onEdit} target={{ kind: 'pagoda' }} label="宝塔图片" variant="pagoda">
+                <DietPagoda tiers={pyramidTiers} coverSrc={nutritionPagodaImage} />
               </ReplaceableImage>
               {/* 图注：把「这张图在说什么」写清楚 —— 宝塔画的是每日推荐摄入量，
                   不是今日菜单的实测营养（实测在右边「营养分析」表里）。
@@ -2718,7 +2904,7 @@ function NutritionHealthModule({ clock, onNavigate, pageAutoPlaying, onTogglePag
           <div className="uk-nutrition-side">
             {/* 单品轮播卡取代了原来的「营养分析」整表（整表已移到 .uk-nutrition-menu-table 的
                 旧规则保留在 style.css 里，回退时可直接复用；对应 JSX 已删）。
-                点击联动：点下方「今日菜单」任一卡 → 跳到那道菜并重置自动播放计时。 */}
+                同一餐品的不同 SOP 各占一张营养卡；下方今日菜单按餐品合并展示，不联动切换本卡。 */}
             <section
               className={`uk-module-panel uk-nutrition-spotlight${exceptionState ? ' uk-has-exception-state' : ''}`}
               data-annotation-id="nutrition-spotlight"
@@ -2728,9 +2914,9 @@ function NutritionHealthModule({ clock, onNavigate, pageAutoPlaying, onTogglePag
               onBlurCapture={() => setHovering(false)}
             >
               <div className="uk-module-panel-head">
-                <div><h2>{editable({ kind: 'module', key: 'nutrition-analysis' }, moduleLabels?.['nutrition-analysis'], '营养分析')}</h2><p>每 100g 熟制成品 ·</p></div>
+                <div><h2>{editable({ kind: 'module', key: 'nutrition-analysis' }, moduleLabels?.['nutrition-analysis'], '营养分析')}</h2><small className="uk-spotlight-unit-note">每 100g 成品</small></div>
                 <div className="uk-spotlight-tools">
-                  <span className="uk-module-panel-count">{slide + 1} / {DISHES.length}</span>
+                  <span className="uk-module-panel-count">{slide + 1} / {NUTRITION_CARDS.length}</span>
                   <button
                     type="button"
                     className="uk-spotlight-play"
@@ -2745,43 +2931,41 @@ function NutritionHealthModule({ clock, onNavigate, pageAutoPlaying, onTogglePag
               <ModuleExceptionState state={exceptionState} />
               <div className="uk-spotlight-body">
                 <figure className="uk-spotlight-figure">
-                  {/* key 绑菜名：换菜时 img 重新挂载，CSS 入场动画才会重播 */}
-                  <img key={selectedDish.name} src={DISH_IMAGES[selectedDish.name]} alt={`${selectedDish.name}菜品图`} />
+                  <img key={selectedCard.id} src={DISH_IMAGES[selectedDish.name]} alt={`${selectedDish.name}菜品图`} />
                   <figcaption>
                     <span className="uk-spotlight-seg" style={{ background: selectedDish.color }}>{selectedDish.segment}</span>
                     <strong style={{ color: selectedDish.color }}>{selectedDish.name}</strong>
                   </figcaption>
                 </figure>
-                <div className="uk-spotlight-detail" key={`${selectedDish.name}-meta`}>
+                <div className="uk-spotlight-detail" key={`${selectedCard.id}-meta`}>
                   {/* 右栏三段：设备/进度 → 6 项营养 → 主料调料。
                       只放 6 个数字的话，右栏 555×328 会空掉大半（6 个标量撑不满），
                       所以把生产状态和配方也放进来 —— 都是 DISHES 里已有的真实字段。 */}
-                  <div className="uk-spotlight-head">
-                  </div>
+                  <div className="uk-spotlight-head"><b>{selectedCard.sopName}</b><span>{selectedCard.sopVersion}</span><small>配方估算</small></div>
                   <div className="uk-spotlight-grid">
                     {SPOTLIGHT_METRICS.map((metric) => (
                       <div className="uk-spotlight-cell" key={metric.key}>
                         <span>{metric.label}</span>
-                        <b>{selectedDish.nutrition[metric.key]}<em>{metric.unit}</em></b>
+                        <b>{selectedCard.nutrition[metric.key]}<em>{metric.unit}</em></b>
                       </div>
                     ))}
                   </div>
                   <div className="uk-spotlight-uses">
-                    <div><span>食材</span><b>{selectedDish.ingredients.join(' · ')}</b></div>
-                    <div><span>调料</span><b>{selectedDish.seasonings.join(' · ')}</b></div>
+                    <div><span>{selectedCard.ingredientRatio ? '原料配比' : '食材'}</span><b>{selectedCard.ingredientRatio ?? selectedCard.ingredients.join(' · ')}</b></div>
+                    <div><span>调料</span><b>{selectedCard.seasonings.join(' · ')}</b></div>
                   </div>
                 </div>
                 <div className="uk-spotlight-dots" role="tablist" aria-label="选择要查看的菜品">
-                  {DISHES.map((dish, index) => (
+                  {NUTRITION_CARDS.map((card, index) => (
                     <button
                       type="button"
                       role="tab"
-                      key={dish.name}
+                      key={card.id}
                       className={`uk-spotlight-dot${index === slide ? ' active' : ''}`}
-                      style={index === slide ? { background: dish.color, borderColor: dish.color } : undefined}
+                      style={index === slide ? { background: card.dish.color, borderColor: card.dish.color } : undefined}
                       aria-selected={index === slide}
-                      aria-label={`查看${dish.name}的营养`}
-                      onClick={() => pickDish(index)}
+                      aria-label={`查看${card.dish.name} ${card.sopName}的营养`}
+                      onClick={() => pickNutritionCard(index)}
                     />
                   ))}
                 </div>
@@ -2792,7 +2976,7 @@ function NutritionHealthModule({ clock, onNavigate, pageAutoPlaying, onTogglePag
               <div className="uk-module-panel-head"><div><h2>{editable({ kind: 'module', key: 'nutrition-menu' }, moduleLabels?.['nutrition-menu'], '今日菜单')}</h2></div><span className="uk-module-panel-count">{recommendations.length} 道</span></div>
               <ModuleExceptionState state={exceptionState} />
               <div className="uk-recommended-grid">
-                {recommendations.map((dish, index) => <button type="button" className={`uk-recommended-card${selectedDish.name === dish.name ? ' active' : ''}`} key={dish.name} onClick={() => pickDish(index)}>
+                {recommendations.map((dish) => <div className="uk-recommended-card" key={dish.name}>
                   <span className="uk-recommended-visual"><img src={DISH_IMAGES[dish.name]} alt={`${dish.name}餐品图片`} loading="lazy" /></span>
                   {/* 卡面 3 行：①名称 + 餐段；②颜色建议（色点 + 色名 + 建议食用频次）；③份数。
                       原来第②行是「151 kcal · 蛋白质 5.5g」，已按要求删掉 ——
@@ -2801,7 +2985,7 @@ function NutritionHealthModule({ clock, onNavigate, pageAutoPlaying, onTogglePag
                       份数取「人份」= total 盆 × PORTIONS_PER_TRAY：「盆」是生产单位，
                       菜谱卡上写盆数对看菜单的人是绕的，直接给人份数。 */}
                   <span className="uk-recommended-copy">
-                    <span className="uk-recommended-title"><strong>{dish.name}</strong><em>{dish.segment}</em></span>
+                    <span className="uk-recommended-title"><strong>{dish.name}</strong><em>{dish.segment}</em>{(SOP_COUNT_BY_DISH[dish.name] ?? 1) > 1 ? <i className="uk-sop-badge">多 SOP · {SOP_COUNT_BY_DISH[dish.name]}</i> : null}</span>
                     <span className="uk-recommended-color">
                       <i className="uk-food-tone" style={{ background: FOOD_COLOR_TONE[dish.foodColor] }} aria-hidden="true" />
                       <span className="uk-recommended-colorname">{dish.foodColor}</span>
@@ -2809,7 +2993,7 @@ function NutritionHealthModule({ clock, onNavigate, pageAutoPlaying, onTogglePag
                     </span>
                     <span className="uk-recommended-parts">份数 <b>{dish.total * PORTIONS_PER_TRAY}</b></span>
                   </span>
-                </button>)}
+                </div>)}
               </div>
             </section>
           </div>
@@ -2825,8 +3009,8 @@ function DeviceMonitorModule({ data, clock, onNavigate }: { data: ModuleSharedDa
   return (
     <CockpitModuleShell current="process" clock={clock} onNavigate={onNavigate}>
       <div className="uk-module-kpis"><ModuleKpi label="设备总数" value={`${devices.length} 台`} note="候选配置 · 演示" /><ModuleKpi label="加工中" value={`${running} 台`} note="炒菜机 / 烤箱" tone="green" /><ModuleKpi label="待命" value={`${devices.length - running} 台`} note="等待下一生产次" tone="blue" /><ModuleKpi label="当前加工菜品" value={`${data.machines.filter((machine) => machine.state === '烹饪中').length} 道`} note="设备任务关联" tone="cyan" /></div>
-      <section className="uk-module-panel uk-device-dashboard"><div className="uk-module-panel-head"><div><h2>设备运行矩阵</h2><p>设备状态、当前菜品和任务进度集中展示</p></div></div><div className="uk-device-grid-dashboard">{devices.map((device, index) => <article className="uk-device-card" key={device.id}><div className="uk-device-card-head"><span className="uk-machine-dot" style={{ background: device.color }} /><b>{device.id}</b><em className={device.state === '烹饪中' || device.state === '协同中' ? 'running' : 'idle'}>{device.state}</em></div><p>{device.dish}</p><div className="uk-device-progress"><i style={{ width: `${device.state === '烹饪中' ? 48 + (index % 4) * 9 : device.state === '协同中' ? 64 : 12}%`, background: device.color }} /></div><small>{device.state === '烹饪中' ? `任务进行中 · ${58 + (index % 3) * 7}%` : device.state === '协同中' ? '设备协同中' : '等待任务下发'}</small></article>)}</div></section>
-      <div className="uk-module-grid uk-module-grid-bottom"><section className="uk-module-panel"><div className="uk-module-panel-head"><div><h2>设备分布</h2><p>按设备类型统计</p></div></div><div className="uk-device-type-bars"><div><span>炒菜机</span><i><b style={{ width: '100%' }} /></i><em>2 台</em></div><div><span>烤箱</span><i><b style={{ width: '50%' }} /></i><em>1 台</em></div></div></section><section className="uk-module-panel"><div className="uk-module-panel-head"><div><h2>状态说明</h2><p>接入现场数据后替换演示值</p></div></div><div className="uk-status-legend"><span><i className="running" />烹饪 / 加工中</span><span><i className="idle" />待命</span><span><i className="warn" />待接入数据</span></div><p className="uk-module-note">当前页面用于向领导展示设备协同关系，不提供启停、配方修改或任务下发操作。</p></section></div>
+      <section className="uk-module-panel uk-device-dashboard"><div className="uk-module-panel-head"><div><h2>设备运行矩阵</h2></div></div><div className="uk-device-grid-dashboard">{devices.map((device, index) => <article className="uk-device-card" key={device.id}><div className="uk-device-card-head"><span className="uk-machine-dot" style={{ background: device.color }} /><b>{device.id}</b><em className={device.state === '烹饪中' || device.state === '协同中' ? 'running' : 'idle'}>{device.state}</em></div><p>{device.dish}</p><div className="uk-device-progress"><i style={{ width: `${device.state === '烹饪中' ? 48 + (index % 4) * 9 : device.state === '协同中' ? 64 : 12}%`, background: device.color }} /></div><small>{device.state === '烹饪中' ? `任务进行中 · ${58 + (index % 3) * 7}%` : device.state === '协同中' ? '设备协同中' : '等待任务下发'}</small></article>)}</div></section>
+      <div className="uk-module-grid uk-module-grid-bottom"><section className="uk-module-panel"><div className="uk-module-panel-head"><div><h2>设备分布</h2></div></div><div className="uk-device-type-bars"><div><span>炒菜机</span><i><b style={{ width: '100%' }} /></i><em>2 台</em></div><div><span>烤箱</span><i><b style={{ width: '50%' }} /></i><em>1 台</em></div></div></section><section className="uk-module-panel"><div className="uk-module-panel-head"><div><h2>状态说明</h2></div></div><div className="uk-status-legend"><span><i className="running" />烹饪 / 加工中</span><span><i className="idle" />待命</span><span><i className="warn" />待接入数据</span></div><p className="uk-module-note">当前页面用于向领导展示设备协同关系，不提供启停、配方修改或任务下发操作。</p></section></div>
     </CockpitModuleShell>
   );
 }
@@ -2835,7 +3019,7 @@ function TaskDispatchModule({ data, clock, onNavigate }: { data: ModuleSharedDat
   return (
     <CockpitModuleShell current="equipment" clock={clock} onNavigate={onNavigate}>
       <div className="uk-module-kpis"><ModuleKpi label="早餐任务" value={`${data.dishes.filter((dish) => dish.segment === '早餐').length} 道`} note="计划已生成" /><ModuleKpi label="午餐任务" value={`${data.dishes.filter((dish) => dish.segment === '午餐').length} 道`} note="当前主餐段" tone="cyan" /><ModuleKpi label="晚餐任务" value={`${data.dishes.filter((dish) => dish.segment === '晚餐').length} 道`} note="待后续生产" tone="blue" /><ModuleKpi label="实际 / 计划" value={`${formatTrays(data.servedNow)} / ${formatTrays(data.totalPlan)}`} note={`${data.serveRate.toFixed(1)}%`} tone="green" /></div>
-      <div className="uk-module-grid uk-module-grid-main"><section className="uk-module-panel uk-task-panel"><div className="uk-module-panel-head"><div><h2>今日菜品任务</h2><p>按餐段展示计划、完成和生产状态</p></div></div><div className="uk-task-table"><div className="uk-task-head"><span>餐段 / 菜品</span><span>计划</span><span>已完成</span><span>状态</span></div>{data.dishes.map((dish) => <div className="uk-task-row" key={dish.name}><span><i style={{ background: dish.color }} />{dish.segment} · {dish.name}</span><b>{dish.total} 批</b><b>{dish.done} 批</b><em className={data.dishState(dish) === '出餐完成' || data.dishState(dish) === '取餐完成' ? 'done' : ''}>{data.dishState(dish)}</em></div>)}</div></section><section className="uk-module-panel"><div className="uk-module-panel-head"><div><h2>出口完成情况</h2><p>出餐数量按出口汇总</p></div></div><div className="uk-exit-cards"><div><b>出口 1</b><strong>{formatTrays(150)} 盆</strong><span>3 批已完成</span><i><em style={{ width: '76%' }} /></i></div><div><b>出口 2</b><strong>{formatTrays(100)} 盆</strong><span>2 批已完成</span><i><em style={{ width: '58%' }} /></i></div></div><div className="uk-module-note">到达出口的批次会同步更新右侧出餐记录与顶部完成率。</div></section></div>
+      <div className="uk-module-grid uk-module-grid-main"><section className="uk-module-panel uk-task-panel"><div className="uk-module-panel-head"><div><h2>今日菜品任务</h2></div></div><div className="uk-task-table"><div className="uk-task-head"><span>餐段 / 菜品</span><span>计划</span><span>已完成</span><span>状态</span></div>{data.dishes.map((dish) => <div className="uk-task-row" key={dish.name}><span><i style={{ background: dish.color }} />{dish.segment} · {dish.name}</span><b>{dish.total} 批</b><b>{dish.done} 批</b><em className={data.dishState(dish) === '出餐完成' || data.dishState(dish) === '取餐完成' ? 'done' : ''}>{data.dishState(dish)}</em></div>)}</div></section><section className="uk-module-panel"><div className="uk-module-panel-head"><div><h2>出口完成情况</h2></div></div><div className="uk-exit-cards"><div><b>出口 1</b><strong>{formatTrays(150)} 盆</strong><span>3 批已完成</span><i><em style={{ width: '76%' }} /></i></div><div><b>出口 2</b><strong>{formatTrays(100)} 盆</strong><span>2 批已完成</span><i><em style={{ width: '58%' }} /></i></div></div><div className="uk-module-note">到达出口的批次会同步更新右侧出餐记录与顶部完成率。</div></section></div>
     </CockpitModuleShell>
   );
 }
@@ -2875,9 +3059,16 @@ export default function UnmannedKitchenCockpit() {
     : exceptionPage === 'reference-load-failed' ? 'load-failed' : undefined;
   const [embed] = useState(readEmbedFromLocation);
   const [previewConfig, setPreviewConfig] = useState<EmbedPreviewConfig | null>(null);
-  /* 图上编辑的开关由后台（父窗口）给：示意图自己不知道该不该进入编辑态 ——
-     它是"被配置的对象"，不是"配置的工具"。默认关，打开就是回到只读的静态图。 */
-  const [previewEdit, setPreviewEdit] = useState(false);
+  const [cameraIndex, setCameraIndex] = useState(0);
+  const [showDensityExample, setShowDensityExample] = useState(false);
+  const cameraStreams = previewConfig?.kitchenStreams?.length ? previewConfig.kitchenStreams : DEMO_KITCHEN_STREAMS;
+  const activeCamera = cameraStreams[cameraIndex % cameraStreams.length];
+  useEffect(() => {
+    if (previewConfig?.streamCarouselEnabled === false || cameraStreams.length < 2) return undefined;
+    const seconds = Math.max(3, Math.min(120, Number(previewConfig?.streamCarouselSeconds) || 20));
+    const timer = window.setInterval(() => setCameraIndex((current) => (current + 1) % cameraStreams.length), seconds * 1000);
+    return () => window.clearInterval(timer);
+  }, [cameraStreams.length, previewConfig?.streamCarouselEnabled, previewConfig?.streamCarouselSeconds]);
   /* 图上改完的字回传给后台，由后台写进草稿。本页**不留副本**：
      配置的唯一真源是后台那份 draft，这里只负责"显示它 + 把改动发回去"。 */
   const commitPreviewEdit = useCallback<PreviewEditCommit>((target, value) => {
@@ -2962,10 +3153,9 @@ export default function UnmannedKitchenCockpit() {
   useEffect(() => {
     if (!embed) return undefined;
     const onMessage = (event: MessageEvent) => {
-      const data = event.data as { type?: string; config?: EmbedPreviewConfig; editMode?: boolean } | null;
+      const data = event.data as { type?: string; config?: EmbedPreviewConfig } | null;
       if (!data || data.type !== 'cockpit-preview-config') return;
       setPreviewConfig(data.config ?? null);
-      setPreviewEdit(Boolean(data.editMode));
     };
     window.addEventListener('message', onMessage);
     /* 父窗口可能在 iframe 还没挂上监听时就发过一次配置，这里主动握一次手让它补发。 */
@@ -2973,20 +3163,21 @@ export default function UnmannedKitchenCockpit() {
     return () => window.removeEventListener('message', onMessage);
   }, [embed]);
 
-  /* 图上编辑时给 body 挂标记，把整页的命中测试关掉、只放行标题输入框
-     （规则在 style.css 的 body.uk-embed-edit 里）。
-     目的是让「能点的东西」精确等于「能改的东西」——不然编辑态下点到轮播开关、
+  /* 配置示意图作为固定背景；仅放行文字输入和图片替换位置，
+     其他控件的命中测试保持关闭（规则在 style.css 的 body.uk-embed-edit 里）。
+     目的是让「能点的东西」精确等于「能改的东西」——不然点到轮播开关、
      餐段筛选、批次切换这些真按钮，示意图当场就动了或切页了，
-     而用户完全不知道是自己点出来的，只会觉得"这图坏了"。
+     用户会误以为背景示意图也可操作。
      注意这只是两道防线里的**里面**那道：外面那道（.uk-admin-live-frame.is-edit>iframe）
-     只是松开了 iframe 这个整体，单靠它等于把整张示意图都解锁了。 */
+     让 iframe 可接收点击，单靠它等于把整张示意图都解锁了。 */
   useEffect(() => {
-    document.body.classList.toggle('uk-embed-edit', embed && previewEdit);
+    if (!embed) return undefined;
+    document.body.classList.add('uk-embed-edit');
     return () => document.body.classList.remove('uk-embed-edit');
-  }, [embed, previewEdit]);
+  }, [embed]);
 
   useEffect(() => {
-    if (embed || !pageAutoPlaying || view === 'version' || view === 'requirements' || view === 'admin' || view === 'reference-no-data' || view === 'reference-load-failed') return undefined;
+    if (embed || !pageAutoPlaying || view === 'version' || view === 'requirements' || view === 'admin' || view === 'production-process-view' || view === 'production-process-edit' || view === 'production-process-edit-ai-timeout' || view === 'production-process-edit-no-ingredients' || view === 'meal-menu' || view === 'reference-no-data' || view === 'reference-load-failed') return undefined;
     const timer = window.setInterval(() => {
       setView((current) => {
         const currentIndex = TOP_NAV_ITEMS.findIndex((item) => item.id === current);
@@ -3203,11 +3394,11 @@ export default function UnmannedKitchenCockpit() {
      三处各绑一份而不是抽成全局组件：那两页是独立组件，拿不到这里的 state，
      硬要共用一个就得把 editEnabled/onEdit 再透传一层，反而更绕。 */
   const editable = (target: PreviewEditTarget, value: string | undefined, fallback: string) =>
-    <EditableText editEnabled={previewEdit} onEdit={commitPreviewEdit} target={target} value={value} fallback={fallback} />;
+    <EditableText editEnabled={embed} onEdit={commitPreviewEdit} target={target} value={value} fallback={fallback} />;
   const shellPreview: ShellPreviewProps = {
     embed,
     hideAnnotations: Boolean(exceptionPage),
-    editEnabled: previewEdit,
+    editEnabled: embed,
     onEdit: commitPreviewEdit,
     brandName: previewConfig?.name,
     logo: previewConfig?.logo,
@@ -3215,7 +3406,29 @@ export default function UnmannedKitchenCockpit() {
   };
   const previewProps: PreviewProps = { ...shellPreview, moduleLabels, nutritionPagodaImage: previewConfig?.nutritionPagodaImage };
   const prototypeDirectory = embed ? null : <PrototypeDirectory currentPageId={exceptionPage ?? view} onNavigate={navigate} />;
-  if (view === 'admin') return <>{prototypeDirectory}<CockpitAdminView onNavigate={navigate} /></>;
+  if (view === 'admin') return <>{prototypeDirectory}<CockpitAdminView onNavigate={navigate} /><PrototypeAnnotationViewer currentPageId={view} onNavigate={navigate} /></>;
+  if (view === 'meal-menu') return (
+    <>
+      {prototypeDirectory}
+      <div className="uk-viewport">
+        <div key={view} className="uk-screen uk-meal-menu-screen" style={{ transform: `translate(-50%, -50%) scale(${scale})` }}>
+          <MealMenuListView />
+        </div>
+      </div>
+      <PrototypeAnnotationViewer currentPageId={view} onNavigate={navigate} />
+    </>
+  );
+  if (view === 'production-process-view' || view === 'production-process-edit' || view === 'production-process-edit-ai-timeout' || view === 'production-process-edit-no-ingredients') return (
+    <>
+      {prototypeDirectory}
+      <div className="uk-viewport">
+        <div key={view} className="uk-screen uk-process-screen" style={{ transform: `translate(-50%, -50%) scale(${scale})` }}>
+          <ProductionProcessView mode={view === 'production-process-view' ? 'view' : 'edit'} state={view === 'production-process-edit-ai-timeout' ? 'ai-timeout' : view === 'production-process-edit-no-ingredients' ? 'no-ingredients' : 'normal'} />
+        </div>
+      </div>
+      <PrototypeAnnotationViewer currentPageId={view} onNavigate={navigate} />
+    </>
+  );
   if (view === 'requirements') return (
     <>
       {prototypeDirectory}
@@ -3325,7 +3538,7 @@ export default function UnmannedKitchenCockpit() {
                     <section className="uk-dish-stat-group" key={group.segment}>
                       <div className="uk-menu-group-heading"><span>{group.segment}</span><em>{group.dishes.length} 道</em></div>
                       {group.dishes.map((dish) => <div className="uk-dish-stat-row" key={dish.name}>
-                        <span className="uk-nutrition-name" style={{ color: dish.color }}><i />{dish.name}</span>
+                        <span className="uk-nutrition-name" style={{ color: dish.color }}><i />{dish.name}{(SOP_COUNT_BY_DISH[dish.name] ?? 1) > 1 ? <small>多 SOP · {SOP_COUNT_BY_DISH[dish.name]}</small> : null}</span>
                         <div className="uk-dish-stat-track"><i style={{ width: `${(dish.done / Math.max(dish.total, 1)) * 100}%`, background: dish.color }} /></div>
                         <b aria-label={`${dish.name} 已完成重量 ${dish.feedKg == null ? '暂无数据' : `${(dish.feedKg * (dish.done / Math.max(dish.total, 1))).toFixed(1)} kg`}，总重量 ${dish.feedKg == null ? '暂无数据' : `${dish.feedKg.toFixed(1)} kg`}`}>{formatDishWeight(dish)}</b>
                       </div>)}
@@ -3338,8 +3551,11 @@ export default function UnmannedKitchenCockpit() {
 
           <section className="uk-col uk-main">
             <section className={`uk-panel uk-line${exceptionState ? ' uk-has-exception-state' : ''}`} data-annotation-id="production-flow">
-              <h2>
-                {editable({ kind: 'module', key: 'production-flow' }, moduleLabels['production-flow'], '智厨生产流程')}
+              <h2 className="uk-flow-panel-heading">
+                <span>{editable({ kind: 'module', key: 'production-flow' }, moduleLabels['production-flow'], '智厨生产流程')}</span>
+                <button type="button" className="uk-flow-density-trigger" aria-expanded={showDensityExample} aria-controls="uk-flow-density-example" onClick={() => setShowDensityExample((open) => !open)}>
+                  多设备示例
+                </button>
               </h2>
               <ModuleExceptionState state={exceptionState} />
               <div className="uk-line-stage">
@@ -3391,7 +3607,31 @@ export default function UnmannedKitchenCockpit() {
 
                   <g className="uk-zone">
                     <rect x="380" y="80" width="320" height="300" rx="10" />
-                    <text x="540" y="64" textAnchor="middle">烹饪区 · 2 台炒菜机 / 1 台烤箱</text>
+                    {/* 烹饪区标题（2026-10-14 按用户选的方案 B 改两行，且改为**数据驱动**）：
+                        原来是手写字符串「烹饪区 · 2 台炒菜机 / 1 台烤箱」，和下面的节点各是
+                        一份数据 —— 设备增减时节点自动变、这行字不会，迟早对不上。现在：
+                        · 主行 = 「烹饪区 · N 台」，N 从 COCKPIT_MACHINES.length 取
+                        · 摘要行 = 按 id 前缀分组计数（'炒菜机 CCJ1' → '炒菜机'），
+                          「炒菜机 ×2 / 烤箱 ×1」，放区块盒内顶部（节点从 y=128 才开始，
+                          80..128 是空的；每行最多 2 类，4 类折两行也放得下，再多就该
+                          升级成徽标条而不是继续加行 —— 方案取舍见当天沟通记录）。
+                        ⚠️ 依旧只动文字：设备 rect 坐标绑着动线动画 keyPoints，别挪。 */}
+                    {(() => {
+                      const groups = new Map<string, number>();
+                      COCKPIT_MACHINES.forEach((machine) => {
+                        const type = machine.id.split(' ')[0] ?? machine.id;
+                        groups.set(type, (groups.get(type) ?? 0) + 1);
+                      });
+                      const parts = [...groups.entries()].map(([type, count]) => `${type} ×${count}`);
+                      const rows: string[] = [];
+                      for (let i = 0; i < parts.length; i += 2) rows.push(parts.slice(i, i + 2).join(' / '));
+                      return <>
+                        <text x="540" y="64" textAnchor="middle">烹饪区 · {COCKPIT_MACHINES.length} 台</text>
+                        <text x="540" y="98" textAnchor="middle" className="uk-zone-summary">
+                          {rows.map((row, index) => <tspan key={index} x="540" dy={index === 0 ? 0 : 14}>{row}</tspan>)}
+                        </text>
+                      </>;
+                    })()}
                     {[0, 1].map((i) => (
                       <g key={`c${i}`}>
                         {/* 台间呼吸灯错峰由内联延迟控制 */}
@@ -3404,9 +3644,12 @@ export default function UnmannedKitchenCockpit() {
                           rx="8"
                           style={{ animationDelay: `${(i % 2) * 1.4}s` }}
                         />
-                        <text className="uk-cooker-label" textAnchor="middle">
-                          <tspan x={458 + i * 108} y="158">{COCKPIT_MACHINES[i].model} 型</tspan>
-                          <tspan className="uk-cooker-id" x={458 + i * 108} dy="14">CCJ{i + 1}</tspan>
+                        {/* 节点文字 = machineTag（设备码-口径，见 COCKPIT_MACHINES 旁的注释）。
+                            ⚠️ 只许改字，**不许动这个 rect 的 x/width**：动线动画的 keyPoints
+                            是按设备中心（CCJ1=458,162 / CCJ2=566,162）手算的，挪一格托盘就飘。
+                            y=166 是 68px 高的盒子的视觉居中（原两行 158/172 改一行后重新取的）。 */}
+                        <text className="uk-cooker-tag" textAnchor="middle">
+                          <tspan x={458 + i * 108} y="166">{machineTag(COCKPIT_MACHINES[i])}</tspan>
                         </text>
                       </g>
                     ))}
@@ -3434,8 +3677,9 @@ export default function UnmannedKitchenCockpit() {
                     /* 不用负数 begin：部分浏览器在 SVG 动画初始化时会把节点留在 (0,0)，
                        也就是流程卡片左上角。正向错峰启动，初始化前保持透明。 */
                     const animationBegin = route.delay;
-                    const ovenPaused = route.id === 'route-kx1-out1' && isMachineCooking('烤箱 KX1');
-                    const routeTokenVisible = routePhase(route) >= route.trayEnd && !ovenPaused;
+                    const pauseTarget = ROUTE_PAUSE_TARGETS[route.id];
+                    const routePaused = pauseTarget ? isMachineCooking(pauseTarget.machineId) : false;
+                    const routeTokenVisible = routePhase(route) >= route.trayEnd && !routePaused;
                     return (
                       <React.Fragment key={route.id}>
                         <g className="uk-route-token" style={{ animationDelay: animationBegin, display: routeTokenVisible ? 'block' : 'none' }}>
@@ -3451,8 +3695,8 @@ export default function UnmannedKitchenCockpit() {
                             {...(route.id === 'route-kx1-out1' ? {} : { keyPoints: route.keyPoints, keyTimes: route.keyTimes })}
                           />
                         </g>
-                        {route.id === 'route-kx1-out1' && (
-                          <g className="uk-route-token uk-oven-route-token" style={{ opacity: ovenPaused ? 1 : 0, display: ovenPaused ? 'block' : 'none' }} transform="translate(510 318)">
+                        {pauseTarget && (
+                          <g className="uk-route-token uk-route-pause-token" style={{ opacity: routePaused ? 1 : 0, display: routePaused ? 'block' : 'none' }} transform={`translate(${pauseTarget.x} ${pauseTarget.y})`}>
                             <rect x="-36" y="-10" width="72" height="20" rx="4" style={{ fill: route.color, stroke: route.color, filter: `drop-shadow(0 0 4px ${route.color})` }} />
                             <text x="0" y="4" textAnchor="middle" style={{ fill: '#ffffff' }}>{route.dish}</text>
                           </g>
@@ -3461,6 +3705,32 @@ export default function UnmannedKitchenCockpit() {
                     );
                   })}
                 </svg>
+                {showDensityExample && (
+                  <div className="uk-flow-density-overlay" id="uk-flow-density-example" role="dialog" aria-modal="true" aria-label="多入口、多设备和多出口示例">
+                    <div className="uk-flow-density-head">
+                      <div><b>多节点展示示例</b><span>流程图保留区域总览，节点数量较多时按类别分组查看</span></div>
+                      <button type="button" aria-label="关闭多设备示例" onClick={() => setShowDensityExample(false)}>×</button>
+                    </div>
+                    <div className="uk-flow-density-cards">
+                      <article>
+                        <div><b>投料入口</b><strong>8 <small>个</small></strong></div>
+                        <p><i>6 个使用中</i><i>2 个待命</i></p>
+                        <small>入口 01–08 · 按工序与产线分组</small>
+                      </article>
+                      <article>
+                        <div><b>烹饪设备</b><strong>12 <small>台</small></strong></div>
+                        <p><i>9 台运行中</i><i>3 台待命</i></p>
+                        <small>炒菜机 8 台 · 烤箱 4 台</small>
+                      </article>
+                      <article>
+                        <div><b>出餐出口</b><strong>6 <small>个</small></strong></div>
+                        <p><i>4 个出餐中</i><i>2 个待命</i></p>
+                        <small>出口 01–06 · 显示队列与完成状态</small>
+                      </article>
+                    </div>
+                    <div className="uk-flow-density-note">节点很多时，主图只显示区域汇总与当前运行路径；具体设备、入口和出口状态在分组明细中展开。</div>
+                  </div>
+                )}
               </div>
             </section>
 
@@ -3539,13 +3809,13 @@ export default function UnmannedKitchenCockpit() {
                 <div className="uk-kitchen-grid" />
                 <div className="uk-cctv-vignette" />
                 <div className="uk-cctv-scanline" />
-                <div className="uk-cctv-topline"><span className="uk-cctv-rec"><i />REC</span><span>CAM-01 · 后厨生产区</span><time>{clock.split('  ')[1] || '--:--:--'}</time></div>
+                <div className="uk-cctv-topline"><span className="uk-cctv-rec"><i />REC</span><span className="uk-cctv-stream-name">{activeCamera.name}</span><time>{clock.split('  ')[1] || '--:--:--'}</time></div>
                 <div className="uk-kitchen-video-head"></div>
                 <div className="uk-kitchen-photo-frame">
                   <img className="uk-kitchen-photo" src={kitchenImage} alt="仿真后厨画面：2台自动炒菜机和1台烤箱正在工作" />
                   <div className="uk-kitchen-photo-shade" />
                 </div>
-                <div className="uk-kitchen-stream"><i /></div>
+                <div className="uk-kitchen-stream"><i /><span>{previewConfig?.streamCarouselEnabled === false ? '模拟画面' : '模拟画面 · 自动轮播'}</span><b>{(cameraIndex % cameraStreams.length) + 1}/{cameraStreams.length}</b></div>
               </div>
             </section>
 
@@ -3569,7 +3839,7 @@ export default function UnmannedKitchenCockpit() {
           </main>
 
           <footer className="uk-bottom" hidden={displayView !== 'cockpit' || Boolean(exceptionPage)}>
-            <div className="uk-ticker">
+              <div className="uk-ticker" data-annotation-id="dish-color-legend">
               <div className="uk-ticker-track">
                 {[...DISHES, ...DISHES].map((dish, index) => (
                   <span key={`${dish.name}-${index}`}>

@@ -10,6 +10,18 @@ type VersionRecord = {
 
 const VERSION_RECORDS: VersionRecord[] = [
   {
+    serial: 2,
+    version: 'v1.2.0',
+    date: '2026-10-14',
+    author: '陈希阳',
+    content: [
+      '新增生产工艺查看、编辑生产工艺及 AI 生成超时、当前无原料两个异常状态页面',
+      '营养素页默认展示单一营养素表，支持手动输入和 AI 生成覆盖，移除重复结果层与原料列表',
+      '完善 AI 生成成功、超时重试、无原料引导等结果提示，异常时保留原有营养素值',
+      '新增商户后台-食堂餐品静态列表页，补充筛选、餐品列表、云餐品库下载和操作入口',
+    ],
+  },
+  {
     serial: 1,
     version: 'v1.0.0',
     date: '2026-10-12',
@@ -31,9 +43,9 @@ export function VersionManagementView() {
     <main className="uk-version-page">
       <div className="uk-module-head">
         <div>
-          <span className="uk-module-kicker">原型资料</span>
+          <span className="uk-module-kicker">原型管理 · 迭代记录</span>
           <h1>版本管理</h1>
-          <p>记录本次原型需求与页面设计范围</p>
+          <p>记录原型需求、页面设计与异常状态的迭代变化</p>
         </div>
         <div className="uk-module-meta">
           <span><i />演示数据</span>
